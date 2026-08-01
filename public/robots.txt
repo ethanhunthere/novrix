@@ -1,0 +1,75 @@
+User-agent: GPTBot
+Allow: /
+Disallow: /admin
+Disallow: /api/auth/
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin
+Disallow: /api/auth/
+
+User-agent: Claude-Web
+Allow: /
+Disallow: /admin
+Disallow: /api/auth/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin
+Disallow: /api/auth/
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /admin
+Disallow: /api/auth/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin
+Disallow: /api/auth/
+
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /admin
+Disallow: /api/auth/
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin
+Disallow: /api/auth/
+
+User-agent: BingPreview
+Allow: /
+Disallow: /admin
+Disallow: /api/auth/
+
+User-agent: Googlebot
+Allow: /
+Disallow: /admin
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin
+
+User-agent: Slurp
+Allow: /
+Disallow: /admin
+
+User-agent: DuckDuckBot
+Allow: /
+Disallow: /admin
+
+User-agent: Baiduspider
+Allow: /
+Disallow: /admin
+
+User-agent: YandexBot
+Allow: /
+Disallow: /admin
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api/auth/
+
+Sitemap: https://novrix.io/sitemap.xml

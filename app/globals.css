@@ -1,0 +1,1188 @@
+@import "tailwindcss";
+
+:root {
+  --font-inter: 'Inter', sans-serif;
+  --font-jetbrains-mono: 'JetBrains Mono', monospace;
+  /* Legacy accent — preserved for component compatibility */
+  --color-accent: #C2344D;
+  --color-accent-bright: #D9485F;
+  --color-accent-dim: #9A2238;
+  --color-accent-muted: #6B1828;
+  --color-steel: #94A3B8;
+
+  /* ──────────────────────────────────────────────────────────
+     NOVRIX INSTITUTIONAL DESIGN SYSTEM — 2026
+     Calibrated for dark operations environments.
+     Every value is deliberate. Nothing is decorative.
+  ────────────────────────────────────────────────────────── */
+
+  /* Backgrounds — cold near-black spectrum */
+  --bg-base:     #0A0A0F;
+  --bg-surface:  #111117;
+  --bg-raised:   #1A1A22;
+  --bg-elevated: #242430;
+
+  /* Borders — alpha-based, structural not decorative */
+  --border-subtle:  rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.08);
+  --border-strong:  rgba(255, 255, 255, 0.15);
+  --border-accent:  rgba(194, 52, 77, 0.30);
+
+  /* Text — never pure white, always calibrated */
+  --text-heading:   #FAFAFA;
+  --text-primary:   #E4E4E7;
+  --text-secondary: #A1A1AA;
+  --text-tertiary:  rgba(255, 255, 255, 0.40);
+  --text-ghost:     rgba(255, 255, 255, 0.25);
+
+  /* Semantic status indicators */
+  --status-nominal:  #10B981;
+  --status-caution:  #F59E0B;
+  --status-critical: #EF4444;
+  --status-data:     #06B6D4;
+
+  /* Brand accents — used sparingly */
+  --accent-novrix: #C2344D;
+  --accent-data:   #FFA028;
+
+  /* Motion — IBM Carbon productive easing */
+  --ease-standard: cubic-bezier(0.2, 0, 0.38, 0.9);
+  --ease-entrance: cubic-bezier(0, 0, 0.38, 0.9);
+  --ease-exit:     cubic-bezier(0.2, 0, 1, 0.9);
+}
+
+@theme inline {
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
+
+  /* Custom breakpoints — calibrated for 320px phones through 5K ultrawide */
+  --breakpoint-3xs: 320px;
+  --breakpoint-xs: 375px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1920px;
+  --breakpoint-3xl: 2560px;
+  --breakpoint-4xl: 3840px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   FLUID DESIGN TOKENS — scale smoothly across all viewports
+   No breakpoint jumps. Continuous scaling from 320px to ∞.
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  /* Viewport-relative fluid spacing — grows continuously */
+  --space-1: clamp(0.25rem, 0.2rem + 0.25vw, 0.5rem);
+  --space-2: clamp(0.5rem, 0.35rem + 0.5vw, 1rem);
+  --space-3: clamp(0.75rem, 0.5rem + 0.75vw, 1.5rem);
+  --space-4: clamp(1rem, 0.6rem + 1.25vw, 2.5rem);
+  --space-5: clamp(1.5rem, 0.8rem + 2vw, 4rem);
+  --space-6: clamp(2rem, 1rem + 3vw, 6rem);
+  --space-7: clamp(3rem, 1.5rem + 4.5vw, 9rem);
+  --space-8: clamp(4rem, 2rem + 6vw, 12rem);
+
+  /* Fluid typography — perceptually consistent at every width */
+  --text-hero: clamp(1.6rem, 0.3rem + 7.5vw, 160px);
+  --text-h1: clamp(1.7rem, 0.6rem + 5.5vw, 88px);
+  --text-h2: clamp(1.5rem, 0.5rem + 5vw, 72px);
+  --text-h3: clamp(1.35rem, 0.7rem + 3vw, 56px);
+  --text-h4: clamp(1.15rem, 0.7rem + 2vw, 36px);
+  --text-body: clamp(0.875rem, 0.75rem + 0.5vw, 20px);
+  --text-body-lg: clamp(1rem, 0.8rem + 0.8vw, 24px);
+  --text-caption: clamp(0.65rem, 0.5rem + 0.3vw, 1rem);
+  --text-micro: clamp(0.55rem, 0.45rem + 0.2vw, 0.85rem);
+
+  /* Fluid container sizing */
+  --container-pad: clamp(1rem, 0.4rem + 2.5vw, 3rem);
+  --container-pad-lg: clamp(1.5rem, 0.5rem + 4vw, 4.5rem);
+  --container-max: min(90vw, 1440px);
+  --container-max-lg: min(92vw, 2000px);
+
+  /* Fluid decorative elements */
+  --shadow-sm: 0 clamp(8px, 4px + 1vw, 24px) clamp(16px, 8px + 2vw, 48px) rgba(0,0,0,0.3);
+  --shadow-md: 0 clamp(16px, 8px + 2vw, 48px) clamp(32px, 16px + 4vw, 96px) rgba(0,0,0,0.35);
+  --shadow-lg: 0 clamp(24px, 12px + 3vw, 72px) clamp(60px, 30px + 7vw, 180px) rgba(0,0,0,0.4);
+  --glow-crimson: 0 0 clamp(20px, 10px + 1.5vw, 50px) rgba(194,52,77,0.15);
+  --glow-cyan: 0 0 clamp(20px, 10px + 1.5vw, 50px) rgba(0,200,238,0.12);
+  --border-thin: clamp(0.5px, 0.4px + 0.03vw, 1px);
+  --grid-size: clamp(28px, 20px + 1.5vw, 56px);
+}
+
+/* Reset */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: #0A0A0F;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scrollbar-gutter: stable;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-inter), sans-serif;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1, 'tnum' 1, 'zero' 1;
+  font-weight: 350;
+  line-height: 1.65;
+}
+
+/* 4K / High-DPI rendering optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  body {
+    -webkit-font-smoothing: subpixel-antialiased;
+  }
+
+  img, svg, canvas {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* ── Navbar active indicator animations ─────────────────────────────────── */
+
+/* Precision tick line scale-in from left */
+@keyframes navTickIn {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* Glow line for active navigation */
+@keyframes navGlow {
+  0%, 100% { box-shadow: 0 0 4px rgba(194,52,77,0.3); }
+  50%       { box-shadow: 0 0 8px rgba(194,52,77,0.55); }
+}
+
+/* CLI cursor blink — 530ms cadence */
+@keyframes navCursorBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.nav-cli-cursor {
+  animation: navCursorBlink 1.06s step-end infinite;
+}
+
+/* Custom scrollbar — crimson accent */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.20);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+}
+
+/* Hide horizontal scrollbar for mobile navigation */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* ========================================
+   GSAP MODULES — scroll-reveal entrance
+   Hero elements render statically (no GSAP timeline).
+   Module section elements are hidden until scroll triggers.
+   Safety fallback: reveal after 0.4s if GSAP never fires.
+   ======================================== */
+@keyframes gsap-reveal-fallback {
+  to { opacity: 1; transform: none; filter: none; }
+}
+
+/* Modules section — GSAP animates opacity+transform on scroll */
+.modules-label,
+.modules-title,
+.modules-line,
+.modules-desc {
+  opacity: 0;
+  animation: gsap-reveal-fallback 0.001s 0.4s forwards;
+}
+
+.module-card {
+  opacity: 0;
+  animation: gsap-reveal-fallback 0.001s 0.4s forwards;
+}
+
+.system-terminal {
+  opacity: 0;
+  animation: gsap-reveal-fallback 0.001s 0.4s forwards;
+}
+
+/* ========================================
+   KEYFRAME ANIMATIONS
+   ======================================== */
+
+/* Title glow — deep crimson charge */
+@keyframes titleGlow {
+  0%, 100% {
+    text-shadow: 0 0 60px rgba(194, 52, 77, 0.18), 0 5px 30px rgba(0, 0, 0, 0.95);
+  }
+  50% {
+    text-shadow: 0 0 80px rgba(194, 52, 77, 0.26), 0 5px 40px rgba(0, 0, 0, 0.95);
+  }
+}
+
+/* Grid scroll animation */
+@keyframes gridScroll {
+  0% { background-position: 0 0; }
+  100% { background-position: 60px 60px; }
+}
+
+@keyframes gridMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 60px 60px; }
+}
+
+/* Word-by-word writing reveal — clip-path sweeps left→right */
+@keyframes wordWrite {
+  from { clip-path: inset(0 100% 0 0); opacity: 1; }
+  to   { clip-path: inset(0 0% 0 0);   opacity: 1; }
+}
+@keyframes heroLineReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+    filter: blur(12px);
+    clip-path: inset(0 100% 0 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+    clip-path: inset(0 0% 0 0);
+  }
+}
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+@keyframes cursorFade {
+  to { opacity: 0; }
+}
+
+/* Boot log line entrance — staggered terminal initialization */
+@keyframes bootLineIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ──────────────────────────────────────────────────────────
+   INSTITUTIONAL BUTTONS — precision instrument controls
+   Primary: crimson (critical action)  |  Secondary: cyan (alt)
+   ────────────────────────────────────────────────────────── */
+
+.btn-intel-primary,
+.btn-intel-secondary {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 32px;
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  border-radius: 0;
+  overflow: hidden;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 400ms cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 400ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1;
+}
+
+/* Sliding background layer (shared) */
+.btn-intel-primary::before,
+.btn-intel-secondary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-101%);
+  transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Arrow indicator (shared) */
+.btn-intel-primary::after,
+.btn-intel-secondary::after {
+  content: '→';
+  margin-left: 2px;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 350ms ease 50ms, transform 350ms cubic-bezier(0.16, 1, 0.3, 1) 50ms;
+  pointer-events: none;
+}
+
+/* ── PRIMARY: crimson — critical action ── */
+.btn-intel-primary {
+  color: #C2344D;
+  background: transparent;
+  border: 1px solid rgba(194, 52, 77, 0.42);
+  box-shadow: inset 0 1px 0 0 rgba(194, 52, 77, 0.30),
+              0 0 0 0 rgba(194, 52, 77, 0);
+}
+.btn-intel-primary::before {
+  background: linear-gradient(90deg, rgba(194,52,77,0.18) 0%, rgba(194,52,77,0.10) 55%, rgba(194,52,77,0.04) 100%);
+}
+.btn-intel-primary:hover {
+  color: #FAFAFA;
+  border-color: rgba(194, 52, 77, 0.85);
+  box-shadow: inset 0 1px 0 0 rgba(194, 52, 77, 0.70),
+              0 0 28px rgba(194, 52, 77, 0.14);
+}
+.btn-intel-primary:hover::before {
+  transform: translateX(0);
+}
+.btn-intel-primary:hover::after {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ── SECONDARY: cyan — alternate action ── */
+.btn-intel-secondary {
+  color: #8A96A8;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.10),
+              0 0 0 0 rgba(0, 200, 238, 0);
+}
+.btn-intel-secondary::before {
+  background: linear-gradient(90deg, rgba(0,200,238,0.10) 0%, rgba(0,200,238,0.05) 55%, rgba(0,200,238,0.02) 100%);
+}
+.btn-intel-secondary:hover {
+  color: #E4EAF0;
+  border-color: rgba(0, 200, 238, 0.55);
+  box-shadow: inset 0 1px 0 0 rgba(0, 200, 238, 0.45),
+              0 0 28px rgba(0, 200, 238, 0.10);
+}
+.btn-intel-secondary:hover::before {
+  transform: translateX(0);
+}
+.btn-intel-secondary:hover::after {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.hero-statement {
+  position: relative;
+  pointer-events: none;
+}
+
+.hero-statement::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -16px;
+  width: min(360px, 58vw);
+  height: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, transparent, rgba(194, 52, 77, 0.58), rgba(0, 200, 238, 0.22), transparent);
+  box-shadow: 0 0 24px rgba(194, 52, 77, 0.14);
+  pointer-events: none;
+}
+
+.hero-statement-stack {
+  display: grid;
+  justify-items: center;
+  gap: clamp(0.58rem, 1.2vw, 0.95rem);
+  width: 100%;
+  text-align: center;
+  pointer-events: none;
+}
+
+.hero-terminal-gate > span {
+  pointer-events: none;
+}
+
+[data-click-surface="home"] a span,
+[data-click-surface="home"] a svg,
+[data-click-surface="home"] button span,
+[data-click-surface="home"] button svg {
+  pointer-events: none;
+}
+
+.hero-signal-strip span {
+  position: relative;
+}
+
+.hero-signal-strip span:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: -0.55rem;
+  top: 50%;
+  width: 3px;
+  height: 3px;
+  transform: translateY(-50%) rotate(45deg);
+  background: rgba(194, 52, 77, 0.68);
+  box-shadow: 0 0 12px rgba(194, 52, 77, 0.3);
+}
+
+.hero-statement-line-workspace strong {
+  color: #FFFFFF;
+  font-weight: 820;
+  text-shadow: 0 0 22px rgba(0, 200, 238, 0.14);
+}
+
+.hero-typing-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.15em;
+  margin-left: 0.28em;
+  transform: translateY(0.18em);
+  background: #C2344D;
+  box-shadow: 0 0 18px rgba(194, 52, 77, 0.58);
+  animation: cursorBlink 1.05s steps(2, jump-none) infinite;
+}
+
+@media (max-width: 639px) {
+  .hero-statement {
+    max-width: 100%;
+  }
+
+  .hero-statement::before {
+    top: -12px;
+    width: min(260px, 70vw);
+  }
+
+  .hero-statement-stack {
+    gap: 0.68rem;
+  }
+
+  .hero-statement-line-muted,
+  .hero-statement-line-workspace,
+  .hero-signal-strip span:not(:last-child)::after {
+    right: -0.42rem;
+    width: 2px;
+    height: 2px;
+  }
+}
+
+/* Responsive typewriter text — readability on small screens */
+@media (max-width: 639px) {
+  .hero-typewriter-text {
+    font-size: clamp(0.82rem, 2.2vw, 0.95rem) !important;
+    font-weight: 400 !important;
+    letter-spacing: 0.04em !important;
+    line-height: 1.55 !important;
+  }
+}
+
+@media (max-width: 374px) {
+  .hero-typewriter-text {
+    font-size: 0.78rem !important;
+    letter-spacing: 0.02em !important;
+  }
+}
+
+@media (min-width: 1920px) {
+  .hero-typewriter-text {
+    font-size: clamp(0.92rem, 0.95vw, 1.25rem) !important;
+    line-height: 1.7 !important;
+  }
+}
+
+@media (min-width: 2560px) {
+  .hero-typewriter-text {
+    font-size: clamp(1rem, 0.85vw, 1.45rem) !important;
+    line-height: 1.75 !important;
+  }
+}
+
+@media (min-width: 3840px) {
+  .hero-typewriter-text {
+    font-size: clamp(1.05rem, 0.75vw, 1.7rem) !important;
+    line-height: 1.8 !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-typing-cursor {
+    animation: none;
+    opacity: 0.75;
+  }
+}
+
+/* Mobile: full-width buttons with proper touch targets */
+@media (max-width: 639px) {
+  .btn-intel-primary,
+  .btn-intel-secondary {
+    min-height: 44px;
+    width: 100%;
+    max-width: 320px;
+    justify-content: center;
+    padding: 10px 16px;
+  }
+}
+
+/* Large-monitor button scaling */
+@media (min-width: 1920px) {
+  .btn-intel-primary,
+  .btn-intel-secondary {
+    font-size: 12px;
+    padding: 16px 40px;
+  }
+}
+
+@media (min-width: 2560px) {
+  .btn-intel-primary,
+  .btn-intel-secondary {
+    font-size: 13px;
+    padding: 18px 48px;
+    letter-spacing: 0.26em;
+  }
+}
+
+@media (min-width: 3840px) {
+  .btn-intel-primary,
+  .btn-intel-secondary {
+    font-size: 15px;
+    padding: 22px 60px;
+    letter-spacing: 0.28em;
+  }
+}
+
+/* System card — institutional panel, sharp geometry */
+/* Fade-in animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Shimmer / light sweep effect */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+/* Horizontal scan line */
+@keyframes scanLine {
+  0% { left: -20%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { left: 120%; opacity: 0; }
+}
+
+/* Orbital spin */
+@keyframes orbitalSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orbitalSpinReverse {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+/* Vertical scan line sweeping from top to bottom (for featured cards) */
+@keyframes scanDown {
+  0%   { top: -3px; opacity: 0; }
+  4%   { opacity: 1; }
+  96%  { opacity: 1; }
+  100% { top: calc(100% + 3px); opacity: 0; }
+}
+
+/* Terminal cursor blink */
+@keyframes terminalBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.animate-blink {
+  animation: terminalBlink 1s step-end infinite;
+}
+
+/* Gentle float */
+@keyframes floatGentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* Data stream vertical */
+@keyframes dataStreamDown {
+  0% { transform: translateY(-100%); opacity: 0; }
+  10% { opacity: 0.3; }
+  90% { opacity: 0.3; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+
+/* Ticker horizontal scroll */
+@keyframes tickerScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Oscilloscope waveform scroll */
+@keyframes oscScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Signal cell update flash */
+@keyframes cellFlash {
+  0%   { background-color: transparent; }
+  15%  { background-color: rgba(194,52,77,0.06); }
+  100% { background-color: transparent; }
+}
+
+/* Terminal line appear */
+@keyframes terminalLine {
+  from { opacity: 0; transform: translateX(-4px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Drift float for decorative elements */
+@keyframes driftY {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-6px); }
+}
+
+/* Card scan-line sweep */
+@keyframes cardScan {
+  0%   { left: -15%; opacity: 0; }
+  5%   { opacity: 1; }
+  95%  { opacity: 1; }
+  100% { left: 115%; opacity: 0; }
+}
+
+/* Pipeline flow — connected node indicator */
+@keyframes pipelineFlow {
+  0%   { opacity: 0.15; }
+  50%  { opacity: 0.6; }
+  100% { opacity: 0.15; }
+}
+
+/* Reveal width from center */
+@keyframes revealWidth {
+  from { width: 0; opacity: 0; }
+  to { width: 100%; opacity: 1; }
+}
+
+/* Subtle glitch flicker */
+@keyframes subtleFlicker {
+  0%, 97%, 100% { opacity: 1; }
+  98% { opacity: 0.85; }
+  99% { opacity: 0.92; }
+}
+
+/* Stagger entrance for lists */
+@keyframes staggerIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Scanline */
+@keyframes scanline {
+  0% { background-position: 0 0, 0 0, -100% 0, 0 0; }
+  100% { background-position: 0 0, 0 0, 100% 0, 0 0; }
+}
+
+/* Background gradient radial utility */
+@layer utilities {
+  .bg-gradient-radial {
+    background-image: radial-gradient(var(--tw-gradient-stops));
+  }
+}
+
+/* ========================================
+   INSTITUTIONAL TERMINAL ENHANCEMENTS
+   ======================================== */
+
+/* Micro-Grid Background Pattern */
+/* body::after micro-grid removed — grid is now in the ambient JSX layer */
+
+/* Glassmorphism Cards */
+/* Skeleton Loader */
+/* Data Stream Animation */
+@keyframes data-stream {
+  0% { transform: translateY(-100%); opacity: 0; }
+  10% { opacity: 0.5; }
+  90% { opacity: 0.5; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+
+/* Terminal Text Effects */
+/* Gradient Borders */
+/* Smooth Transitions */
+/* Card Elevation Levels */
+/* Responsive Typography */
+/* Table Enhancements */
+table { border-collapse: separate; border-spacing: 0; }
+
+thead {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+tbody tr {
+  transition: all 0.2s ease;
+}
+
+tbody tr:hover {
+  background-color: rgba(194, 52, 77, 0.02);
+  transform: scale(1.002);
+}
+
+/* Loading States */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Bento Grid Utilities */
+/* Chart Tooltips */
+/* Card light sweep effect on hover */
+/* Accessibility — precise 1px focus ring */
+:focus-visible {
+  outline: 1px solid rgba(194, 52, 77, 0.60);
+  outline-offset: 2px;
+}
+/* Suppress ALL browser default focus outlines on interactive divs/buttons */
+[role="button"]:focus,
+[role="button"]:focus-visible,
+div:focus:not(:focus-visible),
+button:focus:not(:focus-visible) {
+  outline: none !important;
+  box-shadow: none;
+}
+
+/* Panel card active state — subtle bg shift, no outline */
+/* Performance Optimizations */
+/* GPU-accelerated rendering for smooth animations */
+/* Crisp SVG & icon rendering */
+svg {
+  shape-rendering: geometricPrecision;
+}
+
+/* High-quality image scaling */
+img {
+  image-rendering: auto;
+  -ms-interpolation-mode: bicubic;
+}
+
+/* Subpixel font rendering for headings */
+h1, h2, h3, h4, h5, h6 {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Hero section — stable mobile viewport height.
+   Avoid 100dvh on small screens because browser chrome resizing during scroll
+   changes section height and can make the page appear to snap. */
+.hero-min-height {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+@media (min-width: 769px) {
+  .hero-min-height {
+    min-height: 100dvh;
+  }
+}
+
+/* Hero orbital rings — scale with viewport */
+.hero-orbital-1 {
+  width: min(1100px, 92vw);
+  height: min(1100px, 92vw);
+}
+
+.hero-orbital-2 {
+  width: min(760px, 68vw);
+  height: min(760px, 68vw);
+}
+
+@media (min-width: 1920px) {
+  .hero-orbital-1 {
+    width: min(1400px, 85vw);
+    height: min(1400px, 85vw);
+  }
+  .hero-orbital-2 {
+    width: min(1000px, 60vw);
+    height: min(1000px, 60vw);
+  }
+}
+
+@media (min-width: 2560px) {
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .hero-orbital-1 {
+    width: min(1800px, 80vw);
+    height: min(1800px, 80vw);
+  }
+  .hero-orbital-2 {
+    width: min(1300px, 55vw);
+    height: min(1300px, 55vw);
+  }
+}
+
+@media (min-width: 3840px) {
+  .hero-orbital-1 {
+    width: min(2400px, 75vw);
+    height: min(2400px, 75vw);
+  }
+  .hero-orbital-2 {
+    width: min(1700px, 50vw);
+    height: min(1700px, 50vw);
+  }
+}
+
+/* Module card clickable wrapper */
+/* ═══════════════════════════════════════════════════════════
+   NOVRIX INSTITUTIONAL FINE DETAILS
+   The micro-decisions that create authority.
+   ═══════════════════════════════════════════════════════════ */
+
+/* Text selection \u2014 NOVRIX brand red highlight */
+::selection {
+  background: rgba(194, 52, 77, 0.25);
+  color: #FAFAFA;
+}
+
+/* HR dividers \u2014 structural, never decorative */
+hr {
+  border: none;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Headings \u2014 irradiation-corrected weight for dark backgrounds */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-inter), sans-serif;
+  font-weight: 600;
+  color: var(--text-heading);
+  letter-spacing: -0.03em;
+  font-feature-settings: 'tnum' 1, 'zero' 1;
+  line-height: 1.1;
+}
+
+/* Section identifier labels */
+/* Institutional card \u2014 canonical component */
+/* tbody hover: remove red tint from previous system */
+tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.02);
+  transform: none;
+}
+
+/* Professional micro-interactions */
+/* ═══════════════════════════════════════════════════════════
+   CONTAINER QUERIES — components respond to their own width
+   ═══════════════════════════════════════════════════════════ */
+
+@container (min-width: 480px) {
+  .cq-grid-2 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@container (min-width: 720px) {
+  .cq-grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .cq-grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .cq-flex-row { flex-direction: row; }
+}
+
+@container (min-width: 960px) {
+  .cq-grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .cq-grid-12 { grid-template-columns: repeat(12, 1fr); }
+}
+
+/* Container query utility for cards */
+.cq-card-container {
+  container-type: inline-size;
+  container-name: card;
+}
+
+@container card (min-width: 400px) {
+  .cq-card-heading { font-size: clamp(1.6rem, 1rem + 2cqw, 2.5rem); }
+  .cq-card-padding { padding: clamp(1.5rem, 1rem + 2cqw, 3rem); }
+}
+
+@container card (min-width: 600px) {
+  .cq-card-heading { font-size: clamp(1.8rem, 1rem + 2.5cqw, 3.5rem); }
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  body::after { background-size: 15px 15px; }
+
+}
+
+.scroll-stable-motion,
+.scroll-stable-motion .module-card {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+@media (max-width: 768px), (pointer: coarse) {
+  .scroll-stable-motion,
+  .scroll-stable-motion .module-card {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ========================================
+   DESK CARD — static CSS replacing styled-jsx
+   Uses CSS custom property --accent set inline per card.
+   ======================================== */
+
+.desk-card {
+  --accent: #C2344D;
+}
+
+@keyframes deskBorderPulse {
+  0%, 100% {
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 33%, transparent),
+                0 0 60px color-mix(in srgb, var(--accent) 13%, transparent),
+                0 0 120px color-mix(in srgb, var(--accent) 7%, transparent);
+  }
+  50% {
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 47%, transparent),
+                0 0 80px color-mix(in srgb, var(--accent) 21%, transparent),
+                0 0 140px color-mix(in srgb, var(--accent) 13%, transparent);
+  }
+}
+
+@keyframes deskTraceH { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+@keyframes deskTraceV { from { transform: translateY(-100%); } to { transform: translateY(100%); } }
+@keyframes deskTraceHRev { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+@keyframes deskTraceVRev { from { transform: translateY(100%); } to { transform: translateY(-100%); } }
+@keyframes deskScanSweep { from { transform: translateY(-100%); } to { transform: translateY(calc(100% + 400px)); } }
+
+.desk-card .border-trace-h { animation: deskTraceH 1.5s linear infinite; }
+.desk-card .border-trace-v { animation: deskTraceV 1.5s linear infinite 0.375s; }
+.desk-card .border-trace-h-rev { animation: deskTraceHRev 1.5s linear infinite 0.75s; }
+.desk-card .border-trace-v-rev { animation: deskTraceVRev 1.5s linear infinite 1.125s; }
+.desk-card .card-scanline div { animation: deskScanSweep 2s linear infinite; }
+.desk-card:hover .card-title { text-shadow: 0 0 20px color-mix(in srgb, var(--accent) 19%, transparent); }
+
+.desk-card-glow {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 33%, transparent),
+              0 0 60px color-mix(in srgb, var(--accent) 13%, transparent),
+              0 0 120px color-mix(in srgb, var(--accent) 7%, transparent);
+}
+
+.desk-card-powerline {
+  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--accent) 40%, transparent), color-mix(in srgb, var(--accent) 53%, transparent), color-mix(in srgb, var(--accent) 40%, transparent), transparent);
+}
+
+.desk-card-scanline {
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 19%, transparent), color-mix(in srgb, var(--accent) 31%, transparent), color-mix(in srgb, var(--accent) 19%, transparent), transparent);
+}
+
+.desk-card-topline {
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 67%, transparent), transparent);
+}
+
+.desk-card-dot {
+  background: var(--accent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 53%, transparent);
+}
+
+.desk-card-label {
+  color: var(--accent);
+}
+
+.desk-card-separator {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 20%, transparent), transparent);
+}
+
+.desk-card-note-border {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 33%, transparent), transparent);
+}
+
+.desk-card-btn {
+  color: #E0E4EA;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.desk-card-btn:hover {
+  color: #FFFFFF;
+  background: color-mix(in srgb, var(--accent) 13%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 47%, transparent);
+  box-shadow: 0 0 28px color-mix(in srgb, var(--accent) 27%, transparent),
+              0 0 56px color-mix(in srgb, var(--accent) 13%, transparent),
+              inset 0 1px 0 color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+/* ========================================
+   GSAP PERFORMANCE LAYER
+   ======================================== */
+
+/* GPU-accelerated elements animated by GSAP */
+.hero-line-1,
+.hero-line-2,
+.hero-badge,
+.hero-dash,
+.hero-subtitle,
+.hero-desc,
+.hero-badge-item,
+.hero-cta,
+.hero-metrics,
+.hero-metric-item,
+.hero-corner,
+.hero-content,
+.whale-canvas,
+.module-card,
+.modules-title,
+.modules-label,
+.modules-desc,
+.system-terminal {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Per-character kinetic animation targets */
+.kinetic-text-shell {
+  opacity: 1;
+  visibility: visible;
+}
+
+html.novrix-kinetic-mounted .kinetic-text-shell {
+  animation: none;
+  visibility: visible;
+}
+
+@keyframes kineticInitialReveal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.kinetic-char {
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  pointer-events: none;
+}
+
+/* Separator lines animated via scaleX */
+.hero-separator-line,
+.modules-line {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Clip-path animated elements */
+.system-terminal,
+[style*="clipPath"] {
+  will-change: clip-path, transform, opacity;
+}
+
+/* Initial HTML renders scramble glyphs so the hero is never blank. */
+.hero-line-1 .kinetic-char,
+.hero-line-2 .kinetic-char {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Kinetic title — calibrated depth shadows */
+.hero-line-2 .kinetic-char {
+  text-shadow:
+    0 1px 0 rgba(154, 34, 56, 0.55),
+    0 2px 0 rgba(120, 24, 44, 0.30),
+    0 4px 8px rgba(0, 0, 0, 0.40),
+    0 0 60px rgba(194, 52, 77, 0.20);
+}
+
+.hero-line-1 .kinetic-char {
+  text-shadow:
+    0 1px 0 rgba(100, 130, 160, 0.22),
+    0 2px 0 rgba(70, 100, 130, 0.12),
+    0 4px 6px rgba(0, 0, 0, 0.30);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PERFORMANCE — content-visibility for below-fold sections
+   ═══════════════════════════════════════════════════════════ */
+.content-visibility-auto {
+  content-visibility: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .content-visibility-auto {
+    content-visibility: visible;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CSS CONTAINMENT — isolate layout/paint/style per section
+   Prevents style recalculation from spilling across the
+   document boundary. Applied to major page sections.
+   ═══════════════════════════════════════════════════════════ */
+.section-contained {
+  contain: layout style paint;
+}
+
+/* Hero container — the most critical scroll-linked area */
+.hero-contained {
+  contain: layout style;
+}

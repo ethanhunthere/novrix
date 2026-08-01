@@ -1,0 +1,22 @@
+name = "novrix-fred-cron"
+main = "index.ts"
+compatibility_date = "2026-02-04"
+
+[triggers]
+# 07:00 UTC — FRED macro indicators (46 series)
+# Runs after sentiment-cron passes to avoid competing for subrequest budget.
+# 46 FRED fetch calls < 50 subrequest/invocation limit  ✓
+crons = ["0 7 * * *"]
+
+# Secrets are set via:
+#   wrangler secret put FRED_API_KEY --name novrix-fred-cron
+
+[[d1_databases]]
+binding = "DB"
+database_name = "novrix-sentiment-db"
+database_id = "cf90cd09-caa0-4443-9d9b-5e5c32e734b9"
+
+[[d1_databases]]
+binding = "AUTH_DB"
+database_name = "novrix-auth-db"
+database_id = "45af0302-4c6b-47df-a08b-9ae2b6ae2260"

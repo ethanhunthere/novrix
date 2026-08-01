@@ -1,0 +1,127 @@
+# =============================================================================
+# Cloudflare Pages — Response Headers
+#
+# Order matters: more-specific paths win. The `/*` block applies to every
+# response and sets the security baseline; per-path blocks below tune cache.
+#
+# CSP rationale:
+#   - default-src 'self' covers the static export.
+#   - script-src 'self' 'unsafe-inline' is required because Next.js inlines
+#     a small bootstrap script in <head>; without 'unsafe-inline' the page
+#     errors. We do NOT permit external script origins. If you ever ship a
+#     nonce/hash-based CSP, drop 'unsafe-inline'.
+#   - style-src 'self' 'unsafe-inline' is required by Tailwind and styled
+#     library components. Drop 'unsafe-inline' once those move to nonces.
+#   - img-src allows https: + data: so charts and remote OG images render.
+#   - connect-src 'self' covers same-origin /api/* and Cloudflare Pages
+#     analytics. If you add 3rd-party APIs (e.g. CMC public widgets),
+#     extend this list — never use *.
+#   - frame-ancestors 'none' is the modern equivalent of X-Frame-Options DENY.
+# =============================================================================
+
+/*
+  # Force HTTPS for two years; submit-able to the HSTS preload list.
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+
+  # Block content-type sniffing — required for safe MIME enforcement.
+  X-Content-Type-Options: nosniff
+
+  # No legacy XSS filter (modern browsers ignore it; some are buggy).
+  X-XSS-Protection: 0
+
+  # Click-jacking defense.
+  X-Frame-Options: DENY
+
+  # Cross-origin isolation — friendlier than COEP for a static site.
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: same-origin
+
+  # Privacy: only send Origin (no path/query) on cross-origin requests.
+  Referrer-Policy: strict-origin-when-cross-origin
+
+  # Disable browser features the app does not use.
+  Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), interest-cohort=()
+
+  # Content Security Policy — see header for rationale.
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.gstatic.com data:; img-src 'self' data: blob: https:; media-src 'self' https:; connect-src 'self' https://cloudflareinsights.com https://api.coingecko.com https://api.coinmarketcap.com https://api.alternative.me https://charts.bgeometrics.com https://api.bgeometrics.com https://api.stlouisfed.org https://api.llama.fi https://stablecoins.llama.fi https://yields.llama.fi https://api.dexpaprika.com https://api.coinpaprika.com https://api.binance.com https://fapi.binance.com https://mainnet.helius-rpc.com https://rpc.ankr.com https://api.trongrid.io https://api.blockchair.com https://mempool.space https://api.etherscan.io https://api.ethplorer.io https://api.basescan.org https://api.arbiscan.io https://api.polygonscan.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests
+
+  # HTML shell cache — static export, data is fetched client-side.
+  # Edge caches the HTML for 5 min; serves stale up to 1 hr while revalidating.
+  # Browser never caches (max-age=0) so back/forward always gets fresh shell.
+  Cache-Control: public, max-age=0, s-maxage=300, stale-while-revalidate=3600
+
+# =============================================================================
+# Static assets — immutable content-hashed files
+# =============================================================================
+
+# Content-hashed Next.js chunks → cache forever (immutable).
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# =============================================================================
+# Images — brand assets that rarely change
+# =============================================================================
+
+# Social preview image — cache 1 hour, serve stale 24 hours.
+/novrix-preview.png
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+/og-image.png
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+# Favicon — cache 7 days, serve stale 30 days.
+/favicon.ico
+  Cache-Control: public, max-age=604800, stale-while-revalidate=2592000
+
+# Search-engine verification files — never change.
+/yandex_*.html
+  Cache-Control: public, max-age=31536000, immutable
+
+# =============================================================================
+# SEO files — build artifacts that change only on deploy
+# =============================================================================
+
+/robots.txt
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/sitemap.xml
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+# AI context files — cache 1 hour, stale 1 week
+/llms.txt
+  Cache-Control: public, max-age=3600, stale-while-revalidate=604800
+  Content-Type: text/plain; charset=utf-8
+
+/ai.txt
+  Cache-Control: public, max-age=3600, stale-while-revalidate=604800
+  Content-Type: text/plain; charset=utf-8
+
+# =============================================================================
+# API edge cache — read-only public feeds.
+# Cloudflare CDN caches the response for `s-maxage`, then keeps serving the
+# stale value for `stale-while-revalidate` while it refreshes in background.
+# Browsers do not cache (max-age=0) so user-specific data is never stale.
+# Auth endpoints opt out below.
+# =============================================================================
+
+# Default API fallback — most routes set their own headers; this catches
+# anything that forgets. 5 min edge is safe for read-only indicator data.
+/api/*
+  Cache-Control: public, max-age=0, s-maxage=300, stale-while-revalidate=900
+
+# Auth endpoints must never cache.
+/api/auth/*
+  Cache-Control: no-store, no-cache, must-revalidate
+  Pragma: no-cache
+
+# Address/tracking lookups: per-address payloads are stable for ~5 minutes.
+/api/address/*
+  Cache-Control: public, max-age=0, s-maxage=300, stale-while-revalidate=900
+
+# News feed updates frequently enough that 30s is the right ceiling.
+/api/news/*
+  Cache-Control: public, max-age=0, s-maxage=30, stale-while-revalidate=300
+
+# Macroeconomic series (FRED) updates daily at most.
+/api/fred-*
+  Cache-Control: public, max-age=0, s-maxage=900, stale-while-revalidate=3600

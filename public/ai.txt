@@ -1,0 +1,33 @@
+# AI Crawler Access Policy
+
+This file defines access rules for AI crawlers, LLM training bots, and search agents.
+
+## Allowed Crawlers
+
+The following AI crawlers are permitted to access all public content on novrix.io:
+
+- GPTBot (OpenAI)
+- ChatGPT-User (OpenAI)
+- Claude-Web (Anthropic)
+- anthropic-ai (Anthropic)
+- PerplexityBot (Perplexity)
+- Google-Extended (Google)
+- Applebot-Extended (Apple)
+- BingPreview (Microsoft)
+- OAI-SearchBot (OpenAI)
+
+## Access Rules
+
+- **Allow**: All public pages and content
+- **Disallow**: /admin/ and /api/auth/ (sensitive/administrative paths)
+- **Crawl-delay**: None (respect standard rate limits)
+
+## Resources
+
+- Site overview for LLMs: https://novrix.io/llms.txt
+- Sitemap: https://novrix.io/sitemap.xml
+- Robots.txt: https://novrix.io/robots.txt
+
+## Contact
+
+For questions about crawler access or data usage, contact: contact@novrix.io

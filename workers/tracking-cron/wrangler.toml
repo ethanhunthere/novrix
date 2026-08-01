@@ -1,0 +1,16 @@
+name = "novrix-tracking-cron"
+main = "index.ts"
+compatibility_date = "2026-02-04"
+
+[triggers]
+crons = ["*/15 * * * *"]
+
+[[d1_databases]]
+binding = "TRACKING_DB"
+database_name = "novrix-tracking-db"
+database_id = "0b777d60-7aa5-4cd6-a7e4-befb333f7fe5"
+
+[[d1_databases]]
+binding = "INSIGHTS_DB"
+database_name = "novrix-insights-db"
+database_id = "7ed21350-ce94-4fd8-83db-5477804ec20c"

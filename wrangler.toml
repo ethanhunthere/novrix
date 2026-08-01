@@ -1,0 +1,59 @@
+name = "novrix"
+
+compatibility_date = "2026-02-04"
+
+pages_build_output_dir = "out"
+
+# ========================================
+# RUNTIME SECRETS — DO NOT COMMIT
+# ========================================
+# All API keys, admin secrets, and the auth pepper are stored as
+# Cloudflare Pages secrets, NOT in this file. The committed values that
+# previously lived here have been rotated.
+#
+# Set or rotate with:
+#   wrangler pages secret put FRED_API_KEY            --project-name novrixhere
+#   wrangler pages secret put BGEOMETRICS_API_KEY     --project-name novrixhere
+#   wrangler pages secret put BGEOMETRICS_API_KEY_2   --project-name novrixhere
+#   wrangler pages secret put BGEOMETRICS_API_KEY_3   --project-name novrixhere
+#   wrangler pages secret put BGEOMETRICS_API_KEY_4   --project-name novrixhere
+#   wrangler pages secret put BGEOMETRICS_API_KEY_5   --project-name novrixhere
+#   wrangler pages secret put AUTH_PEPPER             --project-name novrixhere
+#   wrangler pages secret put POST_ADMIN_SECRET       --project-name novrixhere
+#   wrangler pages secret put SEED_ADMIN_SECRET       --project-name novrixhere
+#
+# Non-secret config (e.g. allow-listed origins) may live here:
+[vars]
+ALLOWED_ORIGIN = "https://novrix.io,https://www.novrix.io,https://novrixhere.pages.dev"
+
+# ========================================
+# D1 DATABASE CONFIGURATION
+# ========================================
+# After creating your D1 database, update the database_id below
+# Run: npx wrangler d1 create novrix-sentiment-db
+# Then copy the database_id from the output
+
+[[d1_databases]]
+binding = "DB" # Available in your Worker as env.DB
+database_name = "novrix-sentiment-db"
+database_id = "cf90cd09-caa0-4443-9d9b-5e5c32e734b9"
+
+[[d1_databases]]
+binding = "AUTH_DB" # Available in Pages Functions as env.AUTH_DB
+database_name = "novrix-auth-db"
+database_id = "45af0302-4c6b-47df-a08b-9ae2b6ae2260"
+
+[[d1_databases]]
+binding = "INSIGHTS_DB" # Available in Pages Functions as env.INSIGHTS_DB
+database_name = "novrix-insights-db"
+database_id = "7ed21350-ce94-4fd8-83db-5477804ec20c"
+
+[[d1_databases]]
+binding = "TRACKING_DB" # Available in Pages Functions as env.TRACKING_DB
+database_name = "novrix-tracking-db"
+database_id = "0b777d60-7aa5-4cd6-a7e4-befb333f7fe5"
+
+[[d1_databases]]
+binding = "METRILYTICS_DB" # Available in Pages Functions as env.METRILYTICS_DB
+database_name = "novrix-metrilytics-db"
+database_id = "81ae6b08-4134-43b3-9d04-cf0db157bb08"

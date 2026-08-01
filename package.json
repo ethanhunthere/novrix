@@ -1,0 +1,56 @@
+{
+  "name": "novrix-terminal",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "dev:cf": "next build --webpack && npx wrangler pages dev out/",
+    "build": "NODE_OPTIONS=--max-old-space-size=4096 next build --webpack",
+    "build:turbo": "next build --turbopack",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "typecheck:functions": "tsc -p functions/tsconfig.json --noEmit",
+    "typecheck:workers": "tsc -p workers/tsconfig.json --noEmit",
+    "typecheck:all": "npm run typecheck && npm run typecheck:functions && npm run typecheck:workers",
+    "deploy": "NODE_OPTIONS=--max-old-space-size=4096 next build --webpack && npx wrangler pages deploy out/ --project-name=novrixhere --branch=main",
+    "db:migrate": "echo \"Run a targeted migration: npx wrangler d1 execute <database-name> --remote --file=database/migrations/<database-folder>/<file>.sql\""
+  },
+  "engines": {
+    "node": ">=22.13.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@11.1.1",
+  "dependencies": {
+    "@gsap/react": "^2.1.2",
+    "framer-motion": "^12.38.0",
+    "gsap": "^3.15.0",
+    "modern-screenshot": "^4.7.0",
+    "next": "16.2.6",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "recharts": "^3.8.1",
+    "zod": "^4.4.3"
+  },
+  "browserslist": [
+    "> 0.5%",
+    "last 2 versions",
+    "not dead",
+    "not IE 11",
+    "not op_mini all"
+  ],
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260511.1",
+    "@tailwindcss/postcss": "^4.3.0",
+    "@types/node": "^20",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "babel-plugin-react-compiler": "19.0.0-beta-af1b7da-20250417",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.6",
+    "png-to-ico": "^3.0.2",
+    "sharp": "^0.35.3",
+    "tailwindcss": "^4.3.0",
+    "typescript": "^5"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    // Non-breaking strict subset — forbids the most accident-prone patterns
+    // without forcing a refactor of the existing 6 KLOC sentiment page.
+    // NOTE: `noImplicitReturns` is intentionally *off* in the root config
+    // because many useEffect cleanup callbacks rely on the implicit
+    // `undefined` return for the no-cleanup branch. It is enabled in
+    // functions/ and workers/ where the surface area is smaller.
+    "useUnknownInCatchVariables": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "esModuleInterop": true,
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "incremental": true
+  },
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "**/*.mts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "functions",
+    "workers",
+    "scripts"
+  ]
+}

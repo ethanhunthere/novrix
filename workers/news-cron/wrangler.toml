@@ -1,0 +1,13 @@
+name = "novrix-news-cron"
+main = "index.ts"
+compatibility_date = "2026-02-04"
+
+[triggers]
+# Every 1 minute — tiered incremental fetch (HIGH: 60s, MED: 5m, LOW: 15m)
+crons = ["* * * * *"]
+
+
+[[d1_databases]]
+binding = "INSIGHTS_DB"
+database_name = "novrix-insights-db"
+database_id = "7ed21350-ce94-4fd8-83db-5477804ec20c"

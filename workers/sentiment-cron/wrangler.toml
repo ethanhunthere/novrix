@@ -1,0 +1,25 @@
+name = "novrix-sentiment-cron"
+main = "index.ts"
+compatibility_date = "2026-02-04"
+
+[triggers]
+# One cron expression fires hourly from 06:00-23:00 UTC. The worker maps each
+# hour to a fixed 3-job BGeometrics API slot. With one retry per job, scheduled
+# work stays at <=6 requests/hour, below the 8-request rolling hourly cap.
+#
+# FRED (46 series) runs separately in workers/fred-cron at 07:00 UTC.
+crons = ["0 6-23 * * *"]
+
+# Secrets are set via:
+#   wrangler secret put BGEOMETRICS_API_KEY   --name novrix-sentiment-cron
+#   wrangler secret put BGEOMETRICS_API_KEY_2 --name novrix-sentiment-cron
+#   wrangler secret put BGEOMETRICS_API_KEY_3 --name novrix-sentiment-cron
+#   wrangler secret put BGEOMETRICS_API_KEY_4 --name novrix-sentiment-cron
+#   wrangler secret put BGEOMETRICS_API_KEY_5 --name novrix-sentiment-cron
+#   wrangler secret put RESEARCH_BTC_API_KEY   --name novrix-sentiment-cron
+#   wrangler secret put CMC_API_KEY           --name novrix-sentiment-cron
+
+[[d1_databases]]
+binding = "DB"
+database_name = "novrix-sentiment-db"
+database_id = "cf90cd09-caa0-4443-9d9b-5e5c32e734b9"

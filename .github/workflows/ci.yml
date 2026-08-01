@@ -1,0 +1,97 @@
+# GitHub Actions CI for NOVRIX
+#
+# Runs on every PR + push to main:
+#   1. Install dependencies (npm ci, frozen lockfile)
+#   2. Lint (eslint)
+#   3. Typecheck — three projects: app, functions, workers
+#   4. Build (next build, static export)
+#
+# Tests are intentionally absent — the project ships no test runner today.
+# Once a runner is added (vitest recommended), insert a `npm test` step
+# between typecheck and build.
+#
+# Deploys: the frontend/Pages Functions are still deployed by the Cloudflare
+# Pages git integration. The standalone tracking-cron Worker is NOT covered
+# by that integration — it only ships via the deploy-tracking-cron job below,
+# which needs a CF_API_TOKEN repo secret (Workers Scripts:Edit permission).
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Cancel in-flight runs for the same ref on new pushes.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Typecheck (app)
+        run: pnpm run typecheck
+
+      - name: Typecheck (Pages Functions)
+        run: pnpm run typecheck:functions
+
+      - name: Typecheck (Workers)
+        run: pnpm run typecheck:workers
+
+      - name: Build (static export)
+        run: pnpm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: '1'
+
+  deploy-tracking-cron:
+    needs: verify
+    runs-on: ubuntu-latest
+    # Deploy the cron Worker only on main. The deploy step skips cleanly until
+    # the CF_API_TOKEN secret is configured in repo settings. (A secret check
+    # cannot live in the job-level `if` — GitHub does not allow the `secrets`
+    # context there — so the guard is a step that flags whether the token is set.)
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check CF_API_TOKEN configured
+        id: check
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+        run: |
+          if [ -z "$CF_API_TOKEN" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Deploy tracking-cron Worker
+        if: steps.check.outputs.configured == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          workingDirectory: workers/tracking-cron
+          command: deploy

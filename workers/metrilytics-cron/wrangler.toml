@@ -1,0 +1,11 @@
+name = "novrix-metrilytics-cron"
+main = "index.ts"
+compatibility_date = "2026-02-04"
+
+[triggers]
+crons = ["0 3 * * *"]
+
+[[d1_databases]]
+binding = "METRILYTICS_DB"
+database_name = "novrix-metrilytics-db"
+database_id = "81ae6b08-4134-43b3-9d04-cf0db157bb08"
