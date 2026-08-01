@@ -379,6 +379,10 @@ export const LineToggle = ({ items }: {
   </div>
 );
 
+/** Max date labels rendered on a chart's time axis. Keeping this bounded
+ *  guarantees labels never overlap and Recharts never auto-hides them. */
+const MAX_X_TICKS = 10;
+
 export const getXAxisTicks = (data: Array<{ index: number; dateObj?: Date }>, tf: string): number[] => {
   const ticks: number[] = [];
   for (let i = 0; i < data.length; i++) {
@@ -401,7 +405,16 @@ export const getXAxisTicks = (data: Array<{ index: number; dateObj?: Date }>, tf
       if (!prev || cur.getFullYear() !== prev.getFullYear()) ticks.push(i);
     }
   }
-  return ticks;
+  // Bound the tick count so labels never overlap and Recharts never auto-hides
+  // them. Without this, long timeframes (ALL/20Y) produce 20-30+ year ticks and
+  // Recharts' default interval collapses them to nothing, leaving only sparse
+  // timeframes (e.g. 10Y) with visible dates. Thinning to a fixed max keeps an
+  // even, readable date scale on every timeframe.
+  if (ticks.length <= MAX_X_TICKS) return ticks;
+  const thinned: number[] = [];
+  const step = (ticks.length - 1) / (MAX_X_TICKS - 1);
+  for (let k = 0; k < MAX_X_TICKS; k++) thinned.push(ticks[Math.round(k * step)]);
+  return thinned;
 };
 
 export const formatXAxisTick = (data: Array<{ index: number; dateObj?: Date }>, index: number, tf: string): string => {

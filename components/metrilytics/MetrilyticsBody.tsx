@@ -1340,9 +1340,8 @@ function FeesPanel({
   protocols: FeeRow[];
   loading: boolean;
 }) {
-  const [range, setRange] = useState<RangeKey>('1Y');
   const [mode, setMode] = useState<'fees' | 'revenue'>('fees');
-  const chartData = useMemo(() => filterByRange(history, range), [history, range]);
+  const chartData = useMemo(() => filterByRange(history, 'ALL'), [history]);
   const chartMode = mode === 'revenue' && chartData.every(row => !row.revenue) ? 'fees' : mode;
   const topRows = useMemo(() => {
     const key = chartMode === 'fees' ? 'daily_fees_usd' : 'daily_revenue_usd';
@@ -1357,7 +1356,6 @@ function FeesPanel({
       title="Protocol Fees and Earnings"
       note="Aggregate history sits beside the current protocol revenue stack."
       accent={accent}
-      action={<RangeControl options={['1M', '3M', '1Y', 'ALL']} value={range} onChange={setRange} />}
     >
       <div className="flex justify-end mb-4">
         <div className="flex gap-2">
@@ -1398,7 +1396,7 @@ function FeesPanel({
                   </linearGradient>
                 </defs>
                 <CartesianGrid {...gridProps} />
-                <XAxis dataKey="date" tickFormatter={fmtDateForRange(range)} tick={tickStyle} tickLine={false} axisLine={false} minTickGap={30} />
+                <XAxis dataKey="date" tickFormatter={fmtDateForRange('ALL')} tick={tickStyle} tickLine={false} axisLine={false} minTickGap={30} />
                 <YAxis tickFormatter={fmtMoney} tick={tickStyle} tickLine={false} axisLine={false} width={70} />
                 <Tooltip content={<ChartTooltip accent={accent} />} cursor={cursorProps} />
                 <Area
@@ -2213,7 +2211,6 @@ function buildIndicators(data: Partial<AllData>): IndicatorDefinition[] {
   const external = data.external ?? EMPTY_EXTERNAL_DATA;
   const chainLatest = data.chainLatest ?? [];
   const protocols = data.protocols ?? [];
-  const fees = data.fees ?? [];
   const stableSupply = data.stableSupply ?? [];
   const stableTotal = data.stableTotal ?? [];
   const dexVolumes = data.dexVolumes ?? {};
@@ -2249,8 +2246,6 @@ function buildIndicators(data: Partial<AllData>): IndicatorDefinition[] {
   const btcOiValue = latest(data.btcDerivatives ?? [])?.oi ?? parseSummaryNumber(summary, 'btc_open_interest') ?? 0;
 
   // New Combined Indicators Data
-  const highestFeeProtocol = fees.sort((a, b) => (b.daily_fees_usd ?? 0) - (a.daily_fees_usd ?? 0))[0];
-  const highestRevenueProtocol = fees.sort((a, b) => (b.daily_revenue_usd ?? 0) - (a.daily_revenue_usd ?? 0))[0];
   const topChain = [...chainLatest].filter(c => c.chain !== 'all').sort((a, b) => (b.tvl_usd ?? 0) - (a.tvl_usd ?? 0))[0];
   const topChainDominance = topChain && tvl > 0 ? (topChain.tvl_usd / tvl) * 100 : 0;
   const dailyDexVol = latestDex('all') || parseSummaryNumber(summary, 'total_dex_volume_24h');
@@ -2260,8 +2255,6 @@ function buildIndicators(data: Partial<AllData>): IndicatorDefinition[] {
   const topStableCoin = topBy(stableSupply, row => row.supply_usd, 1)[0];
   const stableDominance = stables > 0 && topStableCoin ? (topStableCoin.supply_usd / stables) * 100 : 0;
   const oiToTvlRatio = tvl > 0 ? (defiOi / tvl) * 100 : 0;
-  const totalDailyFees = latestValue(data.feeHistory ?? [], 'fees') || parseSummaryNumber(summary, 'protocol_fees_24h');
-  const annualizedFeesToTvl = tvl > 0 ? ((totalDailyFees * 365) / tvl) * 100 : 0;
   const btcEthOiRatio = ethOi > 0 ? (btcOi / ethOi) : 0;
   const topDexNetwork = [...(external.dexNetworks ?? [])].sort((a, b) => numberOrZero(b.volume_usd_24h) - numberOrZero(a.volume_usd_24h))[0];
   const yieldPoolsAbove10M = yields.filter(y => (y.tvl_usd ?? 0) > 10_000_000).length;
@@ -2289,7 +2282,6 @@ function buildIndicators(data: Partial<AllData>): IndicatorDefinition[] {
   const btc30d = return30d(data.btcPrices);
   const eth30d = return30d(data.ethPrices);
   const sol30d = return30d(data.solPrices);
-  const dailyRevenueNow = latest(data.feeHistory ?? [])?.revenue ?? parseSummaryNumber(summary, 'protocol_revenue_24h');
   const btcLsRatio = latest(data.btcDerivatives ?? [])?.ls ?? 0;
   const majorsUpCount = [btcQuote, ethQuote, solQuote].filter(q => (q.percent_change_24h ?? 0) > 0).length;
   const ethDomNow = external.tickers.ETH && totalCryptoMcap > 0 ? ((ethQuote.market_cap ?? 0) / totalCryptoMcap) * 100 : parseSummaryNumber(summary, 'eth_dominance');
@@ -2330,7 +2322,6 @@ function buildIndicators(data: Partial<AllData>): IndicatorDefinition[] {
     { id: 'eth-btc-price-ratio', name: 'ETH/BTC Ratio', category: 'Market', value: ethBtcRatio.toFixed(4), detail: 'Relative pricing strength', source: 'CoinPaprika', accent: '#A78BFA', panel: 'market-structure' },
     { id: 'stablecoin-top-dominance', name: 'Stablecoin Dominance', category: 'Stablecoins', value: stableDominance.toFixed(1) + '%', detail: topStableCoin?.symbol ?? '—', source: 'DeFiLlama', accent: GREEN, panel: 'stablecoin-float' },
     { id: 'oi-to-tvl-ratio', name: 'Derivs OI to TVL', category: 'Derivatives', value: oiToTvlRatio.toFixed(2) + '%', detail: 'Leverage relative to spot TVL', source: 'Combined', accent: '#F97316', panel: 'derivatives-risk' },
-    { id: 'fee-yield-to-tvl', name: 'Annualized Protocol APY', category: 'Protocols', value: annualizedFeesToTvl.toFixed(2) + '%', detail: 'Annual fees / Global TVL', source: 'Combined', accent: AMBER, panel: 'protocol-revenue' },
     { id: 'btc-eth-oi-ratio', name: 'BTC/ETH OI Ratio', category: 'Derivatives', value: btcEthOiRatio.toFixed(2) + 'x', detail: 'Relative open interest sizes', source: 'Binance', accent: '#F97316', panel: 'liquidations' },
     { id: 'top-dex-network-name', name: 'Top DEX Network', category: 'DEX', value: topDexNetwork?.name ?? '—', detail: fmtMoney(numberOrZero(topDexNetwork?.volume_usd_24h)) + ' 24h Vol', source: 'DexPaprika', accent: GREEN, panel: 'dex-pools' },
     { id: 'yield-pools-over-10m', name: 'Mega Pools (>$10M)', category: 'Yield', value: yieldPoolsAbove10M.toString(), detail: 'Yield pools with deep liquidity', source: 'Yields Llama', accent: '#14B8A6', panel: 'yield-market' },
@@ -2344,11 +2335,8 @@ function buildIndicators(data: Partial<AllData>): IndicatorDefinition[] {
     { id: 'alt-market-share', name: 'Alt Market Share', category: 'Sentiment', value: altSharePct.toFixed(1) + '%', detail: 'Market cap outside BTC & ETH — altseason gauge', source: 'Composite', accent: '#14B8A6', panel: 'market-structure' },
     { id: 'stable-mcap-share', name: 'Stablecoin Share of Market', category: 'Ratios', value: totalCryptoMcap > 0 ? ((stables / totalCryptoMcap) * 100).toFixed(1) + '%' : '—', detail: 'Dry powder vs total market size', source: 'Composite', accent: GREEN, panel: 'stablecoin-float' },
     { id: 'market-turnover', name: 'Market Turnover', category: 'Ratios', value: totalCryptoMcap > 0 ? ((totalCryptoVol / totalCryptoMcap) * 100).toFixed(1) + '%' : '—', detail: '24h volume vs market cap — trading intensity', source: 'Composite', accent: BLUE, panel: 'market-structure' },
-    { id: 'revenue-take-rate', name: 'Revenue Take Rate', category: 'Efficiency', value: dailyRevenueNow > 0 && totalDailyFees > 0 ? ((dailyRevenueNow / totalDailyFees) * 100).toFixed(1) + '%' : '—', detail: 'Share of user fees kept as revenue', source: 'Composite', accent: '#34D399', panel: 'protocol-revenue' },
     { id: 'tvl-weighted-apy', name: 'TVL-Weighted Avg APY', category: 'Efficiency', value: weightedApyAvg > 0 ? weightedApyAvg.toFixed(2) + '%' : '—', detail: `${yields.length} pools weighted by capital`, source: 'Composite', accent: '#14B8A6', panel: 'yield-market' },
-    { id: 'top-chain-share', name: 'Top Chain TVL Share', category: 'Concentration', value: topChainDominance > 0 ? topChainDominance.toFixed(1) + '%' : '—', detail: `${topChain?.chain ?? summary.top_chain_by_tvl ?? '—'} share of DeFi TVL`, source: 'Composite', accent: '#7DD3FC', panel: 'chain-tvl' },
-    { id: 'fee-leader', name: 'Top Protocol by Fees', category: 'Leaderboard', value: highestFeeProtocol?.protocol ?? '—', detail: `${fmtMoney(highestFeeProtocol?.daily_fees_usd ?? 0)} daily fees`, source: 'DeFiLlama', accent: AMBER, panel: 'protocol-revenue' },
-    { id: 'revenue-leader', name: 'Top Protocol by Revenue', category: 'Leaderboard', value: highestRevenueProtocol?.protocol ?? '—', detail: `${fmtMoney(highestRevenueProtocol?.daily_revenue_usd ?? 0)} daily revenue`, source: 'DeFiLlama', accent: AMBER, panel: 'protocol-revenue' }
+    { id: 'top-chain-share', name: 'Top Chain TVL Share', category: 'Concentration', value: topChainDominance > 0 ? topChainDominance.toFixed(1) + '%' : '—', detail: `${topChain?.chain ?? summary.top_chain_by_tvl ?? '—'} share of DeFi TVL`, source: 'Composite', accent: '#7DD3FC', panel: 'chain-tvl' }
   ];
 
 

@@ -359,6 +359,7 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
                     tick={{ fill: '#8AAEC8', fontSize: 12, fontFamily: 'JetBrains Mono, monospace' }}
                     ticks={getXAxisTicks(panel.data, panel.timeframe)}
                     tickFormatter={(i: number) => formatXAxisTick(panel.data, i, panel.timeframe)}
+                    interval={0}
                     height={26} />
                   <YAxis domain={['auto', 'auto']} stroke="none"
                     tick={{ fill: '#8AAEC8', fontSize: 12, fontFamily: 'JetBrains Mono, monospace' }}
