@@ -11,7 +11,7 @@ import SentimentSidebar from '@/components/sentiment/SentimentSidebar';
 import SentimentChartPanel, { type SentimentPanelConfig } from '@/components/sentiment/SentimentChartPanel';
 import {
   PanelHeader, FngTooltip, PrecisionTooltip, ChartSkeleton,
-  TF_OPTS, FRED_TF_OPTS, TfSelector, LineToggle,
+  TF_OPTS, FRED_TF_OPTS, NOVRIX_TF_OPTS, TfSelector, LineToggle,
   getXAxisTicks, formatXAxisTick, downsample,
   LiveClock, PANEL_CODES, PanelMaximizeWrapper,
   getHalvingIndices,
@@ -450,16 +450,16 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
   });
   const [maximizedPanel, setMaximizedPanel] = useState<string | null>(null);
   // NOVRIX INTELLIGENCE timeframe states
-  const [vtpxTimeframe, setVtpxTimeframe] = useState('365');
-  const [shaxTimeframe, setShaxTimeframe] = useState('365');
-  const [smfxTimeframe, setSmfxTimeframe] = useState('365');
-  const [levrTimeframe, setLevrTimeframe] = useState('365');
-  const [rcfxTimeframe, setRcfxTimeframe] = useState('365');
-  const [cprxTimeframe, setCprxTimeframe] = useState('365');
-  const [rpixTimeframe, setRpixTimeframe] = useState('365');
-  const [crrxTimeframe, setCrrxTimeframe] = useState('365');
-  const [sgrxTimeframe, setSgrxTimeframe] = useState('365');
-  const [domxTimeframe, setDomxTimeframe] = useState('365');
+  const [vtpxTimeframe, setVtpxTimeframe] = useState('3650');
+  const [shaxTimeframe, setShaxTimeframe] = useState('3650');
+  const [smfxTimeframe, setSmfxTimeframe] = useState('3650');
+  const [levrTimeframe, setLevrTimeframe] = useState('3650');
+  const [rcfxTimeframe, setRcfxTimeframe] = useState('3650');
+  const [cprxTimeframe, setCprxTimeframe] = useState('3650');
+  const [rpixTimeframe, setRpixTimeframe] = useState('3650');
+  const [crrxTimeframe, setCrrxTimeframe] = useState('3650');
+  const [sgrxTimeframe, setSgrxTimeframe] = useState('3650');
+  const [domxTimeframe, setDomxTimeframe] = useState('3650');
   const [capturedPanel, setCapturedPanel] = useState<string | null>(null);
   const [selectedIndicator, setSelectedIndicator] = useState<string | null>(null);
   const DEFAULT_OVERVIEW_IDS = useMemo(() => new Set(['indicator-fear-greed', 'indicator-nupl', 'indicator-mvrv', 'indicator-realized-price', 'indicator-sopr', 'indicator-sth-mvrv', 'indicator-hashrate', 'indicator-open-interest', 'indicator-fedfunds']), []);
@@ -1490,7 +1490,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       panelId: 'vtpx', indicatorKey: 'vtpx', code: 'VTPX', title: 'Veteran Premium', desc: 'LTH-MVRV / STH-MVRV — veteran vs tourist profitability spread', metricLabel: 'VTPX',
       id: 'indicator-vtpx', accentColor: '#FF6B35', gradientId: 'vtpxFill', tag: '', updateFreq: 'd',
       data: vtpxChartData, dataWithPrice: vtpxChartDataWithPrice, isLoading: isLthMvrvLoading || isSthMvrvLoading,
-      timeframe: vtpxTimeframe, setTimeframe: setVtpxTimeframe, zoneFn: getVtpxZone,
+      timeframe: vtpxTimeframe, setTimeframe: setVtpxTimeframe, zoneFn: getVtpxZone, tfOpts: NOVRIX_TF_OPTS,
       headerValue: (v: number) => v.toFixed(2) + 'x', tooltipValue: (v: number) => v.toFixed(3) + 'x',
       yAxisTick: (v: number) => v.toFixed(1) + 'x',
     },
@@ -1498,7 +1498,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       panelId: 'shax', indicatorKey: 'shax', code: 'SHAX', title: 'Strong-Hand Accumulation', desc: '30d Δ illiquid supply — coins gained or shed by strong hands', metricLabel: 'SHAX',
       id: 'indicator-shax', accentColor: '#FF6B35', gradientId: 'shaxFill', tag: '', updateFreq: 'd',
       data: shaxChartData, dataWithPrice: shaxChartDataWithPrice, isLoading: isIlliquidSupplyLoading,
-      timeframe: shaxTimeframe, setTimeframe: setShaxTimeframe, zoneFn: getShaxZone,
+      timeframe: shaxTimeframe, setTimeframe: setShaxTimeframe, zoneFn: getShaxZone, tfOpts: NOVRIX_TF_OPTS,
       headerValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(0)} BTC`, tooltipValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(0)} BTC`,
       yAxisTick: (v: number) => v >= 1000 ? `${(v/1000).toFixed(0)}K` : v >= -1000 ? v.toFixed(0) : `${(v/1000).toFixed(0)}K`,
     },
@@ -1506,7 +1506,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       panelId: 'smfx', indicatorKey: 'smfx', code: 'SMFX', title: 'Smart Money Flow', desc: 'LTHΔ − STHΔ 30d position — coins flowing to veterans vs tourists', metricLabel: 'SMFX',
       id: 'indicator-smfx', accentColor: '#FF6B35', gradientId: 'smfxFill', tag: '', updateFreq: 'd',
       data: smfxChartData, dataWithPrice: smfxChartDataWithPrice, isLoading: isLthPositionChangeLoading || isSthPositionChangeLoading,
-      timeframe: smfxTimeframe, setTimeframe: setSmfxTimeframe, zoneFn: getSmfxZone,
+      timeframe: smfxTimeframe, setTimeframe: setSmfxTimeframe, zoneFn: getSmfxZone, tfOpts: NOVRIX_TF_OPTS,
       headerValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(0)} BTC`, tooltipValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(0)} BTC`,
       yAxisTick: (v: number) => v >= 1000 ? `${(v/1000).toFixed(0)}K` : v >= -1000 ? v.toFixed(0) : `${(v/1000).toFixed(0)}K`,
     },
@@ -1514,7 +1514,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       panelId: 'levr', indicatorKey: 'levr', code: 'LEVR', title: 'Estimated Leverage Ratio', desc: 'OI / Market Cap — leveraged share of network value', metricLabel: 'LEVR',
       id: 'indicator-levr', accentColor: '#FF6B35', gradientId: 'levrFill', tag: '', updateFreq: 'd',
       data: levrChartData, dataWithPrice: levrChartDataWithPrice, isLoading: isOpenInterestLoading || isMarketCapK4Loading,
-      timeframe: levrTimeframe, setTimeframe: setLevrTimeframe, zoneFn: getLevrZone,
+      timeframe: levrTimeframe, setTimeframe: setLevrTimeframe, zoneFn: getLevrZone, tfOpts: NOVRIX_TF_OPTS,
       headerValue: (v: number) => v.toFixed(2) + '%', tooltipValue: (v: number) => v.toFixed(3) + '%',
       yAxisTick: (v: number) => v.toFixed(1) + '%',
     },
@@ -1522,7 +1522,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       panelId: 'rcfx', indicatorKey: 'rcfx', code: 'RCFX', title: 'Realized Cap Flow', desc: '30d %Δ realized cap — capital entering or leaving the cost basis', metricLabel: 'RCFX',
       id: 'indicator-rcfx', accentColor: '#FF6B35', gradientId: 'rcfxFill', tag: '', updateFreq: 'd',
       data: rcfxChartData, dataWithPrice: rcfxChartDataWithPrice, isLoading: isRealizedPriceLoading || isMarketCapK4Loading,
-      timeframe: rcfxTimeframe, setTimeframe: setRcfxTimeframe, zoneFn: getRcfxZone,
+      timeframe: rcfxTimeframe, setTimeframe: setRcfxTimeframe, zoneFn: getRcfxZone, tfOpts: NOVRIX_TF_OPTS,
       headerValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(2)}%`, tooltipValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(2)}%`,
       yAxisTick: (v: number) => `${v.toFixed(1)}%`,
     },
@@ -1530,7 +1530,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       panelId: 'cprx', indicatorKey: 'cprx', code: 'CPRX', title: 'Capitulation Pressure', desc: 'Realized Loss / (Loss + Profit) — actual financial pain ratio', metricLabel: 'CPRX',
       id: 'indicator-cprx', accentColor: '#FF6B35', gradientId: 'cprxFill', tag: '', updateFreq: 'd',
       data: cprxChartData, dataWithPrice: cprxChartDataWithPrice, isLoading: isRealizedLossLoading || isRealizedProfitLoading,
-      timeframe: cprxTimeframe, setTimeframe: setCprxTimeframe, zoneFn: getCprxZone,
+      timeframe: cprxTimeframe, setTimeframe: setCprxTimeframe, zoneFn: getCprxZone, tfOpts: NOVRIX_TF_OPTS,
       headerValue: (v: number) => (v * 100).toFixed(1) + '%', tooltipValue: (v: number) => (v * 100).toFixed(2) + '%',
       yAxisTick: (v: number) => (v * 100).toFixed(0) + '%',
     },
@@ -1538,7 +1538,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       panelId: 'rpix', indicatorKey: 'rpix', code: 'RPIX', title: 'Realized P&L Intensity', desc: 'NRPL / Market Cap — realized P&L sized by network value', metricLabel: 'RPIX',
       id: 'indicator-rpix', accentColor: '#FF6B35', gradientId: 'rpixFill', tag: '', updateFreq: 'd',
       data: rpixChartData, dataWithPrice: rpixChartDataWithPrice, isLoading: isNrplLoading || isMarketCapK4Loading,
-      timeframe: rpixTimeframe, setTimeframe: setRpixTimeframe, zoneFn: getRpixZone,
+      timeframe: rpixTimeframe, setTimeframe: setRpixTimeframe, zoneFn: getRpixZone, tfOpts: NOVRIX_TF_OPTS,
       headerValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(3)}%`, tooltipValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(3)}%`,
       yAxisTick: (v: number) => `${v.toFixed(1)}%`,
     },
@@ -1546,7 +1546,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       panelId: 'crrx', indicatorKey: 'crrx', code: 'CRRX', title: 'Cycle Risk-Reward', desc: 'Mayer × Reserve Risk — generational bottom confluence', metricLabel: 'CRRX',
       id: 'indicator-crrx', accentColor: '#FF6B35', gradientId: 'crrxFill', tag: '', updateFreq: 'd',
       data: crrxChartData, dataWithPrice: crrxChartDataWithPrice, isLoading: isMayerMultipleLoading || isReserveRiskLoading,
-      timeframe: crrxTimeframe, setTimeframe: setCrrxTimeframe, zoneFn: getCrrxZone,
+      timeframe: crrxTimeframe, setTimeframe: setCrrxTimeframe, zoneFn: getCrrxZone, tfOpts: NOVRIX_TF_OPTS,
       headerValue: (v: number) => v.toFixed(4), tooltipValue: (v: number) => v.toFixed(5),
       yAxisTick: (v: number) => v.toFixed(3),
     },
@@ -1554,7 +1554,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       panelId: 'sgrx', indicatorKey: 'sgrx', code: 'SGRX', title: 'Sentiment Regime', desc: '30d average Fear & Greed — sustained fear/greed regimes', metricLabel: 'SGRX',
       id: 'indicator-sgrx', accentColor: '#FF6B35', gradientId: 'sgrxFill', tag: '', updateFreq: 'd',
       data: sgrxChartData, dataWithPrice: sgrxChartDataWithPrice, isLoading: isLoading,
-      timeframe: sgrxTimeframe, setTimeframe: setSgrxTimeframe, zoneFn: getSgrxZone,
+      timeframe: sgrxTimeframe, setTimeframe: setSgrxTimeframe, zoneFn: getSgrxZone, tfOpts: NOVRIX_TF_OPTS,
       headerValue: (v: number) => v.toFixed(0), tooltipValue: (v: number) => v.toFixed(1),
       yAxisTick: (v: number) => v.toFixed(0),
     },
@@ -1562,7 +1562,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       panelId: 'domx', indicatorKey: 'domx', code: 'DOMX', title: 'Dominance Rotation', desc: '30d Δ BTC dominance — risk-off rotation vs altseason', metricLabel: 'DOMX',
       id: 'indicator-domx', accentColor: '#FF6B35', gradientId: 'domxFill', tag: '', updateFreq: 'd',
       data: domxChartData, dataWithPrice: domxChartDataWithPrice, isLoading: isDominanceLoading,
-      timeframe: domxTimeframe, setTimeframe: setDomxTimeframe, zoneFn: getDomxZone,
+      timeframe: domxTimeframe, setTimeframe: setDomxTimeframe, zoneFn: getDomxZone, tfOpts: NOVRIX_TF_OPTS,
       headerValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(1)} pp`, tooltipValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(2)} pp`,
       yAxisTick: (v: number) => `${v.toFixed(0)} pp`,
     },

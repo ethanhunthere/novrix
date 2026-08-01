@@ -313,6 +313,10 @@ export const FRED_TF_OPTS = [
   { label: 'ALL',  value: '999999' },
 ] as const;
 
+export const NOVRIX_TF_OPTS = [
+  { label: '10Y',  value: '3650'   },
+] as const;
+
 export const TfSelector = ({ value, onChange, opts }: { value: string; onChange: (v: string) => void; opts?: readonly { label: string; value: string }[] }) => {
   const options = opts ?? TF_OPTS;
   return (

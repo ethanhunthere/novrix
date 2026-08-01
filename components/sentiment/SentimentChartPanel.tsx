@@ -86,6 +86,7 @@ export interface SentimentPanelConfig {
   updateFreq?: UpdateFrequency;
   hideBtcPrice?: boolean;
   useFredTfOpts?: boolean;
+  tfOpts?: readonly { label: string; value: string }[];
   btcSameAxis?: boolean;
   referenceBands?: ReferenceBandConfig[];
   /** Optional explicit zone thresholds. When omitted we auto-detect from zoneFn. */
@@ -330,7 +331,7 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
                   { key: panel.indicatorKey, label: panel.metricLabel, color: metricColor, active: showIndicator[panel.indicatorKey], onClick: () => setShowIndicator((p) => ({ ...p, [panel.indicatorKey]: !p[panel.indicatorKey] })) },
                   ...(showBtc ? [{ key: `price-${panel.indicatorKey}`, label: 'PRICE', color: BTC_PRICE_LEGEND, active: showBtcPrice[panel.indicatorKey], onClick: () => setShowBtcPrice((p) => ({ ...p, [panel.indicatorKey]: !p[panel.indicatorKey] })) }] : []),
                 ]} />
-                <TfSelector value={panel.timeframe} onChange={panel.setTimeframe} opts={isFred ? FRED_TF_OPTS : undefined} />
+                <TfSelector value={panel.timeframe} onChange={panel.setTimeframe} opts={panel.tfOpts ?? (isFred ? FRED_TF_OPTS : undefined)} />
               </div>
               <ResponsiveContainer key={`${panel.panelId}-${panel.timeframe}`} width="100%" height={ch(panel.panelId)}>
                 <AreaChart data={chartData} margin={{ top: 4, right: 4, bottom: 0, left: isMaximized ? 12 : 0 }}>
