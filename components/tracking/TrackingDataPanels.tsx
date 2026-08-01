@@ -196,7 +196,7 @@ function FlowTooltip({ active, payload, label, granularity }: {
    PANEL: EXCHANGE FLOW HISTORY
    ═══════════════════════════════════════════════════════════ */
 
-export function ExchangeFlowHistoryPanel({ data, granularity }: { data: FlowPoint[]; granularity: string }) {
+function ExchangeFlowHistoryPanel({ data, granularity }: { data: FlowPoint[]; granularity: string }) {
   const chartData = useMemo(() =>
     data.map(d => ({
       ...d,
@@ -305,7 +305,7 @@ export function ExchangeFlowHistoryPanel({ data, granularity }: { data: FlowPoin
    PANEL: TOKEN FLOW BREAKDOWN
    ═══════════════════════════════════════════════════════════ */
 
-export function TokenFlowPanel({ data }: { data: TokenFlow[] }) {
+function TokenFlowPanel({ data }: { data: TokenFlow[] }) {
   if (data.length === 0) return null;
 
   const maxVolume = Math.max(...data.map(d => d.volume));
@@ -350,7 +350,7 @@ export function TokenFlowPanel({ data }: { data: TokenFlow[] }) {
    PANEL: EXCHANGE FLOWS TABLE
    ═══════════════════════════════════════════════════════════ */
 
-export function ExchangeFlowsPanel({ data }: { data: ExchangeFlow[] }) {
+function ExchangeFlowsPanel({ data }: { data: ExchangeFlow[] }) {
   if (data.length === 0) return null;
 
   return (
@@ -403,7 +403,7 @@ export function ExchangeFlowsPanel({ data }: { data: ExchangeFlow[] }) {
    PANEL: LARGE TRANSACTIONS
    ═══════════════════════════════════════════════════════════ */
 
-export function LargeTransactionsPanel({ data }: { data: LargeTx[] }) {
+function LargeTransactionsPanel({ data }: { data: LargeTx[] }) {
   if (data.length === 0) return null;
 
   return (
@@ -467,7 +467,7 @@ export function LargeTransactionsPanel({ data }: { data: LargeTx[] }) {
    PANEL: FLOW TYPE DISTRIBUTION
    ═══════════════════════════════════════════════════════════ */
 
-export function FlowTypeDistributionPanel({ data }: { data: FlowTypeDist[] }) {
+function FlowTypeDistributionPanel({ data }: { data: FlowTypeDist[] }) {
   if (data.length === 0) return null;
 
   const total = data.reduce((s, d) => s + d.volume, 0);

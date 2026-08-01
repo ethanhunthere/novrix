@@ -96,7 +96,6 @@ type StableHistoryPoint = { date: string; supply: number };
 type DexPoint = { date: string; volume: number };
 type DerivPoint = { date: string; oi: number | null; fr: number | null; ls: number | null };
 type YieldRow = { pool_id: string; protocol: string; chain: string; symbol: string; apy: number; tvl_usd: number; updated_at: string };
-type YieldHistoryPoint = { date: string; apy: number; tvl: number };
 type OptionsPoint = { date: string; volume: number };
 type BtcPricePoint = { date: string; open: number; high: number; low: number; close: number; volume: number };
 type DexPaprikaNetwork = {
@@ -276,7 +275,6 @@ const rangeDays: Record<RangeKey, number> = {
 const CACHE_KEY = 'novrix_metrilytics_v9';
 const CACHE_TTL = 3_600_000;
 const DEFAULT_PANELS: PanelId[] = ['chain-tvl', 'chain-activity', 'dex-protocols', 'category-history', 'protocol-revenue', 'staking', 'rwa', 'concentration', 'btc-anchor', 'bridges', 'lending', 'liquidations'];
-const MAX_ACTIVE_PANELS = 5;
 const EMPTY_EXTERNAL_DATA: ExternalData = {
   dexNetworks: [],
   dexPools: [],
@@ -318,23 +316,6 @@ const PANEL_DOM_ID: Record<PanelId, string | undefined> = {
 type MetrilyticsBodyProps = {
   onPrimaryDataReady?: () => void;
 };
-
-const EXPANDED_CACHE_KEY = 'novrix_metrilytics_expanded_v1';
-const EXPANDED_CACHE_TTL = 300_000; // 5 minutes
-
-function getExpandedCache<T>(key: string): T | null {
-  try {
-    const raw = localStorage.getItem(`${EXPANDED_CACHE_KEY}_${key}`);
-    if (!raw) return null;
-    const { data, ts } = JSON.parse(raw) as { data: T; ts: number };
-    if (Date.now() - ts > EXPANDED_CACHE_TTL) return null;
-    return data;
-  } catch { return null; }
-}
-
-function setExpandedCache<T>(key: string, data: T): void {
-  try { localStorage.setItem(`${EXPANDED_CACHE_KEY}_${key}`, JSON.stringify({ data, ts: Date.now() })); } catch {}
-}
 
 if (typeof window !== 'undefined') {
   try {
@@ -492,7 +473,6 @@ type TotalStableChartPoint = { date: number | string; totalCirculatingUSD?: Reco
 type BinanceFundingRow = { fundingTime?: number; fundingRate?: string | number };
 type BinanceOpenInterestRow = { timestamp?: number; sumOpenInterestValue?: string | number };
 type CoinGeckoMarketChart = { prices?: [number, number][]; total_volumes?: [number, number][] };
-type YieldChartPayload = { data?: { timestamp?: string; tvlUsd?: number | string; apy?: number | string }[] };
 
 function normalizeLlamaVolume(rows: LlamaChartPair[] | undefined): DexPoint[] {
   return (rows ?? [])
@@ -554,14 +534,6 @@ async function fetchJson<T>(url: string, timeoutMs = 15_000, retries = 2): Promi
     }
   }
   throw new Error('Max retries exceeded');
-}
-
-async function settle<T>(name: string, request: Promise<T>): Promise<{ name: string; value: T | null; status: 'OK' | 'UNAVAILABLE' }> {
-  try {
-    return { name, value: await request, status: 'OK' };
-  } catch {
-    return { name, value: null, status: 'UNAVAILABLE' };
-  }
 }
 
 async function fetchChainTvlFallback(): Promise<{ tvl: Record<string, ChainTvlPoint[]>; latest: { chain: string; tvl_usd: number }[] }> {
@@ -719,14 +691,6 @@ async function fetchBtcPriceFallback(): Promise<BtcPricePoint[]> {
     .sort((a, b) => a.date.localeCompare(b.date));
 }
 
-async function fetchYieldHistory(poolId: string): Promise<YieldHistoryPoint[]> {
-  const payload = await fetchJson<YieldChartPayload>(`https://yields.llama.fi/chart/${encodeURIComponent(poolId)}`, 20_000);
-  return (payload.data ?? [])
-    .map(row => ({ date: normalizeDay(row.timestamp ?? ''), apy: numberOrZero(row.apy), tvl: numberOrZero(row.tvlUsd) }))
-    .filter(row => row.date && (row.apy > 0 || row.tvl > 0))
-    .sort((a, b) => a.date.localeCompare(b.date));
-}
-
 async function fetchProtocolHistory(slug: string): Promise<{ date: string; tvl: number }[]> {
   try {
     const response = await fetch(`/api/metrilytics/protocol/${encodeURIComponent(slug)}?days=0`);
@@ -811,30 +775,8 @@ function tickerUsd(ticker: CoinPaprikaTicker | undefined): NonNullable<NonNullab
   return ticker?.quotes?.USD ?? {};
 }
 
-function calcChange<T extends Record<string, unknown>>(rows: T[] | undefined, days: number, field = 'tvl'): number {
-  if (!rows || rows.length < 2) return 0;
-  const sorted = [...rows].sort((a, b) => String(a.date ?? '').localeCompare(String(b.date ?? '')));
-  const current = sorted[sorted.length - 1];
-  const past = sorted[Math.max(0, sorted.length - 1 - days)];
-  const currentVal = Number(current[field] ?? 0);
-  const pastVal = Number(past[field] ?? 0);
-  if (pastVal === 0) return 0;
-  return ((currentVal - pastVal) / pastVal) * 100;
-}
-
-function avgFunding(rows: { fr: number | null }[] | undefined, days: number): number {
-  if (!rows || rows.length === 0) return 0;
-  const valid = rows.filter(r => r.fr !== null).slice(-days);
-  if (valid.length === 0) return 0;
-  return valid.reduce((sum, r) => sum + (r.fr ?? 0), 0) / valid.length;
-}
-
 function topBy<T>(rows: T[], getValue: (row: T) => number, limit: number): T[] {
   return [...rows].sort((a, b) => getValue(b) - getValue(a)).slice(0, limit);
-}
-
-function uniqueCount<T>(rows: T[], getKey: (row: T) => string | null | undefined): number {
-  return new Set(rows.map(getKey).filter(Boolean)).size;
 }
 
 function LiveClock() {
@@ -1803,221 +1745,6 @@ function DerivativesPanel({
   );
 }
 
-function YieldPanel({ yields, loading }: { yields: YieldRow[]; loading: boolean }) {
-  const [query, setQuery] = useState('');
-  const [sortKey, setSortKey] = useState<'tvl_usd' | 'apy'>('tvl_usd');
-  const [history, setHistory] = useState<YieldHistoryPoint[]>([]);
-  const [historyLoading, setHistoryLoading] = useState(false);
-  const [selectedPoolId, setSelectedPoolId] = useState<string | null>(null);
-
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return [...yields]
-      .filter(row => !q || row.protocol.toLowerCase().includes(q) || row.chain.toLowerCase().includes(q) || row.symbol.toLowerCase().includes(q))
-      .sort((a, b) => (b[sortKey] ?? 0) - (a[sortKey] ?? 0));
-  }, [query, sortKey, yields]);
-
-  const topApy = useMemo(() => {
-    return [...yields].sort((a, b) => b.apy - a.apy).slice(0, 10);
-  }, [yields]);
-
-  const bestStable = useMemo(() => {
-    const stables = ['USDC', 'USDT', 'DAI', 'USDE', 'FRAX'];
-    return [...yields]
-      .filter(y => stables.some(s => y.symbol.toUpperCase().includes(s)) && y.tvl_usd >= 1_000_000)
-      .sort((a, b) => b.apy - a.apy)[0];
-  }, [yields]);
-
-  const selectedPool = selectedPoolId ? yields.find(y => y.pool_id === selectedPoolId) : filtered[0];
-
-  useEffect(() => {
-    if (!selectedPool?.pool_id) {
-      queueMicrotask(() => setHistory([]));
-      return;
-    }
-    let cancelled = false;
-    queueMicrotask(() => { if (!cancelled) setHistoryLoading(true); });
-    fetchYieldHistory(selectedPool.pool_id)
-      .then(rows => {
-        if (!cancelled) setHistory(rows);
-      })
-      .catch(() => {
-        if (!cancelled) setHistory([]);
-      })
-      .finally(() => {
-        if (!cancelled) setHistoryLoading(false);
-      });
-    return () => { cancelled = true; };
-  }, [selectedPool?.pool_id]);
-
-  return (
-    <PanelFrame
-      id="module-yields"
-      eyebrow="Yield market"
-      title="Pool Quality Screen"
-      note="Current free Yields Llama pool data, ranked by capital or yield."
-      accent="#14B8A6"
-    >
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-        <input
-          value={query}
-          onChange={event => setQuery(event.target.value)}
-          placeholder="Filter protocol, chain, or symbol"
-          style={{
-            width: 'min(360px, 100%)',
-            borderRadius: 6,
-            border: '1px solid rgba(255,255,255,0.08)',
-            background: 'rgba(0,0,0,0.22)',
-            color: TEXT,
-            outline: 'none',
-            padding: '10px 12px',
-            fontFamily: SANS,
-            fontSize: 13,
-            letterSpacing: '0.01em',
-          }}
-        />
-        <div className="flex gap-2">
-          {(['tvl_usd', 'apy'] as const).map(key => (
-            <button
-              key={key}
-              type="button"
-              onClick={() => setSortKey(key)}
-              style={{
-                borderRadius: 999,
-                border: `1px solid ${sortKey === key ? '#14B8A6' : 'rgba(255,255,255,0.08)'}`,
-                background: sortKey === key ? 'rgba(20,184,166,0.14)' : 'transparent',
-                color: sortKey === key ? '#5EEAD4' : MUTED,
-                padding: '8px 12px',
-                fontFamily: MONO,
-                fontSize: 11,
-                letterSpacing: '0.04em',
-                fontWeight: sortKey === key ? 700 : 500,
-                cursor: 'pointer',
-              }}
-            >
-              {key === 'tvl_usd' ? 'TVL' : 'APY'}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {loading ? (
-        <Skeleton height={460} />
-      ) : (
-        <div className="space-y-5">
-          {bestStable && (
-            <div style={{ padding: '12px 16px', border: `1px solid ${GREEN}33`, background: `${GREEN}08` }}>
-              <div style={{ fontFamily: MONO, fontSize: 11, color: GREEN, letterSpacing: '0.16em', textTransform: 'uppercase', fontWeight: 700 }}>Best Stablecoin Yield</div>
-              <div className="flex items-center justify-between mt-2">
-                <div>
-                  <span style={{ fontFamily: SANS, fontSize: 15, color: TEXT, fontWeight: 600 }}>{bestStable.symbol}</span>
-                  <span style={{ fontFamily: SANS, fontSize: 12, color: MUTED, marginLeft: 8 }}>{bestStable.protocol} · {bestStable.chain}</span>
-                </div>
-                <span style={{ fontFamily: MONO, fontSize: 20, color: GREEN, fontWeight: 800, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em' }}>{fmtPct(bestStable.apy)}</span>
-              </div>
-            </div>
-          )}
-
-          <div>
-            <div style={{ fontFamily: MONO, fontSize: 12, color: MUTED, marginBottom: 12, letterSpacing: '0.14em', textTransform: 'uppercase', fontWeight: 600 }}>Top 10 by APY</div>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
-              {topApy.map((row, index) => (
-                <button
-                  key={row.pool_id}
-                  type="button"
-                  onClick={() => setSelectedPoolId(row.pool_id)}
-                  style={{
-                    padding: '10px 12px',
-                    border: `1px solid ${selectedPoolId === row.pool_id ? '#14B8A6' : 'rgba(255,255,255,0.06)'}`,
-                    background: selectedPoolId === row.pool_id ? 'rgba(20,184,166,0.10)' : 'rgba(0,0,0,0.15)',
-                    textAlign: 'left',
-                    cursor: 'pointer',
-                  }}
-                >
-                  <div style={{ fontFamily: MONO, fontSize: 10, color: FAINT, fontWeight: 600 }}>#{index + 1}</div>
-                  <div className="truncate" style={{ fontFamily: SANS, fontSize: 13, color: TEXT, fontWeight: 600 }}>{row.symbol}</div>
-                  <div style={{ fontFamily: SANS, fontSize: 11, color: MUTED }}>{row.protocol}</div>
-                  <div style={{ fontFamily: MONO, fontSize: 15, color: row.apy >= 10 ? GREEN : AMBER, fontWeight: 800, marginTop: 4, fontVariantNumeric: 'tabular-nums' }}>{fmtPct(row.apy)}</div>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div style={{ height: 240 }}>
-            {historyLoading ? (
-              <Skeleton height={240} />
-            ) : (
-              <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart data={history} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="yield-apy-gradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#14B8A6" stopOpacity={0.28} />
-                      <stop offset="100%" stopColor="#14B8A6" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid {...gridProps} />
-                  <XAxis dataKey="date" tickFormatter={fmtDateForRange('ALL')} tick={tickStyle} tickLine={false} axisLine={false} minTickGap={30} />
-                  <YAxis yAxisId="apy" tickFormatter={value => `${Number(value).toFixed(1)}%`} tick={tickStyle} tickLine={false} axisLine={false} width={58} />
-                  <YAxis yAxisId="tvl" orientation="right" tickFormatter={fmtMoney} tick={tickStyle} tickLine={false} axisLine={false} width={68} />
-                  <Tooltip
-                    cursor={cursorProps}
-                    content={({ active, payload, label }) => {
-                      if (!active || !payload?.length) return null;
-                      const row = payload[0].payload as YieldHistoryPoint;
-                      return (
-                        <div style={{ minWidth: 170, padding: 12, border: '1px solid rgba(20,184,166,0.45)', borderTop: '2px solid #14B8A6', background: 'rgba(8,10,16,0.98)', fontFamily: MONO, boxShadow: '0 24px 70px rgba(0,0,0,0.72)' }}>
-                          <div style={{ color: '#8A9BB0', fontSize: 12, marginBottom: '2px', letterSpacing: '0.12em' }}>{label ? fmtDate(label) : ''}</div>
-                          <div style={{ height: '1px', background: 'rgba(30,60,100,0.9)', margin: '9px 0' }} />
-                          <div style={{ color: '#6A8EAA', fontSize: 10, letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: 600, marginBottom: '6px' }}>APY</div>
-                          <div style={{ color: '#5EEAD4', fontSize: 16, fontWeight: 800, letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums', lineHeight: 1, textShadow: '0 0 18px rgba(94,234,212,0.50)' }}>{fmtPct(row.apy)}</div>
-                          <div style={{ color: MUTED, fontSize: 11, marginTop: 8 }}>TVL {fmtMoney(row.tvl)}</div>
-                        </div>
-                      );
-                    }}
-                  />
-                  <Area yAxisId="apy" type="monotone" dataKey="apy" name="APY" stroke="#14B8A6" fill="url(#yield-apy-gradient)" strokeWidth={1.8} dot={false} isAnimationActive={false} />
-                  <Line yAxisId="tvl" type="monotone" dataKey="tvl" name="TVL" stroke="#E8960C" strokeWidth={1.2} dot={false} isAnimationActive={false} />
-                </ComposedChart>
-              </ResponsiveContainer>
-            )}
-          </div>
-
-          <div className="space-y-1">
-            <div className="grid grid-cols-[1fr_130px_100px_90px] 3xl:grid-cols-[1fr_150px_120px_110px] gap-4 px-2 pb-2 border-b" style={{ borderBottomColor: 'rgba(255,255,255,0.08)' }}>
-              <span style={{ fontFamily: MONO, fontSize: 11, color: 'rgba(255,255,255,0.40)', letterSpacing: '0.13em', textTransform: 'uppercase', fontWeight: 600 }}>Pool</span>
-              <span style={{ fontFamily: MONO, fontSize: 11, color: 'rgba(255,255,255,0.40)', textAlign: 'right', letterSpacing: '0.13em', textTransform: 'uppercase', fontWeight: 600 }}>TVL</span>
-              <span style={{ fontFamily: MONO, fontSize: 11, color: 'rgba(255,255,255,0.40)', textAlign: 'right', letterSpacing: '0.13em', textTransform: 'uppercase', fontWeight: 600 }}>APY</span>
-              <span style={{ fontFamily: MONO, fontSize: 11, color: 'rgba(255,255,255,0.40)', textAlign: 'right', letterSpacing: '0.13em', textTransform: 'uppercase', fontWeight: 600 }}>Chain</span>
-            </div>
-            {filtered.slice(0, 24).map(row => (
-              <button
-                key={row.pool_id}
-                type="button"
-                onClick={() => setSelectedPoolId(row.pool_id)}
-                className="w-full grid grid-cols-[1fr_130px_100px_90px] 3xl:grid-cols-[1fr_150px_120px_110px] gap-4 items-center px-2 py-3 text-left"
-                style={{
-                  border: 0,
-                  borderBottom: '1px solid rgba(255,255,255,0.04)',
-                  background: selectedPoolId === row.pool_id ? 'rgba(20,184,166,0.06)' : 'transparent',
-                  cursor: 'pointer',
-                }}
-              >
-                <div className="min-w-0">
-                  <div className="truncate" style={{ fontFamily: SANS, fontSize: 13, color: TEXT, fontWeight: 600 }}>{row.symbol}</div>
-                  <div className="truncate" style={{ fontFamily: SANS, fontSize: 11, color: MUTED }}>{row.protocol}</div>
-                </div>
-                <span style={{ fontFamily: MONO, fontSize: 13, color: MUTED, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{fmtMoney(row.tvl_usd)}</span>
-                <span style={{ fontFamily: MONO, fontSize: 13, color: row.apy >= 10 ? GREEN : AMBER, textAlign: 'right', fontWeight: 800, fontVariantNumeric: 'tabular-nums' }}>{fmtPct(row.apy)}</span>
-                <span className="truncate" style={{ fontFamily: SANS, fontSize: 11, color: MUTED, textAlign: 'right' }}>{row.chain}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-    </PanelFrame>
-  );
-}
-
 function OptionsPanel({
   aggregate,
   byChain,
@@ -2491,9 +2218,6 @@ function buildIndicators(data: Partial<AllData>): IndicatorDefinition[] {
   const stableTotal = data.stableTotal ?? [];
   const dexVolumes = data.dexVolumes ?? {};
   const yields = data.yields ?? [];
-  const btcFunding = [...(data.btcDerivatives ?? [])].reverse().find(row => row.fr !== null)?.fr ?? 0;
-  const ethFunding = [...(data.ethDerivatives ?? [])].reverse().find(row => row.fr !== null)?.fr ?? 0;
-  const solFunding = [...(data.solDerivatives ?? [])].reverse().find(row => row.fr !== null)?.fr ?? 0;
   const btcOi = [...(data.btcDerivatives ?? [])].reverse().find(row => row.oi !== null)?.oi ?? 0;
   const ethOi = [...(data.ethDerivatives ?? [])].reverse().find(row => row.oi !== null)?.oi ?? 0;
   const solOi = [...(data.solDerivatives ?? [])].reverse().find(row => row.oi !== null)?.oi ?? 0;
@@ -2508,27 +2232,10 @@ function buildIndicators(data: Partial<AllData>): IndicatorDefinition[] {
   const btcQuote = tickerUsd(external.tickers.BTC);
   const ethQuote = tickerUsd(external.tickers.ETH);
   const solQuote = tickerUsd(external.tickers.SOL);
-  const usdcQuote = tickerUsd(external.tickers.USDC);
-  const usdtQuote = tickerUsd(external.tickers.USDT);
-  const btcDominanceRaw = global?.bitcoin_dominance_percentage ?? 0;
-  const btcPriceChange24h = (btcQuote.percent_change_24h ?? 0) / 100;
-  const globalMcapChange24h = (global?.market_cap_change_24h ?? 0) / 100;
-  const projectedDominance = globalMcapChange24h > -1
-    ? (btcDominanceRaw * (1 + btcPriceChange24h)) / (1 + globalMcapChange24h)
-    : btcDominanceRaw;
-  const dominanceTrend = projectedDominance - btcDominanceRaw;
-  const dominanceArrow = dominanceTrend > 0.001 ? '▲' : dominanceTrend < -0.001 ? '▼' : '—';
   const latestDex = (chain: string) => latest(dexVolumes[chain] ?? [])?.volume ?? 0;
-  const topStable = topBy(stableSupply, row => row.supply_usd, 8);
-  const topChains = topBy(chainLatest.filter(row => row.chain !== 'all'), row => row.tvl_usd, 14);
-  const topProtocols = topBy(protocols, row => row.tvl_usd, 12);
-  const topFees = topBy(fees, row => row.daily_fees_usd, 10);
   const topYields = topBy(yields, row => row.tvl_usd, 10);
-  const bestApy = topBy(yields.filter(row => row.tvl_usd >= 10_000_000), row => row.apy, 8);
-  const dexNetworks = topBy(external.dexNetworks, row => numberOrZero(row.volume_usd_24h), 12);
   const lending = data.lendingProtocols ?? [];
   const bridges = data.bridges ?? [];
-  const totalBorrowed = data.lendingTotalBorrowed ?? 0;
 
   const bestLargePool = yields.filter(y => (y.tvl_usd ?? 0) >= 1_000_000).sort((a, b) => (b.apy ?? 0) - (a.apy ?? 0))[0];
   const st = data.stableTotal ?? [];
@@ -2544,21 +2251,14 @@ function buildIndicators(data: Partial<AllData>): IndicatorDefinition[] {
   // New Combined Indicators Data
   const highestFeeProtocol = fees.sort((a, b) => (b.daily_fees_usd ?? 0) - (a.daily_fees_usd ?? 0))[0];
   const highestRevenueProtocol = fees.sort((a, b) => (b.daily_revenue_usd ?? 0) - (a.daily_revenue_usd ?? 0))[0];
-  const top100Yields = [...yields].sort((a, b) => (b.tvl_usd ?? 0) - (a.tvl_usd ?? 0)).slice(0, 100);
-  const avgYieldTop100 = top100Yields.length ? top100Yields.reduce((sum, y) => sum + (y.apy ?? 0), 0) / top100Yields.length : 0;
   const topChain = [...chainLatest].filter(c => c.chain !== 'all').sort((a, b) => (b.tvl_usd ?? 0) - (a.tvl_usd ?? 0))[0];
   const topChainDominance = topChain && tvl > 0 ? (topChain.tvl_usd / tvl) * 100 : 0;
   const dailyDexVol = latestDex('all') || parseSummaryNumber(summary, 'total_dex_volume_24h');
   const stableVelocity = stables > 0 ? (dailyDexVol / stables) * 100 : 0;
   const defiCryptoRatio = global?.market_cap_usd ? (tvl / global.market_cap_usd) * 100 : 0;
   const ethBtcRatio = (btcQuote?.price ?? 0) > 0 ? ((ethQuote?.price ?? 0) / (btcQuote?.price ?? 1)) : 0;
-  const totalBridges = bridges.reduce((sum, b) => sum + (b.tvl_usd ?? 0), 0);
-  const topBridgeShare = totalBridges > 0 && bridges[0] ? (bridges[0].tvl_usd / totalBridges) * 100 : 0;
-  const totalDexTxns = (external.dexNetworks ?? []).reduce((sum, n) => sum + (n.txns_24h ?? 0), 0);
-  const dexAvgTradeSize = totalDexTxns > 0 ? dailyDexVol / totalDexTxns : 0;
   const topStableCoin = topBy(stableSupply, row => row.supply_usd, 1)[0];
   const stableDominance = stables > 0 && topStableCoin ? (topStableCoin.supply_usd / stables) * 100 : 0;
-  const highestApyPool = yields.filter(y => (y.tvl_usd ?? 0) >= 100000).sort((a, b) => (b.apy ?? 0) - (a.apy ?? 0))[0];
   const oiToTvlRatio = tvl > 0 ? (defiOi / tvl) * 100 : 0;
   const totalDailyFees = latestValue(data.feeHistory ?? [], 'fees') || parseSummaryNumber(summary, 'protocol_fees_24h');
   const annualizedFeesToTvl = tvl > 0 ? ((totalDailyFees * 365) / tvl) * 100 : 0;
@@ -2590,7 +2290,6 @@ function buildIndicators(data: Partial<AllData>): IndicatorDefinition[] {
   const eth30d = return30d(data.ethPrices);
   const sol30d = return30d(data.solPrices);
   const dailyRevenueNow = latest(data.feeHistory ?? [])?.revenue ?? parseSummaryNumber(summary, 'protocol_revenue_24h');
-  const avgFunding3 = (btcFrValue + ethFrValue + solFrValue) / 3;
   const btcLsRatio = latest(data.btcDerivatives ?? [])?.ls ?? 0;
   const majorsUpCount = [btcQuote, ethQuote, solQuote].filter(q => (q.percent_change_24h ?? 0) > 0).length;
   const ethDomNow = external.tickers.ETH && totalCryptoMcap > 0 ? ((ethQuote.market_cap ?? 0) / totalCryptoMcap) * 100 : parseSummaryNumber(summary, 'eth_dominance');
@@ -2611,7 +2310,6 @@ function buildIndicators(data: Partial<AllData>): IndicatorDefinition[] {
     { id: 'total-yield-tvl', name: 'Total Yield TVL', category: 'Yield', value: fmtMoney(yields.reduce((sum, y) => sum + (y.tvl_usd ?? 0), 0)), detail: yields.length + ' pools tracked', source: 'Yields Llama', accent: '#14B8A6', panel: 'yield-market' },
     { id: 'market-structure', name: 'Market Structure', category: 'Market', value: fmtMoney(global?.market_cap_usd), detail: 'Global prices, volume & dominance', source: 'CoinPaprika', accent: BLUE, panel: 'market-structure' },
     { id: 'dex-network-txns', name: 'DEX Network Transactions', category: 'DEX', value: (() => { const txns = (external.dexNetworks ?? []).reduce((sum, n) => sum + (n.txns_24h ?? 0), 0); return txns > 1000000 ? (txns / 1000000).toFixed(1) + 'M' : txns > 1000 ? (txns / 1000).toFixed(0) + 'K' : txns.toString(); })(), detail: '24h DEX transactions across all networks', source: 'DexPaprika', accent: GREEN, panel: 'dex-pools' },
-    { id: 'dex-network-volume', name: 'DEX Network Volume', category: 'DEX', value: fmtMoney(external.dexNetworks.reduce((sum, row) => sum + numberOrZero(row.volume_usd_24h), 0)), detail: 'DexPaprika indexed 24h network flow', source: 'DexPaprika', accent: GREEN, panel: 'dex-pools' },
     { id: 'lending-total', name: 'Lending Total Supplied', category: 'Lending', value: fmtMoney(lending.reduce((s, p) => s + (p.tvl_usd ?? 0), 0)), detail: 'Top lending protocols combined TVL', source: 'DeFiLlama', accent: AMBER, panel: 'lending' },
     { id: 'top-lending-protocol', name: 'Top Lending Protocol', category: 'Lending', value: fmtMoney(lending[0]?.tvl_usd ?? 0), detail: lending[0]?.protocol ?? summary.top_lending_protocol ?? '—', source: 'DeFiLlama', accent: AMBER, panel: 'lending' },
     { id: 'bridge-tvl', name: 'Bridge TVL Total', category: 'Bridges', value: fmtMoney(bridges.reduce((sum, b) => sum + (b.tvl_usd ?? 0), 0) || parseSummaryNumber(summary, 'total_bridge_tvl')), detail: bridges[0]?.protocol ? 'Top: ' + bridges[0].protocol : summary.top_bridge ?? '—', source: 'DeFiLlama', accent: '#A78BFA', panel: 'bridges' },
@@ -2626,15 +2324,11 @@ function buildIndicators(data: Partial<AllData>): IndicatorDefinition[] {
     { id: 'protocol-revenue', name: 'Protocol Revenue', category: 'Protocols', value: fmtMoney(latest(data.feeHistory ?? [])?.revenue ?? parseSummaryNumber(summary, 'protocol_revenue_24h')), detail: '24h revenue across all protocols', source: 'DeFiLlama', accent: AMBER, panel: 'protocol-revenue' },
     { id: 'top-protocol-tvl', name: 'Top Protocol by TVL', category: 'Protocols', value: fmtMoney(protocols[0]?.tvl_usd ?? 0), detail: protocols[0]?.protocol ?? summary.top_protocol_by_tvl ?? '—', source: 'DeFiLlama', accent: AMBER, panel: 'protocol-board' },
     { id: 'top-defi-category', name: 'Top DeFi Category', category: 'Concentration', value: (() => { const counts = new Map<string, number>(); for (const p of protocols) { const c = p.category || 'Unknown'; counts.set(c, (counts.get(c) ?? 0) + 1); } let best = '—', bestN = 0; for (const [c, n] of counts) if (n > bestN) { best = c; bestN = n; } return best; })(), detail: 'Largest protocol cluster by category', source: 'DeFiLlama', accent: '#7DD3FC', panel: 'category-history' },
-    { id: 'protocol-concentration', name: 'Top Protocol TVL Share', category: 'Concentration', value: (() => { const total = protocols.reduce((s, p) => s + (p.tvl_usd ?? 0), 0); return total > 0 ? ((protocols[0]?.tvl_usd ?? 0) / total * 100).toFixed(1) + '%' : '—'; })(), detail: protocols[0]?.protocol ? `Leader: ${protocols[0].protocol}` : 'Capital concentration gauge', source: 'Composite', accent: '#A78BFA', panel: 'concentration' },
     { id: 'dex-venue-leader', name: 'DEX Venue Leaderboard', category: 'DEX', value: 'Leaderboard', detail: 'Per-protocol DEX volume by 24h / 30d / 1y', source: 'DeFiLlama', accent: GREEN, panel: 'dex-protocols' },
     { id: 'stable-velocity', name: 'Stablecoin Velocity', category: 'Stablecoins', value: stableVelocity.toFixed(2) + '%', detail: 'Daily DEX Vol / Stable Supply', source: 'Combined', accent: GREEN, panel: 'stablecoin-float' },
     { id: 'defi-to-crypto-cap', name: 'DeFi / Crypto Ratio', category: 'Market', value: defiCryptoRatio.toFixed(2) + '%', detail: 'DeFi TVL vs Total Crypto Cap', source: 'Combined', accent: BLUE, panel: 'market-structure' },
     { id: 'eth-btc-price-ratio', name: 'ETH/BTC Ratio', category: 'Market', value: ethBtcRatio.toFixed(4), detail: 'Relative pricing strength', source: 'CoinPaprika', accent: '#A78BFA', panel: 'market-structure' },
-    { id: 'top-bridge-share', name: 'Top Bridge Dominance', category: 'Bridges', value: topBridgeShare.toFixed(1) + '%', detail: bridges[0]?.protocol ?? '—', source: 'DeFiLlama', accent: '#A78BFA', panel: 'bridges' },
-    { id: 'dex-avg-trade-size', name: 'Avg DEX Trade Size', category: 'DEX', value: fmtMoney(dexAvgTradeSize), detail: 'Vol per Txn across top networks', source: 'DexPaprika', accent: GREEN, panel: 'dex-pools' },
     { id: 'stablecoin-top-dominance', name: 'Stablecoin Dominance', category: 'Stablecoins', value: stableDominance.toFixed(1) + '%', detail: topStableCoin?.symbol ?? '—', source: 'DeFiLlama', accent: GREEN, panel: 'stablecoin-float' },
-    { id: 'highest-apy-pool-100k', name: 'Highest APY (>$100k)', category: 'Yield', value: (highestApyPool?.apy ?? 0).toFixed(0) + '%', detail: highestApyPool ? `${highestApyPool.protocol} ${highestApyPool.symbol}` : '—', source: 'Yields Llama', accent: '#14B8A6', panel: 'yield-market' },
     { id: 'oi-to-tvl-ratio', name: 'Derivs OI to TVL', category: 'Derivatives', value: oiToTvlRatio.toFixed(2) + '%', detail: 'Leverage relative to spot TVL', source: 'Combined', accent: '#F97316', panel: 'derivatives-risk' },
     { id: 'fee-yield-to-tvl', name: 'Annualized Protocol APY', category: 'Protocols', value: annualizedFeesToTvl.toFixed(2) + '%', detail: 'Annual fees / Global TVL', source: 'Combined', accent: AMBER, panel: 'protocol-revenue' },
     { id: 'btc-eth-oi-ratio', name: 'BTC/ETH OI Ratio', category: 'Derivatives', value: btcEthOiRatio.toFixed(2) + 'x', detail: 'Relative open interest sizes', source: 'Binance', accent: '#F97316', panel: 'liquidations' },
@@ -2645,7 +2339,6 @@ function buildIndicators(data: Partial<AllData>): IndicatorDefinition[] {
     { id: 'eth-30d-momentum', name: 'ETH 30d Momentum', category: 'Momentum', value: eth30d === null ? '—' : fmtPct(eth30d), detail: '30-day price return', source: 'CoinGecko', accent: '#A78BFA', panel: 'market-structure' },
     { id: 'sol-30d-momentum', name: 'SOL 30d Momentum', category: 'Momentum', value: sol30d === null ? '—' : fmtPct(sol30d), detail: '30-day price return', source: 'CoinGecko', accent: '#9945FF', panel: 'market-structure' },
     { id: 'btc-ma-cross', name: 'BTC Trend Signal', category: 'Momentum', value: btcCloses.length >= 200 ? (btcMa50 >= btcMa200 ? 'Bullish' : 'Bearish') : '—', detail: btcCloses.length >= 200 ? `50d MA ${fmtMoney(btcMa50)} vs 200d MA ${fmtMoney(btcMa200)}` : 'Insufficient price history', source: 'CoinGecko', accent: btcCloses.length >= 200 ? (btcMa50 >= btcMa200 ? GREEN : RED) : MUTED, panel: 'btc-anchor' },
-    { id: 'cross-asset-funding', name: 'Cross-Asset Funding', category: 'Sentiment', value: (avgFunding3 >= 0 ? '+' : '') + (avgFunding3 * 100).toFixed(4) + '%', detail: 'Mean BTC/ETH/SOL perp funding — positioning bias', source: 'Binance', accent: '#FB7185', panel: 'derivatives-risk' },
     { id: 'btc-long-short', name: 'BTC Long/Short Ratio', category: 'Sentiment', value: btcLsRatio > 0 ? btcLsRatio.toFixed(2) : '—', detail: btcLsRatio > 0 ? (btcLsRatio >= 1 ? 'Accounts skew net long' : 'Accounts skew net short') : 'No positioning data', source: 'Binance', accent: btcLsRatio > 0 ? (btcLsRatio >= 1 ? GREEN : RED) : MUTED, panel: 'liquidations' },
     { id: 'majors-breadth', name: 'Majors 24h Breadth', category: 'Sentiment', value: `${majorsUpCount}/3`, detail: 'BTC · ETH · SOL trading green over 24h', source: 'CoinPaprika', accent: majorsUpCount >= 2 ? GREEN : RED, panel: 'market-structure' },
     { id: 'alt-market-share', name: 'Alt Market Share', category: 'Sentiment', value: altSharePct.toFixed(1) + '%', detail: 'Market cap outside BTC & ETH — altseason gauge', source: 'Composite', accent: '#14B8A6', panel: 'market-structure' },

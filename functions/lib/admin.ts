@@ -1,10 +1,8 @@
 /**
  * Shared admin-token check for seed / write endpoints.
  *
- * Replaces the duplicated `const SEED_SECRET = 'novrix-seed-2026'` literal
- * that previously lived in 24 different `seed.ts` files. All checks now
- * read from `env.SEED_ADMIN_SECRET` (set via
- * `wrangler pages secret put SEED_ADMIN_SECRET`) and compare in constant time.
+ * Reads from `env.SEED_ADMIN_SECRET` (set via
+ * `wrangler pages secret put SEED_ADMIN_SECRET`) and compares in constant time.
  *
  * Returns `null` when the request is authorized, otherwise a ready-to-return
  * `Response` so the caller can `if (resp) return resp;`.

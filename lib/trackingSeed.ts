@@ -1,5 +1,5 @@
 /// <reference types="@cloudflare/workers-types" />
-// Auto-generated shared tracking seed module
+// Shared tracking seed module
 // Contains LABELS, TOP_ENTITIES, SEED_BATCHES, and ensureKnownAddresses
 
 interface EntityConfig {
@@ -1645,7 +1645,7 @@ const TOP_ENTITIES: EntityConfig[] = [
   },
 ];
 
-// Auto-generated from database/seeds/seed_addresses.sql — 11018 addresses in 111 batches
+// Seed addresses — 11018 addresses in 111 batches
 
 const SEED_BATCHES: string[] = [
   `INSERT OR IGNORE INTO known_addresses (address, label, entity, blockchain, tags) VALUES

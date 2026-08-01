@@ -187,6 +187,17 @@ export const onRequest: PagesFunction<Env> = async (context) => {
        ORDER BY volume DESC`
     ).bind(addrLower, addrLower).all();
 
+    // 5. Current on-chain holdings value for this address (native + token balances)
+    const nativeBalance = await TRACKING_DB.prepare(
+      `SELECT COALESCE(SUM(balance_usd), 0) as bal
+       FROM entity_holdings WHERE LOWER(address) = ?`
+    ).bind(addrLower).first<{ bal: number }>();
+    const tokenBalance = await TRACKING_DB.prepare(
+      `SELECT COALESCE(SUM(balance_usd), 0) as bal
+       FROM entity_token_holdings WHERE LOWER(address) = ?`
+    ).bind(addrLower).first<{ bal: number }>();
+    const balanceUsd = (nativeBalance?.bal ?? 0) + (tokenBalance?.bal ?? 0);
+
     return new Response(
       JSON.stringify({
         success: true,
@@ -205,6 +216,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
           tx_count: txCount,
           first_seen: firstSeens[0] || '',
           last_seen: lastSeens[0] || '',
+          balance_usd: balanceUsd,
         },
         tokens: tokenBreakdown.results || [],
         transactions: (txs.results || []).map((row: TxRow) => ({
