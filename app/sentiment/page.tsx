@@ -1154,8 +1154,12 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
     const sliced = data.filter(pt => pt.dateObj && pt.dateObj.getTime() >= cutoff);
     // Guarantee a renderable segment even when downsampling leaves a single
     // point inside a short window (e.g. 1W on a 2013-depth series).
-    if (sliced.length === 1 && data.length >= 2) return data.slice(-2);
-    return sliced;
+    // Re-index to sequential positions: the X-axis plots dataKey="index" while
+    // getXAxisTicks/formatXAxisTick address points by array position, so a
+    // .filter() that preserves the source index field offsets the year labels
+    // off the axis domain (worst on deep-history series like CPRX at 10Y).
+    if (sliced.length === 1 && data.length >= 2) return data.slice(-2).map((pt, i) => ({ ...pt, index: i }));
+    return sliced.map((pt, i) => ({ ...pt, index: i }));
   };
 
   // VTPX: Veteran Premium (replaces CVIX)
