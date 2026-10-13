@@ -4,7 +4,6 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useCLI } from '@/lib/state/CLIContext';
 import { useAuth } from '@/lib/hooks/useAuth';
-import { openAuthGate } from '@/lib/utils/auth';
 
 const VERSION = '1.0.0';
 
@@ -217,7 +216,7 @@ export default function GlobalCLI() {
       return;
     }
     addLine(`Opening → ${label} on /sentiment`, 'info');
-    openAuthGate();
+    router.push('/sentiment');
     setTimeout(close, 220);
     // Poll up to ~3.6s for the panel to mount after navigation.
     for (let i = 0; i < 18; i++) {
@@ -444,9 +443,8 @@ export default function GlobalCLI() {
         if (!path) { addLine(`go: unknown destination "${sub}".`, 'error'); return; }
         const intelRoutes = ['/sentiment', '/tracking', '/metrilytics'];
         if (intelRoutes.includes(path)) {
-          addLine(`Opening ${path}...`, 'info');
-          openAuthGate();
-          setTimeout(close, 240);
+          addLine(`Navigating to ${path}...`, 'info');
+          setTimeout(() => { router.push(path); close(); }, 240);
           return;
         }
         addLine(`Navigating to ${path}...`, 'info');
@@ -478,16 +476,14 @@ export default function GlobalCLI() {
 
       if (base === 'whale') {
         addLine('Opening whale tracking...', 'info');
-        openAuthGate();
-        setTimeout(close, 240);
+        setTimeout(() => { router.push('/tracking'); close(); }, 240);
         return;
       }
 
       if (base === 'defi') {
         if (!sub) {
           addLine('Opening DeFi metrilytics...', 'info');
-          openAuthGate();
-          setTimeout(close, 240);
+          setTimeout(() => { router.push('/metrilytics'); close(); }, 240);
           return;
         }
         if (sub === 'tvl') {

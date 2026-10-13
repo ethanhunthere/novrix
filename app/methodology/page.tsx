@@ -1,7 +1,6 @@
 import Navbar from '@/components/layout/Navbar';
 import FooterHome from '@/components/layout/FooterHome';
 import Link from 'next/link';
-import { AuthGateButton } from '@/components/auth/AuthGateButton';
 import { defaultOgImages, defaultTwitterImages } from '@/lib/og-config';
 
 export const metadata = {
@@ -200,7 +199,7 @@ export default function MethodologyPage() {
 
           <div className="flex items-center gap-6 pt-4" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
             <Link href="/documentation" className="text-[10px] text-[#475569] hover:text-[#94A3B8] transition-colors" style={{ fontFamily: 'Inter, system-ui, sans-serif', letterSpacing: '0.10em', textDecoration: 'none' }}>Documentation →</Link>
-            <AuthGateButton className="text-[10px] text-[#475569] hover:text-[#94A3B8] transition-colors cursor-pointer bg-transparent border-none" style={{ fontFamily: 'Inter, system-ui, sans-serif', letterSpacing: '0.10em', textDecoration: 'none' }}>Sentiment Module →</AuthGateButton>
+            <Link href="/sentiment" className="text-[10px] text-[#475569] hover:text-[#94A3B8] transition-colors" style={{ fontFamily: 'Inter, system-ui, sans-serif', letterSpacing: '0.10em', textDecoration: 'none' }}>Sentiment Module →</Link>
           </div>
         </div>
       </div>

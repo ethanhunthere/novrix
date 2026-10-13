@@ -4,20 +4,12 @@ import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import DeskVisual from './DeskVisuals';
 import { fadeUp, type DeskItem } from './home-data';
-import { openAuthGate } from '@/lib/utils/auth';
-import { useAuth } from '@/lib/hooks/useAuth';
 
 export default function DeskCard({ desk }: { desk: DeskItem }) {
-  const { user } = useAuth();
   const router = useRouter();
 
   const handleClick = () => {
-    if (user) {
-      router.push(desk.href);
-    } else {
-      sessionStorage.setItem('novrix-pending-nav', desk.href);
-      openAuthGate();
-    }
+    router.push(desk.href);
   };
 
   return (

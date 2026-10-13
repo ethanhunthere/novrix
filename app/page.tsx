@@ -21,8 +21,6 @@ import {
   DESKS,
   fadeUp,
 } from '@/components/home/home-data';
-import { openAuthGate } from '@/lib/utils/auth';
-import { useAuth } from '@/lib/hooks/useAuth';
 
 const WhaleFlowCanvas = dynamic(
   () => import('@/components/effects/WhaleFlowCanvas'),
@@ -40,15 +38,9 @@ function useKineticFirstPaint() {
 }
 
 function HomeModuleButton({ href, label, variant }: { href: string; label: string; variant: 'primary' | 'secondary' }) {
-  const { user } = useAuth();
   const router = useRouter();
   const handleClick = () => {
-    if (user) {
-      router.push(href);
-    } else {
-      sessionStorage.setItem('novrix-pending-nav', href);
-      openAuthGate();
-    }
+    router.push(href);
   };
   return (
     <button onClick={handleClick} className={variant === 'primary' ? 'btn-intel-primary' : 'btn-intel-secondary'}>
@@ -551,7 +543,7 @@ export default function Home() {
               `}</style>
               <div className="flex items-center justify-center max-w-xs sm:max-w-none mx-auto">
                 <div className="hero-cta">
-                  <Link href="/terminal" prefetch={false} className="hero-terminal-gate" aria-label="Open Terminal">
+                  <Link href="/sentiment" prefetch={false} className="hero-terminal-gate" aria-label="Open Terminal">
                     <span className="gate-scanline"></span>
                     <span className="gate-border-glow"></span>
                     <span className="gate-stream"></span>

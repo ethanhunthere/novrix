@@ -1266,7 +1266,7 @@ function TerminalInner() {
   const mountRef                       = useRef(0);
   const [time, setTime]                = useState('');
   const [uptime, setUptime]            = useState('00:00:00');
-  const [gateOpen, setGateOpen]        = useState(() => hasModuleRedirect);
+  const [gateOpen, setGateOpen]        = useState(false);
   const [pendingHref, setPendingHref]  = useState(() => redirectTarget);
 
   useEffect(() => {
@@ -1283,29 +1283,14 @@ function TerminalInner() {
   }, []);
 
   useEffect(() => {
-    queueMicrotask(() => {
-      if (hasModuleRedirect) {
-        setPendingHref(redirectTarget);
-      }
-
-      if (authLoading) {
-        if (hasModuleRedirect) setGateOpen(true);
-        return;
-      }
-
-      if (user) {
-        if (hasModuleRedirect) window.location.replace(redirectTarget);
-        return;
-      }
-
-      if (hasModuleRedirect) setGateOpen(true);
-    });
-  }, [authLoading, hasModuleRedirect, redirectTarget, user]);
+    if (hasModuleRedirect) {
+      window.location.replace(redirectTarget);
+    }
+  }, [hasModuleRedirect, redirectTarget]);
 
   const handleEnterModule = useCallback((href: string) => {
-    if (user) { window.location.assign(href); return; }
-    setPendingHref(href); setGateOpen(true);
-  }, [user]);
+    window.location.assign(href);
+  }, []);
 
   const closeGateToTerminal = useCallback(() => {
     setPendingHref('/terminal');
@@ -1643,13 +1628,6 @@ function TerminalInner() {
 
         <FooterHome />
 
-        {gateOpen && (
-          <GatePanel
-            targetModule={pendingHref}
-            onSuccess={handleAuthSuccess}
-            onClose={closeGateToTerminal}
-          />
-        )}
       </div>
     </DesktopGate>
   );

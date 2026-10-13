@@ -1,11 +1,21 @@
 'use client';
 
-import { openAuthGate } from '@/lib/utils/auth';
+import Link from 'next/link';
 
-export function AuthGateButton({ children, className, style }: { children: React.ReactNode; className?: string; style?: React.CSSProperties }) {
+export function AuthGateButton({
+  href = '/sentiment',
+  children,
+  className,
+  style,
+}: {
+  href?: string;
+  children: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+}) {
   return (
-    <button onClick={openAuthGate} className={className} style={style}>
+    <Link href={href} className={className} style={style}>
       {children}
-    </button>
+    </Link>
   );
 }

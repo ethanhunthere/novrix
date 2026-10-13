@@ -6,7 +6,6 @@ import { useState, useEffect, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth, useLogout } from '@/lib/hooks/useAuth';
 import { useCLI } from '@/lib/state/CLIContext';
-import { openAuthGate } from '@/lib/utils/auth';
 
 const MONO  = 'var(--font-jetbrains-mono), JetBrains Mono, monospace';
 const INTER = 'var(--font-inter), Inter, system-ui, sans-serif';
@@ -304,16 +303,8 @@ export default function Navbar() {
                             index={i}
                             onClick={() => {
                               setTermMode(null);
-                              if (isIntelModule) {
-                                if (user) {
-                                  router.push(dest);
-                                } else {
-                                  sessionStorage.setItem('novrix-pending-nav', dest);
-                                  openAuthGate();
-                                }
-                              }
+                              router.push(dest);
                             }}
-                            useAuthGate={isIntelModule}
                           />
                         );
                       })}
@@ -325,7 +316,7 @@ export default function Navbar() {
                       style={{ position: 'relative', borderTop: '1px solid rgba(255,255,255,0.075)' }}
                     >
                       <span style={{ fontFamily: MONO, fontSize: '9px', fontWeight: 500, letterSpacing: '0.12em', color: '#64748B', textTransform: 'uppercase' }}>
-                        Authentication Required
+                        Active Terminal Modules
                       </span>
                     </div>
                   </div>
@@ -508,14 +499,7 @@ export default function Navbar() {
             const isIntelModule = ['/sentiment', '/tracking', '/metrilytics'].includes(href);
             const handleClick = () => {
               setMobileOpen(false);
-              if (isIntelModule) {
-                if (user) {
-                  router.push(href);
-                } else {
-                  sessionStorage.setItem('novrix-pending-nav', href);
-                  openAuthGate();
-                }
-              }
+              router.push(href);
             };
             const itemStyle = {
               display: 'flex', alignItems: 'center', gap: '14px',
@@ -598,14 +582,14 @@ export default function Navbar() {
               </button>
             </div>
           ) : (
-            <Link href="/terminal" prefetch={false} onClick={() => setMobileOpen(false)}
+            <Link href="/sentiment" prefetch={false} onClick={() => setMobileOpen(false)}
               style={{
                 fontFamily: INTER, fontSize: '12px', fontWeight: 600, letterSpacing: '0.10em', textTransform: 'uppercase',
                 minHeight: '44px', padding: '0 20px', color: '#C0A8B0',
                 border: '1px solid rgba(194,52,77,0.40)', background: 'rgba(194,52,77,0.06)',
                 textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
               }}>
-              Access Terminal
+              Launch Terminal
             </Link>
           )}
         </div>
@@ -683,20 +667,20 @@ function CLIButton({ onClick }: { onClick: () => void }) {
 
 function AccessButton() {
   return (
-    <Link href="/terminal" prefetch={false}
+    <Link href="/sentiment" prefetch={false}
       style={{ ...NAV, fontSize: '11px', fontWeight: 600, letterSpacing: '0.20em', padding: '7px 16px', color: '#C2344D', border: '1px solid rgba(194,52,77,0.45)', background: 'transparent', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '7px', transition: 'color 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease', borderRadius: 0 }}
       onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.color = '#D9485F'; el.style.borderColor = 'rgba(194,52,77,0.80)'; el.style.background = 'rgba(194,52,77,0.08)'; el.style.boxShadow = '0 0 14px rgba(194,52,77,0.15)'; }}
       onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.color = '#C2344D'; el.style.borderColor = 'rgba(194,52,77,0.45)'; el.style.background = 'transparent'; el.style.boxShadow = 'none'; }}
     >
       <span style={{ fontSize: '8px', color: '#C2344D', flexShrink: 0, lineHeight: 1, pointerEvents: 'none' }}>&#9679;</span>
-      ACCESS TERMINAL
+      LAUNCH TERMINAL
     </Link>
   );
 }
 
-function DropdownModule({ href, label, desc, Icon, active, open, index, onClick, useAuthGate }: {
+function DropdownModule({ href, label, desc, Icon, active, open, index, onClick }: {
   href: string; label: string; desc: string;
-  Icon: () => React.ReactElement; active: boolean; open: boolean; index: number; onClick: () => void; useAuthGate?: boolean;
+  Icon: () => React.ReactElement; active: boolean; open: boolean; index: number; onClick: () => void;
 }) {
   const [hovered, setHovered] = useState(false);
   const on = active || hovered;
@@ -815,20 +799,6 @@ function DropdownModule({ href, label, desc, Icon, active, open, index, onClick,
     cursor: 'pointer',
     width: '100%',
   };
-
-  if (useAuthGate) {
-    return (
-      <button
-        onClick={onClick}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        className="terminal-dropdown-module"
-        style={{ ...style, border: 'none', textAlign: 'left' }}
-      >
-        {content}
-      </button>
-    );
-  }
 
   return (
     <Link href={href} prefetch={false} onClick={onClick} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
