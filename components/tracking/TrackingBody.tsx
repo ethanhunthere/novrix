@@ -3,7 +3,6 @@
 import TerminalModulePageShell from '@/components/terminal/TerminalModulePageShell';
 import FooterTerminal from '@/components/terminal/FooterTerminal';
 import DesktopGate from '@/components/layout/DesktopGate';
-import BootSequence from '@/components/layout/BootSequence';
 import AuthGuard from '@/components/layout/AuthGuard';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';

@@ -172,36 +172,8 @@ import { useSentimentData } from '@/lib/hooks/useSentimentData';
 // ── Per-indicator sessionStorage cache (1-hour TTL) — also used by useSentimentData hook ──
 // Re-exported from lib/fetchWithSSCache.ts; kept here only as a reference.
 // URLs pre-fetched during the boot animation so data is ready when content mounts
-// ── Module-level prefetch for ALL indicator URLs ────────────────────────────
-// Fires at JS parse time — before React hydrates, before BootSequence mounts.
-// Checks sessionStorage for each URL (1-hour TTL) and falls back to a network
-// fetch. This gives every indicator a 2.5 s head-start while the boot animation
-// runs, so data is ready the moment the overlay dismisses.
-if (typeof window !== 'undefined') {
-  SENTIMENT_PREFETCH_URLS.forEach((url) => {
-    // Skip the bulk endpoint — already handled by the dedicated preload block above
-    if (url === PRELOAD_URL) return;
+// Module-level bulk preload handled above via PRELOAD_URL (/api/sentiment/all)
 
-    // Check sessionStorage for per-indicator cached data (same key format as fetchWithSSCache)
-    const cacheKey = `novrix_${SENTIMENT_DATA_VERSION}_` + url.replace(/^\/api\//, '').replace(/[\/?=&]/g, '_') + '_cache';
-    const raw = sessionStorage.getItem(cacheKey);
-    if (raw) {
-      try {
-        const { d, t } = JSON.parse(raw);
-        if (Date.now() - t < SS_TTL && d) {
-          registerPromise(url, Promise.resolve(d));
-          return;
-        }
-      } catch {
-        sessionStorage.removeItem(cacheKey);
-      }
-    }
-
-    // Start the fetch immediately — bootCache deduplicates so BootSequence's
-    // identical prefetch later in the lifecycle is a no-op.
-    prefetch(url);
-  });
-}
 
 type SentimentContentProps = {
   onPrimaryDataReady: () => void;
@@ -471,32 +443,80 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
 
 
 
-  // All panels render immediately — data skeletons handle loading state per-chart
-  const [visiblePanels] = useState<Set<string>>(() => new Set([
+  // Top panels render immediately; offscreen panels mount when scrolled near viewport (600px margin)
+  const [visiblePanels, setVisiblePanels] = useState<Set<string>>(() => new Set([
     'sentiment-oscillator', 'nupl', 'mvrv', 'lth-mvrv', 'sopr', 'sth-mvrv', 'ssr',
-    'supply-loss', 'supply-profit', 'realized-profit', 'realized-loss', 'hashrate',
-    'dominance', 'social-sentiment', 'trending-coins',
-    'puell-multiple', 'mayer-multiple', 'reserve-risk', 'aviv', 'mvrv-zscore',
-    'vdd', 'supply-shock', 'active-addresses',
-    'illiquid-supply', 'hot-supply', 'hashribbons',
-    'nrpl', 'rhodl-ratio', 'open-interest', 'funding-rate',
-    'm2', 'dxy', 'vix',
-    'fedfunds', 'etf', 'sp500', 'gold',
-    'stablecoin-supply', 'ssr-oscillator', 'crypto-market-cap',
-    'realized-price', 'market-cap-k4', '200-week-ma',
-    'highly-liquid-supply',
-    'lth-position-change', 'sth-position-change', 'mpi', 'miner-sell-pressure',
-    'utxo-profit', 'utxo-loss',
-    'nvts', 'nvt-zscore', 'cvdd',
-    'fred-sofr', 'fred-walcl', 'fred-wresbal', 'fred-rrpontsyd', 'fred-cpiaucsl', 'fred-cpilfesl', 'fred-pcepi', 'fred-pcepilfe', 'fred-mich', 'fred-t5yie', 'fred-t10yie', 'fred-dgs1mo', 'fred-dgs3mo', 'fred-dgs6mo', 'fred-dgs1', 'fred-dgs5', 'fred-dgs20', 'fred-dgs30', 'fred-t10y2y', 'fred-t10y3m', 'fred-m1sl', 'fred-mabmm301usm189s', 'fred-unrate', 'fred-payems', 'fred-icsa', 'fred-jtsjol', 'fred-emratio', 'fred-gdpc1', 'fred-indpro', 'fred-houst', 'fred-umcsent', 'fred-rsxfs', 'fred-dcoilwtico', 'fred-bamlh0a0hym2', 'fred-mortgage30us', 'fred-bogmbase', 'fred-totalsl',
-    'vtpx', 'shax', 'smfx', 'levr', 'rcfx',
-    'cprx', 'rpix', 'crrx', 'sgrx', 'domx',
   ]));
 
-  // Refs for screenshot capture on each indicator panel
+  const observerRef = useRef<IntersectionObserver | null>(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const panelId = entry.target.getAttribute('data-panel-id');
+            if (panelId) {
+              setVisiblePanels((prev) => {
+                if (prev.has(panelId)) return prev;
+                const next = new Set(prev);
+                next.add(panelId);
+                return next;
+              });
+              observer.unobserve(entry.target);
+            }
+          }
+        });
+      },
+      { rootMargin: '600px 0px' }
+    );
+    observerRef.current = observer;
+
+    Object.entries(panelRefs.current).forEach(([key, el]) => {
+      if (el) {
+        el.setAttribute('data-panel-id', key);
+        observer.observe(el);
+      }
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (maximizedPanel) {
+      setVisiblePanels((prev) => {
+        if (prev.has(maximizedPanel)) return prev;
+        const next = new Set(prev);
+        next.add(maximizedPanel);
+        return next;
+      });
+    }
+  }, [maximizedPanel]);
+
+  useEffect(() => {
+    if (selectedIndicator) {
+      const panelId = selectedIndicator.replace(/^indicator-/, '');
+      setVisiblePanels((prev) => {
+        if (prev.has(panelId)) return prev;
+        const next = new Set(prev);
+        next.add(panelId);
+        return next;
+      });
+    }
+  }, [selectedIndicator]);
+
+  // Refs for screenshot capture and lazy-load observation on each indicator panel
   const panelRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const setPanelRef = useCallback((key: string) => (el: HTMLDivElement | null) => {
     panelRefs.current[key] = el;
+    if (el) {
+      el.setAttribute('data-panel-id', key);
+      if (observerRef.current) {
+        observerRef.current.observe(el);
+      }
+    }
   }, []);
 
 
@@ -512,7 +532,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
 
   const ch = useCallback((panelId: string, normalH = 320) => {
     if (maximizedPanel === panelId) return Math.min(560, vpHeight * 0.58);
-    if (selectedIndicator !== null) return Math.max(normalH, Math.min(vpHeight - 410, 600));
+    if (selectedIndicator !== null) return Math.max(normalH, Math.min(vpHeight - 410, 480));
     return normalH;
   }, [maximizedPanel, selectedIndicator, vpHeight]);
 

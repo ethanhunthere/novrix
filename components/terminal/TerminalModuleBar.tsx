@@ -153,12 +153,6 @@ export default function TerminalModuleBar() {
               <Link
                 key={mod.href}
                 href={mod.href}
-                onClick={(e) => {
-                  if (isActive) return;
-                  e.preventDefault();
-                  sessionStorage.setItem('novrix-terminal-internal-nav', '1');
-                  window.location.href = mod.href;
-                }}
                 style={{
                   position: 'relative',
                   display: 'flex',

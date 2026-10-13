@@ -69,8 +69,8 @@ function MoodVisual({ accent }: { accent: string }) {
       <style jsx>{`
         @keyframes gaugeSwing { from { stroke-dashoffset: 35; } to { stroke-dashoffset: 115; } }
         @keyframes ekgPulse { 0%, 100% { opacity: 0.65; } 50% { opacity: 1; } }
-        @keyframes cardiacPulse { 0%, 100% { opacity: 0.4; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.08); } }
-        @keyframes alarmFlash { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+        .cardiac-surge, .alarm-bar { animation-play-state: paused; }
+        .group:hover .mood-visual .cardiac-surge, .group:hover .mood-visual .alarm-bar { animation-play-state: running; }
         .group:hover .mood-visual .gauge-active { filter: url(#${id}-glow-hover); stroke-width: 4; animation-duration: 0.8s; }
         .group:hover .mood-visual .ekg-line { stroke-width: 2.8; filter: url(#${id}-glow-hover); animation-duration: 0.7s; }
         .group:hover .mood-visual .ekg-fill { opacity: 0.85; animation-duration: 0.7s; }
@@ -201,6 +201,10 @@ function WalletVisual({ accent }: { accent: string }) {
         .scanline-sweep { animation: scanlineSweep 1.8s linear infinite; }
         @keyframes dataRain { 0% { transform: translateY(-120%); opacity: 0; } 10% { opacity: 0.6; } 90% { opacity: 0.6; } 100% { transform: translateY(500%); opacity: 0; } }
         @keyframes packetFly { 0% { transform: translateX(-20px); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateX(360px); opacity: 0; } }
+        .data-stream, .packet, .scanline-sweep { animation-play-state: paused; }
+        .group:hover .wallet-visual .data-stream,
+        .group:hover .wallet-visual .packet,
+        .group:hover .wallet-visual .scanline-sweep { animation-play-state: running; }
         .group:hover .wallet-visual .flow-particle { filter: url(#${id}-glow-hover); }
         .group:hover .wallet-visual .flow-particle-trail { opacity: 0.85; }
         .group:hover .wallet-visual .flow-surge { opacity: 0.9; filter: url(#${id}-glow-hover); }
@@ -335,6 +339,9 @@ function ProtocolVisual({ accent }: { accent: string }) {
         @keyframes radarSweep { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes shieldAura { 0% { opacity: 0.3; transform: scale(0.95); } 100% { opacity: 0.8; transform: scale(1.1); } }
         @keyframes hexRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .radar-sweep, .shield-aura { animation-play-state: paused; }
+        .group:hover .protocol-visual .radar-sweep,
+        .group:hover .protocol-visual .shield-aura { animation-play-state: running; }
         .group:hover .protocol-visual .hex-grid { opacity: 0.45; animation: hexRotate 20s linear infinite; transform-origin: 170px 85px; }
         .group:hover .protocol-visual .shield-group { animation: shieldLock 0.6s ease-out forwards; }
         @keyframes shieldLock { 0% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.18) rotate(3deg); } 100% { transform: scale(1.12) rotate(0deg); } }

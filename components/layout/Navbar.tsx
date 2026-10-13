@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useAuth, useLogout } from '@/lib/hooks/useAuth';
 import { useCLI } from '@/lib/state/CLIContext';
 import { openAuthGate } from '@/lib/utils/auth';
@@ -73,6 +73,7 @@ export default function Navbar() {
   const userRef  = useRef<HTMLDivElement>(null);
   const hoverLeaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathname = usePathname();
+  const router = useRouter();
   const { user } = useAuth();
   const logout   = useLogout();
   const { toggle: toggleCLI } = useCLI();
@@ -305,10 +306,7 @@ export default function Navbar() {
                               setTermMode(null);
                               if (isIntelModule) {
                                 if (user) {
-                                  // Already authenticated — mark as internal terminal hop so
-                                  // BootSequence shows the entering card instead of full boot.
-                                  sessionStorage.setItem('novrix-terminal-internal-nav', '1');
-                                  window.location.href = dest;
+                                  router.push(dest);
                                 } else {
                                   sessionStorage.setItem('novrix-pending-nav', dest);
                                   openAuthGate();
@@ -512,9 +510,7 @@ export default function Navbar() {
               setMobileOpen(false);
               if (isIntelModule) {
                 if (user) {
-                  // Internal terminal module hop — show entering card, not full boot.
-                  sessionStorage.setItem('novrix-terminal-internal-nav', '1');
-                  window.location.href = href;
+                  router.push(href);
                 } else {
                   sessionStorage.setItem('novrix-pending-nav', href);
                   openAuthGate();

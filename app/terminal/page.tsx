@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -69,9 +69,6 @@ function getSafeRedirectTarget(raw: string | null) {
   } catch { return '/terminal'; }
 }
 
-function navigateTo(href: string) {
-  window.location.href = href;
-}
 
 /* ═══════════════════════════════════════════════════════════
    COMPACT HERO
@@ -605,12 +602,17 @@ function GatePanel({ onSuccess, onClose }: {
    ═══════════════════════════════════════════════════════════ */
 
 export default function TerminalPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const { user } = useAuth();
   const [showGate, setShowGate] = useState(false);
   const [redirecting, setRedirecting] = useState(false);
   const [pendingHref, setPendingHref] = useState<string | null>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
+
+  const navigateTo = useCallback((href: string) => {
+    router.push(href);
+  }, [router]);
 
   const targetModule = getSafeRedirectTarget(searchParams.get('redirect'));
 

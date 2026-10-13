@@ -534,7 +534,7 @@ export interface PanelMaximizeWrapperProps {
 }
 
 export const PanelMaximizeWrapper = forwardRef<HTMLDivElement, PanelMaximizeWrapperProps>(
-  ({ panelId: _panelId, isMaximized, onMinimize, children, className, style, id, 'data-panel': dataPanelAttr, onMouseEnter, fullHeight }, ref) => {
+  ({ panelId: _panelId, isMaximized, onMinimize, children, className, style, id, 'data-panel': dataPanelAttr, onMouseEnter, fullHeight: _fullHeight }, ref) => {
     useEffect(() => {
       if (!isMaximized) return;
       const handleKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onMinimize(); };
@@ -554,12 +554,8 @@ export const PanelMaximizeWrapper = forwardRef<HTMLDivElement, PanelMaximizeWrap
       };
     }, [isMaximized, onMinimize]);
 
-    const mergedStyle = fullHeight
-      ? { ...style, height: 'calc(100vh - 250px)', display: 'flex' as const, flexDirection: 'column' as const }
-      : style;
-
     const panelEl = (
-      <div ref={ref} className={`${className || ''}${fullHeight ? ' [&>div:last-child]:flex-1' : ''}`} style={mergedStyle} id={id} data-panel={dataPanelAttr} onMouseEnter={onMouseEnter}>
+      <div ref={ref} className={className} style={style} id={id} data-panel={dataPanelAttr} onMouseEnter={onMouseEnter}>
         {children}
       </div>
     );

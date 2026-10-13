@@ -167,7 +167,6 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} ${barlow.variable} font-sans antialiased min-h-screen flex flex-col text-white overflow-y-scroll bg-[#09090B]`}
         style={{
-          scrollBehavior: 'smooth',
           WebkitFontSmoothing: 'antialiased',
           MozOsxFontSmoothing: 'grayscale',
           textRendering: 'optimizeLegibility',

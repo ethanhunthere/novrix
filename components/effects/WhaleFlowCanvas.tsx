@@ -288,7 +288,7 @@ export default function WhaleFlowCanvas() {
     <canvas
       ref={canvasRef}
       className="absolute inset-0 w-full h-full pointer-events-none"
-      style={{ mixBlendMode: 'screen', opacity: 0.6 }}
+      style={{ opacity: 0.6 }}
       aria-hidden="true"
     />
   );

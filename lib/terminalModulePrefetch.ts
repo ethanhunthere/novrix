@@ -6,81 +6,10 @@ export type TerminalModuleKey = 'sentiment' | 'tracking' | 'metrilytics';
 export const SENTIMENT_PRELOAD_URL = withSentimentDataVersion('/api/sentiment/all');
 
 export const SENTIMENT_PREFETCH_URLS = [
-  '/api/sentiment/all',
-  '/api/sentiment/cached',
-  '/api/fear-greed?days=3000',
-  '/api/nrpl',
-  '/api/rhodl-ratio',
-  '/api/open-interest',
-  '/api/funding-rate',
-  '/api/realized-price',
-  '/api/market-cap',
-  '/api/200-week-ma',
-  '/api/highly-liquid-supply',
-  '/api/lth-position-change',
-  '/api/sth-position-change',
-  '/api/mpi',
-  '/api/miner-sell-pressure',
-  '/api/utxo-profit',
-  '/api/utxo-loss',
-  '/api/m2',
-  '/api/dxy',
-  '/api/vix',
-  '/api/fedfunds',
-  '/api/etf',
-  '/api/sp500',
-  '/api/gold',
-  '/api/stablecoin-supply',
-  '/api/crypto-market-cap',
-  '/api/nvts',
-  '/api/nvt-zscore',
-  '/api/cvdd',
-  '/api/puell-multiple',
-  '/api/mayer-multiple',
-  '/api/reserve-risk',
-  '/api/aviv',
-  '/api/mvrv-zscore',
-  '/api/vdd',
-  '/api/supply-shock-ratio',
-  '/api/active-addresses',
-  '/api/hot-supply',
-  '/api/hashribbons',
-  '/api/dominance/historical',
-  '/api/fred-sofr',
-  '/api/fred-walcl',
-  '/api/fred-rrpontsyd',
-  '/api/fred-cpiaucsl',
-  '/api/fred-cpilfesl',
-  '/api/fred-pcepi',
-  '/api/fred-pcepilfe',
-  '/api/fred-mich',
-  '/api/fred-t5yie',
-  '/api/fred-t10yie',
-  '/api/fred-dgs1mo',
-  '/api/fred-dgs3mo',
-  '/api/fred-dgs6mo',
-  '/api/fred-dgs1',
-  '/api/fred-dgs5',
-  '/api/fred-dgs20',
-  '/api/fred-dgs30',
-  '/api/fred-t10y2y',
-  '/api/fred-t10y3m',
-  '/api/fred-mabmm301usm189s',
-  '/api/fred-unrate',
-  '/api/fred-payems',
-  '/api/fred-icsa',
-  '/api/fred-jtsjol',
-  '/api/fred-emratio',
-  '/api/fred-gdpc1',
-  '/api/fred-indpro',
-  '/api/fred-houst',
-  '/api/fred-umcsent',
-  '/api/fred-rsxfs',
-  '/api/fred-dcoilwtico',
-  '/api/fred-bamlh0a0hym2',
-  '/api/fred-mortgage30us',
-  '/api/fred-totalsl',
-].map(withSentimentDataVersion);
+  SENTIMENT_PRELOAD_URL,
+  withSentimentDataVersion('/api/sentiment/cached'),
+  withSentimentDataVersion('/api/fear-greed?days=3000'),
+];
 
 export const TRACKING_PREFETCH_URLS = [
   '/api/tracking/?limit=100&offset=0',
@@ -115,7 +44,12 @@ export const METRILYTICS_API_URLS = {
   concentration: `/api/metrilytics/concentration?days=365&top=10&v=${FULL_HISTORY_VERSION}`,
 };
 
-export const METRILYTICS_PREFETCH_URLS = Object.values(METRILYTICS_API_URLS);
+export const METRILYTICS_PREFETCH_URLS = [
+  METRILYTICS_API_URLS.summary,
+  METRILYTICS_API_URLS.chains,
+  METRILYTICS_API_URLS.protocols,
+  METRILYTICS_API_URLS.market,
+];
 
 const MODULE_PREFETCH_URLS: Record<TerminalModuleKey, string[]> = {
   sentiment: SENTIMENT_PREFETCH_URLS,
@@ -127,12 +61,6 @@ export function prefetchTerminalModule(module: TerminalModuleKey): void {
   MODULE_PREFETCH_URLS[module].forEach(bootPrefetch);
 }
 
-export function prefetchPeerTerminalModules(currentModule: TerminalModuleKey): void {
-  if (typeof window === 'undefined') return;
-
-  window.setTimeout(() => {
-    (Object.keys(MODULE_PREFETCH_URLS) as TerminalModuleKey[])
-      .filter(module => module !== currentModule)
-      .forEach(prefetchTerminalModule);
-  }, 0);
+export function prefetchPeerTerminalModules(_currentModule: TerminalModuleKey): void {
+  // Disabled aggressive 100+ parallel request burst to preserve bandwidth and keep terminal entry instantaneous
 }

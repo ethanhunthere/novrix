@@ -46,15 +46,17 @@ function isFREDUpdateResult(value: unknown): value is FREDUpdateResult {
   return typeof value === 'object' && value !== null && 'inserted' in value;
 }
 
-// 39 series — all confirmed valid on FRED as of 2025.
-// Note: gold uses GOLDPMGBD228NLBM (London PM fix) — the AM series was discontinued.
+// FRED series — all confirmed valid on FRED.
+// Note: gold is NOT fetched from FRED. FRED's gold series (the London AM/PM
+// fixes GOLDAMGBD228NLBM / GOLDPMGBD228NLBM) were discontinued, and the
+// remaining NASDAQQGLDI index diverges badly from the real gold price. Gold
+// is sourced from Yahoo Finance GC=F via updateGoldFromYahoo() below.
 
 const FRED_ENDPOINTS: Record<string, FREDEndpoint> = {
   dxy:       { seriesId: 'DTWEXBGS',          table: 'dxy_data' },
   vix:       { seriesId: 'VIXCLS',            table: 'vix_data' },
   fedfunds:  { seriesId: 'FEDFUNDS',          table: 'fedfunds_data' },
   sp500:     { seriesId: 'SP500',             table: 'sp500_data' },
-  gold:      { seriesId: 'NASDAQQGLDI',        table: 'gold_data' }, // NASDAQ Gold Index (USD/oz, daily)
   m2:        { seriesId: 'M2SL',              table: 'm2_data', scale: 1_000_000_000 },
 
   sofr:      { seriesId: 'SOFR',              table: 'fred_sofr_data' },
@@ -198,6 +200,51 @@ async function updateFREDIndicator(
   }
 }
 
+/**
+ * Gold is sourced from Yahoo Finance GC=F (COMEX gold futures front-month,
+ * which tracks spot gold closely). FRED no longer has a usable gold series:
+ * the London AM/PM fixes were discontinued and NASDAQQGLDI diverges from the
+ * real price. Fetches the last ~60 days of daily closes and upserts them.
+ */
+async function updateGoldFromYahoo(db: D1Database): Promise<FREDUpdateResult> {
+  try {
+    const period2 = Math.floor(Date.now() / 1000);
+    const period1 = period2 - 60 * 86400;
+    const url = `https://query1.finance.yahoo.com/v8/finance/chart/GC=F?period1=${period1}&period2=${period2}&interval=1d`;
+    const response = await fetch(url, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (NOVRIX gold sync)' },
+      signal: AbortSignal.timeout(30000),
+    });
+    if (!response.ok) throw new Error(`Yahoo HTTP ${response.status} for GC=F`);
+
+    const json = await response.json() as {
+      chart?: { result?: Array<{ timestamp?: number[]; indicators?: { quote?: Array<{ close?: Array<number | null> }> } }> };
+    };
+    const result = json.chart?.result?.[0];
+    const timestamps = result?.timestamp ?? [];
+    const closes = result?.indicators?.quote?.[0]?.close ?? [];
+
+    const byDate = new Map<string, number>();
+    for (let i = 0; i < timestamps.length; i++) {
+      const close = closes[i];
+      if (close === null || close === undefined || !Number.isFinite(close)) continue;
+      byDate.set(toDateStr(new Date(timestamps[i] * 1000)), Math.round(close * 100) / 100);
+    }
+    if (byDate.size === 0) throw new Error('Yahoo GC=F returned no usable closes');
+
+    const records = [...byDate.entries()].map(([date, value]) => ({ date, value }));
+    const stmts = records.map(r =>
+      db.prepare('INSERT OR REPLACE INTO gold_data (date, value) VALUES (?, ?)').bind(r.date, r.value)
+    );
+    await db.batch(stmts);
+    return { inserted: stmts.length, skipped: false, fetched: byDate.size };
+  } catch (error: unknown) {
+    const message = errorMessage(error);
+    console.error(`[Gold:Yahoo Error] ${message}`);
+    return { inserted: 0, skipped: false, fetched: 0, error: message };
+  }
+}
+
 const LOCK_KEY = 'fred-cron:running';
 const LOCK_TTL_MINUTES = 30;
 
@@ -236,6 +283,10 @@ async function runFREDUpdates(env: Env): Promise<FREDRunResults> {
     const [key, endpoint] = entries[i];
     results[key] = await updateFREDIndicator(env.DB, key, endpoint, apiKey);
   }
+
+  // Gold: FRED's gold series were discontinued, so it is fetched separately
+  // from Yahoo Finance GC=F (COMEX front-month, tracks spot gold).
+  results.gold = await updateGoldFromYahoo(env.DB);
 
   const inserted = Object.values(results).reduce((sum: number, r) => sum + r.inserted, 0);
   const errors = Object.entries(results).filter(([, r]) => r.error).map(([k]) => k);

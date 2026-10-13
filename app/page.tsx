@@ -5,6 +5,7 @@ import FooterHome from '@/components/layout/FooterHome';
 import KineticText from '@/components/effects/KineticText';
 import DeskCard from '@/components/home/DeskCard';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 
 const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
@@ -40,9 +41,10 @@ function useKineticFirstPaint() {
 
 function HomeModuleButton({ href, label, variant }: { href: string; label: string; variant: 'primary' | 'secondary' }) {
   const { user } = useAuth();
+  const router = useRouter();
   const handleClick = () => {
     if (user) {
-      window.location.href = href;
+      router.push(href);
     } else {
       sessionStorage.setItem('novrix-pending-nav', href);
       openAuthGate();
@@ -61,51 +63,8 @@ function HomeModuleButton({ href, label, variant }: { href: string; label: strin
 /* ═══════════════════════════════════════════════════════════
    HERO STATEMENT — typewriter reveal
    ═══════════════════════════════════════════════════════════ */
-function HeroStatement({ startTyping }: { startTyping: boolean }) {
+function HeroStatement({ startTyping: _startTyping }: { startTyping?: boolean }) {
   const fullText = HERO_STATEMENT;
-  const [phase, setPhase] = useState<'idle' | 'header' | 'typing' | 'done'>('idle');
-  const visibleRef = useRef<HTMLSpanElement>(null);
-  const idxRef = useRef(1);
-
-  useIsomorphicLayoutEffect(() => {
-    if (!startTyping || phase !== 'idle') return;
-    setPhase('typing');
-  }, [startTyping, phase]);
-
-  useIsomorphicLayoutEffect(() => {
-    if (phase !== 'typing') return;
-    let cancelled = false;
-    let timeoutId: ReturnType<typeof setTimeout> | null = null;
-
-    const tick = () => {
-      if (cancelled) return;
-      const i = idxRef.current;
-      if (i >= fullText.length) {
-        setPhase('done');
-        return;
-      }
-      const char = fullText[i];
-      const base = char === ' ' ? 38 : 28;
-      const jitter = Math.floor(Math.random() * 22);
-      timeoutId = setTimeout(() => {
-        if (cancelled) return;
-        idxRef.current = i + 1;
-        if (visibleRef.current) {
-          visibleRef.current.textContent = fullText.slice(0, i + 1);
-        }
-        tick();
-      }, base + jitter);
-    };
-
-    tick();
-    return () => {
-      cancelled = true;
-      if (timeoutId) clearTimeout(timeoutId);
-    };
-  }, [phase, fullText]);
-
-  const showBlock = phase !== 'idle';
-  const showCursor = phase === 'typing';
   const typewriterStyle = {
     fontFamily: 'var(--font-jetbrains-mono), JetBrains Mono, monospace',
     fontSize: 'clamp(0.76rem, 1.1vw, 0.96rem)',
@@ -134,8 +93,7 @@ function HeroStatement({ startTyping }: { startTyping: boolean }) {
             position: 'relative',
             maxWidth: 'min(720px, 92vw)',
             padding: 'clamp(0.8rem, 2vh, 1.6rem) clamp(0.5rem, 2vw, 2rem)',
-            opacity: showBlock ? 1 : 0,
-            transition: 'opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1)',
+            opacity: 1,
           }}
         >
           <div
@@ -204,28 +162,8 @@ function HeroStatement({ startTyping }: { startTyping: boolean }) {
               borderBottom: '1px solid rgba(0,200,238,0.25)',
             }}
           />
-          <div style={{ display: 'grid' }}>
-            <div
-              aria-hidden="true"
-              className="hero-typewriter-text"
-              style={{ ...typewriterStyle, gridArea: '1 / 1', visibility: 'hidden' }}
-            >
-              <span style={bracketStyle}>[</span> {fullText} <span style={bracketStyle}>]</span>
-            </div>
-            <div
-              className="hero-typewriter-text"
-              style={{ ...typewriterStyle, gridArea: '1 / 1' }}
-            >
-              <span style={bracketStyle}>[</span>{' '}
-              <span ref={visibleRef}>{fullText.charAt(0)}</span>
-              {showCursor && (
-                <span
-                  className="hero-typing-cursor"
-                  style={{ display: 'inline-block', pointerEvents: 'none' }}
-                />
-              )}{' '}
-              <span style={bracketStyle}>]</span>
-            </div>
+          <div className="hero-typewriter-text" style={typewriterStyle}>
+            <span style={bracketStyle}>[</span> {fullText} <span style={bracketStyle}>]</span>
           </div>
         </div>
       </div>
