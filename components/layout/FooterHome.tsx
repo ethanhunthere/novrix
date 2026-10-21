@@ -88,7 +88,7 @@ export default function FooterHome() {
       <div
         style={{
           height: '1px',
-          background: 'linear-gradient(90deg, transparent 0%, rgba(194,52,77,0.25) 20%, rgba(194,52,77,0.4) 50%, rgba(194,52,77,0.25) 80%, transparent 100%)',
+          background: 'linear-gradient(90deg, transparent 0%, rgba(199,85,102,0.22) 20%, rgba(199,85,102,0.36) 50%, rgba(199,85,102,0.22) 80%, transparent 100%)',
         }}
       />
 

@@ -140,7 +140,7 @@ export default function Navbar() {
       <nav
         className="relative z-[50]"
         style={{
-          background: 'rgba(7, 9, 15, 0.92)',
+          background: 'rgba(10, 10, 12, 0.90)',
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)',
         }}

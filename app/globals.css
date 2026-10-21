@@ -1186,3 +1186,130 @@ html.novrix-kinetic-mounted .kinetic-text-shell {
 .hero-contained {
   contain: layout style;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   HOME — static edition
+   No keyframes, no observers, no runtime animation. Hover
+   feedback is CSS transitions only.
+   ═══════════════════════════════════════════════════════════ */
+.home-shell {
+  background: #0a0a0c;
+}
+
+.home-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 0 22px;
+  border-radius: 2px;
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease;
+}
+
+.home-btn .arrow {
+  transition: transform 200ms ease;
+}
+
+.home-btn:hover .arrow {
+  transform: translateX(3px);
+}
+
+.home-btn-primary {
+  color: #111113;
+  background: #ede9e2;
+  border: 1px solid #ede9e2;
+}
+
+.home-btn-primary:hover {
+  background: #faf8f4;
+  border-color: #faf8f4;
+}
+
+.home-btn-ghost {
+  color: #d8d3ca;
+  background: transparent;
+  border: 1px solid rgba(237, 233, 226, 0.16);
+}
+
+.home-btn-ghost:hover {
+  color: #f4f1ec;
+  border-color: rgba(199, 85, 102, 0.5);
+}
+
+.home-module-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(22px, 2.2vw, 32px);
+  border: 1px solid rgba(237, 233, 226, 0.075);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.018);
+  text-decoration: none;
+  transition: background-color 220ms ease, border-color 220ms ease, transform 220ms ease;
+}
+
+.home-module-card:hover {
+  background: rgba(255, 255, 255, 0.032);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  transform: translateY(-2px);
+}
+
+.home-module-card:focus-visible {
+  outline: 1px solid color-mix(in srgb, var(--accent) 65%, transparent);
+  outline-offset: 2px;
+}
+
+.home-module-top {
+  border-bottom: 1px solid rgba(237, 233, 226, 0.07);
+}
+
+.home-module-dot {
+  background: var(--accent);
+}
+
+.home-module-label {
+  color: color-mix(in srgb, var(--accent) 78%, #ede9e2);
+}
+
+.home-module-index {
+  color: rgba(237, 233, 226, 0.28);
+}
+
+.home-module-cta {
+  color: rgba(237, 233, 226, 0.5);
+  transition: color 200ms ease;
+}
+
+.home-module-cta .arrow {
+  transition: transform 200ms ease;
+}
+
+.home-module-card:hover .home-module-cta {
+  color: #f4f1ec;
+}
+
+.home-module-card:hover .home-module-cta .arrow {
+  transform: translateX(3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-btn,
+  .home-btn .arrow,
+  .home-module-card,
+  .home-module-cta,
+  .home-module-cta .arrow {
+    transition: none;
+  }
+
+  .home-module-card:hover {
+    transform: none;
+  }
+}

@@ -82,7 +82,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
-  themeColor: '#0A0A0F',
+  themeColor: '#0A0A0C',
 };
 
 export default function RootLayout({
@@ -91,7 +91,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark" style={{ background: '#09090B' }}>
+    <html lang="en" className="dark" style={{ background: '#0A0A0C' }}>
       <head>
         {/* Explicit favicon links for crawler compatibility */}
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
@@ -165,7 +165,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} ${barlow.variable} font-sans antialiased min-h-screen flex flex-col text-white overflow-y-scroll bg-[#09090B]`}
+        className={`${inter.variable} ${jetbrainsMono.variable} ${barlow.variable} font-sans antialiased min-h-screen flex flex-col text-white overflow-y-scroll bg-[#0A0A0C]`}
         style={{
           WebkitFontSmoothing: 'antialiased',
           MozOsxFontSmoothing: 'grayscale',
@@ -176,7 +176,7 @@ export default function RootLayout({
         <div
           className="fixed inset-0 pointer-events-none z-0"
           style={{
-            background: 'radial-gradient(ellipse at 50% 0%, rgba(194, 52, 77, 0.03) 0%, transparent 55%)'
+            background: 'radial-gradient(ellipse at 50% 0%, rgba(199, 85, 102, 0.035) 0%, transparent 55%)'
           }}
         />
 
