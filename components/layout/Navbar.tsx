@@ -2,755 +2,458 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState, useEffect, useRef } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { usePathname } from 'next/navigation';
 import { useAuth, useLogout } from '@/lib/hooks/useAuth';
-import { useCLI } from '@/lib/state/CLIContext';
 
-const MONO  = 'var(--ff-mono)';
-const INTER = 'var(--ff-sans)';
-
-const NAV: React.CSSProperties = {
-  fontFamily: INTER,
-  fontSize: '13px',
-  fontWeight: 500,
-  letterSpacing: '0.01em',
-  textTransform: 'none',
-  lineHeight: 1,
-};
-
-const MODULES = [
-  {
-    href : '/sentiment',
-    label: 'Sentiment',
-    desc : 'Market psychology',
-    Icon : () => (
-      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M1 7.5Q3 4 5 7.5Q7 11 9 7.5Q11 4 13.5 7.5" />
-        <circle cx="13.5" cy="7.5" r="1" fill="currentColor" stroke="none" />
-      </svg>
-    ),
-  },
-  {
-    href : '/metrilytics',
-    label: 'Metrilytics',
-    desc : 'On-chain metrics',
-    Icon : () => (
-      <svg width="15" height="15" viewBox="0 0 15 15" fill="currentColor">
-        <rect x="0.5" y="8.5" width="3.5" height="6" rx="0.5" opacity="0.45" />
-        <rect x="5.5" y="5.5" width="3.5" height="9" rx="0.5" opacity="0.72" />
-        <rect x="10.5" y="2" width="3.5" height="12.5" rx="0.5" />
-      </svg>
-    ),
-  },
-  {
-    href : '/tracking',
-    label: 'Tracking',
-    desc : 'Whale monitoring',
-    Icon : () => (
-      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-        <circle cx="7.5" cy="7.5" r="3" />
-        <line x1="7.5" y1="1"   x2="7.5" y2="4"   />
-        <line x1="7.5" y1="11"  x2="7.5" y2="14"  />
-        <line x1="1"   y1="7.5" x2="4"   y2="7.5" />
-        <line x1="11"  y1="7.5" x2="14"  y2="7.5" />
-        <circle cx="7.5" cy="7.5" r="0.8" fill="currentColor" stroke="none" />
-      </svg>
-    ),
-  },
+const ITEMS = [
+  { href: '/',         label: 'Home',     idx: '01' },
+  { href: '/insights', label: 'Insights', idx: '02' },
+  { href: '/terminal', label: 'Terminal', idx: '03' },
 ];
 
+const TERMINAL_ROUTES = ['/terminal', '/sentiment', '/tracking', '/metrilytics'];
 
 export default function Navbar() {
-  type TermMode = 'hover' | 'click' | null;
-  const [termMode,   setTermMode]   = useState<TermMode>(null);
-  const [userOpen,   setUserOpen]   = useState(false);
+  const [hovered,    setHovered]    = useState<number | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [scrolled,   setScrolled]   = useState(false);
+  const [userOpen,   setUserOpen]   = useState(false);
+  const [bar, setBar] = useState<{ left: number; width: number; ready: boolean }>({ left: 0, width: 0, ready: false });
 
-  const termRef  = useRef<HTMLDivElement>(null);
-  const userRef  = useRef<HTMLDivElement>(null);
-  const hoverLeaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const clusterRef = useRef<HTMLDivElement>(null);
+  const itemRefs   = useRef<Array<HTMLAnchorElement | null>>([]);
+  const userRef    = useRef<HTMLDivElement>(null);
+
   const pathname = usePathname();
-  const router = useRouter();
   const { user } = useAuth();
-  const logout   = useLogout();
-  const { toggle: toggleCLI } = useCLI();
+  const logout = useLogout();
 
-  /* Close dropdowns on outside click */
+  const norm = pathname.replace(/\/+$/, '') || '/';
+
+  const isActive = useCallback((href: string) => {
+    if (href === '/') return norm === '/';
+    if (href === '/terminal') return TERMINAL_ROUTES.includes(norm);
+    return norm === href || norm.startsWith(href + '/');
+  }, [norm]);
+
+  const activeIdx = ITEMS.findIndex(i => isActive(i.href));
+  const shown = hovered ?? (activeIdx >= 0 ? activeIdx : null);
+
+  const measure = useCallback(() => {
+    if (shown === null) return;
+    const el = itemRefs.current[shown];
+    const parent = clusterRef.current;
+    if (!el || !parent) return;
+    const r = el.getBoundingClientRect();
+    const p = parent.getBoundingClientRect();
+    setBar({ left: r.left - p.left, width: r.width, ready: true });
+  }, [shown]);
+
+  useEffect(() => { measure(); }, [measure]);
+
   useEffect(() => {
-    const fn = (e: MouseEvent) => {
-      if (termRef.current && !termRef.current.contains(e.target as Node)) {
-        setTermMode(null);
-        if (hoverLeaveTimer.current) {
-          clearTimeout(hoverLeaveTimer.current);
-          hoverLeaveTimer.current = null;
-        }
-      }
+    const onResize = () => measure();
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, [measure]);
+
+  useEffect(() => {
+    document.fonts?.ready.then(() => measure()).catch(() => {});
+  }, [measure]);
+
+  useEffect(() => {
+    const parent = clusterRef.current;
+    if (!parent || typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(() => measure());
+    ro.observe(parent);
+    return () => ro.disconnect();
+  }, [measure]);
+
+  useEffect(() => {
+    const onDown = (e: MouseEvent) => {
       if (userRef.current && !userRef.current.contains(e.target as Node)) setUserOpen(false);
     };
-    document.addEventListener('mousedown', fn);
-    return () => document.removeEventListener('mousedown', fn);
+    document.addEventListener('mousedown', onDown);
+    return () => document.removeEventListener('mousedown', onDown);
   }, []);
 
-  /* Scroll state for navbar elevation shift */
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 16);
-    window.addEventListener('scroll', fn, { passive: true });
-    fn();
-    return () => window.removeEventListener('scroll', fn);
-  }, []);
+    if (!mobileOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = prev; };
+  }, [mobileOpen]);
 
-  const norm           = pathname.replace(/\/+$/, '') || '/';
-  const isActive       = (p: string) => norm === p;
-  const terminalActive = MODULES.map(m => m.href).concat(['/terminal']).includes(norm);
+  const current = shown !== null ? ITEMS[shown] : null;
 
   return (
     <>
       <style>{`
-        @keyframes terminalPanelIn {
-          from { opacity: 0; transform: translateX(-50%) translateY(-6px) scale(0.985); }
-          to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+        .nv-root {
+          position: relative;
+          z-index: 50;
+          background: rgba(10, 9, 8, 0.72);
+          -webkit-backdrop-filter: blur(14px) saturate(1.1);
+          backdrop-filter: blur(14px) saturate(1.1);
+          border-bottom: 1px solid rgba(245, 241, 234, 0.07);
         }
-        @keyframes terminalModuleIn {
-          from { opacity: 0; transform: translate3d(0, -7px, 0) scale(0.985); }
-          to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+        .nv-wide { max-width: 1800px; }
+        .nv-logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
+        .nv-word {
+          font-family: var(--ff-sans);
+          font-size: 12px;
+          font-weight: 600;
+          letter-spacing: 0.30em;
+          color: rgba(245, 241, 234, 0.80);
+          transition: color 0.25s ease;
         }
-        .terminal-menu:focus-within .terminal-dropdown {
-          opacity: 1 !important;
-          pointer-events: auto !important;
-          transform: translateX(-50%) translateY(0) scale(1) !important;
-        }
+        .nv-logo:hover .nv-word { color: #F5F1EA; }
 
-        .terminal-menu:focus-within .terminal-dropdown-module {
-          opacity: 1 !important;
-          transform: translate3d(0, 0, 0) scale(1) !important;
+        .nv-cluster { position: relative; align-items: stretch; height: 100%; }
+        .nv-item {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          height: 100%;
+          padding: 0 22px;
+          text-decoration: none;
+          -webkit-tap-highlight-color: transparent;
+        }
+        .nv-idx {
+          font-family: var(--ff-mono);
+          font-size: 8px;
+          font-weight: 500;
+          letter-spacing: 0.12em;
+          color: rgba(245, 241, 234, 0.24);
+          transition: color 0.22s ease, opacity 0.22s ease;
+        }
+        .nv-label {
+          font-family: var(--ff-sans);
+          font-size: 13px;
+          font-weight: 500;
+          letter-spacing: 0.02em;
+          line-height: 1;
+          color: rgba(245, 241, 234, 0.46);
+          transition: color 0.22s ease;
+        }
+        .nv-item:focus-visible,
+        .nv-burger:focus-visible,
+        .nv-mobile-row:focus-visible,
+        .nv-user:focus-visible {
+          outline: 1px solid rgba(194, 52, 77, 0.6);
+          outline-offset: -1px;
+        }
+        .nv-item[data-on="1"] .nv-label { color: #F5F1EA; }
+        .nv-item[data-on="1"] .nv-idx   { color: #C2344D; }
+        .nv-cluster[data-hover="1"] .nv-item[data-on="0"] .nv-label { color: rgba(245, 241, 234, 0.30); }
+        .nv-cluster[data-hover="1"] .nv-item[data-on="0"] .nv-idx   { color: rgba(245, 241, 234, 0.16); }
+
+        .nv-rail {
+          position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+          background: rgba(245, 241, 234, 0.09);
+          pointer-events: none;
+        }
+        .nv-ticks {
+          position: absolute; left: 0; right: 0; bottom: 2px; height: 4px;
+          pointer-events: none;
+          background-image:
+            repeating-linear-gradient(90deg, rgba(245,241,234,0.20) 0 1px, transparent 1px 7px),
+            repeating-linear-gradient(90deg, rgba(245,241,234,0.32) 0 1px, transparent 1px 35px);
+          background-size: 100% 3px, 100% 4px;
+          background-position: left bottom, left bottom;
+          background-repeat: repeat-x;
+          opacity: 0.55;
+        }
+        .nv-caliper {
+          position: absolute; bottom: 0; height: 1px;
+          background: linear-gradient(90deg, rgba(194,52,77,0.55), #C2344D 18%, #C2344D 82%, rgba(194,52,77,0.55));
+          transition: left 0.34s cubic-bezier(0.22,1,0.36,1), width 0.34s cubic-bezier(0.22,1,0.36,1), opacity 0.25s ease;
+          pointer-events: none;
+          will-change: left, width;
+        }
+        .nv-jaw {
+          position: absolute; bottom: 0; width: 1px; height: 6px;
+          background: #C2344D;
+          transition: none;
+        }
+        .nv-jaw-l { left: 0; }
+        .nv-jaw-r { right: 0; }
+
+        .nv-readout {
+          font-family: var(--ff-mono);
+          font-size: 9px;
+          font-weight: 500;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: rgba(245, 241, 234, 0.38);
+          white-space: nowrap;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .nv-readout .rd-num { color: #C2344D; }
+        .nv-readout .rd-sep { color: rgba(245, 241, 234, 0.20); }
+
+        .nv-user {
+          display: inline-flex; align-items: center; gap: 8px;
+          border: 1px solid rgba(245,241,234,0.14);
+          background: rgba(245,241,234,0.03);
+          padding: 6px 10px;
+          cursor: pointer;
+          font-family: var(--ff-mono);
+          font-size: 10px;
+          letter-spacing: 0.06em;
+          color: rgba(245,241,234,0.72);
+          transition: border-color 0.18s ease, color 0.18s ease;
+        }
+        .nv-user:hover { border-color: rgba(245,241,234,0.28); color: #F5F1EA; }
+
+        .nv-burger {
+          width: 44px; height: 44px;
+          flex-direction: column; align-items: center; justify-content: center;
+          gap: 5px;
+          border: 1px solid rgba(245,241,234,0.10);
+          background: rgba(245,241,234,0.02);
+          transition: border-color 0.2s ease, background 0.2s ease;
+        }
+        .nv-burger span {
+          display: block; width: 17px; height: 1px;
+          background: #D8D2C9;
+          transition: transform 0.24s ease, opacity 0.2s ease, background 0.2s ease;
+        }
+        .nv-burger:hover { border-color: rgba(194,52,77,0.45); }
+        .nv-burger[data-open="1"] { border-color: rgba(194,52,77,0.45); background: rgba(194,52,77,0.06); }
+        .nv-burger[data-open="1"] span { background: #C2344D; }
+        .nv-burger[data-open="1"] span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+        .nv-burger[data-open="1"] span:nth-child(2) { opacity: 0; }
+        .nv-burger[data-open="1"] span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+        .nv-mobile-row {
+          position: relative;
+          display: flex;
+          align-items: baseline;
+          gap: 14px;
+          padding: 18px 8px;
+          text-decoration: none;
+          border-bottom: 1px solid rgba(245,241,234,0.055);
+        }
+        .nv-mobile-row .m-idx {
+          font-family: var(--ff-mono);
+          font-size: 10px;
+          letter-spacing: 0.14em;
+          color: rgba(245,241,234,0.28);
+          transition: color 0.2s ease;
+        }
+        .nv-mobile-row .m-label {
+          font-family: var(--ff-display);
+          font-size: 30px;
+          font-weight: 500;
+          letter-spacing: -0.01em;
+          line-height: 1;
+          color: rgba(245,241,234,0.62);
+          transition: color 0.2s ease, transform 0.25s ease;
+        }
+        .nv-mobile-row:active .m-label { color: #F5F1EA; }
+        .nv-mobile-row[data-on="1"] .m-label { color: #F5F1EA; }
+        .nv-mobile-row[data-on="1"] .m-idx { color: #C2344D; }
+
+        @media (prefers-reduced-motion: reduce) {
+          .nv-caliper, .nv-label, .nv-idx, .nv-mobile-row .m-label { transition: none !important; }
         }
       `}</style>
-      {/* ════════════════════════ NAVBAR ════════════════════════ */}
-      <nav
-        className="relative z-[50]"
-        style={{
-          background: 'rgba(10, 9, 8, 0.86)',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          borderBottom: '1px solid rgba(245, 241, 234, 0.07)',
-        }}
-      >
 
+      <nav className="nv-root">
+        <div className="nv-wide mx-auto px-4 sm:px-6 lg:px-10 xl:px-16 2xl:px-24">
+          <div className="flex lg:grid lg:grid-cols-[1fr_auto_1fr] items-center justify-between h-[60px] md:h-[68px]">
 
-        <div className="max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-[2800px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-16 2xl:px-24 3xl:px-32 4xl:px-48">
-          <div className="grid grid-cols-3 items-center h-[60px] sm:h-[64px] md:h-[68px] 2xl:h-[72px] 3xl:h-[76px]">
+            {/* Logo lockup */}
+            <Link href="/" className="nv-logo" aria-label="NOVRIX home">
+              <Image
+                src="/logo.png" alt=""
+                width={32} height={32} priority quality={100}
+                className="w-7 h-7 md:w-8 md:h-8 block"
+                style={{ pointerEvents: 'none' }}
+              />
+              <span className="nv-word hidden sm:inline">NOVRIX</span>
+            </Link>
 
-            {/* ══════════════════════════════════════════
-                LOGO + SYSTEM STATUS
-            ══════════════════════════════════════════ */}
-            <div className="flex items-center">
-              <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', padding: '0 6px', flexShrink: 0 }}>
-                <Image
-                  src="/logo.png" alt="NOVRIX"
-                  width={32} height={32} priority quality={100}
-                  className="w-7 h-7 md:w-8 md:h-8 block"
-                  style={{ pointerEvents: 'none' }}
-                />
-              </Link>
-            </div>
-
-            {/* ══════════════════════════════════════════
-                CENTER NAVIGATION
-            ══════════════════════════════════════════ */}
-            <div className="hidden lg:flex items-center justify-center">
-              <div className="flex items-center" style={{ height: '68px' }}>
-
-                <NavLink href="/" active={isActive('/')}>Home</NavLink>
-                <NavSep />
-                <NavLink href="/insights" active={isActive('/insights')}>Insights</NavLink>
-                <NavSep />
-
-                {/* Terminal dropdown trigger */}
-                <div
-                  className="terminal-menu relative flex h-full items-stretch"
-                  ref={termRef}
-                  onMouseEnter={() => {
-                    if (hoverLeaveTimer.current) {
-                      clearTimeout(hoverLeaveTimer.current);
-                      hoverLeaveTimer.current = null;
-                    }
-                    if (termMode === null) {
-                      setTermMode('hover');
-                    }
-                  }}
-                  onMouseLeave={() => {
-                    if (termMode === 'hover') {
-                      hoverLeaveTimer.current = setTimeout(() => {
-                        setTermMode(null);
-                        hoverLeaveTimer.current = null;
-                      }, 200);
-                    }
-                  }}
-                >
-                  <button
-                    onClick={(e) => e.preventDefault()}
-                    onMouseDown={(e) => e.preventDefault()}
-                    className="relative flex flex-col items-center justify-center group"
-                    style={{ padding: '0 26px', height: '100%', background: 'none', border: 'none', cursor: 'pointer', gap: 0 }}
-                  >
-                    <span
-                      style={{
-                        ...NAV,
-                        display: 'flex', alignItems: 'center', gap: '5px',
-                        color: terminalActive ? '#F5F1EA' : 'rgba(245, 241, 234, 0.48)',
-                        fontWeight: terminalActive ? 600 : 500,
-                        textShadow: 'none',
-                        transition: 'color 0.15s ease',
-                        pointerEvents: 'none',
-                      }}
-                      className="group-hover:!text-[rgba(245, 241, 234, 0.78)]"
-                    >
-                      Terminal
-                      <svg width="7" height="7" viewBox="0 0 8 8" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
-                        style={{ opacity: 0.45, flexShrink: 0, transition: 'transform 0.15s ease', transform: termMode !== null ? 'rotate(180deg)' : 'none', pointerEvents: 'none' }}>
-                        <path d="M1 2.5L4 5.5L7 2.5" />
-                      </svg>
-                    </span>
-                    <PrecisionTick active={terminalActive} />
-                  </button>
-
-                  {/* Invisible hover bridge — fills gap between button and dropdown */}
-                  <div className="absolute left-0 right-0" style={{ top: '100%', height: '10px', zIndex: 1000 }} />
-
-                  {/* ── Dropdown panel ─────────────────── */}
-                  <div
-                    className="terminal-dropdown absolute z-[1001]"
-                    style={{
-                      top: 'calc(100% + 9px)',
-                      left: '50%',
-                      transform: termMode !== null ? 'translateX(-50%) translateY(0) scale(1)' : 'translateX(-50%) translateY(-8px) scale(0.975)',
-                      width: 'clamp(244px, 24vw, 282px)',
-                      maxWidth: 'calc(100vw - 24px)',
-                      maxHeight: 'min(72vh, 356px)',
-                      opacity: termMode !== null ? 1 : 0,
-                      pointerEvents: termMode !== null ? 'auto' : 'none',
-                      transition: 'opacity 0.2s ease, transform 0.24s cubic-bezier(0.22,1,0.36,1)',
-                      background: '#11100E',
-                      border: '1px solid rgba(245,241,234,0.10)',
-                      borderRadius: '6px',
-                      boxShadow: '0 24px 64px rgba(0,0,0,0.55)',
-                      overflow: 'hidden',
-                      animation: termMode !== null ? 'terminalPanelIn 0.24s cubic-bezier(0.22,1,0.36,1) both' : 'none',
-                    }}
-                  >
-                    {/* Panel header */}
-                    <div
-                      className="px-4 py-3"
-                      style={{ position: 'relative', borderBottom: '1px solid rgba(245,241,234,0.075)' }}
-                    >
-                      <span style={{ fontFamily: INTER, fontSize: '11px', fontWeight: 650, letterSpacing: '0.09em', color: '#EAE5DD', textTransform: 'uppercase' }}>
-                        Terminal Modules
-                      </span>
-                    </div>
-
-                    {/* Module rows */}
-                    <div style={{ position: 'relative', padding: '6px' }}>
-                      {MODULES.map((m, i) => {
-                        const active = isActive(m.href);
-                        const dest   = m.href;
-                        const isIntelModule = ['/sentiment', '/tracking', '/metrilytics'].includes(dest);
-                        return (
-                          <DropdownModule
-                            key={m.href}
-                            href={dest}
-                            label={m.label}
-                            desc={m.desc}
-                            Icon={m.Icon}
-                            active={active}
-                            open={termMode !== null}
-                            index={i}
-                            onClick={() => {
-                              setTermMode(null);
-                              router.push(dest);
-                            }}
-                          />
-                        );
-                      })}
-                    </div>
-
-                    {/* Panel footer */}
-                    <div
-                      className="px-4 py-2.5"
-                      style={{ position: 'relative', borderTop: '1px solid rgba(245,241,234,0.075)' }}
-                    >
-                      <span style={{ fontFamily: MONO, fontSize: '9px', fontWeight: 500, letterSpacing: '0.12em', color: 'rgba(245, 241, 234, 0.46)', textTransform: 'uppercase' }}>
-                        Active Terminal Modules
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
+            {/* Instrument cluster */}
+            <div
+              ref={clusterRef}
+              className="nv-cluster hidden lg:flex"
+              data-hover={hovered !== null ? '1' : '0'}
+              onMouseLeave={() => setHovered(null)}
+            >
+              <div className="nv-ticks" />
+              <div className="nv-rail" />
+              <div
+                className="nv-caliper"
+                style={{ left: bar.left, width: bar.width, opacity: bar.ready ? 1 : 0 }}
+                aria-hidden
+              >
+                <span className="nv-jaw nv-jaw-l" />
+                <span className="nv-jaw nv-jaw-r" />
               </div>
+              {ITEMS.map((item, i) => {
+                const on = hovered === i || activeIdx === i;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    ref={el => { itemRefs.current[i] = el; }}
+                    className="nv-item"
+                    data-on={on ? '1' : '0'}
+                    onMouseEnter={() => setHovered(i)}
+                    onFocus={() => setHovered(i)}
+                    onBlur={() => setHovered(null)}
+                    aria-current={activeIdx === i ? 'page' : undefined}
+                  >
+                    <span className="nv-idx">{item.idx}</span>
+                    <span className="nv-label">{item.label}</span>
+                  </Link>
+                );
+              })}
             </div>
 
-            {/* ══════════════════════════════════════════
-                RIGHT SIDE — CLI + AUTH
-            ══════════════════════════════════════════ */}
-            <div className="hidden lg:flex items-center justify-end gap-[10px]">
+            {/* Readout + auth */}
+            <div className="hidden lg:flex items-center justify-end gap-4">
+              <div className="nv-readout" aria-hidden>
+                {current ? (
+                  <>
+                    <span className="rd-num">{current.idx}</span>
+                    <span className="rd-sep">/</span>
+                    <span>03</span>
+                    <span className="rd-sep">·</span>
+                    <span>{current.label}</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="rd-num">01—03</span>
+                    <span className="rd-sep">·</span>
+                    <span>NOVRIX</span>
+                  </>
+                )}
+              </div>
 
-              {/* CLI button */}
-              <CLIButton onClick={toggleCLI} />
-
-              {/* Vertical rule */}
-              <div style={{ width: '1px', height: '20px', background: 'rgba(245,241,234,0.08)', flexShrink: 0 }} />
-
-              {/* Auth */}
-              {user ? (
+              {user && (
                 <div className="relative" ref={userRef}>
-                  <button
-                    onClick={() => setUserOpen(o => !o)}
-                    className="flex items-center gap-[9px]"
-                    style={{
-                      padding: '7px 11px',
-                      border: '1px solid rgba(245,241,234,0.18)',
-                      background: 'rgba(245,241,234,0.04)',
-                      cursor: 'pointer',
-                      borderRadius: '4px',
-                      transition: 'border-color 0.15s ease, background 0.15s ease',
-                    }}
-                    onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = 'rgba(245,241,234,0.30)'; el.style.background = 'rgba(245,241,234,0.08)'; }}
-                    onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = 'rgba(245,241,234,0.18)'; el.style.background = 'rgba(245,241,234,0.04)'; }}
-                  >
-                    <span style={{ fontFamily: MONO, fontSize: '10px', letterSpacing: '0.1em', color: '#E0E0E8' }}>{user.novrix_id}</span>
-                    <svg width="7" height="7" viewBox="0 0 8 8" fill="none" stroke="#6F6962" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
-                      style={{ transition: 'transform 0.15s ease', transform: userOpen ? 'rotate(180deg)' : 'none', flexShrink: 0 }}>
+                  <button className="nv-user" onClick={() => setUserOpen(o => !o)}>
+                    <span>{user.novrix_id}</span>
+                    <svg width="7" height="7" viewBox="0 0 8 8" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
+                      style={{ opacity: 0.6, transform: userOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.18s ease' }}>
                       <path d="M1 2.5L4 5.5L7 2.5" />
                     </svg>
                   </button>
-
-                  {/* User dropdown */}
                   <div
-                    className="absolute right-0 z-[1001]"
                     style={{
-                      top: 'calc(100% + 6px)', width: '172px',
-                      background: '#0E0E12',
-                      border: '1px solid rgba(245,241,234,0.13)',
-                      borderRadius: '6px',
-                      boxShadow: '0 0 0 1px rgba(0,0,0,0.5), 0 24px 64px rgba(0,0,0,0.95)',
+                      position: 'absolute', right: 0, top: 'calc(100% + 8px)', width: '168px',
+                      background: '#11100E',
+                      border: '1px solid rgba(245,241,234,0.12)',
+                      borderRadius: '5px',
+                      boxShadow: '0 24px 64px rgba(0,0,0,0.55)',
+                      overflow: 'hidden',
                       opacity: userOpen ? 1 : 0,
                       pointerEvents: userOpen ? 'auto' : 'none',
-                      clipPath: userOpen ? 'inset(0 0 0% 0 round 6px)' : 'inset(0 0 100% 0 round 6px)',
-                      transition: 'opacity 0.12s ease, clip-path 0.15s cubic-bezier(0,0,0.2,1)',
+                      transform: userOpen ? 'translateY(0)' : 'translateY(-4px)',
+                      transition: 'opacity 0.14s ease, transform 0.16s ease',
                     }}
                   >
-                    <div style={{ padding: '4px 0' }}>
-                      <Link href="/terminal" prefetch={false} onClick={() => setUserOpen(false)}
-                        style={{ fontFamily: INTER, fontSize: '12px', fontWeight: 500, display: 'flex', alignItems: 'center', padding: '8px 14px', margin: '1px 6px', color: '#D8D2C9', textDecoration: 'none', borderRadius: '4px', transition: 'color 0.12s ease, background 0.12s ease' }}
-                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#F5F1EA'; (e.currentTarget as HTMLElement).style.background = '#191613'; }}
-                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = '#D8D2C9'; (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
-                      >Terminal</Link>
-                      <button onClick={() => { setUserOpen(false); logout(); }}
-                        style={{ fontFamily: INTER, fontSize: '12px', fontWeight: 500, display: 'flex', alignItems: 'center', width: 'calc(100% - 12px)', padding: '8px 14px', margin: '1px 6px', color: '#D8D2C9', background: 'transparent', border: 'none', cursor: 'pointer', borderRadius: '4px', transition: 'color 0.12s ease, background 0.12s ease' }}
-                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#D95168'; (e.currentTarget as HTMLElement).style.background = 'rgba(194,52,77,0.06)'; }}
-                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = '#D8D2C9'; (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
-                      >Disconnect</button>
-                    </div>
+                    <button onClick={() => { setUserOpen(false); logout(); }}
+                      style={{
+                        width: '100%', textAlign: 'left', padding: '10px 12px',
+                        background: 'transparent', border: 'none', cursor: 'pointer',
+                        fontFamily: 'var(--ff-sans)', fontSize: '12px', fontWeight: 500,
+                        color: '#D8D2C9', transition: 'color 0.12s ease, background 0.12s ease',
+                      }}
+                      onMouseEnter={e => { const el = e.currentTarget; el.style.color = '#D95168'; el.style.background = 'rgba(194,52,77,0.06)'; }}
+                      onMouseLeave={e => { const el = e.currentTarget; el.style.color = '#D8D2C9'; el.style.background = 'transparent'; }}
+                    >Disconnect</button>
                   </div>
                 </div>
-              ) : (
-                <AccessButton />
               )}
             </div>
 
-            {/* ── Mobile hamburger ─────────────────────────── */}
+            {/* Mobile trigger */}
             <button
+              className="nv-burger flex lg:hidden"
+              data-open={mobileOpen ? '1' : '0'}
+              aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={mobileOpen}
               onClick={() => setMobileOpen(o => !o)}
-              className="lg:hidden col-start-3 justify-self-end flex flex-col items-center justify-center gap-[6px]"
-              style={{
-                width: '44px', height: '44px',
-                border: mobileOpen ? '1px solid rgba(194,52,77,0.40)' : '1px solid rgba(245,241,234,0.09)',
-                background: mobileOpen ? 'rgba(194,52,77,0.07)' : 'rgba(245,241,234,0.02)',
-                transition: 'border-color 0.22s ease, background 0.22s ease',
-              }}
             >
-              {[0, 1, 2].map(i => (
-                <span key={i} className="block h-px origin-center"
-                  style={{
-                    width: '18px',
-                    background: mobileOpen ? '#C2344D' : '#D8D2C9',
-                    opacity: mobileOpen && i === 1 ? 0 : 1,
-                    transform: mobileOpen && i === 0 ? 'rotate(45deg) translate(0,6px)' : mobileOpen && i === 2 ? 'rotate(-45deg) translate(0,-6px)' : 'none',
-                    transition: 'transform 0.22s ease, opacity 0.22s ease, background 0.22s ease',
-                  }}
-                />
-              ))}
+              <span /><span /><span />
             </button>
-
           </div>
         </div>
       </nav>
 
-      {/* ════════════════════════ MOBILE MENU ════════════════════════ */}
-      <div className="fixed inset-0 z-[100] lg:hidden flex flex-col overflow-y-auto"
+      {/* Mobile sheet */}
+      <div
+        className="fixed inset-0 z-[100] lg:hidden flex flex-col"
         style={{
           background: 'rgba(10,9,8,0.98)',
-          backdropFilter: 'blur(24px)',
-          WebkitBackdropFilter: 'blur(24px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          backdropFilter: 'blur(20px)',
           opacity: mobileOpen ? 1 : 0,
           pointerEvents: mobileOpen ? 'auto' : 'none',
-          transform: mobileOpen ? 'translateX(0)' : 'translateX(6px)',
-          transition: 'opacity 0.20s ease, transform 0.20s ease',
+          transform: mobileOpen ? 'translateX(0)' : 'translateX(8px)',
+          transition: 'opacity 0.22s ease, transform 0.22s ease',
         }}
       >
-        {/* Top accent line */}
-        <div className="absolute top-0 left-0 right-0 h-px shrink-0"
-          style={{ background: 'linear-gradient(90deg, transparent 5%, rgba(194,52,77,0.55) 40%, rgba(194,52,77,0.35) 60%, transparent 95%)' }}
-        />
-
-        {/* Header: logo + close */}
-        <div className="flex items-center justify-between shrink-0"
-          style={{ padding: '0 20px', height: '56px', borderBottom: '1px solid rgba(245,241,234,0.04)' }}>
-          <span style={{ fontFamily: MONO, fontSize: '10px', letterSpacing: '0.22em', color: 'rgba(245, 241, 234, 0.50)' }}>NOVRIX</span>
+        <div className="flex items-center justify-between shrink-0 px-5 h-[60px]" style={{ borderBottom: '1px solid rgba(245,241,234,0.06)' }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '9px' }}>
+            <Image src="/logo.png" alt="" width={24} height={24} className="w-6 h-6 block" style={{ pointerEvents: 'none' }} />
+            <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '10px', letterSpacing: '0.24em', color: 'rgba(245,241,234,0.45)' }}>NOVRIX</span>
+          </span>
           <button
             onClick={() => setMobileOpen(false)}
+            aria-label="Close menu"
             style={{
-              width: '36px', height: '36px', border: '1px solid rgba(245,241,234,0.08)',
-              background: 'rgba(245,241,234,0.02)', display: 'flex', alignItems: 'center',
-              justifyContent: 'center', cursor: 'pointer', color: '#D8D2C9',
-              fontFamily: MONO, fontSize: '16px', lineHeight: 1,
+              width: '36px', height: '36px', border: '1px solid rgba(245,241,234,0.10)',
+              background: 'rgba(245,241,234,0.02)', color: '#D8D2C9',
+              fontFamily: 'var(--ff-mono)', fontSize: '17px', lineHeight: 1, cursor: 'pointer',
             }}
           >×</button>
         </div>
 
-        {/* Main nav links */}
-        <div className="shrink-0" style={{ padding: '8px 0' }}>
-          {[
-            { href: '/',        label: 'Home',     active: isActive('/') },
-            { href: '/insights',label: 'Insights', active: isActive('/insights') },
-          ].map(item => (
-            <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)}
-              style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                minHeight: '52px', padding: '0 24px',
-                textDecoration: 'none',
-                borderLeft: `2px solid ${item.active ? '#C2344D' : 'transparent'}`,
-                background: item.active ? 'rgba(194,52,77,0.04)' : 'transparent',
-              }}
+        <div className="px-6 pt-6">
+          {ITEMS.map(item => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="nv-mobile-row"
+              data-on={isActive(item.href) ? '1' : '0'}
+              onClick={() => setMobileOpen(false)}
             >
-              <span style={{
-                fontFamily: INTER, fontSize: '15px', fontWeight: 500,
-                letterSpacing: '0.01em',
-                color: item.active ? '#F5F1EA' : '#D8D2C9',
-              }}>{item.label}</span>
-              {item.active && (
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#C2344D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M2 6h8M6 2l4 4-4 4" />
-                </svg>
-              )}
+              <span className="m-idx">{item.idx}</span>
+              <span className="m-label">{item.label}</span>
             </Link>
           ))}
         </div>
 
-        {/* Divider: MODULES */}
-        <div className="shrink-0" style={{ padding: '4px 24px 8px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ fontFamily: MONO, fontSize: '8px', letterSpacing: '0.28em', color: 'rgba(245, 241, 234, 0.46)', textTransform: 'uppercase', flexShrink: 0 }}>TERMINAL MODULES</span>
-            <div style={{ flex: 1, height: '1px', background: 'rgba(245,241,234,0.05)' }} />
-          </div>
-        </div>
-
-        {/* Module rows */}
-        <div className="shrink-0" style={{ padding: '4px 0 12px' }}>
-          {MODULES.map(m => {
-            const href = m.href;
-            const active = isActive(m.href);
-            const isIntelModule = ['/sentiment', '/tracking', '/metrilytics'].includes(href);
-            const handleClick = () => {
-              setMobileOpen(false);
-              router.push(href);
-            };
-            const itemStyle = {
-              display: 'flex', alignItems: 'center', gap: '14px',
-              minHeight: '60px', padding: '0 24px',
-              textDecoration: 'none',
-              borderLeft: `2px solid ${active ? 'rgba(245,241,234,0.18)' : 'transparent'}`,
-              background: active ? 'rgba(245,241,234,0.025)' : 'transparent',
-              cursor: 'pointer',
-              width: '100%',
-              border: 'none',
-              borderBottom: 'none',
-              borderRight: 'none',
-              borderTop: 'none',
-            };
-            return isIntelModule ? (
-              <button key={m.href} onClick={handleClick} style={itemStyle}>
-                {/* Icon box */}
-                <div style={{
-                  width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  border: `1px solid ${active ? 'rgba(245, 241, 234, 0.16)' : 'rgba(245, 241, 234, 0.10)'}`,
-                  background: active ? '#191613' : 'transparent',
-                  color: active ? '#D8D2C9' : '#6F6962',
-                  flexShrink: 0,
-                }}>
-                  <m.Icon />
-                </div>
-                {/* Label + desc */}
-                <div>
-                  <div style={{ fontFamily: INTER, fontSize: '14px', fontWeight: 500, letterSpacing: '0.01em', color: active ? '#EAE5DD' : 'rgba(245, 241, 234, 0.40)', marginBottom: '2px' }}>
-                    {m.label}
-                  </div>
-                  <div style={{ fontFamily: INTER, fontSize: '11px', fontWeight: 400, letterSpacing: '0.02em', color: '#A9A29A' }}>
-                    {m.desc}
-                  </div>
-                </div>
-              </button>
-            ) : (
-              <Link key={m.href} href={href} prefetch={false} onClick={() => setMobileOpen(false)}
-                style={itemStyle}
-              >
-                {/* Icon box */}
-                <div style={{
-                  width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  border: `1px solid ${active ? 'rgba(245, 241, 234, 0.16)' : 'rgba(245, 241, 234, 0.10)'}`,
-                  background: active ? '#191613' : 'transparent',
-                  color: active ? '#D8D2C9' : '#6F6962',
-                  flexShrink: 0,
-                }}>
-                  <m.Icon />
-                </div>
-                {/* Label + desc */}
-                <div>
-                  <div style={{ fontFamily: INTER, fontSize: '14px', fontWeight: 500, letterSpacing: '0.01em', color: active ? '#EAE5DD' : 'rgba(245, 241, 234, 0.40)', marginBottom: '2px' }}>
-                    {m.label}
-                  </div>
-                  <div style={{ fontFamily: INTER, fontSize: '11px', fontWeight: 400, letterSpacing: '0.02em', color: '#A9A29A' }}>
-                    {m.desc}
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-
-        {/* Auth section */}
-        <div className="shrink-0" style={{ padding: '16px 24px', borderTop: '1px solid rgba(245,241,234,0.04)', marginTop: 'auto' }}>
+        <div className="mt-auto px-6 pb-8 pt-6" style={{ borderTop: '1px solid rgba(245,241,234,0.06)' }}>
           {user ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontFamily: MONO, fontSize: '10px', letterSpacing: '0.16em', color: 'rgba(245, 241, 234, 0.50)' }}>{user.novrix_id}</span>
-              </div>
-              <button onClick={() => { setMobileOpen(false); logout(); }}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+              <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '10px', letterSpacing: '0.12em', color: 'rgba(245,241,234,0.50)' }}>
+                {user.novrix_id}
+              </span>
+              <button
+                onClick={() => { setMobileOpen(false); logout(); }}
                 style={{
-                  fontFamily: INTER, fontSize: '12px', fontWeight: 500, letterSpacing: '0.06em',
-                  minHeight: '44px', padding: '0 20px', color: '#D8D2C9',
-                  border: '1px solid rgba(194,52,77,0.20)', background: 'transparent', cursor: 'pointer',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                }}>
-                Disconnect
-              </button>
+                  fontFamily: 'var(--ff-sans)', fontSize: '12px', fontWeight: 500,
+                  padding: '10px 16px', color: '#D8D2C9', cursor: 'pointer',
+                  border: '1px solid rgba(194,52,77,0.22)', background: 'transparent',
+                }}
+              >Disconnect</button>
             </div>
           ) : (
-            <Link href="/sentiment" prefetch={false} onClick={() => setMobileOpen(false)}
-              style={{
-                fontFamily: INTER, fontSize: '12px', fontWeight: 500, letterSpacing: '0.06em',
-                minHeight: '44px', padding: '0 20px', color: '#C0A8B0',
-                border: '1px solid rgba(194,52,77,0.40)', background: 'rgba(194,52,77,0.06)',
-                textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
-              }}>
-              Launch Terminal
-            </Link>
+            <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', letterSpacing: '0.20em', color: 'rgba(245,241,234,0.28)', textTransform: 'uppercase' }}>
+              On-chain intelligence
+            </span>
           )}
         </div>
-
-        {/* Footer version */}
-        <div className="pb-6 shrink-0 flex justify-center">
-          <span style={{ fontFamily: MONO, fontSize: '10px', letterSpacing: '0.18em', color: '#8090A0', textTransform: 'uppercase' }}>
-            NOVRIX v3.2.1
-          </span>
-        </div>
       </div>
     </>
-  );
-}
-
-/* ════════════════════════════════════════════════════════════
-   SUB-COMPONENTS
-   ════════════════════════════════════════════════════════════ */
-
-function NavLink({ href, active, children }: { href: string; active: boolean; children: React.ReactNode }) {
-  const [hovered, setHovered] = useState(false);
-  return (
-    <Link href={href}
-      className="relative flex flex-col items-center justify-center"
-      style={{ padding: '0 26px', height: '100%', textDecoration: 'none', gap: 0 }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <span style={{
-        ...NAV,
-        color: active ? '#F5F1EA' : hovered ? 'rgba(245, 241, 234, 0.78)' : 'rgba(245, 241, 234, 0.48)',
-        fontWeight: active ? 600 : 500,
-        textShadow: 'none',
-        transition: 'color 0.15s ease, text-shadow 0.15s ease',
-        pointerEvents: 'none',
-      }}>{children}</span>
-      <div style={{
-        position: 'absolute', bottom: 0, left: '26px', right: '26px', height: '1px',
-        background: active ? '#C2344D' : hovered ? 'rgba(194,52,77,0.20)' : 'transparent',
-        transition: 'background 0.15s ease',
-      }} />
-    </Link>
-  );
-}
-
-function NavSep() {
-  return <div className="self-center shrink-0" style={{ width: '1px', height: '16px', background: 'rgba(245,241,234,0.07)' }} />;
-}
-
-function PrecisionTick({ active }: { active: boolean }) {
-  return (
-    <div style={{
-      position: 'absolute', bottom: 0, left: '23px', right: '29px', height: '1px',
-      pointerEvents: 'none',
-      background: '#C2344D',
-      transformOrigin: 'left center',
-      transform: active ? 'scaleX(1)' : 'scaleX(0)',
-      transition: 'transform 0.25s cubic-bezier(0.4,0,0.2,1)',
-    }} />
-  );
-}
-
-function CLIButton({ onClick }: { onClick: () => void }) {
-  return (
-    <button onClick={onClick} title="Open CLI  (` or Ctrl+K)"
-      style={{ fontFamily: MONO, fontSize: '11px', letterSpacing: '0.12em', padding: '7px 11px', color: 'rgba(245, 241, 234, 0.62)', border: '1px solid rgba(245, 241, 234, 0.14)', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '3px', transition: 'color 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease', lineHeight: 1, borderRadius: 0 }}
-      onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = 'rgba(194,52,77,0.48)'; el.style.background = 'rgba(194,52,77,0.05)'; el.style.boxShadow = 'none'; }}
-      onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = 'rgba(245,241,234,0.14)'; el.style.background = 'transparent'; el.style.boxShadow = 'none'; }}
-    >
-      <span style={{ color: '#C2344D', opacity: 0.85, pointerEvents: 'none' }}>&gt;_</span>
-      <span className="nav-cli-cursor" style={{ color: 'rgba(245, 241, 234, 0.55)', display: 'inline-block', width: '7px', textAlign: 'center', pointerEvents: 'none' }}>▌</span>
-    </button>
-  );
-}
-
-function AccessButton() {
-  return (
-    <Link href="/sentiment" prefetch={false}
-      style={{ ...NAV, fontSize: '11px', fontWeight: 500, letterSpacing: '0.12em', padding: '8px 15px', color: '#0A0908', border: '1px solid #F5F1EA', background: '#F5F1EA', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '7px', transition: 'background 0.18s ease, border-color 0.18s ease', borderRadius: '2px' }}
-      onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = '#FFFCF6'; el.style.borderColor = '#FFFCF6'; }}
-      onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = '#F5F1EA'; el.style.borderColor = '#F5F1EA'; }}
-    >
-      Launch terminal
-    </Link>
-  );
-}
-
-function DropdownModule({ href, label, desc, Icon, active, open, index, onClick }: {
-  href: string; label: string; desc: string;
-  Icon: () => React.ReactElement; active: boolean; open: boolean; index: number; onClick: () => void;
-}) {
-  const [hovered, setHovered] = useState(false);
-  const on = active || hovered;
-
-  const content = (
-    <>
-      {/* Icon box */}
-      <div style={{
-        width: '34px', height: '34px',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        flexShrink: 0,
-        position: 'relative',
-        zIndex: 2,
-        border: `1px solid ${active ? 'rgba(245,241,234,0.20)' : hovered ? 'rgba(245,241,234,0.18)' : 'rgba(245,241,234,0.08)'}`,
-        background: active ? 'rgba(245,241,234,0.095)' : hovered ? 'rgba(245,241,234,0.075)' : 'rgba(245,241,234,0.025)',
-        color: on ? '#F5F1EA' : '#A9A29A',
-        borderRadius: '7px',
-        transform: 'none',
-        boxShadow: 'none',
-        transition: 'border-color 0.22s ease, background 0.22s ease, color 0.22s ease',
-        pointerEvents: 'none',
-      }}>
-        <Icon />
-      </div>
-
-      {/* Text */}
-      <div style={{ flex: 1, minWidth: 0, position: 'relative', zIndex: 2, pointerEvents: 'none' }}>
-        <span style={{
-          fontFamily: INTER,
-          fontSize: '13px',
-          fontWeight: 600,
-          letterSpacing: '0.01em',
-          lineHeight: 1.4,
-          color: on ? '#F5F1EA' : '#C9C2B9',
-          transition: 'color 0.22s ease'
-        }}>
-          {label}
-        </span>
-        <div style={{
-          fontFamily: INTER,
-          fontSize: '11px',
-          fontWeight: 400,
-          letterSpacing: '0.02em',
-          color: on ? '#A9A29A' : 'rgba(245, 241, 234, 0.46)',
-          marginTop: '2px',
-          lineHeight: 1.3,
-          transition: 'color 0.22s ease'
-        }}>
-          {desc}
-        </div>
-      </div>
-
-      {/* Arrow indicator */}
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 14 14"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        style={{
-          position: 'relative',
-          zIndex: 2,
-          flexShrink: 0,
-          color: on ? '#EAE5DD' : 'transparent',
-          transform: hovered ? 'translateX(2px)' : 'translateX(0)',
-          transition: 'color 0.22s ease, transform 0.22s ease',
-          opacity: on ? 1 : 0,
-          pointerEvents: 'none',
-        }}
-      >
-        <path d="M5 2L10 7L5 12" />
-      </svg>
-    </>
-  );
-
-  const style = {
-    position: 'relative' as const,
-    display: 'flex', alignItems: 'center', gap: '11px',
-    padding: '10px 12px',
-    marginBottom: '2px',
-    textDecoration: 'none',
-    borderRadius: '8px',
-    overflow: 'hidden',
-    background: hovered
-      ? 'rgba(245,241,234,0.065)'
-      : active
-        ? 'rgba(245,241,234,0.04)'
-        : 'transparent',
-    border: `1px solid ${active ? 'rgba(245,241,234,0.18)' : hovered ? 'rgba(245,241,234,0.16)' : 'rgba(245,241,234,0.06)'}`,
-    transform: open ? 'translate3d(0, 0, 0)' : 'translate3d(0, -6px, 0)',
-    boxShadow: 'none',
-    opacity: open ? 1 : 0,
-    transition: `opacity 0.22s ease ${index * 30}ms, transform 0.22s ease ${index * 30}ms, background 0.22s ease, border-color 0.22s ease`,
-    cursor: 'pointer',
-    width: '100%',
-  };
-
-  return (
-    <Link href={href} prefetch={false} onClick={onClick} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-      className="terminal-dropdown-module"
-      style={style}
-    >
-      {content}
-    </Link>
   );
 }
