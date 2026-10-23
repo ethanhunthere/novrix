@@ -30,7 +30,7 @@ interface WeeklyResponse {
   };
 }
 
-const MONO = "'JetBrains Mono', monospace";
+const MONO = 'var(--ff-mono)';
 
 function formatUSDCompact(val: number): string {
   if (val >= 1e9) return `$${(val / 1e9).toFixed(1)}B`;

@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-const INTER = 'var(--font-inter), Inter, system-ui, sans-serif';
-const MONO  = 'var(--font-jetbrains-mono), JetBrains Mono, monospace';
+const INTER = 'var(--ff-sans)';
+const MONO  = 'var(--ff-mono)';
 
 function getGateTarget(pathname: string | null): string {
   if (pathname?.startsWith('/tracking')) return 'the tracking module';

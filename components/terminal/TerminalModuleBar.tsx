@@ -5,8 +5,8 @@ import { usePathname } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth, useLogout } from '@/lib/hooks/useAuth';
 
-const MONO = 'var(--font-jetbrains-mono), JetBrains Mono, monospace';
-const INTER = 'var(--font-inter), Inter, system-ui, sans-serif';
+const MONO = 'var(--ff-mono)';
+const INTER = 'var(--ff-sans)';
 const BAR_HEIGHT = '40px';
 
 const MODULES = [

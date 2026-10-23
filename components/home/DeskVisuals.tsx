@@ -51,8 +51,8 @@ function MoodVisual({ accent }: { accent: string }) {
         </defs>
         <path d="M 80 150 A 90 90 0 0 1 260 150" fill="none" stroke={`${accent}18`} strokeWidth="3" strokeLinecap="round" className="gauge-bg" />
         <path d="M 80 150 A 90 90 0 0 1 170 60" fill="none" stroke={accent} strokeWidth="3" strokeLinecap="round" strokeDasharray="142" strokeDashoffset="35" filter={`url(#${id}-glow)`} className="gauge-active" style={{ animation: 'gaugeSwing 3s ease-in-out infinite alternate' }} />
-        <text x="75" y="165" fill="rgba(255,255,255,0.30)" fontSize="7" fontFamily="JetBrains Mono, monospace" letterSpacing="0.15em">FEAR</text>
-        <text x="245" y="165" fill="rgba(255,255,255,0.30)" fontSize="7" fontFamily="JetBrains Mono, monospace" letterSpacing="0.15em">GREED</text>
+        <text x="75" y="165" fill="rgba(255,255,255,0.30)" fontSize="7" fontFamily="var(--ff-mono)" letterSpacing="0.15em">FEAR</text>
+        <text x="245" y="165" fill="rgba(255,255,255,0.30)" fontSize="7" fontFamily="var(--ff-mono)" letterSpacing="0.15em">GREED</text>
         <path d="M 0 110 L 40 110 L 50 95 L 60 125 L 70 85 L 80 115 L 90 105 L 110 105 L 120 75 L 135 135 L 150 90 L 165 120 L 180 100 L 200 100 L 210 70 L 225 130 L 240 95 L 255 115 L 270 105 L 300 105 L 310 80 L 320 120 L 330 105 L 340 105" fill="none" stroke={`url(#${id}-line)`} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" filter={`url(#${id}-glow)`} className="ekg-line" style={{ animation: 'ekgPulse 2.8s ease-in-out infinite' }} />
         <path d="M 0 180 L 40 180 L 50 165 L 60 195 L 70 155 L 80 185 L 90 175 L 110 175 L 120 145 L 135 205 L 150 160 L 165 190 L 180 170 L 200 170 L 210 140 L 225 200 L 240 165 L 255 185 L 270 175 L 300 175 L 310 150 L 320 190 L 330 175 L 340 175 L 340 180 Z" fill={`url(#${id}-fill)`} opacity="0.5" className="ekg-fill" style={{ animation: 'ekgPulse 2.8s ease-in-out infinite' }} />
         <path d="M 0 115 L 30 115 L 38 100 L 48 130 L 58 80 L 68 120 L 78 108 L 100 108 L 112 68 L 130 140 L 148 85 L 162 125 L 178 95 L 198 95 L 208 62 L 228 135 L 242 88 L 258 118 L 272 102 L 298 102 L 312 72 L 324 125 L 334 108 L 340 108" fill="none" stroke={accent} strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" opacity="0" className="ekg-surge" filter={`url(#${id}-glow-hover)`} />
@@ -287,7 +287,7 @@ function ProtocolVisual({ accent }: { accent: string }) {
         <g className="shield-group" style={{ transformOrigin: '170px 85px' }}>
           <polygon points="170,50 202,68 202,100 170,118 138,100 138,68" fill={`${accent}10`} stroke={accent} strokeWidth="1.2" filter={`url(#${id}-glow)`} className="shield-outer" />
           <polygon points="170,62 192,75 192,95 170,108 148,95 148,75" fill={`${accent}18`} stroke={`${accent}80`} strokeWidth="0.8" className="shield-inner" />
-          <text x="170" y="94" textAnchor="middle" fill="#E8EAED" fontSize="12" fontFamily="JetBrains Mono, monospace" fontWeight="700" opacity="0.85">N</text>
+          <text x="170" y="94" textAnchor="middle" fill="#E8EAED" fontSize="12" fontFamily="var(--ff-mono)" fontWeight="700" opacity="0.85">N</text>
         </g>
         <circle cx="170" cy="85" r="28" fill="none" stroke={accent} strokeWidth="0.7" opacity="0" className="proto-ring" style={{ animation: 'protoRing 3s ease-out infinite' }} />
         <circle cx="170" cy="85" r="42" fill="none" stroke={accent} strokeWidth="0.5" opacity="0" className="proto-ring" style={{ animation: 'protoRing 3s ease-out 1s infinite' }} />
@@ -301,28 +301,28 @@ function ProtocolVisual({ accent }: { accent: string }) {
           <rect x="0" y="0" width="68" height="5" rx="2.5" fill={`url(#${id}-bar)`} filter={`url(#${id}-glow)`} className="status-bar">
             <animate attributeName="width" values="62;72;65;68" dur="4s" repeatCount="indefinite" />
           </rect>
-          <text x="0" y="16" fill="rgba(255,255,255,0.30)" fontSize="6" fontFamily="JetBrains Mono, monospace" letterSpacing="0.1em">LIQUIDITY</text>
+          <text x="0" y="16" fill="rgba(255,255,255,0.30)" fontSize="6" fontFamily="var(--ff-mono)" letterSpacing="0.1em">LIQUIDITY</text>
         </g>
         <g transform="translate(38, 150)">
           <rect x="0" y="0" width="82" height="5" rx="2.5" fill="rgba(255,255,255,0.05)" />
           <rect x="0" y="0" width="58" height="5" rx="2.5" fill={`url(#${id}-bar)`} filter={`url(#${id}-glow)`} opacity="0.8" className="status-bar">
             <animate attributeName="width" values="54;62;58;60" dur="3.5s" repeatCount="indefinite" />
           </rect>
-          <text x="0" y="16" fill="rgba(255,255,255,0.30)" fontSize="6" fontFamily="JetBrains Mono, monospace" letterSpacing="0.1em">YIELD</text>
+          <text x="0" y="16" fill="rgba(255,255,255,0.30)" fontSize="6" fontFamily="var(--ff-mono)" letterSpacing="0.1em">YIELD</text>
         </g>
         <g transform="translate(220, 128)">
           <rect x="0" y="0" width="82" height="5" rx="2.5" fill="rgba(255,255,255,0.05)" />
           <rect x="0" y="0" width="74" height="5" rx="2.5" fill={`url(#${id}-bar)`} filter={`url(#${id}-glow)`} className="status-bar">
             <animate attributeName="width" values="70;78;72;76" dur="5s" repeatCount="indefinite" />
           </rect>
-          <text x="0" y="16" fill="rgba(255,255,255,0.30)" fontSize="6" fontFamily="JetBrains Mono, monospace" letterSpacing="0.1em">USAGE</text>
+          <text x="0" y="16" fill="rgba(255,255,255,0.30)" fontSize="6" fontFamily="var(--ff-mono)" letterSpacing="0.1em">USAGE</text>
         </g>
         <g transform="translate(220, 150)">
           <rect x="0" y="0" width="82" height="5" rx="2.5" fill="rgba(255,255,255,0.05)" />
           <rect x="0" y="0" width="48" height="5" rx="2.5" fill={`url(#${id}-bar)`} filter={`url(#${id}-glow)`} opacity="0.65" className="status-bar">
             <animate attributeName="width" values="44;52;46;50" dur="4.5s" repeatCount="indefinite" />
           </rect>
-          <text x="0" y="16" fill="rgba(255,255,255,0.30)" fontSize="6" fontFamily="JetBrains Mono, monospace" letterSpacing="0.1em">FEES</text>
+          <text x="0" y="16" fill="rgba(255,255,255,0.30)" fontSize="6" fontFamily="var(--ff-mono)" letterSpacing="0.1em">FEES</text>
         </g>
       </svg>
       <div className="absolute inset-x-4 top-3.5 flex justify-between items-center">

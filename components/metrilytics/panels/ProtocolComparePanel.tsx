@@ -19,7 +19,7 @@ import {
   YAxis
 } from 'recharts';
 
-const MONO = 'var(--font-jetbrains-mono), JetBrains Mono, monospace';
+const MONO = 'var(--ff-mono)';
 const RED = '#C2344D';
 const GREEN = '#22C55E';
 const AMBER = '#E8960C';

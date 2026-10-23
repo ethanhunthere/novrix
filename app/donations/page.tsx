@@ -4,9 +4,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import FooterHome from '@/components/layout/FooterHome';
 
-const INTER = 'var(--font-inter), Inter, system-ui, sans-serif';
-const MONO  = 'var(--font-jetbrains-mono), JetBrains Mono, monospace';
-const BARLOW = 'var(--font-barlow), Barlow Semi Condensed, sans-serif';
+const INTER = 'var(--ff-sans)';
+const MONO  = 'var(--ff-mono)';
 
 const ZEC_ADDRESS = 'u1gjdr3v4tutx7g9jf045sxm35m380q2phsmnhvzs2sygwcxq0w79whuv0k8mksue6fk9k2x5dgt43knkqfjqt2rrf3kr48pkcqqflsux0uzkpkrul2eh4wyql00agn6rkuayw5zuuhf4ehaar8805a2acengl2hrgqzzmsczhlqrxm3l5';
 const BTC_ADDRESS = '18d6ybiWceKC3QwAGveMUijVyBMbNvUZmd';

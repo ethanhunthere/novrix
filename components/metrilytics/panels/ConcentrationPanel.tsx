@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Area, AreaChart, CartesianGrid, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
-const MONO = 'var(--font-jetbrains-mono), JetBrains Mono, monospace';
+const MONO = 'var(--ff-mono)';
 const AMBER = '#E8960C';
 const BLUE = '#38BDF8';
 const GREEN = '#22C55E';

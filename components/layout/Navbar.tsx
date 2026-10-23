@@ -7,15 +7,15 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useAuth, useLogout } from '@/lib/hooks/useAuth';
 import { useCLI } from '@/lib/state/CLIContext';
 
-const MONO  = 'var(--font-jetbrains-mono), JetBrains Mono, monospace';
-const INTER = 'var(--font-inter), Inter, system-ui, sans-serif';
+const MONO  = 'var(--ff-mono)';
+const INTER = 'var(--ff-sans)';
 
 const NAV: React.CSSProperties = {
   fontFamily: INTER,
   fontSize: '13px',
   fontWeight: 500,
-  letterSpacing: '0.5px',
-  textTransform: 'uppercase',
+  letterSpacing: '0.01em',
+  textTransform: 'none',
   lineHeight: 1,
 };
 
@@ -109,22 +109,13 @@ export default function Navbar() {
     <>
       <style>{`
         @keyframes terminalPanelIn {
-          from { opacity: 0; transform: translateX(-50%) translateY(-8px) scale(0.975); filter: blur(2px); }
-          to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); filter: blur(0); }
+          from { opacity: 0; transform: translateX(-50%) translateY(-6px) scale(0.985); }
+          to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
         }
         @keyframes terminalModuleIn {
           from { opacity: 0; transform: translate3d(0, -7px, 0) scale(0.985); }
           to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
         }
-        @keyframes terminalGlassFlow {
-          0%, 100% { transform: translate3d(-8%, -2%, 0); opacity: 0.45; }
-          50% { transform: translate3d(8%, 2%, 0); opacity: 0.72; }
-        }
-        @keyframes terminalEdgeSweep {
-          from { transform: translate3d(-120%, 0, 0); }
-          to { transform: translate3d(220%, 0, 0); }
-        }
-
         .terminal-menu:focus-within .terminal-dropdown {
           opacity: 1 !important;
           pointer-events: auto !important;
@@ -140,9 +131,10 @@ export default function Navbar() {
       <nav
         className="relative z-[50]"
         style={{
-          background: 'rgba(10, 10, 12, 0.90)',
+          background: 'rgba(10, 9, 8, 0.86)',
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)',
+          borderBottom: '1px solid rgba(245, 241, 234, 0.07)',
         }}
       >
 
@@ -159,10 +151,7 @@ export default function Navbar() {
                   src="/logo.png" alt="NOVRIX"
                   width={32} height={32} priority quality={100}
                   className="w-7 h-7 md:w-8 md:h-8 block"
-                  style={{
-                    filter: 'drop-shadow(0 0 4px rgba(194,52,77,0.42)) drop-shadow(0 1px 0 rgba(0,0,0,0.95))',
-                    pointerEvents: 'none',
-                  }}
+                  style={{ pointerEvents: 'none' }}
                 />
               </Link>
             </div>
@@ -210,13 +199,13 @@ export default function Navbar() {
                       style={{
                         ...NAV,
                         display: 'flex', alignItems: 'center', gap: '5px',
-                        color: terminalActive ? '#E5E7EB' : '#6B7280',
+                        color: terminalActive ? '#F5F1EA' : 'rgba(245, 241, 234, 0.48)',
                         fontWeight: terminalActive ? 600 : 500,
-                        textShadow: terminalActive ? '0 0 12px rgba(194,52,77,0.40)' : 'none',
+                        textShadow: 'none',
                         transition: 'color 0.15s ease',
                         pointerEvents: 'none',
                       }}
-                      className="group-hover:!text-[#A0AAB4]"
+                      className="group-hover:!text-[rgba(245, 241, 234, 0.78)]"
                     >
                       Terminal
                       <svg width="7" height="7" viewBox="0 0 8 8" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
@@ -243,44 +232,20 @@ export default function Navbar() {
                       opacity: termMode !== null ? 1 : 0,
                       pointerEvents: termMode !== null ? 'auto' : 'none',
                       transition: 'opacity 0.2s ease, transform 0.24s cubic-bezier(0.22,1,0.36,1)',
-                      background: 'linear-gradient(180deg, rgba(8,10,16,0.97), rgba(3,5,10,0.95))',
-                      backdropFilter: 'blur(26px) saturate(1.35)',
-                      WebkitBackdropFilter: 'blur(26px) saturate(1.35)',
-                      border: '1px solid rgba(255,255,255,0.11)',
-                      borderRadius: '10px',
-                      boxShadow: '0 28px 80px rgba(0,0,0,0.68), 0 0 0 1px rgba(0,0,0,0.78), inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -1px 0 rgba(255,255,255,0.025)',
+                      background: '#11100E',
+                      border: '1px solid rgba(245,241,234,0.10)',
+                      borderRadius: '6px',
+                      boxShadow: '0 24px 64px rgba(0,0,0,0.55)',
                       overflow: 'hidden',
                       animation: termMode !== null ? 'terminalPanelIn 0.24s cubic-bezier(0.22,1,0.36,1) both' : 'none',
                     }}
                   >
-                    <div
-                      style={{
-                        position: 'absolute',
-                        inset: '-35% -18%',
-                        pointerEvents: 'none',
-                        background: 'radial-gradient(circle at 18% 20%, rgba(0,200,238,0.13), transparent 28%), radial-gradient(circle at 82% 68%, rgba(194,52,77,0.12), transparent 32%)',
-                        filter: 'blur(16px)',
-                        opacity: termMode !== null ? 1 : 0,
-                        animation: termMode !== null ? 'terminalGlassFlow 5.5s ease-in-out infinite' : 'none',
-                      }}
-                    />
-                    <div
-                      style={{
-                        position: 'absolute',
-                        left: 0,
-                        right: 0,
-                        top: 0,
-                        height: '1px',
-                        background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.24), transparent)',
-                        pointerEvents: 'none',
-                      }}
-                    />
                     {/* Panel header */}
                     <div
                       className="px-4 py-3"
-                      style={{ position: 'relative', borderBottom: '1px solid rgba(255,255,255,0.075)' }}
+                      style={{ position: 'relative', borderBottom: '1px solid rgba(245,241,234,0.075)' }}
                     >
-                      <span style={{ fontFamily: INTER, fontSize: '11px', fontWeight: 650, letterSpacing: '0.09em', color: '#E2E8F0', textTransform: 'uppercase' }}>
+                      <span style={{ fontFamily: INTER, fontSize: '11px', fontWeight: 650, letterSpacing: '0.09em', color: '#EAE5DD', textTransform: 'uppercase' }}>
                         Terminal Modules
                       </span>
                     </div>
@@ -313,9 +278,9 @@ export default function Navbar() {
                     {/* Panel footer */}
                     <div
                       className="px-4 py-2.5"
-                      style={{ position: 'relative', borderTop: '1px solid rgba(255,255,255,0.075)' }}
+                      style={{ position: 'relative', borderTop: '1px solid rgba(245,241,234,0.075)' }}
                     >
-                      <span style={{ fontFamily: MONO, fontSize: '9px', fontWeight: 500, letterSpacing: '0.12em', color: '#64748B', textTransform: 'uppercase' }}>
+                      <span style={{ fontFamily: MONO, fontSize: '9px', fontWeight: 500, letterSpacing: '0.12em', color: 'rgba(245, 241, 234, 0.46)', textTransform: 'uppercase' }}>
                         Active Terminal Modules
                       </span>
                     </div>
@@ -334,7 +299,7 @@ export default function Navbar() {
               <CLIButton onClick={toggleCLI} />
 
               {/* Vertical rule */}
-              <div style={{ width: '1px', height: '20px', background: 'rgba(255,255,255,0.08)', flexShrink: 0 }} />
+              <div style={{ width: '1px', height: '20px', background: 'rgba(245,241,234,0.08)', flexShrink: 0 }} />
 
               {/* Auth */}
               {user ? (
@@ -344,17 +309,17 @@ export default function Navbar() {
                     className="flex items-center gap-[9px]"
                     style={{
                       padding: '7px 11px',
-                      border: '1px solid rgba(255,255,255,0.22)',
-                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid rgba(245,241,234,0.18)',
+                      background: 'rgba(245,241,234,0.04)',
                       cursor: 'pointer',
                       borderRadius: '4px',
                       transition: 'border-color 0.15s ease, background 0.15s ease',
                     }}
-                    onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = 'rgba(255,255,255,0.35)'; el.style.background = 'rgba(255,255,255,0.08)'; }}
-                    onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = 'rgba(255,255,255,0.22)'; el.style.background = 'rgba(255,255,255,0.04)'; }}
+                    onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = 'rgba(245,241,234,0.30)'; el.style.background = 'rgba(245,241,234,0.08)'; }}
+                    onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = 'rgba(245,241,234,0.18)'; el.style.background = 'rgba(245,241,234,0.04)'; }}
                   >
                     <span style={{ fontFamily: MONO, fontSize: '10px', letterSpacing: '0.1em', color: '#E0E0E8' }}>{user.novrix_id}</span>
-                    <svg width="7" height="7" viewBox="0 0 8 8" fill="none" stroke="#52525B" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
+                    <svg width="7" height="7" viewBox="0 0 8 8" fill="none" stroke="#6F6962" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
                       style={{ transition: 'transform 0.15s ease', transform: userOpen ? 'rotate(180deg)' : 'none', flexShrink: 0 }}>
                       <path d="M1 2.5L4 5.5L7 2.5" />
                     </svg>
@@ -366,7 +331,7 @@ export default function Navbar() {
                     style={{
                       top: 'calc(100% + 6px)', width: '172px',
                       background: '#0E0E12',
-                      border: '1px solid rgba(255,255,255,0.14)',
+                      border: '1px solid rgba(245,241,234,0.13)',
                       borderRadius: '6px',
                       boxShadow: '0 0 0 1px rgba(0,0,0,0.5), 0 24px 64px rgba(0,0,0,0.95)',
                       opacity: userOpen ? 1 : 0,
@@ -377,14 +342,14 @@ export default function Navbar() {
                   >
                     <div style={{ padding: '4px 0' }}>
                       <Link href="/terminal" prefetch={false} onClick={() => setUserOpen(false)}
-                        style={{ fontFamily: INTER, fontSize: '12px', fontWeight: 500, display: 'flex', alignItems: 'center', padding: '8px 14px', margin: '1px 6px', color: '#D0D0D8', textDecoration: 'none', borderRadius: '4px', transition: 'color 0.12s ease, background 0.12s ease' }}
-                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#FFFFFF'; (e.currentTarget as HTMLElement).style.background = '#18181B'; }}
-                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = '#D0D0D8'; (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
+                        style={{ fontFamily: INTER, fontSize: '12px', fontWeight: 500, display: 'flex', alignItems: 'center', padding: '8px 14px', margin: '1px 6px', color: '#D8D2C9', textDecoration: 'none', borderRadius: '4px', transition: 'color 0.12s ease, background 0.12s ease' }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#F5F1EA'; (e.currentTarget as HTMLElement).style.background = '#191613'; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = '#D8D2C9'; (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
                       >Terminal</Link>
                       <button onClick={() => { setUserOpen(false); logout(); }}
-                        style={{ fontFamily: INTER, fontSize: '12px', fontWeight: 500, display: 'flex', alignItems: 'center', width: 'calc(100% - 12px)', padding: '8px 14px', margin: '1px 6px', color: '#D0D0D8', background: 'transparent', border: 'none', cursor: 'pointer', borderRadius: '4px', transition: 'color 0.12s ease, background 0.12s ease' }}
-                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#FCA5A5'; (e.currentTarget as HTMLElement).style.background = 'rgba(239,68,68,0.06)'; }}
-                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = '#D0D0D8'; (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
+                        style={{ fontFamily: INTER, fontSize: '12px', fontWeight: 500, display: 'flex', alignItems: 'center', width: 'calc(100% - 12px)', padding: '8px 14px', margin: '1px 6px', color: '#D8D2C9', background: 'transparent', border: 'none', cursor: 'pointer', borderRadius: '4px', transition: 'color 0.12s ease, background 0.12s ease' }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#D95168'; (e.currentTarget as HTMLElement).style.background = 'rgba(194,52,77,0.06)'; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = '#D8D2C9'; (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
                       >Disconnect</button>
                     </div>
                   </div>
@@ -400,8 +365,8 @@ export default function Navbar() {
               className="lg:hidden col-start-3 justify-self-end flex flex-col items-center justify-center gap-[6px]"
               style={{
                 width: '44px', height: '44px',
-                border: mobileOpen ? '1px solid rgba(194,52,77,0.40)' : '1px solid rgba(255,255,255,0.09)',
-                background: mobileOpen ? 'rgba(194,52,77,0.07)' : 'rgba(255,255,255,0.02)',
+                border: mobileOpen ? '1px solid rgba(194,52,77,0.40)' : '1px solid rgba(245,241,234,0.09)',
+                background: mobileOpen ? 'rgba(194,52,77,0.07)' : 'rgba(245,241,234,0.02)',
                 transition: 'border-color 0.22s ease, background 0.22s ease',
               }}
             >
@@ -409,7 +374,7 @@ export default function Navbar() {
                 <span key={i} className="block h-px origin-center"
                   style={{
                     width: '18px',
-                    background: mobileOpen ? '#C2344D' : '#C0C8D4',
+                    background: mobileOpen ? '#C2344D' : '#D8D2C9',
                     opacity: mobileOpen && i === 1 ? 0 : 1,
                     transform: mobileOpen && i === 0 ? 'rotate(45deg) translate(0,6px)' : mobileOpen && i === 2 ? 'rotate(-45deg) translate(0,-6px)' : 'none',
                     transition: 'transform 0.22s ease, opacity 0.22s ease, background 0.22s ease',
@@ -425,7 +390,7 @@ export default function Navbar() {
       {/* ════════════════════════ MOBILE MENU ════════════════════════ */}
       <div className="fixed inset-0 z-[100] lg:hidden flex flex-col overflow-y-auto"
         style={{
-          background: 'rgba(2,3,5,0.98)',
+          background: 'rgba(10,9,8,0.98)',
           backdropFilter: 'blur(24px)',
           WebkitBackdropFilter: 'blur(24px)',
           opacity: mobileOpen ? 1 : 0,
@@ -441,14 +406,14 @@ export default function Navbar() {
 
         {/* Header: logo + close */}
         <div className="flex items-center justify-between shrink-0"
-          style={{ padding: '0 20px', height: '56px', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-          <span style={{ fontFamily: MONO, fontSize: '10px', letterSpacing: '0.30em', color: '#8899AA' }}>NOVRIX</span>
+          style={{ padding: '0 20px', height: '56px', borderBottom: '1px solid rgba(245,241,234,0.04)' }}>
+          <span style={{ fontFamily: MONO, fontSize: '10px', letterSpacing: '0.22em', color: 'rgba(245, 241, 234, 0.50)' }}>NOVRIX</span>
           <button
             onClick={() => setMobileOpen(false)}
             style={{
-              width: '36px', height: '36px', border: '1px solid rgba(255,255,255,0.08)',
-              background: 'rgba(255,255,255,0.02)', display: 'flex', alignItems: 'center',
-              justifyContent: 'center', cursor: 'pointer', color: '#C0C8D4',
+              width: '36px', height: '36px', border: '1px solid rgba(245,241,234,0.08)',
+              background: 'rgba(245,241,234,0.02)', display: 'flex', alignItems: 'center',
+              justifyContent: 'center', cursor: 'pointer', color: '#D8D2C9',
               fontFamily: MONO, fontSize: '16px', lineHeight: 1,
             }}
           >×</button>
@@ -470,9 +435,9 @@ export default function Navbar() {
               }}
             >
               <span style={{
-                fontFamily: INTER, fontSize: '15px', fontWeight: 600,
-                letterSpacing: '0.08em', textTransform: 'uppercase',
-                color: item.active ? '#FFFFFF' : '#C0C8D4',
+                fontFamily: INTER, fontSize: '15px', fontWeight: 500,
+                letterSpacing: '0.01em',
+                color: item.active ? '#F5F1EA' : '#D8D2C9',
               }}>{item.label}</span>
               {item.active && (
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#C2344D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -486,8 +451,8 @@ export default function Navbar() {
         {/* Divider: MODULES */}
         <div className="shrink-0" style={{ padding: '4px 24px 8px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ fontFamily: MONO, fontSize: '8px', letterSpacing: '0.28em', color: '#4A6070', textTransform: 'uppercase', flexShrink: 0 }}>TERMINAL MODULES</span>
-            <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.05)' }} />
+            <span style={{ fontFamily: MONO, fontSize: '8px', letterSpacing: '0.28em', color: 'rgba(245, 241, 234, 0.46)', textTransform: 'uppercase', flexShrink: 0 }}>TERMINAL MODULES</span>
+            <div style={{ flex: 1, height: '1px', background: 'rgba(245,241,234,0.05)' }} />
           </div>
         </div>
 
@@ -505,8 +470,8 @@ export default function Navbar() {
               display: 'flex', alignItems: 'center', gap: '14px',
               minHeight: '60px', padding: '0 24px',
               textDecoration: 'none',
-              borderLeft: `2px solid ${active ? 'rgba(255,255,255,0.22)' : 'transparent'}`,
-              background: active ? 'rgba(255,255,255,0.025)' : 'transparent',
+              borderLeft: `2px solid ${active ? 'rgba(245,241,234,0.18)' : 'transparent'}`,
+              background: active ? 'rgba(245,241,234,0.025)' : 'transparent',
               cursor: 'pointer',
               width: '100%',
               border: 'none',
@@ -519,19 +484,19 @@ export default function Navbar() {
                 {/* Icon box */}
                 <div style={{
                   width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  border: `1px solid ${active ? '#3F3F46' : '#27272A'}`,
-                  background: active ? '#1A1A1C' : 'transparent',
-                  color: active ? '#D4D4D8' : '#52525B',
+                  border: `1px solid ${active ? 'rgba(245, 241, 234, 0.16)' : 'rgba(245, 241, 234, 0.10)'}`,
+                  background: active ? '#191613' : 'transparent',
+                  color: active ? '#D8D2C9' : '#6F6962',
                   flexShrink: 0,
                 }}>
                   <m.Icon />
                 </div>
                 {/* Label + desc */}
                 <div>
-                  <div style={{ fontFamily: INTER, fontSize: '13px', fontWeight: 600, letterSpacing: '0.10em', textTransform: 'uppercase', color: active ? '#E2E8F0' : '#4A6278', marginBottom: '2px' }}>
+                  <div style={{ fontFamily: INTER, fontSize: '14px', fontWeight: 500, letterSpacing: '0.01em', color: active ? '#EAE5DD' : 'rgba(245, 241, 234, 0.40)', marginBottom: '2px' }}>
                     {m.label}
                   </div>
-                  <div style={{ fontFamily: INTER, fontSize: '11px', fontWeight: 400, letterSpacing: '0.02em', color: '#94A3B8' }}>
+                  <div style={{ fontFamily: INTER, fontSize: '11px', fontWeight: 400, letterSpacing: '0.02em', color: '#A9A29A' }}>
                     {m.desc}
                   </div>
                 </div>
@@ -543,19 +508,19 @@ export default function Navbar() {
                 {/* Icon box */}
                 <div style={{
                   width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  border: `1px solid ${active ? '#3F3F46' : '#27272A'}`,
-                  background: active ? '#1A1A1C' : 'transparent',
-                  color: active ? '#D4D4D8' : '#52525B',
+                  border: `1px solid ${active ? 'rgba(245, 241, 234, 0.16)' : 'rgba(245, 241, 234, 0.10)'}`,
+                  background: active ? '#191613' : 'transparent',
+                  color: active ? '#D8D2C9' : '#6F6962',
                   flexShrink: 0,
                 }}>
                   <m.Icon />
                 </div>
                 {/* Label + desc */}
                 <div>
-                  <div style={{ fontFamily: INTER, fontSize: '13px', fontWeight: 600, letterSpacing: '0.10em', textTransform: 'uppercase', color: active ? '#E2E8F0' : '#4A6278', marginBottom: '2px' }}>
+                  <div style={{ fontFamily: INTER, fontSize: '14px', fontWeight: 500, letterSpacing: '0.01em', color: active ? '#EAE5DD' : 'rgba(245, 241, 234, 0.40)', marginBottom: '2px' }}>
                     {m.label}
                   </div>
-                  <div style={{ fontFamily: INTER, fontSize: '11px', fontWeight: 400, letterSpacing: '0.02em', color: '#94A3B8' }}>
+                  <div style={{ fontFamily: INTER, fontSize: '11px', fontWeight: 400, letterSpacing: '0.02em', color: '#A9A29A' }}>
                     {m.desc}
                   </div>
                 </div>
@@ -565,16 +530,16 @@ export default function Navbar() {
         </div>
 
         {/* Auth section */}
-        <div className="shrink-0" style={{ padding: '16px 24px', borderTop: '1px solid rgba(255,255,255,0.04)', marginTop: 'auto' }}>
+        <div className="shrink-0" style={{ padding: '16px 24px', borderTop: '1px solid rgba(245,241,234,0.04)', marginTop: 'auto' }}>
           {user ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontFamily: MONO, fontSize: '10px', letterSpacing: '0.16em', color: '#8899AA' }}>{user.novrix_id}</span>
+                <span style={{ fontFamily: MONO, fontSize: '10px', letterSpacing: '0.16em', color: 'rgba(245, 241, 234, 0.50)' }}>{user.novrix_id}</span>
               </div>
               <button onClick={() => { setMobileOpen(false); logout(); }}
                 style={{
-                  fontFamily: INTER, fontSize: '12px', fontWeight: 600, letterSpacing: '0.10em', textTransform: 'uppercase',
-                  minHeight: '44px', padding: '0 20px', color: '#C0C8D4',
+                  fontFamily: INTER, fontSize: '12px', fontWeight: 500, letterSpacing: '0.06em',
+                  minHeight: '44px', padding: '0 20px', color: '#D8D2C9',
                   border: '1px solid rgba(194,52,77,0.20)', background: 'transparent', cursor: 'pointer',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}>
@@ -584,7 +549,7 @@ export default function Navbar() {
           ) : (
             <Link href="/sentiment" prefetch={false} onClick={() => setMobileOpen(false)}
               style={{
-                fontFamily: INTER, fontSize: '12px', fontWeight: 600, letterSpacing: '0.10em', textTransform: 'uppercase',
+                fontFamily: INTER, fontSize: '12px', fontWeight: 500, letterSpacing: '0.06em',
                 minHeight: '44px', padding: '0 20px', color: '#C0A8B0',
                 border: '1px solid rgba(194,52,77,0.40)', background: 'rgba(194,52,77,0.06)',
                 textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
@@ -596,7 +561,7 @@ export default function Navbar() {
 
         {/* Footer version */}
         <div className="pb-6 shrink-0 flex justify-center">
-          <span style={{ fontFamily: MONO, fontSize: '10px', letterSpacing: '0.38em', color: '#8090A0', textTransform: 'uppercase' }}>
+          <span style={{ fontFamily: MONO, fontSize: '10px', letterSpacing: '0.18em', color: '#8090A0', textTransform: 'uppercase' }}>
             NOVRIX v3.2.1
           </span>
         </div>
@@ -620,14 +585,14 @@ function NavLink({ href, active, children }: { href: string; active: boolean; ch
     >
       <span style={{
         ...NAV,
-        color: active ? '#E5E7EB' : hovered ? '#A0AAB4' : '#6B7280',
+        color: active ? '#F5F1EA' : hovered ? 'rgba(245, 241, 234, 0.78)' : 'rgba(245, 241, 234, 0.48)',
         fontWeight: active ? 600 : 500,
-        textShadow: active ? '0 0 12px rgba(194,52,77,0.40)' : 'none',
+        textShadow: 'none',
         transition: 'color 0.15s ease, text-shadow 0.15s ease',
         pointerEvents: 'none',
       }}>{children}</span>
       <div style={{
-        position: 'absolute', bottom: 0, left: '26px', right: '26px', height: '2px',
+        position: 'absolute', bottom: 0, left: '26px', right: '26px', height: '1px',
         background: active ? '#C2344D' : hovered ? 'rgba(194,52,77,0.20)' : 'transparent',
         transition: 'background 0.15s ease',
       }} />
@@ -636,13 +601,13 @@ function NavLink({ href, active, children }: { href: string; active: boolean; ch
 }
 
 function NavSep() {
-  return <div className="self-center shrink-0" style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.07)' }} />;
+  return <div className="self-center shrink-0" style={{ width: '1px', height: '16px', background: 'rgba(245,241,234,0.07)' }} />;
 }
 
 function PrecisionTick({ active }: { active: boolean }) {
   return (
     <div style={{
-      position: 'absolute', bottom: 0, left: '23px', right: '29px', height: '2px',
+      position: 'absolute', bottom: 0, left: '23px', right: '29px', height: '1px',
       pointerEvents: 'none',
       background: '#C2344D',
       transformOrigin: 'left center',
@@ -655,12 +620,12 @@ function PrecisionTick({ active }: { active: boolean }) {
 function CLIButton({ onClick }: { onClick: () => void }) {
   return (
     <button onClick={onClick} title="Open CLI  (` or Ctrl+K)"
-      style={{ fontFamily: MONO, fontSize: '11px', letterSpacing: '0.12em', padding: '7px 11px', color: '#00C8EE', border: '1px solid rgba(0,200,238,0.22)', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '3px', transition: 'color 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease', lineHeight: 1, borderRadius: 0 }}
-      onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = 'rgba(0,200,238,0.55)'; el.style.background = 'rgba(0,200,238,0.06)'; el.style.boxShadow = '0 0 12px rgba(0,200,238,0.18)'; }}
-      onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = 'rgba(0,200,238,0.22)'; el.style.background = 'transparent'; el.style.boxShadow = 'none'; }}
+      style={{ fontFamily: MONO, fontSize: '11px', letterSpacing: '0.12em', padding: '7px 11px', color: 'rgba(245, 241, 234, 0.62)', border: '1px solid rgba(245, 241, 234, 0.14)', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '3px', transition: 'color 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease', lineHeight: 1, borderRadius: 0 }}
+      onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = 'rgba(194,52,77,0.48)'; el.style.background = 'rgba(194,52,77,0.05)'; el.style.boxShadow = 'none'; }}
+      onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = 'rgba(245,241,234,0.14)'; el.style.background = 'transparent'; el.style.boxShadow = 'none'; }}
     >
-      <span style={{ color: '#00C8EE', opacity: 0.7, pointerEvents: 'none' }}>&gt;_</span>
-      <span className="nav-cli-cursor" style={{ color: '#00C8EE', display: 'inline-block', width: '7px', textAlign: 'center', pointerEvents: 'none' }}>▌</span>
+      <span style={{ color: '#C2344D', opacity: 0.85, pointerEvents: 'none' }}>&gt;_</span>
+      <span className="nav-cli-cursor" style={{ color: 'rgba(245, 241, 234, 0.55)', display: 'inline-block', width: '7px', textAlign: 'center', pointerEvents: 'none' }}>▌</span>
     </button>
   );
 }
@@ -668,12 +633,11 @@ function CLIButton({ onClick }: { onClick: () => void }) {
 function AccessButton() {
   return (
     <Link href="/sentiment" prefetch={false}
-      style={{ ...NAV, fontSize: '11px', fontWeight: 600, letterSpacing: '0.20em', padding: '7px 16px', color: '#C2344D', border: '1px solid rgba(194,52,77,0.45)', background: 'transparent', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '7px', transition: 'color 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease', borderRadius: 0 }}
-      onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.color = '#D9485F'; el.style.borderColor = 'rgba(194,52,77,0.80)'; el.style.background = 'rgba(194,52,77,0.08)'; el.style.boxShadow = '0 0 14px rgba(194,52,77,0.15)'; }}
-      onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.color = '#C2344D'; el.style.borderColor = 'rgba(194,52,77,0.45)'; el.style.background = 'transparent'; el.style.boxShadow = 'none'; }}
+      style={{ ...NAV, fontSize: '11px', fontWeight: 500, letterSpacing: '0.12em', padding: '8px 15px', color: '#0A0908', border: '1px solid #F5F1EA', background: '#F5F1EA', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '7px', transition: 'background 0.18s ease, border-color 0.18s ease', borderRadius: '2px' }}
+      onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = '#FFFCF6'; el.style.borderColor = '#FFFCF6'; }}
+      onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = '#F5F1EA'; el.style.borderColor = '#F5F1EA'; }}
     >
-      <span style={{ fontSize: '8px', color: '#C2344D', flexShrink: 0, lineHeight: 1, pointerEvents: 'none' }}>&#9679;</span>
-      LAUNCH TERMINAL
+      Launch terminal
     </Link>
   );
 }
@@ -684,22 +648,9 @@ function DropdownModule({ href, label, desc, Icon, active, open, index, onClick 
 }) {
   const [hovered, setHovered] = useState(false);
   const on = active || hovered;
-  
+
   const content = (
     <>
-      <span
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          zIndex: 0,
-          pointerEvents: 'none',
-          background: 'linear-gradient(105deg, transparent 0%, rgba(255,255,255,0.12) 42%, transparent 68%)',
-          opacity: hovered ? 1 : 0,
-          transform: hovered ? 'translate3d(65%,0,0)' : 'translate3d(-105%,0,0)',
-          transition: 'opacity 0.18s ease, transform 0.55s cubic-bezier(0.22,1,0.36,1)',
-        }}
-      />
       {/* Icon box */}
       <div style={{
         width: '34px', height: '34px',
@@ -707,13 +658,13 @@ function DropdownModule({ href, label, desc, Icon, active, open, index, onClick 
         flexShrink: 0,
         position: 'relative',
         zIndex: 2,
-        border: `1px solid ${active ? 'rgba(255,255,255,0.24)' : hovered ? 'rgba(255,255,255,0.20)' : 'rgba(255,255,255,0.08)'}`,
-        background: active ? 'rgba(255,255,255,0.095)' : hovered ? 'rgba(255,255,255,0.075)' : 'rgba(255,255,255,0.025)',
-        color: on ? '#F8FAFC' : '#94A3B8',
+        border: `1px solid ${active ? 'rgba(245,241,234,0.20)' : hovered ? 'rgba(245,241,234,0.18)' : 'rgba(245,241,234,0.08)'}`,
+        background: active ? 'rgba(245,241,234,0.095)' : hovered ? 'rgba(245,241,234,0.075)' : 'rgba(245,241,234,0.025)',
+        color: on ? '#F5F1EA' : '#A9A29A',
         borderRadius: '7px',
-        transform: hovered ? 'rotate(-2deg) scale(1.035)' : 'rotate(0deg) scale(1)',
-        boxShadow: hovered ? '0 0 18px rgba(148,163,184,0.12)' : 'none',
-        transition: 'border-color 0.22s ease, background 0.22s ease, color 0.22s ease, transform 0.22s cubic-bezier(0.22,1,0.36,1), box-shadow 0.22s ease',
+        transform: 'none',
+        boxShadow: 'none',
+        transition: 'border-color 0.22s ease, background 0.22s ease, color 0.22s ease',
         pointerEvents: 'none',
       }}>
         <Icon />
@@ -721,46 +672,46 @@ function DropdownModule({ href, label, desc, Icon, active, open, index, onClick 
 
       {/* Text */}
       <div style={{ flex: 1, minWidth: 0, position: 'relative', zIndex: 2, pointerEvents: 'none' }}>
-        <span style={{ 
-          fontFamily: INTER, 
-          fontSize: '13px', 
-          fontWeight: 600, 
-          letterSpacing: '0.01em', 
-          lineHeight: 1.4, 
-          color: on ? '#F8FAFC' : '#CBD5E1', 
-          transition: 'color 0.22s ease' 
+        <span style={{
+          fontFamily: INTER,
+          fontSize: '13px',
+          fontWeight: 600,
+          letterSpacing: '0.01em',
+          lineHeight: 1.4,
+          color: on ? '#F5F1EA' : '#C9C2B9',
+          transition: 'color 0.22s ease'
         }}>
           {label}
         </span>
-        <div style={{ 
-          fontFamily: INTER, 
-          fontSize: '11px', 
+        <div style={{
+          fontFamily: INTER,
+          fontSize: '11px',
           fontWeight: 400,
-          letterSpacing: '0.02em', 
-          color: on ? '#94A3B8' : '#64748B', 
-          marginTop: '2px', 
-          lineHeight: 1.3, 
-          transition: 'color 0.22s ease' 
+          letterSpacing: '0.02em',
+          color: on ? '#A9A29A' : 'rgba(245, 241, 234, 0.46)',
+          marginTop: '2px',
+          lineHeight: 1.3,
+          transition: 'color 0.22s ease'
         }}>
           {desc}
         </div>
       </div>
 
       {/* Arrow indicator */}
-      <svg 
-        width="14" 
-        height="14" 
-        viewBox="0 0 14 14" 
-        fill="none" 
-        stroke="currentColor" 
-        strokeWidth="2" 
-        strokeLinecap="round" 
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 14 14"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
         strokeLinejoin="round"
-        style={{ 
+        style={{
           position: 'relative',
           zIndex: 2,
           flexShrink: 0,
-          color: on ? '#E2E8F0' : 'transparent',
+          color: on ? '#EAE5DD' : 'transparent',
           transform: hovered ? 'translateX(2px)' : 'translateX(0)',
           transition: 'color 0.22s ease, transform 0.22s ease',
           opacity: on ? 1 : 0,
@@ -781,21 +732,15 @@ function DropdownModule({ href, label, desc, Icon, active, open, index, onClick 
     borderRadius: '8px',
     overflow: 'hidden',
     background: hovered
-      ? 'linear-gradient(135deg, rgba(255,255,255,0.105), rgba(255,255,255,0.045))'
+      ? 'rgba(245,241,234,0.065)'
       : active
-        ? 'linear-gradient(135deg, rgba(255,255,255,0.072), rgba(255,255,255,0.032))'
-        : 'rgba(255,255,255,0.018)',
-    border: `1px solid ${active ? 'rgba(255,255,255,0.18)' : hovered ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.055)'}`,
-    transform: open
-      ? (hovered ? 'translate3d(2px, -1px, 0) scale(1.01)' : 'translate3d(0, 0, 0) scale(1)')
-      : 'translate3d(0, -6px, 0) scale(0.985)',
-    boxShadow: hovered
-      ? '0 14px 28px rgba(0,0,0,0.32), inset 0 1px 0 rgba(255,255,255,0.085)'
-      : active
-        ? '0 8px 18px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.06)'
-        : 'inset 0 1px 0 rgba(255,255,255,0.025)',
+        ? 'rgba(245,241,234,0.04)'
+        : 'transparent',
+    border: `1px solid ${active ? 'rgba(245,241,234,0.18)' : hovered ? 'rgba(245,241,234,0.16)' : 'rgba(245,241,234,0.06)'}`,
+    transform: open ? 'translate3d(0, 0, 0)' : 'translate3d(0, -6px, 0)',
+    boxShadow: 'none',
     opacity: open ? 1 : 0,
-    transition: `opacity 0.22s ease ${index * 30}ms, transform 0.22s ease ${index * 30}ms, background 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease`,
+    transition: `opacity 0.22s ease ${index * 30}ms, transform 0.22s ease ${index * 30}ms, background 0.22s ease, border-color 0.22s ease`,
     cursor: 'pointer',
     width: '100%',
   };

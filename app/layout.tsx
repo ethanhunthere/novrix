@@ -1,34 +1,28 @@
 import type { Metadata, Viewport } from "next";
 import type React from "react";
-import { Inter, JetBrains_Mono, Barlow_Semi_Condensed } from "next/font/google";
+import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import "./globals.css";
 import { CLIProvider } from "@/lib/state/CLIContext";
 import { AuthGateProvider } from "@/lib/state/AuthGateContext";
 import GlobalCLI from "@/components/cli/GlobalCLI";
 import AuthGate from "@/components/auth/AuthGate";
 
-// Weights audited from grep across app/ + components/: actual usage is
-// 400 (normal), 500 (medium), 600 (semibold), 700 (bold), 800, 900 (black).
-// `font-black` (900) appears widely in headings; previously the font file
-// did not ship 900 and the browser synthesised it.
-const inter = Inter({
+const geistSans = Geist({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "900"],
-  variable: "--font-inter",
+  variable: "--font-geist-sans",
   display: "swap",
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const geistMono = Geist_Mono({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-jetbrains-mono",
+  variable: "--font-geist-mono",
   display: "swap",
 });
 
-const barlow = Barlow_Semi_Condensed({
+const newsreader = Newsreader({
   subsets: ["latin"],
-  weight: ["600", "700", "800", "900"],
-  variable: "--font-barlow",
+  style: ["normal", "italic"],
+  variable: "--font-newsreader",
   display: "swap",
 });
 
@@ -82,7 +76,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
-  themeColor: '#0A0A0C',
+  themeColor: '#0A0908',
 };
 
 export default function RootLayout({
@@ -91,7 +85,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark" style={{ background: '#0A0A0C' }}>
+    <html
+      lang="en"
+      className={`dark ${geistSans.variable} ${geistMono.variable} ${newsreader.variable}`}
+      style={{ background: '#0A0908' }}
+    >
       <head>
         {/* Explicit favicon links for crawler compatibility */}
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
@@ -165,7 +163,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} ${barlow.variable} font-sans antialiased min-h-screen flex flex-col text-white overflow-y-scroll bg-[#0A0A0C]`}
+        className="font-sans antialiased min-h-screen flex flex-col text-white overflow-y-scroll bg-[#0A0908]"
         style={{
           WebkitFontSmoothing: 'antialiased',
           MozOsxFontSmoothing: 'grayscale',
@@ -176,7 +174,7 @@ export default function RootLayout({
         <div
           className="fixed inset-0 pointer-events-none z-0"
           style={{
-            background: 'radial-gradient(ellipse at 50% 0%, rgba(199, 85, 102, 0.035) 0%, transparent 55%)'
+            background: 'radial-gradient(ellipse at 50% 0%, rgba(194, 52, 77, 0.03) 0%, transparent 55%)'
           }}
         />
 

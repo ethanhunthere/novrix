@@ -11,6 +11,7 @@ import gsap from 'gsap';
 import { useAuth } from '@/lib/hooks/useAuth';
 import type { AuthUser } from '@/lib/hooks/useAuth';
 import { AreaChart, Area, ResponsiveContainer } from 'recharts';
+import { monoFontStack } from '@/lib/utils/fonts';
 
 /* ═══════════════════════════════════════════════════════════
    MARKET DATA
@@ -214,11 +215,11 @@ function OscilloscopeMultiChan({ fgi }: { fgi: number | null }) {
 
         // label text
         ctx.fillStyle = ch.color;
-        ctx.font = `900 9px "JetBrains Mono",monospace`;
+        ctx.font = `900 9px ${monoFontStack()}`;
         ctx.textAlign = 'left';
         ctx.fillText(ch.label, 9, midY - 7);
         ctx.fillStyle = `rgba(${ch.rgb},0.5)`;
-        ctx.font = `500 5.5px "JetBrains Mono",monospace`;
+        ctx.font = `500 5.5px ${monoFontStack()}`;
         ctx.fillText(ch.sub, 9, midY + 6);
 
         // grid
@@ -285,7 +286,7 @@ function OscilloscopeMultiChan({ fgi }: { fgi: number | null }) {
         if (ci === 0 && fgi !== null) valText = `${fgi}`;
         if (valText) {
           ctx.fillStyle = `rgba(${ch.rgb},0.45)`;
-          ctx.font = `700 7px "JetBrains Mono",monospace`;
+          ctx.font = `700 7px ${monoFontStack()}`;
           ctx.textAlign = 'right';
           ctx.fillText(valText, W - 8, cy + 11);
         }
@@ -294,7 +295,7 @@ function OscilloscopeMultiChan({ fgi }: { fgi: number | null }) {
 
       // bottom label strip
       ctx.fillStyle = 'rgba(255,255,255,0.09)';
-      ctx.font = `600 5.5px "JetBrains Mono",monospace`;
+      ctx.font = `600 5.5px ${monoFontStack()}`;
       ctx.textAlign = 'right';
       ctx.fillText('50ms/DIV · NOVRIX OSC-4', W - 8, H - 5);
       ctx.fillStyle = 'rgba(255,255,255,0.22)';
@@ -429,7 +430,7 @@ function RadarViz() {
         ctx.restore();
         if (intensity > 0.4) {
           ctx.fillStyle = `rgba(255,255,255,${intensity * 0.72})`;
-          ctx.font = `bold 6px "JetBrains Mono",monospace`;
+          ctx.font = `bold 6px ${monoFontStack()}`;
           ctx.fillText(chain.label, bx + 6, by - 4);
         }
       });
@@ -455,7 +456,7 @@ function RadarViz() {
 
       // HUD labels
       ctx.fillStyle = 'rgba(194,52,77,0.5)';
-      ctx.font = '700 6px "JetBrains Mono",monospace';
+      ctx.font = `700 6px ${monoFontStack()}`;
       ctx.textAlign = 'left';  ctx.fillText('GLOBAL SWEEP', 10, 14);
       ctx.textAlign = 'right'; ctx.fillText(`${Math.round(degRef.current)}°`, W - 10, 14);
       ctx.fillStyle = 'rgba(255,255,255,0.12)';
@@ -556,27 +557,27 @@ function SpectrumCanvas({ mcap }: { mcap: number | null }) {
       // market cap readout overlay
       if (mcap) {
         ctx.fillStyle = 'rgba(0,200,238,0.38)';
-        ctx.font = `500 6px "JetBrains Mono",monospace`;
+        ctx.font = `500 6px ${monoFontStack()}`;
         ctx.textAlign = 'left';
         ctx.fillText('TOTAL MCAP TRACKED', 16, 18);
         ctx.save();
         ctx.shadowBlur = 24; ctx.shadowColor = 'rgba(0,200,238,0.5)';
         ctx.fillStyle = '#00C8EE';
-        ctx.font = `900 28px "JetBrains Mono",monospace`;
+        ctx.font = `900 28px ${monoFontStack()}`;
         ctx.fillText(formatUSD(mcap), 16, 46);
         ctx.restore();
       } else {
         ctx.fillStyle = 'rgba(0,200,238,0.15)';
-        ctx.font = `500 6px "JetBrains Mono",monospace`;
+        ctx.font = `500 6px ${monoFontStack()}`;
         ctx.textAlign = 'left';
         ctx.fillText('TOTAL MCAP TRACKED', 16, 18);
         ctx.fillStyle = 'rgba(0,50,60,0.9)';
-        ctx.font = `900 28px "JetBrains Mono",monospace`;
+        ctx.font = `900 28px ${monoFontStack()}`;
         ctx.fillText('——', 16, 46);
       }
 
       ctx.fillStyle = 'rgba(0,200,238,0.25)';
-      ctx.font = `600 5.5px "JetBrains Mono",monospace`;
+      ctx.font = `600 5.5px ${monoFontStack()}`;
       ctx.textAlign = 'right';
       ctx.fillText('SPECTRAL DEPTH · 3-LAYER', W - 14, H - 8);
       ctx.textAlign = 'left';
@@ -633,14 +634,14 @@ function EntityScan() {
 
   return (
     <div style={{ padding: '12px 0 0 0' }}>
-      <div style={{ fontSize: '6px', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '0.44em', color: 'rgba(194,52,77,0.4)', marginBottom: '8px', textTransform: 'uppercase' }}>
+      <div style={{ fontSize: '6px', fontFamily: 'var(--ff-mono)', letterSpacing: '0.44em', color: 'rgba(194,52,77,0.4)', marginBottom: '8px', textTransform: 'uppercase' }}>
         Entity Scanner
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
         {visible.map((e, i) => (
           <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '7px', fontFamily: "'JetBrains Mono',monospace", color: color(e.status), letterSpacing: '0.02em' }}>{e.text}</span>
-            <span style={{ fontSize: '6px', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '0.28em', color: color(e.status), flexShrink: 0, marginLeft: '12px' }}>{e.status}</span>
+            <span style={{ fontSize: '7px', fontFamily: 'var(--ff-mono)', color: color(e.status), letterSpacing: '0.02em' }}>{e.text}</span>
+            <span style={{ fontSize: '6px', fontFamily: 'var(--ff-mono)', letterSpacing: '0.28em', color: color(e.status), flexShrink: 0, marginLeft: '12px' }}>{e.status}</span>
           </div>
         ))}
       </div>
@@ -702,7 +703,7 @@ function SignalSpine() {
         ctx.restore();
 
         ctx.fillStyle = `rgba(${n.rgb},0.55)`;
-        ctx.font = `700 6.5px "JetBrains Mono",monospace`;
+        ctx.font = `700 6.5px ${monoFontStack()}`;
         ctx.textAlign = 'center';
         ctx.fillText(n.label, n.x, y - 22);
       });
@@ -723,7 +724,7 @@ function SignalSpine() {
 
       // label
       ctx.fillStyle = 'rgba(255,255,255,0.07)';
-      ctx.font = `600 5.5px "JetBrains Mono",monospace`;
+      ctx.font = `600 5.5px ${monoFontStack()}`;
       ctx.textAlign = 'left';
       ctx.fillText('SIGNAL BUS', 12, y - 9);
       ctx.textAlign = 'right';
@@ -878,10 +879,10 @@ function GatePanel({ targetModule, onSuccess, onClose }: {
           {/* ── HEADER ── */}
           <div style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)', borderBottom: '1px solid rgba(255,255,255,0.10)', padding: '14px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', zIndex: 4 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '13px', letterSpacing: '0.16em', color: '#CBD5E1', textTransform: 'uppercase', fontWeight: 600 }}>TERMINAL ACCESS</span>
+              <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '13px', letterSpacing: '0.16em', color: '#CBD5E1', textTransform: 'uppercase', fontWeight: 600 }}>TERMINAL ACCESS</span>
             </div>
             <button onClick={onClose}
-              style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: 'rgba(255,255,255,0.45)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, letterSpacing: '0.08em', transition: 'color 150ms' }}
+              style={{ fontFamily: 'var(--ff-mono)', fontSize: '11px', color: 'rgba(255,255,255,0.45)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, letterSpacing: '0.08em', transition: 'color 150ms' }}
               onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.80)')}
               onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.45)')}>
               [ESC]
@@ -894,7 +895,7 @@ function GatePanel({ targetModule, onSuccess, onClose }: {
             {/* ─ SIGN IN ─ */}
             {mode === 'signin' && (
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <label style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', color: '#CBD5E1', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '12px', display: 'block', fontWeight: 600 }}>
+                <label style={{ fontFamily: 'var(--ff-mono)', fontSize: '12px', color: '#CBD5E1', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '12px', display: 'block', fontWeight: 600 }}>
                   Operator Access ID
                 </label>
                 <div style={{ position: 'relative' }}>
@@ -915,7 +916,7 @@ function GatePanel({ targetModule, onSuccess, onClose }: {
                       borderRadius: 0,
                       height: '50px',
                       padding: '0 16px',
-                      fontFamily: "'JetBrains Mono', monospace",
+                      fontFamily: 'var(--ff-mono)',
                       fontSize: '16px',
                       color: '#F8FAFC',
                       caretColor: '#94A3B8',
@@ -935,7 +936,7 @@ function GatePanel({ targetModule, onSuccess, onClose }: {
                     background: loading || !siId ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.08)',
                     border: `1px solid ${loading || !siId ? 'rgba(255,255,255,0.10)' : 'rgba(255,255,255,0.22)'}`,
                     color: loading || !siId ? 'rgba(255,255,255,0.35)' : '#F1F5F9',
-                    fontFamily: "'JetBrains Mono', monospace", fontSize: '13px', letterSpacing: '0.14em', fontWeight: 600, textTransform: 'uppercase',
+                    fontFamily: 'var(--ff-mono)', fontSize: '13px', letterSpacing: '0.14em', fontWeight: 600, textTransform: 'uppercase',
                     cursor: loading || !siId ? 'not-allowed' : 'pointer',
                     transition: 'all 200ms cubic-bezier(0.16, 1, 0.3, 1)',
                     position: 'relative',
@@ -949,7 +950,7 @@ function GatePanel({ targetModule, onSuccess, onClose }: {
                 <div style={{ marginTop: '20px', textAlign: 'center' }}>
                   <button
                     onClick={() => { setMode('signup'); setError(''); }}
-                    style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '13px', color: 'rgba(148,163,184,0.80)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, transition: 'color 150ms', letterSpacing: '0.04em' }}
+                    style={{ fontFamily: 'var(--ff-mono)', fontSize: '13px', color: 'rgba(148,163,184,0.80)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, transition: 'color 150ms', letterSpacing: '0.04em' }}
                     onMouseEnter={e => (e.currentTarget.style.color = '#E2E8F0')}
                     onMouseLeave={e => (e.currentTarget.style.color = 'rgba(148,163,184,0.80)')}>
                     Issue new credential
@@ -964,11 +965,11 @@ function GatePanel({ targetModule, onSuccess, onClose }: {
                 {granted ? (
                   /* ── POST-GRANT ── */
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                    <label style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', color: '#CBD5E1', letterSpacing: '0.12em', textTransform: 'uppercase', display: 'block', fontWeight: 600 }}>
+                    <label style={{ fontFamily: 'var(--ff-mono)', fontSize: '12px', color: '#CBD5E1', letterSpacing: '0.12em', textTransform: 'uppercase', display: 'block', fontWeight: 600 }}>
                       Generated Access ID
                     </label>
                     <div style={{ background: '#0F111A', border: '1px solid rgba(148,163,184,0.35)', height: '50px', padding: '0 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
-                      <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '17px', color: '#E2E8F0', letterSpacing: '0.04em' }}>{novrixId}</span>
+                      <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '17px', color: '#E2E8F0', letterSpacing: '0.04em' }}>{novrixId}</span>
                       <button type="button" onClick={copyId}
                         style={{ flexShrink: 0, background: 'none', border: 'none', cursor: 'pointer', color: copied ? '#4ADE80' : 'rgba(255,255,255,0.45)', padding: '4px', transition: 'color 150ms' }}
                         onMouseEnter={e => { if (!copied) e.currentTarget.style.color = 'rgba(255,255,255,0.80)'; }}
@@ -979,19 +980,19 @@ function GatePanel({ targetModule, onSuccess, onClose }: {
                           : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="9" width="13" height="13"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>}
                       </button>
                     </div>
-                    <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', color: '#FCA5A5', margin: 0, lineHeight: 1.6, letterSpacing: '0.02em' }}>
+                    <p style={{ fontFamily: 'var(--ff-mono)', fontSize: '12px', color: '#FCA5A5', margin: 0, lineHeight: 1.6, letterSpacing: '0.02em' }}>
                       This credential cannot be recovered. Save it before continuing.
                     </p>
                     <button
                       onClick={() => onSuccess(authedUser || { id: '', novrix_id: novrixId })}
-                      style={{ width: '100%', height: '48px', borderRadius: 0, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.22)', color: '#F1F5F9', fontFamily: "'JetBrains Mono', monospace", fontSize: '13px', letterSpacing: '0.14em', fontWeight: 600, textTransform: 'uppercase', cursor: 'pointer', transition: 'all 200ms cubic-bezier(0.16, 1, 0.3, 1)' }}
+                      style={{ width: '100%', height: '48px', borderRadius: 0, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.22)', color: '#F1F5F9', fontFamily: 'var(--ff-mono)', fontSize: '13px', letterSpacing: '0.14em', fontWeight: 600, textTransform: 'uppercase', cursor: 'pointer', transition: 'all 200ms cubic-bezier(0.16, 1, 0.3, 1)' }}
                       onMouseEnter={e => { e.currentTarget.style.background = 'rgba(148,163,184,0.15)'; e.currentTarget.style.borderColor = 'rgba(148,163,184,0.65)'; e.currentTarget.style.color = '#FFFFFF'; e.currentTarget.style.boxShadow = '0 0 24px rgba(148,163,184,0.10)'; }}
                       onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.22)'; e.currentTarget.style.color = '#F1F5F9'; e.currentTarget.style.boxShadow = 'none'; }}>
                       INITIALIZE ACCESS
                     </button>
                     <div style={{ textAlign: 'center' }}>
                       <button onClick={() => { setMode('signin'); setError(''); }}
-                        style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '13px', color: 'rgba(148,163,184,0.80)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, transition: 'color 150ms', letterSpacing: '0.04em' }}
+                        style={{ fontFamily: 'var(--ff-mono)', fontSize: '13px', color: 'rgba(148,163,184,0.80)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, transition: 'color 150ms', letterSpacing: '0.04em' }}
                         onMouseEnter={e => (e.currentTarget.style.color = '#E2E8F0')}
                         onMouseLeave={e => (e.currentTarget.style.color = 'rgba(148,163,184,0.80)')}>
                         Already have credentials? Sign in
@@ -1001,14 +1002,14 @@ function GatePanel({ targetModule, onSuccess, onClose }: {
                 ) : (
                   /* ── PRE-GRANT ── */
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <label style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', color: '#CBD5E1', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '12px', display: 'block', fontWeight: 600 }}>
+                    <label style={{ fontFamily: 'var(--ff-mono)', fontSize: '12px', color: '#CBD5E1', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '12px', display: 'block', fontWeight: 600 }}>
                       Generated Access ID
                     </label>
                     <div style={{ background: '#0F111A', border: `1px solid ${idLoading ? 'rgba(255,255,255,0.08)' : 'rgba(148,163,184,0.35)'}`, height: '50px', padding: '0 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
                       {idLoading ? (
-                        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '14px', color: '#94A3B8' }}>Generating…</span>
+                        <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '14px', color: '#94A3B8' }}>Generating…</span>
                       ) : (
-                        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '17px', color: '#E2E8F0', letterSpacing: '0.04em' }}>{novrixId}</span>
+                        <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '17px', color: '#E2E8F0', letterSpacing: '0.04em' }}>{novrixId}</span>
                       )}
                       {!idLoading && novrixId && (
                         <button type="button" onClick={copyId}
@@ -1023,7 +1024,7 @@ function GatePanel({ targetModule, onSuccess, onClose }: {
                       )}
                     </div>
 
-                    <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', color: '#FCA5A5', marginTop: '14px', marginBottom: '0', lineHeight: 1.6, letterSpacing: '0.02em' }}>
+                    <p style={{ fontFamily: 'var(--ff-mono)', fontSize: '12px', color: '#FCA5A5', marginTop: '14px', marginBottom: '0', lineHeight: 1.6, letterSpacing: '0.02em' }}>
                       This credential cannot be recovered. Save it before continuing.
                     </p>
 
@@ -1035,7 +1036,7 @@ function GatePanel({ targetModule, onSuccess, onClose }: {
                         background: grantedFlash ? 'rgba(74,222,128,0.08)' : loading || idLoading || !novrixId ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.08)',
                         border: grantedFlash ? '1px solid rgba(74,222,128,0.35)' : `1px solid ${loading || idLoading || !novrixId ? 'rgba(255,255,255,0.10)' : 'rgba(255,255,255,0.22)'}`,
                         color: grantedFlash ? '#4ADE80' : loading || idLoading || !novrixId ? 'rgba(255,255,255,0.35)' : '#F1F5F9',
-                        fontFamily: "'JetBrains Mono', monospace", fontSize: '13px', letterSpacing: '0.14em', fontWeight: 600, textTransform: 'uppercase',
+                        fontFamily: 'var(--ff-mono)', fontSize: '13px', letterSpacing: '0.14em', fontWeight: 600, textTransform: 'uppercase',
                         cursor: loading || idLoading || !novrixId || grantedFlash ? 'not-allowed' : 'pointer',
                         transition: 'all 200ms cubic-bezier(0.16, 1, 0.3, 1)',
                       }}
@@ -1047,7 +1048,7 @@ function GatePanel({ targetModule, onSuccess, onClose }: {
                     <div style={{ marginTop: '20px', textAlign: 'center' }}>
                       <button
                         onClick={() => { setMode('signin'); setError(''); }}
-                        style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '13px', color: 'rgba(148,163,184,0.80)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, transition: 'color 150ms', letterSpacing: '0.04em' }}
+                        style={{ fontFamily: 'var(--ff-mono)', fontSize: '13px', color: 'rgba(148,163,184,0.80)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, transition: 'color 150ms', letterSpacing: '0.04em' }}
                         onMouseEnter={e => (e.currentTarget.style.color = '#E2E8F0')}
                         onMouseLeave={e => (e.currentTarget.style.color = 'rgba(148,163,184,0.80)')}>
                         Already have credentials? Sign in
@@ -1061,9 +1062,9 @@ function GatePanel({ targetModule, onSuccess, onClose }: {
             {/* Error */}
             {error && (
               <div style={{ marginTop: '18px', padding: '12px 16px', background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.22)', borderLeft: '3px solid #EF4444', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
-                <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', color: '#FECACA', margin: 0, lineHeight: 1.6, letterSpacing: '0.02em' }}>{error}</p>
+                <p style={{ fontFamily: 'var(--ff-mono)', fontSize: '12px', color: '#FECACA', margin: 0, lineHeight: 1.6, letterSpacing: '0.02em' }}>{error}</p>
                 {mode === 'signup' && !novrixId && (
-                  <button onClick={fetchNewId} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.12em', color: '#FCA5A5', background: 'none', border: '1px solid rgba(252,165,165,0.35)', cursor: 'pointer', padding: '5px 10px', flexShrink: 0, textTransform: 'uppercase', transition: 'all 150ms' }}
+                  <button onClick={fetchNewId} style={{ fontFamily: 'var(--ff-mono)', fontSize: '10px', letterSpacing: '0.12em', color: '#FCA5A5', background: 'none', border: '1px solid rgba(252,165,165,0.35)', cursor: 'pointer', padding: '5px 10px', flexShrink: 0, textTransform: 'uppercase', transition: 'all 150ms' }}
                     onMouseEnter={e => { e.currentTarget.style.background = 'rgba(252,165,165,0.12)'; e.currentTarget.style.borderColor = 'rgba(252,165,165,0.50)'; }}
                     onMouseLeave={e => { e.currentTarget.style.background = 'none'; e.currentTarget.style.borderColor = 'rgba(252,165,165,0.35)'; }}>
                     RETRY
@@ -1075,10 +1076,10 @@ function GatePanel({ targetModule, onSuccess, onClose }: {
 
           {/* ── FOOTER ── */}
           <div style={{ background: 'rgba(255,255,255,0.02)', borderTop: '1px solid rgba(255,255,255,0.08)', padding: '12px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', zIndex: 4 }}>
-            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.10em', color: 'rgba(148,163,184,0.70)' }}>
+            <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '11px', letterSpacing: '0.10em', color: 'rgba(148,163,184,0.70)' }}>
               SECURE
             </span>
-            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.10em', color: 'rgba(148,163,184,0.55)' }}>
+            <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '11px', letterSpacing: '0.10em', color: 'rgba(148,163,184,0.55)' }}>
               {targetModule.toUpperCase()}
             </span>
           </div>
@@ -1136,15 +1137,15 @@ function SentimentChart({ fgi }: { fgi: number | null }) {
       </div>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '10px', borderTop: '1px solid rgba(255,255,255,0.08)', flexShrink: 0, marginTop: '8px' }}>
         <div>
-          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.24em', color: '#8A9BB0', marginBottom: '4px', textTransform: 'uppercase' }}>CURRENT</div>
+          <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '8px', letterSpacing: '0.24em', color: '#8A9BB0', marginBottom: '4px', textTransform: 'uppercase' }}>CURRENT</div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
-            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '20px', fontWeight: 700, color: fgiColor, lineHeight: 1 }}>{fv}</span>
-            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.14em', color: fgiColor }}>{zone}</span>
+            <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '20px', fontWeight: 700, color: fgiColor, lineHeight: 1 }}>{fv}</span>
+            <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', letterSpacing: '0.14em', color: fgiColor }}>{zone}</span>
           </div>
         </div>
         <div style={{ textAlign: 'right' }}>
-          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.24em', color: '#8A9BB0', marginBottom: '4px', textTransform: 'uppercase' }}>30D TREND</div>
-          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '14px', fontWeight: 700, color: trendColor }}>{trend === 'UP' ? '↑' : '↓'} {trend}</div>
+          <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '8px', letterSpacing: '0.24em', color: '#8A9BB0', marginBottom: '4px', textTransform: 'uppercase' }}>30D TREND</div>
+          <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '14px', fontWeight: 700, color: trendColor }}>{trend === 'UP' ? '↑' : '↓'} {trend}</div>
         </div>
       </div>
     </div>
@@ -1189,26 +1190,26 @@ function WhaleFeedLog() {
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '9px 14px', borderBottom: '1px solid rgba(255,255,255,0.08)', flexShrink: 0 }}>
-        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.26em', color: '#00C8EE', textTransform: 'uppercase' }}>TX FEED MIN $1M</span>
+        <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '8px', letterSpacing: '0.26em', color: '#00C8EE', textTransform: 'uppercase' }}>TX FEED MIN $1M</span>
         <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.18em', color: '#00C8EE' }}>LIVE FEED</span>
+          <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '8px', letterSpacing: '0.18em', color: '#00C8EE' }}>LIVE FEED</span>
         </div>
       </div>
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         {rows.map((r, i) => (
           <div key={r.uid} style={{ display: 'grid', gridTemplateColumns: '36px 1fr 76px 64px 28px', alignItems: 'center', gap: '8px', padding: '0 14px', height: '32px', background: i % 2 === 1 ? '#1C1C28' : '#161620', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', fontWeight: 700, color: r.cc }}>{r.chain}</span>
-            <span style={{ fontFamily: 'Inter, system-ui, sans-serif', fontSize: '13px', color: '#E4E4E7', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.entity}</span>
-            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', fontWeight: 700, color: '#FFFFFF', textAlign: 'right', letterSpacing: '0.01em' }}>{r.amount}</span>
+            <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '10px', fontWeight: 700, color: r.cc }}>{r.chain}</span>
+            <span style={{ fontFamily: 'var(--ff-sans)', fontSize: '13px', color: '#E4E4E7', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.entity}</span>
+            <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '11px', fontWeight: 700, color: '#FFFFFF', textAlign: 'right', letterSpacing: '0.01em' }}>{r.amount}</span>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '7.5px', letterSpacing: '0.08em', color: r.dc, padding: '1px 5px', border: `1px solid ${r.dc}50`, background: `${r.dc}20` }}>{r.type}</span>
+              <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '7.5px', letterSpacing: '0.08em', color: r.dc, padding: '1px 5px', border: `1px solid ${r.dc}50`, background: `${r.dc}20` }}>{r.type}</span>
             </div>
-            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', color: '#8A9BB0', textAlign: 'right' }}>{r.ago === 0 ? '<1m' : `${r.ago}m`}</span>
+            <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '8px', color: '#8A9BB0', textAlign: 'right' }}>{r.ago === 0 ? '<1m' : `${r.ago}m`}</span>
           </div>
         ))}
       </div>
       <div style={{ padding: '7px 14px', borderTop: '1px solid rgba(255,255,255,0.08)', flexShrink: 0 }}>
-        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: 'rgba(0,200,238,0.75)' }}>›{' '}<span style={{ opacity: blink ? 1 : 0, transition: 'opacity 0.1s ease' }}>▌</span></span>
+        <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '11px', color: 'rgba(0,200,238,0.75)' }}>›{' '}<span style={{ opacity: blink ? 1 : 0, transition: 'opacity 0.1s ease' }}>▌</span></span>
       </div>
     </div>
   );
@@ -1235,12 +1236,12 @@ function DefiTiles() {
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr', height: '100%', gap: '1px', background: 'rgba(255,255,255,0.08)' }}>
       {DEFI_BASE.map((m, i) => (
         <div key={i} style={{ background: '#1E1E2A', padding: '14px 16px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.18em', color: '#8A9BB0', textTransform: 'uppercase' }}>{m.label}</span>
+          <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '11px', letterSpacing: '0.18em', color: '#8A9BB0', textTransform: 'uppercase' }}>{m.label}</span>
           <div>
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '20px', fontWeight: 700, color: '#FFFFFF', lineHeight: 1, marginBottom: '7px', letterSpacing: '-0.01em' }}>
+            <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '20px', fontWeight: 700, color: '#FFFFFF', lineHeight: 1, marginBottom: '7px', letterSpacing: '-0.01em' }}>
               ${vals[i].toFixed(1)}{m.unit}
             </div>
-            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.10em', color: m.up ? '#4ADE80' : '#F87171', background: m.up ? 'rgba(74,222,128,0.12)' : 'rgba(248,113,113,0.12)', padding: '2px 7px', border: `1px solid ${m.up ? 'rgba(74,222,128,0.25)' : 'rgba(248,113,113,0.25)'}` }}>
+            <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', letterSpacing: '0.10em', color: m.up ? '#4ADE80' : '#F87171', background: m.up ? 'rgba(74,222,128,0.12)' : 'rgba(248,113,113,0.12)', padding: '2px 7px', border: `1px solid ${m.up ? 'rgba(74,222,128,0.25)' : 'rgba(248,113,113,0.25)'}` }}>
               {m.delta} 24H
             </span>
           </div>
@@ -1407,12 +1408,12 @@ function TerminalInner() {
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '32px', gap: '16px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <div style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#4ADE80' }} />
-                    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.20em', color: '#4ADE80', textTransform: 'uppercase' }}>Online</span>
+                    <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '8px', letterSpacing: '0.20em', color: '#4ADE80', textTransform: 'uppercase' }}>Online</span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.14em', color: '#334155', textTransform: 'uppercase' }}>All Systems Nominal</span>
+                    <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '8px', letterSpacing: '0.14em', color: '#334155', textTransform: 'uppercase' }}>All Systems Nominal</span>
                     <div style={{ width: '1px', height: '12px', background: 'rgba(148,163,184,0.15)' }} />
-                    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.12em', color: '#334155', textTransform: 'uppercase' }}>Build {SYS_VER}</span>
+                    <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '8px', letterSpacing: '0.12em', color: '#334155', textTransform: 'uppercase' }}>Build {SYS_VER}</span>
                   </div>
                 </div>
               </div>
@@ -1426,21 +1427,21 @@ function TerminalInner() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                     <div style={{ width: '3px', height: '40px', background: 'linear-gradient(180deg, rgba(148,163,184,0.45) 0%, rgba(148,163,184,0.08) 100%)', borderRadius: '1px' }} />
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', flexShrink: 0 }}>
-                      <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '20px', fontWeight: 700, letterSpacing: '0.28em', color: '#F8FAFC', textTransform: 'uppercase', lineHeight: 1 }}>TERMINAL</span>
+                      <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '20px', fontWeight: 700, letterSpacing: '0.28em', color: '#F8FAFC', textTransform: 'uppercase', lineHeight: 1 }}>TERMINAL</span>
                       <div style={{ width: '64px', height: '2px', background: 'rgba(148,163,184,0.35)' }} />
                     </div>
                     <div style={{ width: '1px', height: '36px', background: 'rgba(148,163,184,0.10)' }} />
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                      <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.18em', color: '#475569', textTransform: 'uppercase' }}>On-Chain Analytics</span>
-                      <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.12em', color: '#334155', textTransform: 'uppercase' }}>Authorized Access Only</span>
+                      <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', letterSpacing: '0.18em', color: '#475569', textTransform: 'uppercase' }}>On-Chain Analytics</span>
+                      <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '8px', letterSpacing: '0.12em', color: '#334155', textTransform: 'uppercase' }}>Authorized Access Only</span>
                     </div>
                   </div>
 
                   {/* Right: Time + Auth */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: '18px', flexShrink: 0 }}>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '3px' }}>
-                      <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '14px', fontWeight: 600, color: '#E2E8F0', letterSpacing: '0.04em', lineHeight: 1 }}>{time}</span>
-                      <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.16em', color: '#64748B', textTransform: 'uppercase', lineHeight: 1 }}>UTC</span>
+                      <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '14px', fontWeight: 600, color: '#E2E8F0', letterSpacing: '0.04em', lineHeight: 1 }}>{time}</span>
+                      <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', letterSpacing: '0.16em', color: '#64748B', textTransform: 'uppercase', lineHeight: 1 }}>UTC</span>
                     </div>
                     <div style={{ width: '1px', height: '32px', background: 'rgba(148,163,184,0.18)' }} />
                     {!authLoading && (
@@ -1448,13 +1449,13 @@ function TerminalInner() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                           <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#4ADE80' }} />
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', fontWeight: 600, letterSpacing: '0.12em', color: '#4ADE80', textTransform: 'uppercase', lineHeight: 1 }}>Active</span>
-                            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.06em', color: '#64748B', lineHeight: 1 }}>{opId}</span>
+                            <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.12em', color: '#4ADE80', textTransform: 'uppercase', lineHeight: 1 }}>Active</span>
+                            <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', letterSpacing: '0.06em', color: '#64748B', lineHeight: 1 }}>{opId}</span>
                           </div>
                         </div>
                       ) : (
                         <span
-                          style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', fontWeight: 600, letterSpacing: '0.14em', color: '#F87171', textTransform: 'uppercase', border: '1px solid rgba(248,113,113,0.40)', padding: '6px 14px' }}>
+                          style={{ fontFamily: 'var(--ff-mono)', fontSize: '11px', fontWeight: 600, letterSpacing: '0.14em', color: '#F87171', textTransform: 'uppercase', border: '1px solid rgba(248,113,113,0.40)', padding: '6px 14px' }}>
                           Guest
                         </span>
                       )
@@ -1471,13 +1472,13 @@ function TerminalInner() {
 
               <div className="max-w-[1700px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-16 2xl:px-20">
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '40px', gap: '16px' }}>
-                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.22em', color: '#475569', textTransform: 'uppercase', flexShrink: 0 }}>Command Surface</span>
+                  <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '10px', letterSpacing: '0.22em', color: '#475569', textTransform: 'uppercase', flexShrink: 0 }}>Command Surface</span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '18px', flexWrap: 'wrap' }}>
                     {['#4ADE80', '#00C8EE', '#4ADE80'].map((color, i) => (
                       <div key={i} style={{ width: '5px', height: '5px', borderRadius: '50%', background: color }} />
                     ))}
                   </div>
-                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.12em', color: '#334155', textTransform: 'uppercase', flexShrink: 0 }}>Build {SYS_VER}</span>
+                  <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', letterSpacing: '0.12em', color: '#334155', textTransform: 'uppercase', flexShrink: 0 }}>Build {SYS_VER}</span>
                 </div>
               </div>
             </div>
@@ -1500,10 +1501,10 @@ function TerminalInner() {
                     <div key={cell.label} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '8px', padding: '22px 24px', borderRight: i < 3 ? '1px solid rgba(148,163,184,0.08)' : 'none', position: 'relative', minHeight: '88px' }}>
                       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: cell.accent, opacity: 0.45 }} />
                       <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '1px', background: cell.accent, opacity: 0.12 }} />
-                      <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.24em', color: '#475569', textTransform: 'uppercase', lineHeight: 1 }}>{cell.label}</span>
+                      <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', letterSpacing: '0.24em', color: '#475569', textTransform: 'uppercase', lineHeight: 1 }}>{cell.label}</span>
                       <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px' }}>
-                        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '26px', fontWeight: 700, color: '#F8FAFC', lineHeight: 1, letterSpacing: '-0.01em' }}>{cell.val}</span>
-                        {cell.delta && <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', fontWeight: 600, color: cell.accent, letterSpacing: '0.02em' }}>{cell.delta}</span>}
+                        <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '26px', fontWeight: 700, color: '#F8FAFC', lineHeight: 1, letterSpacing: '-0.01em' }}>{cell.val}</span>
+                        {cell.delta && <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '12px', fontWeight: 600, color: cell.accent, letterSpacing: '0.02em' }}>{cell.delta}</span>}
                       </div>
                     </div>
                   ))}
@@ -1523,8 +1524,8 @@ function TerminalInner() {
                     { label: 'Session', val: user ? (opId ?? '——') : 'Guest' },
                   ].map((item, i, arr) => (
                     <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: '10px', paddingRight: i < arr.length - 1 ? '20px' : '0', marginRight: i < arr.length - 1 ? '20px' : '0', borderRight: i < arr.length - 1 ? '1px solid rgba(148,163,184,0.08)' : 'none', flexShrink: 0, height: '100%' }}>
-                      <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.18em', color: '#475569', textTransform: 'uppercase' }}>{item.label}</span>
-                      <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', fontWeight: 600, color: '#94A3B8', letterSpacing: '0.02em' }}>{item.val}</span>
+                      <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', letterSpacing: '0.18em', color: '#475569', textTransform: 'uppercase' }}>{item.label}</span>
+                      <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '12px', fontWeight: 600, color: '#94A3B8', letterSpacing: '0.02em' }}>{item.val}</span>
                     </div>
                   ))}
                 </div>
@@ -1557,25 +1558,25 @@ function TerminalInner() {
                     <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '3px', background: mod.accent, opacity: 1, zIndex: 5, pointerEvents: 'none' }} />
 
                     {/* RESTRICTED watermark */}
-                    <div style={{ position: 'absolute', bottom: '28px', right: '8px', transform: 'rotate(-90deg)', transformOrigin: 'right center', fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.32em', color: '#FAFAFA', opacity: 0.055, textTransform: 'uppercase', pointerEvents: 'none', userSelect: 'none', zIndex: 1 }}>RESTRICTED</div>
+                    <div style={{ position: 'absolute', bottom: '28px', right: '8px', transform: 'rotate(-90deg)', transformOrigin: 'right center', fontFamily: 'var(--ff-mono)', fontSize: '9px', letterSpacing: '0.32em', color: '#FAFAFA', opacity: 0.055, textTransform: 'uppercase', pointerEvents: 'none', userSelect: 'none', zIndex: 1 }}>RESTRICTED</div>
 
                     {/* LEFT ZONE */}
                     <div className="terminal-module-left" style={{ padding: '30px 26px 30px 30px', borderRight: '1px solid rgba(255,255,255,0.10)', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '13px', position: 'relative', zIndex: 2, minWidth: 0 }}>
                       <div style={{ display: 'inline-flex', width: 'fit-content' }}>
-                        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.15em', color: mod.accent, background: `rgba(${mod.rgb},0.12)`, border: `1px solid rgba(${mod.rgb},0.30)`, padding: '3px 10px', borderRadius: '2px', fontWeight: 600 }}>{mod.code}</span>
+                        <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '10px', letterSpacing: '0.15em', color: mod.accent, background: `rgba(${mod.rgb},0.12)`, border: `1px solid rgba(${mod.rgb},0.30)`, padding: '3px 10px', borderRadius: '2px', fontWeight: 600 }}>{mod.code}</span>
                       </div>
-                      <h2 style={{ fontFamily: 'Inter, system-ui, sans-serif', fontWeight: 700, fontSize: '32px', lineHeight: 0.95, letterSpacing: '-0.02em', color: '#FFFFFF', margin: 0 }}>
+                      <h2 style={{ fontFamily: 'var(--ff-sans)', fontWeight: 700, fontSize: '32px', lineHeight: 0.95, letterSpacing: '-0.02em', color: '#FFFFFF', margin: 0 }}>
                         {mod.name.charAt(0) + mod.name.slice(1).toLowerCase()}
                       </h2>
-                      <p style={{ fontFamily: 'Inter, system-ui, sans-serif', fontWeight: 400, fontSize: '14px', color: '#C4C4D4', lineHeight: 1.55, margin: 0, maxWidth: '264px' }}>
+                      <p style={{ fontFamily: 'var(--ff-sans)', fontWeight: 400, fontSize: '14px', color: '#C4C4D4', lineHeight: 1.55, margin: 0, maxWidth: '264px' }}>
                         {descriptions[idx]}
                       </p>
                       <div style={{ display: 'inline-flex', alignItems: 'center', width: 'fit-content', border: `1px solid rgba(${mod.rgb},0.34)`, background: `rgba(${mod.rgb},0.10)`, padding: '4px 9px' }}>
-                        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.18em', color: mod.accent, textTransform: 'uppercase' }}>Status Active</span>
+                        <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '10px', letterSpacing: '0.18em', color: mod.accent, textTransform: 'uppercase' }}>Status Active</span>
                       </div>
                       <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                         {mod.meta.map(m => (
-                          <span key={m} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.10em', color: '#A1A1AA', background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)', padding: '3px 9px' }}>{m}</span>
+                          <span key={m} style={{ fontFamily: 'var(--ff-mono)', fontSize: '10px', letterSpacing: '0.10em', color: '#A1A1AA', background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)', padding: '3px 9px' }}>{m}</span>
                         ))}
                       </div>
                     </div>
@@ -1595,15 +1596,15 @@ function TerminalInner() {
                       <div style={{ display: 'flex', gap: '28px' }}>
                         {metaNumbers.map(mn => (
                           <div key={mn.l}>
-                            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '30px', fontWeight: 700, color: mod.accent, lineHeight: 1, letterSpacing: '-0.02em', marginBottom: '5px' }}>{mn.n}</div>
-                            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.22em', color: '#8A9BB0', textTransform: 'uppercase' }}>{mn.l}</div>
+                            <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '30px', fontWeight: 700, color: mod.accent, lineHeight: 1, letterSpacing: '-0.02em', marginBottom: '5px' }}>{mn.n}</div>
+                            <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '8px', letterSpacing: '0.22em', color: '#8A9BB0', textTransform: 'uppercase' }}>{mn.l}</div>
                           </div>
                         ))}
                       </div>
                       {/* Tags */}
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
                         {mod.tags.map(tag => (
-                          <span key={tag} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.14em', color: mod.accent, background: `rgba(${mod.rgb},0.15)`, border: `1px solid rgba(${mod.rgb},0.30)`, padding: '3px 8px', textShadow: `0 0 8px rgba(${mod.rgb},0.25)` }}>
+                          <span key={tag} style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', letterSpacing: '0.14em', color: mod.accent, background: `rgba(${mod.rgb},0.15)`, border: `1px solid rgba(${mod.rgb},0.30)`, padding: '3px 8px', textShadow: `0 0 8px rgba(${mod.rgb},0.25)` }}>
                             {tag}
                           </span>
                         ))}
@@ -1612,7 +1613,7 @@ function TerminalInner() {
                       <button
                         className="enter-btn"
                         onClick={e => { e.stopPropagation(); handleEnterModule(mod.href); }}
-                        style={{ width: '100%', height: '48px', background: `rgba(${mod.rgb},0.15)`, border: `1px solid rgba(${mod.rgb},0.60)`, borderRadius: 0, color: '#FFFFFF', fontFamily: "'JetBrains Mono', monospace", fontSize: '13px', letterSpacing: '0.12em', fontWeight: 700, textTransform: 'uppercase', cursor: 'pointer' }}
+                        style={{ width: '100%', height: '48px', background: `rgba(${mod.rgb},0.15)`, border: `1px solid rgba(${mod.rgb},0.60)`, borderRadius: 0, color: '#FFFFFF', fontFamily: 'var(--ff-mono)', fontSize: '13px', letterSpacing: '0.12em', fontWeight: 700, textTransform: 'uppercase', cursor: 'pointer' }}
                         onMouseEnter={e => { const t = e.currentTarget; t.style.background = `rgba(${mod.rgb},0.25)`; t.style.borderColor = `rgba(${mod.rgb},0.90)`; t.style.boxShadow = `0 0 20px rgba(${mod.rgb},0.20)`; }}
                         onMouseLeave={e => { const t = e.currentTarget; t.style.background = `rgba(${mod.rgb},0.15)`; t.style.borderColor = `rgba(${mod.rgb},0.60)`; t.style.boxShadow = 'none'; }}>
                         ENTER MODULE →

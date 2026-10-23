@@ -6,7 +6,7 @@ import {
   AreaChart, Area,
 } from 'recharts';
 
-const MONO = 'var(--font-jetbrains-mono), JetBrains Mono, monospace';
+const MONO = 'var(--ff-mono)';
 const MUTED = 'var(--text-secondary)';
 const TEXT = 'var(--text-primary)';
 const AMBER = '#E8960C';

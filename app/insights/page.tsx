@@ -197,8 +197,8 @@ function isVeryNew(dateStr: string): boolean {
    DESIGN TOKENS
    ═══════════════════════════════════════════════════════════════════════ */
 
-const INTER = 'var(--font-inter), Inter, system-ui, sans-serif';
-const MONO  = 'var(--font-jetbrains-mono), "JetBrains Mono", monospace';
+const INTER = 'var(--ff-sans)';
+const MONO  = 'var(--ff-mono)';
 const BG = '#08080c';
 
 function NewsReadArticleCta({ hovered, compact = false }: { hovered: boolean; compact?: boolean }) {
@@ -404,14 +404,14 @@ function InsightsHeader({
                 transitionDelay: '0.1s',
               }}>
                 <h1 style={{
-                  fontFamily: INTER,
+                  fontFamily: 'var(--ff-display)',
                   fontSize: heroFont,
-                  lineHeight: 1.35,
+                  lineHeight: 1.08,
                   color: '#f1f5f9',
                   margin: 0,
-                  maxWidth: '760px',
-                  fontWeight: 600,
-                  letterSpacing: '-0.015em',
+                  maxWidth: '820px',
+                  fontWeight: 500,
+                  letterSpacing: '-0.02em',
                 }}>
                   Everything worth reading about crypto and macro in one place.
                 </h1>

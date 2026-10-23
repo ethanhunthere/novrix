@@ -29,11 +29,11 @@ function PolicySection({ id, title, children }: { id: string; title: string; chi
       <div className="flex items-start gap-3 mb-4">
         <span
           className="text-[8px] sm:text-[9px] tracking-[0.26em]"
-          style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#475569' }}
+          style={{ fontFamily: 'var(--ff-sans)', color: '#475569' }}
         >
         </span>
         <div style={{ width: '1px', height: '14px', background: 'rgba(71,85,105,0.4)' }} />
-        <h2 className="min-w-0 flex-1 text-[13px] tracking-[0.18em] font-black leading-relaxed break-words" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#CBD5E1' }}>{title}</h2>
+        <h2 className="min-w-0 flex-1 text-[13px] tracking-[0.18em] font-black leading-relaxed break-words" style={{ fontFamily: 'var(--ff-sans)', color: '#CBD5E1' }}>{title}</h2>
       </div>
       <div className="p-4 sm:p-5" style={{ background: 'linear-gradient(135deg, #040912 0%, #050A16 60%, #040810 100%)', border: '1px solid rgba(255,255,255,0.06)', contain: 'paint layout' }}>
         {children}
@@ -43,14 +43,14 @@ function PolicySection({ id, title, children }: { id: string; title: string; chi
 }
 
 function Para({ children }: { children: React.ReactNode }) {
-  return <p className="text-[12.5px] leading-relaxed mb-4 last:mb-0" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#94A3B8', lineHeight: 1.85 }}>{children}</p>;
+  return <p className="text-[12.5px] leading-relaxed mb-4 last:mb-0" style={{ fontFamily: 'var(--ff-sans)', color: '#94A3B8', lineHeight: 1.85 }}>{children}</p>;
 }
 
 function Item({ label, value }: { label: string; value: string }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-1 sm:gap-4 items-start mb-3 last:mb-0">
-      <span className="text-[8.5px] tracking-[0.14em] font-bold pt-0.5" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#475569' }}>{label}</span>
-      <span className="text-[11.5px] leading-relaxed" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#94A3B8', lineHeight: 1.7 }}>{value}</span>
+      <span className="text-[8.5px] tracking-[0.14em] font-bold pt-0.5" style={{ fontFamily: 'var(--ff-sans)', color: '#475569' }}>{label}</span>
+      <span className="text-[11.5px] leading-relaxed" style={{ fontFamily: 'var(--ff-sans)', color: '#94A3B8', lineHeight: 1.7 }}>{value}</span>
     </div>
   );
 }
@@ -88,7 +88,7 @@ export default function PrivacyPage() {
             >
               <p
                 className="text-[11px]"
-                style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#64748B', lineHeight: 1.7 }}
+                style={{ fontFamily: 'var(--ff-sans)', color: '#64748B', lineHeight: 1.7 }}
               >
                 <strong style={{ color: '#94A3B8' }}>Account recovery is not possible.</strong> If you lose your NOVRIX ID, the account cannot be recovered. There is no recovery mechanism.
               </p>
@@ -136,14 +136,14 @@ export default function PrivacyPage() {
             <Link
               href="/terms"
               className="text-[10px] text-[#475569] hover:text-[#94A3B8] transition-colors"
-              style={{ fontFamily: 'Inter, system-ui, sans-serif', letterSpacing: '0.10em', textDecoration: 'none' }}
+              style={{ fontFamily: 'var(--ff-sans)', letterSpacing: '0.10em', textDecoration: 'none' }}
             >
               Terms of Service →
             </Link>
             <Link
               href="/about"
               className="text-[10px] text-[#475569] hover:text-[#94A3B8] transition-colors"
-              style={{ fontFamily: 'Inter, system-ui, sans-serif', letterSpacing: '0.10em', textDecoration: 'none' }}
+              style={{ fontFamily: 'var(--ff-sans)', letterSpacing: '0.10em', textDecoration: 'none' }}
             >
               About NOVRIX →
             </Link>

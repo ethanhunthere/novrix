@@ -873,10 +873,10 @@ function TrkLiveClock() {
   }, []);
   return (
     <>
-      <div className="text-[15px] tabular-nums font-bold leading-none" style={{ fontFamily: "'JetBrains Mono', monospace", color: '#FFFFFF', letterSpacing: '0.04em' }}>
+      <div className="text-[15px] tabular-nums font-bold leading-none" style={{ fontFamily: 'var(--ff-mono)', color: '#FFFFFF', letterSpacing: '0.04em' }}>
         {t.slice(11)}
       </div>
-      <div className="text-[11px] tabular-nums mt-0.5" style={{ fontFamily: "'JetBrains Mono', monospace", color: '#5A6A7A' }}>
+      <div className="text-[11px] tabular-nums mt-0.5" style={{ fontFamily: 'var(--ff-mono)', color: '#5A6A7A' }}>
         {t.slice(0, 10)}
       </div>
     </>
@@ -1303,7 +1303,7 @@ function TrackingContent({ onPrimaryDataReady }: TrackingContentProps) {
   return (
     <div
       className="tracking-contrast min-h-screen flex flex-col relative overflow-hidden font-mono"
-      style={{ background: '#050A0E', color: '#F4F7FB', fontFamily: 'var(--font-jetbrains-mono), JetBrains Mono, monospace' }}
+      style={{ background: '#050A0E', color: '#F4F7FB', fontFamily: 'var(--ff-mono)' }}
     >
       {/* Subtle ambient grid */}
       <div className="fixed inset-0 pointer-events-none" style={{
@@ -1631,7 +1631,7 @@ function TrackingContent({ onPrimaryDataReady }: TrackingContentProps) {
                       <div key={tile.label} className="px-3 py-2.5" style={{ background: '#0B1118' }}>
                         <div className="text-[7.5px] font-mono tracking-[0.18em] text-[#8EA0B7] mb-1">{tile.label}</div>
                         <div className="flex items-baseline gap-2">
-                          <span className="text-[13px] font-mono font-bold tabular-nums" style={{ fontFamily: "'JetBrains Mono', monospace", color: valueColor }}>
+                          <span className="text-[13px] font-mono font-bold tabular-nums" style={{ fontFamily: 'var(--ff-mono)', color: valueColor }}>
                             {valueText}
                           </span>
                           {delta !== null && (
@@ -1761,7 +1761,7 @@ function TrackingContent({ onPrimaryDataReady }: TrackingContentProps) {
               <div className="flex items-center justify-between px-5 py-3.5"
                 style={{ borderBottom: '1px solid rgba(214,226,242,0.14)' }}>
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-mono text-[#0EA5C8] font-bold tracking-wider" style={{ fontFamily: "'JetBrains Mono', monospace" }}>▸ LIVE FEED</span>
+                  <span className="text-[10px] font-mono text-[#0EA5C8] font-bold tracking-wider" style={{ fontFamily: 'var(--ff-mono)' }}>▸ LIVE FEED</span>
                   {threshold > 0 && (
                     <span className="text-[8px] font-mono text-[#0EA5C8] px-1.5 py-0.5"
                       style={{ background: 'rgba(14,165,200,0.14)', border: '1px solid rgba(14,165,200,0.34)', borderRadius: 0 }}>
@@ -1809,7 +1809,7 @@ function TrackingContent({ onPrimaryDataReady }: TrackingContentProps) {
                         {['CHAIN', 'DIRECTION', 'FROM', 'TO', 'VALUE', 'WHEN', 'TX'].map(col => (
                           <th key={col}
                             className="px-2.5 py-2 text-left text-[9px] font-mono tracking-[0.14em]"
-                            style={{ color: 'rgba(125,211,252,0.95)', fontFamily: "'JetBrains Mono', monospace" }}>
+                            style={{ color: 'rgba(125,211,252,0.95)', fontFamily: 'var(--ff-mono)' }}>
                             {col}
                           </th>
                         ))}
@@ -1925,16 +1925,16 @@ function TrackingContent({ onPrimaryDataReady }: TrackingContentProps) {
 
                                   <td className="px-2.5 py-2">
                                     <div className="flex flex-col leading-none">
-                                      <span className="text-[12px] font-mono font-bold tabular-nums" style={{ fontFamily: "'JetBrains Mono', monospace", color: tx.amount_usd >= 50_000_000 ? '#FFD08A' : '#FAFAFA' }}>
+                                      <span className="text-[12px] font-mono font-bold tabular-nums" style={{ fontFamily: 'var(--ff-mono)', color: tx.amount_usd >= 50_000_000 ? '#FFD08A' : '#FAFAFA' }}>
                                         {formatUSD(tx.amount_usd)}
                                       </span>
-                                      <span className="text-[8px] font-mono tabular-nums mt-0.5" style={{ color: cc, fontFamily: "'JetBrains Mono', monospace" }}>
+                                      <span className="text-[8px] font-mono tabular-nums mt-0.5" style={{ color: cc, fontFamily: 'var(--ff-mono)' }}>
                                         {tx.amount_native > 0
                                           ? `${tx.amount_native.toLocaleString('en-US', { maximumFractionDigits: 2 })} ${tx.token}`
                                           : '—'}
                                       </span>
                                       {tx.amount_native > 0 && (
-                                        <span className="text-[7.5px] font-mono tabular-nums mt-px" style={{ color: '#8EA0B7', fontFamily: "'JetBrains Mono', monospace" }}>
+                                        <span className="text-[7.5px] font-mono tabular-nums mt-px" style={{ color: '#8EA0B7', fontFamily: 'var(--ff-mono)' }}>
                                           @ {formatUSD(tx.amount_usd / tx.amount_native)}/{tx.token}
                                         </span>
                                       )}
@@ -1942,7 +1942,7 @@ function TrackingContent({ onPrimaryDataReady }: TrackingContentProps) {
                                   </td>
 
                                   <td className="px-2.5 py-2">
-                                    <span className={`text-[10px] font-mono tabular-nums ${formatAge(tx.timestamp) === 'NOW' ? 'text-[#3DFF9E] font-bold' : 'text-[#C5CEDA]'}`} style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                                    <span className={`text-[10px] font-mono tabular-nums ${formatAge(tx.timestamp) === 'NOW' ? 'text-[#3DFF9E] font-bold' : 'text-[#C5CEDA]'}`} style={{ fontFamily: 'var(--ff-mono)' }}>
                                       {formatAge(tx.timestamp)}
                                     </span>
                                   </td>
@@ -1989,13 +1989,13 @@ function TrackingContent({ onPrimaryDataReady }: TrackingContentProps) {
                                         </div>
                                         <div>
                                           <div className="text-[8px] font-mono text-[#B4C0CF] tracking-wider mb-1">VALUE</div>
-                                          <span className="text-[12px] font-mono font-bold text-white tabular-nums" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                                          <span className="text-[12px] font-mono font-bold text-white tabular-nums" style={{ fontFamily: 'var(--ff-mono)' }}>
                                             ${tx.amount_usd.toLocaleString('en-US', { minimumFractionDigits: 4 })}
                                           </span>
                                         </div>
                                         <div>
                                           <div className="text-[8px] font-mono text-[#B4C0CF] tracking-wider mb-1">NATIVE</div>
-                                          <span className="text-[9px] font-mono text-[#D5DDE8] tabular-nums" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                                          <span className="text-[9px] font-mono text-[#D5DDE8] tabular-nums" style={{ fontFamily: 'var(--ff-mono)' }}>
                                             {tx.amount_native > 0
                                               ? `${tx.amount_native.toLocaleString('en-US', { maximumFractionDigits: 8 })} ${tx.token}`
                                               : '—'}
@@ -2048,7 +2048,7 @@ function TrackingContent({ onPrimaryDataReady }: TrackingContentProps) {
             {/* Watchlist Grid */}
             <div className="panel-glass p-5">
               <div className="flex items-center justify-between mb-3">
-                <span className="text-[10px] font-mono text-[#0EA5C8] font-bold tracking-wider" style={{ fontFamily: "'JetBrains Mono', monospace" }}>▸ WATCHLIST</span>
+                <span className="text-[10px] font-mono text-[#0EA5C8] font-bold tracking-wider" style={{ fontFamily: 'var(--ff-mono)' }}>▸ WATCHLIST</span>
                 <input
                   type="text"
                   value={entitySearch}
@@ -2123,7 +2123,7 @@ function TrackingContent({ onPrimaryDataReady }: TrackingContentProps) {
                         {displayCategory}
                       </div>
                       {holdingsData && holdingsData.total_usd > 0 && (
-                        <div className="text-[9px] font-mono font-black text-white tabular-nums mt-0.5" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                        <div className="text-[9px] font-mono font-black text-white tabular-nums mt-0.5" style={{ fontFamily: 'var(--ff-mono)' }}>
                           {formatUSD(holdingsData.total_usd)}
                         </div>
                       )}
@@ -2167,7 +2167,7 @@ function TrackingContent({ onPrimaryDataReady }: TrackingContentProps) {
                           {entityHoldings?.portfolio && entityHoldings.portfolio.total_usd > 0 && (
                             <div className="text-right">
                               <div className="text-[9px] font-mono text-[#B4C0CF] tracking-wider">PORTFOLIO</div>
-                              <div className="text-base font-mono font-black text-white tabular-nums" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{formatUSD(entityHoldings.portfolio.total_usd)}</div>
+                              <div className="text-base font-mono font-black text-white tabular-nums" style={{ fontFamily: 'var(--ff-mono)' }}>{formatUSD(entityHoldings.portfolio.total_usd)}</div>
                             </div>
                           )}
                           <button onClick={() => { setSelectedEntity(null); setEntityDetail(null); setEntityHoldings(null); }}
@@ -2184,7 +2184,7 @@ function TrackingContent({ onPrimaryDataReady }: TrackingContentProps) {
                         ].map(s => (
                           <div key={s.label} className="py-1">
                             <div className="text-[8px] font-mono text-[#B4C0CF] tracking-wider mb-0.5">{s.label}</div>
-                            <div className="text-[12px] font-mono font-bold tabular-nums" style={{ fontFamily: "'JetBrains Mono', monospace", color: s.color }}>{s.value}</div>
+                            <div className="text-[12px] font-mono font-bold tabular-nums" style={{ fontFamily: 'var(--ff-mono)', color: s.color }}>{s.value}</div>
                           </div>
                         ))}
                       </div>
@@ -2192,7 +2192,7 @@ function TrackingContent({ onPrimaryDataReady }: TrackingContentProps) {
                       {/* Portfolio Breakdown */}
                       {entityHoldings?.holdings_by_chain && Object.keys(entityHoldings.holdings_by_chain).length > 0 && (
                         <div className="px-5 py-4" style={{ borderBottom: '1px solid rgba(214,226,242,0.12)' }}>
-                          <div className="text-[9px] font-mono text-[#0EA5C8] tracking-wider font-bold mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                          <div className="text-[9px] font-mono text-[#0EA5C8] tracking-wider font-bold mb-2" style={{ fontFamily: 'var(--ff-mono)' }}>
                             ◈ ALLOCATION
                           </div>
                           {/* Allocation bar */}
@@ -2233,7 +2233,7 @@ function TrackingContent({ onPrimaryDataReady }: TrackingContentProps) {
                                     <span className="text-[9px] font-mono text-[#B4C0CF]">
                                       {data.balance.toLocaleString('en-US', { maximumFractionDigits: 2 })} {data.token}
                                     </span>
-                                    <span className="text-[10px] font-mono font-black text-white tabular-nums" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                                    <span className="text-[10px] font-mono font-black text-white tabular-nums" style={{ fontFamily: 'var(--ff-mono)' }}>
                                       {formatUSD(data.balance_usd)}
                                     </span>
                                   </div>
@@ -2246,7 +2246,7 @@ function TrackingContent({ onPrimaryDataReady }: TrackingContentProps) {
                       {/* Recent Activity */}
                       {entityHoldings?.recent_transactions && entityHoldings.recent_transactions.length > 0 && (
                         <div className="px-5 py-4">
-                          <div className="text-[9px] font-mono text-[#0EA5C8] tracking-wider font-bold mb-3" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                          <div className="text-[9px] font-mono text-[#0EA5C8] tracking-wider font-bold mb-3" style={{ fontFamily: 'var(--ff-mono)' }}>
                             ▸ RECENT MOVEMENTS
                           </div>
                           <div className="space-y-1.5 max-h-[260px] overflow-y-auto tracking-scroll">
@@ -2261,7 +2261,7 @@ function TrackingContent({ onPrimaryDataReady }: TrackingContentProps) {
                                     style={{ color: actionColor, background: actionColor + '10', border: `0.5px solid ${actionColor}25`, borderRadius: 0 }}>
                                     {isBuy ? 'IN' : 'OUT'}
                                   </span>
-                                  <span className="text-[10px] font-mono font-bold text-white tabular-nums flex-1" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{formatUSD(tx.amount_usd)}</span>
+                                  <span className="text-[10px] font-mono font-bold text-white tabular-nums flex-1" style={{ fontFamily: 'var(--ff-mono)' }}>{formatUSD(tx.amount_usd)}</span>
                                   <span className="text-[8px] font-mono text-[#B4C0CF]">{formatAge(tx.timestamp)}</span>
                                 </div>
                               );
@@ -2285,7 +2285,7 @@ function TrackingContent({ onPrimaryDataReady }: TrackingContentProps) {
               <div className="flex items-center justify-between px-5 py-3.5"
                 style={{ borderBottom: '1px solid rgba(214,226,242,0.14)' }}>
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-mono text-[#0EA5C8] font-bold tracking-wider" style={{ fontFamily: "'JetBrains Mono', monospace" }}>◈ LEADERBOARD</span>
+                  <span className="text-[10px] font-mono text-[#0EA5C8] font-bold tracking-wider" style={{ fontFamily: 'var(--ff-mono)' }}>◈ LEADERBOARD</span>
                   <span className="text-[9px] font-mono text-[#B4C0CF]">
                     {holdingsLeaderboard.length > 0
                       ? `${formatUSD(holdingsStats.total_value_tracked)} tracked`
@@ -2312,7 +2312,7 @@ function TrackingContent({ onPrimaryDataReady }: TrackingContentProps) {
                       <tr style={{ borderBottom: '1px solid rgba(214,226,242,0.14)' }}>
                         {['#', 'ENTITY', 'CATEGORY', 'PORTFOLIO', 'VOLUME'].map(col => (
                           <th key={col} className="px-2.5 py-2 text-left text-[9px] font-mono tracking-[0.14em]"
-                            style={{ color: 'rgba(125,211,252,0.92)', fontFamily: "'JetBrains Mono', monospace" }}>
+                            style={{ color: 'rgba(125,211,252,0.92)', fontFamily: 'var(--ff-mono)' }}>
                             {col}
                           </th>
                         ))}
@@ -2363,12 +2363,12 @@ function TrackingContent({ onPrimaryDataReady }: TrackingContentProps) {
                                 )}
                               </td>
                               <td className="px-2.5 py-1.5">
-                                <span className="text-[10px] font-mono font-black text-white tabular-nums" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                                <span className="text-[10px] font-mono font-black text-white tabular-nums" style={{ fontFamily: 'var(--ff-mono)' }}>
                                   {ent.portfolio > 0 ? formatUSD(ent.portfolio) : '\u2014'}
                                 </span>
                               </td>
                               <td className="px-2.5 py-1.5">
-                                <span className="text-[9px] font-mono text-[#D5DDE8] tabular-nums" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                                <span className="text-[9px] font-mono text-[#D5DDE8] tabular-nums" style={{ fontFamily: 'var(--ff-mono)' }}>
                                   {ent.volume > 0 ? formatUSD(ent.volume) : '\u2014'}
                                 </span>
                               </td>
@@ -2389,7 +2389,7 @@ function TrackingContent({ onPrimaryDataReady }: TrackingContentProps) {
                 <div className="flex items-center justify-between px-5 py-3.5"
                   style={{ borderBottom: '1px solid rgba(214,226,242,0.14)' }}>
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono text-[#9BAEFF] font-bold tracking-wider" style={{ fontFamily: "'JetBrains Mono', monospace" }}>◈ MARKET MAKERS</span>
+                    <span className="text-[10px] font-mono text-[#9BAEFF] font-bold tracking-wider" style={{ fontFamily: 'var(--ff-mono)' }}>◈ MARKET MAKERS</span>
                     <span className="text-[9px] font-mono text-[#B4C0CF]">
                       Tracked OTC desks &amp; trading firms
                     </span>
@@ -2401,7 +2401,7 @@ function TrackingContent({ onPrimaryDataReady }: TrackingContentProps) {
                       <tr style={{ borderBottom: '1px solid rgba(214,226,242,0.14)' }}>
                         {['#', 'ENTITY', 'CATEGORY', 'PORTFOLIO', 'VOLUME'].map(col => (
                           <th key={col} className="px-2.5 py-2 text-left text-[9px] font-mono tracking-[0.14em]"
-                            style={{ color: 'rgba(125,211,252,0.92)', fontFamily: "'JetBrains Mono', monospace" }}>
+                            style={{ color: 'rgba(125,211,252,0.92)', fontFamily: 'var(--ff-mono)' }}>
                             {col}
                           </th>
                         ))}
@@ -2441,12 +2441,12 @@ function TrackingContent({ onPrimaryDataReady }: TrackingContentProps) {
                               )}
                             </td>
                             <td className="px-2.5 py-1.5">
-                              <span className="text-[10px] font-mono font-black text-white tabular-nums" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                              <span className="text-[10px] font-mono font-black text-white tabular-nums" style={{ fontFamily: 'var(--ff-mono)' }}>
                                 {ent.portfolio > 0 ? formatUSD(ent.portfolio) : '\u2014'}
                               </span>
                             </td>
                             <td className="px-2.5 py-1.5">
-                              <span className="text-[9px] font-mono text-[#D5DDE8] tabular-nums" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                              <span className="text-[9px] font-mono text-[#D5DDE8] tabular-nums" style={{ fontFamily: 'var(--ff-mono)' }}>
                                 {ent.volume > 0 ? formatUSD(ent.volume) : '\u2014'}
                               </span>
                             </td>

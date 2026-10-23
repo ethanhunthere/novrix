@@ -581,7 +581,7 @@ export default function GlobalCLI() {
           background: '#09090B',
           border: '1px solid #27272A',
           boxShadow: '0 0 0 1px rgba(194,52,77,0.07), 0 40px 100px rgba(0,0,0,0.95)',
-          fontFamily: 'var(--font-jetbrains-mono), JetBrains Mono, monospace',
+          fontFamily: 'var(--ff-mono)',
           maxHeight: 'min(600px, 90vh)',
         }}
       >
@@ -641,7 +641,7 @@ export default function GlobalCLI() {
                 color: LINE_COLORS[line.type] ?? '#A1A1AA',
                 whiteSpace: 'pre-wrap',
                 wordBreak: 'break-all',
-                fontFamily: 'var(--font-jetbrains-mono), JetBrains Mono, monospace',
+                fontFamily: 'var(--ff-mono)',
               }}
             >
               {line.text || '\u00A0'}
@@ -664,7 +664,7 @@ export default function GlobalCLI() {
             className="flex-1 bg-transparent outline-none"
             style={{
               color: '#FAFAFA',
-              fontFamily: 'var(--font-jetbrains-mono), JetBrains Mono, monospace',
+              fontFamily: 'var(--ff-mono)',
               fontSize: '12px',
               caretColor: '#C2344D',
               letterSpacing: '0.02em',

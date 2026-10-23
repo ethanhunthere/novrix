@@ -6,8 +6,8 @@ import { useState, useEffect, useCallback } from 'react';
    ADMIN PANEL — NOVRIX Editorial Post Manager
    ═══════════════════════════════════════════════════════════════════════ */
 
-const INTER = 'var(--font-inter), Inter, system-ui, sans-serif';
-const MONO  = 'var(--font-jetbrains-mono), JetBrains Mono, monospace';
+const INTER = 'var(--ff-sans)';
+const MONO  = 'var(--ff-mono)';
 
 const BG       = '#0D0E15';
 const SURFACE  = '#151720';

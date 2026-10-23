@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-const MONO = 'var(--font-jetbrains-mono), JetBrains Mono, monospace';
+const MONO = 'var(--ff-mono)';
 const AMBER = '#E8960C';
 const BLUE = '#38BDF8';
 const GREEN = '#22C55E';

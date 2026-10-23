@@ -94,7 +94,7 @@ function CompactHero() {
       <div className="relative z-10 text-center px-4">
         <p
           style={{
-            fontFamily: 'var(--font-jetbrains-mono), monospace',
+            fontFamily: 'var(--ff-mono), monospace',
             fontSize: '10px',
             letterSpacing: '0.28em',
             color: C.textMuted,
@@ -106,7 +106,7 @@ function CompactHero() {
         </p>
         <h1
           style={{
-            fontFamily: 'var(--font-inter), sans-serif',
+            fontFamily: 'var(--ff-sans), sans-serif',
             fontSize: 'clamp(36px, 6vw, 72px)',
             fontWeight: 800,
             textTransform: 'uppercase',
@@ -121,7 +121,7 @@ function CompactHero() {
         </h1>
         <p
           style={{
-            fontFamily: 'var(--font-inter), sans-serif',
+            fontFamily: 'var(--ff-sans), sans-serif',
             fontSize: '13px',
             fontWeight: 400,
             color: C.textMuted,
@@ -185,7 +185,7 @@ function ModuleCard({
       {/* Index badge */}
       <div
         style={{
-          fontFamily: 'var(--font-jetbrains-mono), monospace',
+          fontFamily: 'var(--ff-mono), monospace',
           fontSize: '10px',
           letterSpacing: '0.2em',
           color: C.textDim,
@@ -198,7 +198,7 @@ function ModuleCard({
       {/* Title */}
       <h2
         style={{
-          fontFamily: 'var(--font-inter), sans-serif',
+          fontFamily: 'var(--ff-sans), sans-serif',
           fontSize: 'clamp(20px, 2.5vw, 28px)',
           fontWeight: 700,
           textTransform: 'uppercase',
@@ -226,7 +226,7 @@ function ModuleCard({
       {/* Description */}
       <p
         style={{
-          fontFamily: 'var(--font-inter), sans-serif',
+          fontFamily: 'var(--ff-sans), sans-serif',
           fontSize: '13px',
           fontWeight: 400,
           color: C.textMuted,
@@ -246,7 +246,7 @@ function ModuleCard({
           onEnter();
         }}
         style={{
-          fontFamily: 'var(--font-jetbrains-mono), monospace',
+          fontFamily: 'var(--ff-mono), monospace',
           fontSize: '11px',
           letterSpacing: '0.14em',
           textTransform: 'uppercase',
@@ -327,7 +327,7 @@ export default function TerminalPage() {
     <DesktopGate>
       <div
         className="min-h-screen flex flex-col relative"
-        style={{ background: C.bg, fontFamily: 'var(--font-inter), sans-serif' }}
+        style={{ background: C.bg, fontFamily: 'var(--ff-sans), sans-serif' }}
       >
         {/* Seamless navbar connection */}
         <div

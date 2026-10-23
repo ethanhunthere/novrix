@@ -16,7 +16,7 @@ export default function CopyButton({ text }: { text: string }) {
     <button
       onClick={handleCopy}
       style={{
-        fontFamily: "'JetBrains Mono', monospace",
+        fontFamily: 'var(--ff-mono)',
         fontSize: '11px',
         letterSpacing: '0.12em',
         textTransform: 'uppercase',

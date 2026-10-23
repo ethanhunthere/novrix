@@ -30,7 +30,7 @@ function SectionHeader({ label }: { label: string }) {
       <div className="min-w-0">
         <div
           className="text-[11px] tracking-[0.22em] font-black"
-          style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#94A3B8' }}
+          style={{ fontFamily: 'var(--ff-sans)', color: '#94A3B8' }}
         >
           {label}
         </div>
@@ -68,13 +68,13 @@ export default function AboutPage() {
           <ContentPanel>
             <p
               className="text-[13px] leading-relaxed mb-5"
-              style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#CBD5E1', lineHeight: 1.85 }}
+              style={{ fontFamily: 'var(--ff-sans)', color: '#CBD5E1', lineHeight: 1.85 }}
             >
               NOVRIX is an on-chain intelligence infrastructure. Built to give institutional-grade analytical capability to any operator.
             </p>
             <p
               className="text-[13px] leading-relaxed"
-              style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#94A3B8', lineHeight: 1.85 }}
+              style={{ fontFamily: 'var(--ff-sans)', color: '#94A3B8', lineHeight: 1.85 }}
             >
               NOVRIX provides comprehensive on-chain analytics, market sentiment data, whale transaction tracking, and multi-chain protocol analytics. All data is updated on automated schedules with fallback mechanisms to ensure continuity.
             </p>
@@ -86,7 +86,7 @@ export default function AboutPage() {
                 <span
                   key={tag}
                   className="text-[9px] sm:text-[10px] tracking-[0.18em] px-2 py-1"
-                  style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#475569', border: '1px solid rgba(71,85,105,0.25)', background: 'rgba(71,85,105,0.06)' }}
+                  style={{ fontFamily: 'var(--ff-sans)', color: '#475569', border: '1px solid rgba(71,85,105,0.25)', background: 'rgba(71,85,105,0.06)' }}
                 >
                   {tag}
                 </span>
@@ -117,13 +117,13 @@ export default function AboutPage() {
                   <div className="min-w-0">
                     <div
                       className="text-[8px] tracking-[0.22em] font-black mb-2"
-                      style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#64748B' }}
+                      style={{ fontFamily: 'var(--ff-sans)', color: '#64748B' }}
                     >
                       {item.label}
                     </div>
                     <p
                       className="text-[12px] leading-relaxed"
-                      style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#94A3B8', lineHeight: 1.8 }}
+                      style={{ fontFamily: 'var(--ff-sans)', color: '#94A3B8', lineHeight: 1.8 }}
                     >
                       {item.body}
                     </p>
@@ -138,13 +138,13 @@ export default function AboutPage() {
           <ContentPanel>
             <p
               className="text-[13px] leading-relaxed mb-5"
-              style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#CBD5E1', lineHeight: 1.85 }}
+              style={{ fontFamily: 'var(--ff-sans)', color: '#CBD5E1', lineHeight: 1.85 }}
             >
               Intelligence should be accessible to any operator.
             </p>
             <p
               className="text-[13px] leading-relaxed mb-5"
-              style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#94A3B8', lineHeight: 1.85 }}
+              style={{ fontFamily: 'var(--ff-sans)', color: '#94A3B8', lineHeight: 1.85 }}
             >
               The platform authenticates with a NOVRIX ID — a numeric access key generated on first use. The ID is the only credential. Lose it and the account is gone.
             </p>
@@ -156,7 +156,7 @@ export default function AboutPage() {
           <ContentPanel>
             <p
               className="text-[12px] mb-5"
-              style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#64748B', lineHeight: 1.7 }}
+              style={{ fontFamily: 'var(--ff-sans)', color: '#64748B', lineHeight: 1.7 }}
             >
               Technical infrastructure for operators who want to know what&apos;s running.
             </p>
@@ -173,13 +173,13 @@ export default function AboutPage() {
                 <div key={row.key} className="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-1 sm:gap-4 items-start">
                   <span
                     className="text-[8.5px] tracking-[0.14em] font-bold pt-0.5"
-                    style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#475569' }}
+                    style={{ fontFamily: 'var(--ff-sans)', color: '#475569' }}
                   >
                     {row.key}
                   </span>
                   <span
                     className="text-[11.5px] leading-relaxed"
-                    style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#94A3B8', lineHeight: 1.7 }}
+                    style={{ fontFamily: 'var(--ff-sans)', color: '#94A3B8', lineHeight: 1.7 }}
                   >
                     {row.value}
                   </span>
@@ -193,7 +193,7 @@ export default function AboutPage() {
           <ContentPanel>
             <p
               className="text-[13px] leading-relaxed mb-5"
-              style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#CBD5E1', lineHeight: 1.85 }}
+              style={{ fontFamily: 'var(--ff-sans)', color: '#CBD5E1', lineHeight: 1.85 }}
             >
               NOVRIX stands on the shoulders of exceptional data providers and open-source infrastructure.
             </p>
@@ -212,13 +212,13 @@ export default function AboutPage() {
                   <div className="min-w-0">
                     <div
                       className="text-[12px] font-bold mb-1"
-                      style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#CBD5E1' }}
+                      style={{ fontFamily: 'var(--ff-sans)', color: '#CBD5E1' }}
                     >
                       {src.name}
                     </div>
                     <p
                       className="text-[11.5px] leading-relaxed"
-                      style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#94A3B8', lineHeight: 1.75 }}
+                      style={{ fontFamily: 'var(--ff-sans)', color: '#94A3B8', lineHeight: 1.75 }}
                     >
                       {src.desc}
                     </p>
@@ -228,7 +228,7 @@ export default function AboutPage() {
             </div>
             <p
               className="text-[12px] mt-5 pt-5"
-              style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#64748B', lineHeight: 1.7, borderTop: '1px solid rgba(255,255,255,0.05)' }}
+              style={{ fontFamily: 'var(--ff-sans)', color: '#64748B', lineHeight: 1.7, borderTop: '1px solid rgba(255,255,255,0.05)' }}
             >
               All trademarks and data belong to their respective owners. NOVRIX aggregates and presents this data for analytical purposes only.
             </p>
@@ -242,14 +242,14 @@ export default function AboutPage() {
             <Link
               href="/privacy"
               className="text-[10px] text-[#475569] hover:text-[#94A3B8] transition-colors"
-              style={{ fontFamily: 'Inter, system-ui, sans-serif', letterSpacing: '0.10em', textDecoration: 'none' }}
+              style={{ fontFamily: 'var(--ff-sans)', letterSpacing: '0.10em', textDecoration: 'none' }}
             >
               Data Policy →
             </Link>
             <Link
               href="/methodology"
               className="text-[10px] text-[#475569] hover:text-[#94A3B8] transition-colors"
-              style={{ fontFamily: 'Inter, system-ui, sans-serif', letterSpacing: '0.10em', textDecoration: 'none' }}
+              style={{ fontFamily: 'var(--ff-sans)', letterSpacing: '0.10em', textDecoration: 'none' }}
             >
               Methodology →
             </Link>

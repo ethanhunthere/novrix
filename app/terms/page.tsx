@@ -29,13 +29,13 @@ function Section({ id, title, children }: { id: string; title: string; children:
       <div className="flex items-start gap-3 mb-4">
         <span
           className="text-[8px] sm:text-[9px] tracking-[0.26em]"
-          style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#475569' }}
+          style={{ fontFamily: 'var(--ff-sans)', color: '#475569' }}
         >
         </span>
         <div style={{ width: '1px', height: '14px', background: 'rgba(71,85,105,0.4)' }} />
         <h2
           className="min-w-0 flex-1 text-[13px] tracking-[0.18em] font-black leading-relaxed break-words"
-          style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#CBD5E1' }}
+          style={{ fontFamily: 'var(--ff-sans)', color: '#CBD5E1' }}
         >
           {title}
         </h2>
@@ -58,7 +58,7 @@ function Para({ children }: { children: React.ReactNode }) {
   return (
     <p
       className="text-[12.5px] leading-relaxed mb-4 last:mb-0"
-      style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#94A3B8', lineHeight: 1.85 }}
+      style={{ fontFamily: 'var(--ff-sans)', color: '#94A3B8', lineHeight: 1.85 }}
     >
       {children}
     </p>
@@ -110,10 +110,10 @@ export default function TermsPage() {
                 'Share your account credentials with others',
               ].map(item => (
                 <div key={item} className="flex gap-2.5 items-start">
-                  <span style={{ color: '#C2344D', fontSize: '8px', marginTop: '3px', flexShrink: 0, fontFamily: 'Inter, system-ui, sans-serif' }}>✕</span>
+                  <span style={{ color: '#C2344D', fontSize: '8px', marginTop: '3px', flexShrink: 0, fontFamily: 'var(--ff-sans)' }}>✕</span>
                   <span
                     className="text-[11.5px]"
-                    style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#94A3B8', lineHeight: 1.7 }}
+                    style={{ fontFamily: 'var(--ff-sans)', color: '#94A3B8', lineHeight: 1.7 }}
                   >
                     {item}
                   </span>
@@ -177,14 +177,14 @@ export default function TermsPage() {
             <Link
               href="/privacy"
               className="text-[10px] text-[#475569] hover:text-[#94A3B8] transition-colors"
-              style={{ fontFamily: 'Inter, system-ui, sans-serif', letterSpacing: '0.10em', textDecoration: 'none' }}
+              style={{ fontFamily: 'var(--ff-sans)', letterSpacing: '0.10em', textDecoration: 'none' }}
             >
               Data Policy →
             </Link>
             <Link
               href="/about"
               className="text-[10px] text-[#475569] hover:text-[#94A3B8] transition-colors"
-              style={{ fontFamily: 'Inter, system-ui, sans-serif', letterSpacing: '0.10em', textDecoration: 'none' }}
+              style={{ fontFamily: 'var(--ff-sans)', letterSpacing: '0.10em', textDecoration: 'none' }}
             >
               About NOVRIX →
             </Link>

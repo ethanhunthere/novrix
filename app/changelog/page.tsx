@@ -74,14 +74,14 @@ export default function ChangelogPage() {
                     <div className="flex items-center gap-3 mb-3 flex-wrap">
                       <span
                         className="min-w-0 text-[15px] sm:text-[18px] font-black tracking-[0.08em] break-words"
-                        style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#E2E8F0' }}
+                        style={{ fontFamily: 'var(--ff-sans)', color: '#E2E8F0' }}
                       >
                         {entry.version}
                       </span>
                       <span
                         className="text-[9px] sm:text-[10px] tracking-[0.20em] px-2 py-0.5 font-black"
                         style={{
-                          fontFamily: 'Inter, system-ui, sans-serif',
+                          fontFamily: 'var(--ff-sans)',
                           color: entry.tagColor,
                           border: `1px solid ${entry.tagColor}35`,
                           background: `${entry.tagColor}0A`,
@@ -91,7 +91,7 @@ export default function ChangelogPage() {
                       </span>
                       <span
                         className="text-[9px] sm:text-[10px] tracking-[0.14em]"
-                        style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#334155' }}
+                        style={{ fontFamily: 'var(--ff-sans)', color: '#334155' }}
                       >
                         {entry.date}
                       </span>
@@ -117,7 +117,7 @@ export default function ChangelogPage() {
                                 fontSize: 'clamp(8px, 1.2vw, 11px)',
                                 marginTop: '3px',
                                 flexShrink: 0,
-                                fontFamily: 'Inter, system-ui, sans-serif',
+                                fontFamily: 'var(--ff-sans)',
                               }}
                             >
                               {idx === 0 ? '▸' : '·'}
@@ -125,7 +125,7 @@ export default function ChangelogPage() {
                             <span
                               className="text-[12px] leading-relaxed"
                               style={{
-                                fontFamily: 'Inter, system-ui, sans-serif',
+                                fontFamily: 'var(--ff-sans)',
                                 color: idx === 0 ? '#94A3B8' : '#64748B',
                                 lineHeight: 1.75,
                               }}

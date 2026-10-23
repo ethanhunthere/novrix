@@ -10,7 +10,7 @@ export default function SentimentError({
   return (
     <div
       className="min-h-screen flex items-center justify-center"
-      style={{ background: '#08090C', fontFamily: 'JetBrains Mono, monospace' }}
+      style={{ background: '#08090C', fontFamily: 'var(--ff-mono)' }}
     >
       <div className="text-center max-w-md px-6">
         <div className="text-[9px] tracking-[0.3em] text-[#C2344D] mb-4 uppercase">Runtime Error</div>

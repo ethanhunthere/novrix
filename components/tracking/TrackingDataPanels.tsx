@@ -6,7 +6,7 @@ import {
   ResponsiveContainer, ComposedChart, Line, Cell, PieChart, Pie,
 } from 'recharts';
 
-const MONO = "'JetBrains Mono', monospace";
+const MONO = 'var(--ff-mono)';
 
 /* ═══════════════════════════════════════════════════════════
    TYPES

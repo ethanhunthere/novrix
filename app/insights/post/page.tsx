@@ -31,8 +31,8 @@ interface AuthorLink {
    DESIGN TOKENS  (match insights page)
    ═══════════════════════════════════════════════════════════════════════ */
 
-const INTER = 'var(--font-inter), Inter, system-ui, sans-serif';
-const MONO  = 'var(--font-jetbrains-mono), JetBrains Mono, monospace';
+const INTER = 'var(--ff-sans)';
+const MONO  = 'var(--ff-mono)';
 const BG    = '#070A0F';
 const RULE  = 'rgba(255,255,255,0.055)';
 
@@ -453,12 +453,12 @@ function PostContent() {
 
               {/* Title */}
               <h1 style={{
-                fontFamily: INTER,
-                fontSize: 'clamp(28px, 5vw, 38px)',
-                fontWeight: 800,
+                fontFamily: 'var(--ff-display)',
+                fontSize: 'clamp(30px, 5vw, 44px)',
+                fontWeight: 500,
                 color: '#F1F5F9',
-                letterSpacing: '-0.03em',
-                lineHeight: 1.12,
+                letterSpacing: '-0.02em',
+                lineHeight: 1.06,
                 margin: '0 0 14px',
               }}>
                 {post.title}

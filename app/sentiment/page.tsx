@@ -19,6 +19,7 @@ import {
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceArea, ReferenceLine } from 'recharts';
 import { motion } from 'framer-motion';
 import type { ChartDataPoint } from '@/lib/types/sentiment';
+import { monoFontStack } from '@/lib/utils/fonts';
 
 const _rechartsModule = { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceArea, ReferenceLine };
 import { SENTIMENT_DATA_VERSION } from '@/lib/sentimentDataVersion';
@@ -592,7 +593,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
 
         // Watermark text
         ctx.fillStyle = '#444444';
-        ctx.font = '20px "JetBrains Mono", monospace';
+        ctx.font = `20px ${monoFontStack()}`;
         ctx.textBaseline = 'middle';
         ctx.fillText('NOVRIX.IO  ·  ON-CHAIN INTELLIGENCE', 32, img.height + watermarkHeight / 2);
 
@@ -2508,7 +2509,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 onClick={() => setSelectedIndicator(null)}
                 className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-all duration-150 hover:opacity-80"
                 style={{
-                  fontFamily: 'JetBrains Mono, monospace',
+                  fontFamily: 'var(--ff-mono)',
                   color: '#94A3B8',
                   background: 'rgba(255,255,255,0.04)',
                   border: '1px solid rgba(255,255,255,0.08)',
@@ -2556,12 +2557,12 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                   <div className="min-w-0">
                       {isHistoricalLoading ? (
                         <div className="flex items-center justify-center h-64">
-                          <span className="text-[9px] text-[#71717A] tracking-[0.2em]" style={{ fontFamily: 'JetBrains Mono, monospace' }}>LOADING</span>
+                          <span className="text-[9px] text-[#71717A] tracking-[0.2em]" style={{ fontFamily: 'var(--ff-mono)' }}>LOADING</span>
                         </div>
                       ) : (
                         <>
                           <div className="flex flex-col 2xl:flex-row 2xl:items-center 2xl:justify-between gap-3 mb-3">
-                            <div className="flex flex-wrap items-center gap-3 text-[7.5px]" style={{ fontFamily: 'JetBrains Mono, monospace', color: '#5A7A94' }}>
+                            <div className="flex flex-wrap items-center gap-3 text-[7.5px]" style={{ fontFamily: 'var(--ff-mono)', color: '#5A7A94' }}>
                               <div className="flex items-center gap-1.5"><div className="w-4 h-[2px]" style={{ background: '#10B981', opacity: 0.8 }} /><span>FEAR &lt;25</span></div>
                               <div className="flex items-center gap-1.5"><div className="w-4 h-[2px]" style={{ background: '#EF4444', opacity: 0.8 }} /><span>GREED &gt;75</span></div>
                             </div>
@@ -2578,7 +2579,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                                     key={tf.value}
                                     onClick={() => setSelectedTimeframe(tf.value)}
                                     style={{
-                                      fontFamily: 'JetBrains Mono, monospace',
+                                      fontFamily: 'var(--ff-mono)',
                                       fontSize: '11px',
                                       letterSpacing: '0.12em',
                                       padding: '5px 9px',
@@ -2632,7 +2633,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                               <ReferenceArea y1={75} y2={100} fill="#EF4444" fillOpacity={SENTIMENT_BAND_OPACITY} />
                               <XAxis
                                 dataKey="index" stroke="none"
-                                tick={{ fill: '#8AAEC8', fontSize: 11, fontFamily: 'JetBrains Mono, monospace' }}
+                                tick={{ fill: '#8AAEC8', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
                                 ticks={calculateTicks()}
                                 tickFormatter={formatXAxis}
                                 height={22}
@@ -2640,7 +2641,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                               <YAxis
                                 domain={[0, 100]}
                                 stroke="none"
-                                tick={{ fill: '#8AAEC8', fontSize: 11, fontFamily: 'JetBrains Mono, monospace' }}
+                                tick={{ fill: '#8AAEC8', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
                                 width={24}
                               />
                               <Tooltip
@@ -2771,7 +2772,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                   <ChartSkeleton height={320} />
                 ) : dominanceChartDataWithPrice.length === 0 ? (
                   <div style={{ height: '320px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '9px', color: '#52525B', letterSpacing: '0.18em' }}>AWAITING DATA SYNC</span>
+                    <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', color: '#52525B', letterSpacing: '0.18em' }}>AWAITING DATA SYNC</span>
                   </div>
                 ) : (
                   <div>
@@ -2796,16 +2797,16 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                         </defs>
                         <CartesianGrid strokeDasharray="3 6" stroke="rgba(130,175,220,0.04)" vertical={false} />
                         <XAxis dataKey="index" stroke="none"
-                          tick={{ fill: '#8AAEC8', fontSize: 11, fontFamily: 'JetBrains Mono, monospace' }}
+                          tick={{ fill: '#8AAEC8', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
                           ticks={getXAxisTicks(dominanceChartDataWithPrice, '365')}
                           tickFormatter={(i: number) => formatXAxisTick(dominanceChartDataWithPrice, i, '365')}
                           height={22} />
                         <YAxis domain={['auto', 'auto']} stroke="none"
-                          tick={{ fill: '#8AAEC8', fontSize: 11, fontFamily: 'JetBrains Mono, monospace' }}
+                          tick={{ fill: '#8AAEC8', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
                           tickFormatter={(v) => `${v.toFixed(0)}%`} width={52} />
                         {showBtcPrice['dominance'] && (
                           <YAxis yAxisId="btcPrice" orientation="right" scale="log" domain={['auto', 'auto']} stroke="none"
-                            tick={{ fill: '#6B7A8D', fontSize: 10, fontFamily: 'JetBrains Mono, monospace' }}
+                            tick={{ fill: '#6B7A8D', fontSize: 10, fontFamily: 'var(--ff-mono)' }}
                             tickFormatter={(v) => v >= 1e3 ? `$${(v/1e3).toFixed(0)}K` : `$${v}`} width={46} />
                         )}
                         <Tooltip cursor={{ stroke: 'rgba(160,215,255,0.85)', strokeWidth: 2 }} animationDuration={0} isAnimationActive={false}
@@ -3111,14 +3112,14 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                           </linearGradient>
                         </defs>
                         <CartesianGrid strokeDasharray="3 6" stroke="rgba(130,175,220,0.04)" vertical={false} />
-                        <XAxis dataKey="index" stroke="none" tick={{ fill: '#8AAEC8', fontSize: 11, fontFamily: 'JetBrains Mono, monospace' }}
+                        <XAxis dataKey="index" stroke="none" tick={{ fill: '#8AAEC8', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
                           ticks={getXAxisTicks(hashribbonsChartData, hashribbonsTimeframe)}
                           tickFormatter={(i: number) => formatXAxisTick(hashribbonsChartData, i, hashribbonsTimeframe)} height={22} />
-                        <YAxis stroke="none" tick={{ fill: '#8AAEC8', fontSize: 11, fontFamily: 'JetBrains Mono, monospace' }}
+                        <YAxis stroke="none" tick={{ fill: '#8AAEC8', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
                           tickFormatter={(v) => v >= 1e6 ? `${(v/1e6).toFixed(0)}E` : v >= 1e3 ? `${(v/1e3).toFixed(0)}P` : `${v.toFixed(0)}T`} width={52} />
                         {showBtcPrice['hashribbons'] && (
                           <YAxis yAxisId="btcPrice" orientation="right" scale="log" domain={['auto', 'auto']} stroke="none"
-                            tick={{ fill: '#6B7A8D', fontSize: 10, fontFamily: 'JetBrains Mono, monospace' }}
+                            tick={{ fill: '#6B7A8D', fontSize: 10, fontFamily: 'var(--ff-mono)' }}
                             tickFormatter={(v) => v >= 1e3 ? `$${(v/1e3).toFixed(0)}K` : `$${v}`} width={46} />
                         )}
                         <Tooltip cursor={{ stroke: 'rgba(160,215,255,0.85)', strokeWidth: 2 }} animationDuration={0} isAnimationActive={false}
@@ -3140,7 +3141,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
 {showIndicator['hashribbonsSma60'] && <Area type="monotone" dataKey="sma60" stroke={zoneColor} strokeWidth={3} fill="url(#hribSma60Fill)" animationDuration={0} isAnimationActive={false} dot={false} />}
                         {showBtcPrice['hashribbons'] && <Area type="monotone" dataKey="btcPrice" yAxisId="btcPrice" stroke="#FFFFFF" strokeWidth={1.5} fill="none" animationDuration={0} isAnimationActive={false} dot={false} />}
                         {(hashribbonsTimeframe === '1460' || hashribbonsTimeframe === '999999') && getHalvingIndices(hashribbonsChartDataWithPrice).map((h) => (
-                          <ReferenceLine key={h.index} x={h.index} stroke="rgba(247,147,26,0.2)" strokeDasharray="2 4" label={{ value: `${h.year}↑`, position: 'top', fill: 'rgba(247,147,26,0.4)', fontSize: 8, fontFamily: 'JetBrains Mono, monospace' }} />
+                          <ReferenceLine key={h.index} x={h.index} stroke="rgba(247,147,26,0.2)" strokeDasharray="2 4" label={{ value: `${h.year}↑`, position: 'top', fill: 'rgba(247,147,26,0.4)', fontSize: 8, fontFamily: 'var(--ff-mono)' }} />
                         ))}
                       </AreaChart>
                     </ResponsiveContainer>
@@ -3406,7 +3407,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
               <div className="px-4 pt-3 pb-4" style={{ background: 'linear-gradient(180deg, rgba(3,5,10,0.85) 0%, rgba(4,7,12,0.55) 12%, rgba(5,8,14,0.22) 28%, transparent 55%)' }}>
                 {(!visiblePanels.has('200-week-ma') || isWeekMa200Loading) ? <ChartSkeleton height={320} /> : weekMa200ChartData.length === 0 ? (
                   <div style={{ height: '320px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '9px', color: '#52525B', letterSpacing: '0.18em' }}>AWAITING DATA SYNC</span>
+                    <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', color: '#52525B', letterSpacing: '0.18em' }}>AWAITING DATA SYNC</span>
                   </div>
                 ) : (
                   <div>
@@ -3426,10 +3427,10 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                           </linearGradient>
                         </defs>
                         <CartesianGrid strokeDasharray="3 6" stroke="rgba(130,175,220,0.04)" vertical={false} />
-                        <XAxis dataKey="index" stroke="none" tick={{ fill: '#8AAEC8', fontSize: 11, fontFamily: 'JetBrains Mono, monospace' }}
+                        <XAxis dataKey="index" stroke="none" tick={{ fill: '#8AAEC8', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
                           ticks={getXAxisTicks(weekMa200ChartData, weekMa200Timeframe)}
                           tickFormatter={(i: number) => formatXAxisTick(weekMa200ChartData, i, weekMa200Timeframe)} height={22} />
-                        <YAxis domain={['auto', 'auto']} stroke="none" tick={{ fill: '#8AAEC8', fontSize: 11, fontFamily: 'JetBrains Mono, monospace' }}
+                        <YAxis domain={['auto', 'auto']} stroke="none" tick={{ fill: '#8AAEC8', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
                           tickFormatter={(v) => `$${v >= 1000 ? `${(v/1000).toFixed(0)}K` : v.toFixed(0)}`} width={52} />
                         <Tooltip cursor={{ stroke: 'rgba(160,215,255,0.85)', strokeWidth: 2 }} animationDuration={0} isAnimationActive={false}
                           content={(props) => (
@@ -3445,7 +3446,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                         {showIndicator['weekMa200'] && <Area type="monotone" dataKey="value" stroke={zoneColor} strokeWidth={3} fill="url(#weekMa200Fill)" animationDuration={0} isAnimationActive={false} dot={false} />}
                         {showBtcPrice['weekMa200'] && <Area type="monotone" dataKey="btcPrice" stroke="#FFFFFF" strokeWidth={1.5} fill="none" animationDuration={0} isAnimationActive={false} dot={false} />}
                         {(weekMa200Timeframe === '1460' || weekMa200Timeframe === '999999') && getHalvingIndices(weekMa200ChartDataWithPrice).map((h) => (
-                          <ReferenceLine key={h.index} x={h.index} stroke="rgba(247,147,26,0.2)" strokeDasharray="2 4" label={{ value: `${h.year}↑`, position: 'top', fill: 'rgba(247,147,26,0.4)', fontSize: 8, fontFamily: 'JetBrains Mono, monospace' }} />
+                          <ReferenceLine key={h.index} x={h.index} stroke="rgba(247,147,26,0.2)" strokeDasharray="2 4" label={{ value: `${h.year}↑`, position: 'top', fill: 'rgba(247,147,26,0.4)', fontSize: 8, fontFamily: 'var(--ff-mono)' }} />
                         ))}
                       </AreaChart>
                     </ResponsiveContainer>
@@ -3608,8 +3609,8 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                     {/* Aggregate signal bar — flat, sharp, precision */}
                     <div style={{ marginBottom: '14px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
-                        <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '6.5px', letterSpacing: '0.28em', color: '#64748B' }}>COMMUNITY AGGREGATE SIGNAL</span>
-                        <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '7px', letterSpacing: '0.12em', fontWeight: 800, color: socialSentiment.avgBullish > 55 ? '#00FF88' : socialSentiment.avgBullish < 45 ? '#C2344D' : '#F7931A', textShadow: `0 0 10px ${socialSentiment.avgBullish > 55 ? 'rgba(0,255,136,0.5)' : socialSentiment.avgBullish < 45 ? 'rgba(194,52,77,0.5)' : 'rgba(247,147,26,0.5)'}` }}>
+                        <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '6.5px', letterSpacing: '0.28em', color: '#64748B' }}>COMMUNITY AGGREGATE SIGNAL</span>
+                        <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '7px', letterSpacing: '0.12em', fontWeight: 800, color: socialSentiment.avgBullish > 55 ? '#00FF88' : socialSentiment.avgBullish < 45 ? '#C2344D' : '#F7931A', textShadow: `0 0 10px ${socialSentiment.avgBullish > 55 ? 'rgba(0,255,136,0.5)' : socialSentiment.avgBullish < 45 ? 'rgba(194,52,77,0.5)' : 'rgba(247,147,26,0.5)'}` }}>
                           {socialSentiment.avgBullish > 55 ? 'BULLISH' : socialSentiment.avgBullish < 45 ? 'BEARISH' : 'NEUTRAL'} · {socialSentiment.avgBullish.toFixed(1)}%
                         </span>
                       </div>
@@ -3630,8 +3631,8 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                         <div style={{ position: 'absolute', left: '50%', top: 0, bottom: 0, width: '1px', background: 'rgba(255,255,255,0.08)' }} />
                       </div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '4px' }}>
-                        <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '6px', color: '#C2344D', letterSpacing: '0.14em' }}>BEARISH {(100 - socialSentiment.avgBullish).toFixed(1)}%</span>
-                        <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '6px', color: '#00FF88', letterSpacing: '0.14em' }}>BULLISH {socialSentiment.avgBullish.toFixed(1)}%</span>
+                        <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '6px', color: '#C2344D', letterSpacing: '0.14em' }}>BEARISH {(100 - socialSentiment.avgBullish).toFixed(1)}%</span>
+                        <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '6px', color: '#00FF88', letterSpacing: '0.14em' }}>BULLISH {socialSentiment.avgBullish.toFixed(1)}%</span>
                       </div>
                     </div>
 
@@ -3640,8 +3641,8 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1px', marginBottom: '1px' }}>
                       {socialSentiment.coins.map((coin) => (
                         <div key={coin.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '3px 8px', background: 'rgba(4,8,18,0.9)', borderBottom: '1px solid rgba(12,22,44,0.6)' }}>
-                          <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '6px', color: '#64748B', letterSpacing: '0.20em' }}>{coin.symbol}</span>
-                          <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '6px', color: coin.priceChange24h >= 0 ? '#00FF88' : '#C2344D', fontWeight: 700 }}>
+                          <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '6px', color: '#64748B', letterSpacing: '0.20em' }}>{coin.symbol}</span>
+                          <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '6px', color: coin.priceChange24h >= 0 ? '#00FF88' : '#C2344D', fontWeight: 700 }}>
                             {coin.priceChange24h >= 0 ? '+' : ''}{coin.priceChange24h.toFixed(2)}%
                           </span>
                         </div>
@@ -3667,8 +3668,8 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                           >
                             {/* Symbol + rank */}
                             <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginBottom: '8px' }}>
-                              <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '15px', fontWeight: 800, color: '#D8E8F4', letterSpacing: '0.02em', lineHeight: 1 }}>{coin.symbol}</span>
-                              <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '7px', color: '#64748B' }}>#{coin.marketCapRank}</span>
+                              <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '15px', fontWeight: 800, color: '#D8E8F4', letterSpacing: '0.02em', lineHeight: 1 }}>{coin.symbol}</span>
+                              <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '7px', color: '#64748B' }}>#{coin.marketCapRank}</span>
                             </div>
                             {/* Flat sentiment bar */}
                             <div style={{ height: '3px', background: 'rgba(4,8,18,0.9)', border: '1px solid rgba(10,20,40,0.6)', marginBottom: '6px', overflow: 'hidden' }}>
@@ -3681,17 +3682,17 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                             </div>
                             {/* Signal chip */}
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                              <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '6px', color: '#64748B', letterSpacing: '0.12em' }}>{coin.bearish.toFixed(1)}% bear</span>
+                              <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '6px', color: '#64748B', letterSpacing: '0.12em' }}>{coin.bearish.toFixed(1)}% bear</span>
                               <span style={{
-                                fontFamily: 'JetBrains Mono, monospace', fontSize: '6.5px', fontWeight: 800,
+                                fontFamily: 'var(--ff-mono)', fontSize: '6.5px', fontWeight: 800,
                                 letterSpacing: '0.14em', padding: '2px 6px',
                                 color: signalColor, background: `${signalColor}12`, border: `1px solid ${signalColor}40`,
                               }}>{signal}</span>
                             </div>
                             {/* Watchlist */}
                             <div style={{ marginTop: '6px', paddingTop: '6px', borderTop: '1px solid rgba(12,22,44,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                              <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '6px', color: '#64748B', letterSpacing: '0.12em' }}>WATCHLIST</span>
-                              <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '7px', color: '#64748B', fontWeight: 600 }}>{(coin.watchlistUsers / 1000).toFixed(0)}K</span>
+                              <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '6px', color: '#64748B', letterSpacing: '0.12em' }}>WATCHLIST</span>
+                              <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '7px', color: '#64748B', fontWeight: 600 }}>{(coin.watchlistUsers / 1000).toFixed(0)}K</span>
                             </div>
                           </div>
                         );
@@ -3700,7 +3701,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                   </div>
                 ) : (
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '200px' }}>
-                    <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '9px', color: '#C2344D', letterSpacing: '0.18em' }}>SOCIAL DATA UNAVAILABLE</span>
+                    <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', color: '#C2344D', letterSpacing: '0.18em' }}>SOCIAL DATA UNAVAILABLE</span>
                   </div>
                 )}
               </div>
@@ -3739,7 +3740,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                     {/* Terminal data-feed header row */}
                     <div style={{ display: 'grid', gridTemplateColumns: '28px 1fr 52px 80px 52px', gap: 0, borderBottom: '1px solid rgba(14,26,50,0.9)', paddingBottom: '6px', marginBottom: '2px' }}>
                       {['·', 'ASSET', 'RANK', 'PRICE (USD)', '24H Δ'].map((h, i) => (
-                        <div key={i} style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '8px', letterSpacing: '0.20em', color: '#64748B', textAlign: i > 1 ? 'right' : 'left', padding: '0 4px' }}>{h}</div>
+                        <div key={i} style={{ fontFamily: 'var(--ff-mono)', fontSize: '8px', letterSpacing: '0.20em', color: '#64748B', textAlign: i > 1 ? 'right' : 'left', padding: '0 4px' }}>{h}</div>
                       ))}
                     </div>
 
@@ -3773,18 +3774,18 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                           }}
                         >
                           {/* Rank index */}
-                          <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '8px', fontWeight: 800, color: '#F59E0B', padding: '0 4px', textShadow: '0 0 8px rgba(245,158,11,0.4)' }}>{idx + 1}</div>
+                          <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '8px', fontWeight: 800, color: '#F59E0B', padding: '0 4px', textShadow: '0 0 8px rgba(245,158,11,0.4)' }}>{idx + 1}</div>
                           {/* Name + ticker */}
                           <div style={{ padding: '0 4px', overflow: 'hidden' }}>
-                            <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', fontWeight: 600, color: '#BACEDF', letterSpacing: '0.01em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.name}</div>
-                            <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '8px', color: '#4E6A80', letterSpacing: '0.10em', marginTop: '1px' }}>{item.symbol?.toUpperCase()}</div>
+                            <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '10px', fontWeight: 600, color: '#BACEDF', letterSpacing: '0.01em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.name}</div>
+                            <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '8px', color: '#4E6A80', letterSpacing: '0.10em', marginTop: '1px' }}>{item.symbol?.toUpperCase()}</div>
                           </div>
                           {/* Market cap rank */}
-                          <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '8px', color: '#4E6A80', textAlign: 'right', padding: '0 4px' }}>
+                          <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '8px', color: '#4E6A80', textAlign: 'right', padding: '0 4px' }}>
                             {item.market_cap_rank ? `#${item.market_cap_rank}` : '—'}
                           </div>
                           {/* Price */}
-                          <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '9px', fontWeight: 600, color: '#7AAAD0', textAlign: 'right', padding: '0 4px', fontVariantNumeric: 'tabular-nums' }}>
+                          <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', fontWeight: 600, color: '#7AAAD0', textAlign: 'right', padding: '0 4px', fontVariantNumeric: 'tabular-nums' }}>
                             {priceUsd
                               ? Number(priceUsd) >= 1
                                 ? `$${Number(priceUsd).toLocaleString(undefined, { maximumFractionDigits: 2 })}`
@@ -3792,7 +3793,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                               : '—'}
                           </div>
                           {/* 24h change */}
-                          <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '8.5px', fontWeight: 700, color: changeColor, textAlign: 'right', padding: '0 4px', textShadow: `0 0 8px ${changeColor}50` }}>
+                          <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '8.5px', fontWeight: 700, color: changeColor, textAlign: 'right', padding: '0 4px', textShadow: `0 0 8px ${changeColor}50` }}>
                             {isPositive ? '+' : ''}{priceChange.toFixed(1)}%
                           </div>
                         </div>
@@ -3801,7 +3802,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                   </div>
                 ) : (
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '200px' }}>
-                    <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '9px', color: '#C2344D', letterSpacing: '0.18em' }}>TRENDING DATA UNAVAILABLE</span>
+                    <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', color: '#C2344D', letterSpacing: '0.18em' }}>TRENDING DATA UNAVAILABLE</span>
                   </div>
                 )}
               </div>
@@ -3930,7 +3931,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
           background: 'rgba(4,8,18,0.98)',
           border: '1px solid rgba(16,185,129,0.4)',
           borderLeft: '2px solid #10B981',
-          fontFamily: 'JetBrains Mono, monospace',
+          fontFamily: 'var(--ff-mono)',
           fontSize: '8px', letterSpacing: '0.18em', color: '#10B981',
           boxShadow: '0 8px 40px rgba(0,0,0,0.9)',
           pointerEvents: 'none',

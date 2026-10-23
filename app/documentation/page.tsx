@@ -28,7 +28,7 @@ function Section({ id, title, children }: { id: string; title: string; children:
     <div id={id} className="mb-10 scroll-mt-16 sm:scroll-mt-20">
       <div className="flex items-start gap-3 mb-4">
         <div style={{ width: '1px', height: '14px', background: 'rgba(71,85,105,0.4)' }} />
-        <h2 className="min-w-0 flex-1 text-[13px] tracking-[0.18em] font-black leading-relaxed break-words" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#CBD5E1' }}>{title}</h2>
+        <h2 className="min-w-0 flex-1 text-[13px] tracking-[0.18em] font-black leading-relaxed break-words" style={{ fontFamily: 'var(--ff-sans)', color: '#CBD5E1' }}>{title}</h2>
       </div>
       <div className="p-4 sm:p-5" style={{ background: 'linear-gradient(135deg, #040912 0%, #050A16 60%, #040810 100%)', border: '1px solid rgba(255,255,255,0.06)', contain: 'paint layout' }}>
         {children}
@@ -38,12 +38,12 @@ function Section({ id, title, children }: { id: string; title: string; children:
 }
 
 function Para({ children }: { children: React.ReactNode }) {
-  return <p className="text-[12.5px] leading-relaxed mb-4 last:mb-0" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#94A3B8', lineHeight: 1.85 }}>{children}</p>;
+  return <p className="text-[12.5px] leading-relaxed mb-4 last:mb-0" style={{ fontFamily: 'var(--ff-sans)', color: '#94A3B8', lineHeight: 1.85 }}>{children}</p>;
 }
 
 function Code({ children }: { children: React.ReactNode }) {
   return (
-    <code className="px-1.5 py-0.5 text-[11px]" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#CBD5E1', background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.08)', overflowWrap: 'anywhere' }}>
+    <code className="px-1.5 py-0.5 text-[11px]" style={{ fontFamily: 'var(--ff-mono)', color: '#CBD5E1', background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.08)', overflowWrap: 'anywhere' }}>
       {children}
     </code>
   );
@@ -53,12 +53,12 @@ function Step({ n, title, children }: { n: number; title: string; children: Reac
   return (
     <div className="flex gap-4 mb-5 last:mb-0">
       <div className="flex flex-col items-center gap-1 shrink-0">
-        <div className="w-6 h-6 flex items-center justify-center text-[9px] font-black" style={{ border: '1px solid rgba(100,116,139,0.3)', color: '#64748B', fontFamily: 'Inter, system-ui, sans-serif', background: 'rgba(71,85,105,0.06)' }}>{n}</div>
+        <div className="w-6 h-6 flex items-center justify-center text-[9px] font-black" style={{ border: '1px solid rgba(100,116,139,0.3)', color: '#64748B', fontFamily: 'var(--ff-sans)', background: 'rgba(71,85,105,0.06)' }}>{n}</div>
         <div style={{ width: '1px', flex: 1, background: 'rgba(71,85,105,0.2)' }} />
       </div>
       <div className="pb-4 min-w-0">
-        <div className="text-[11px] font-bold mb-2" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#CBD5E1' }}>{title}</div>
-        <p className="text-[11.5px]" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#94A3B8', lineHeight: 1.75 }}>{children}</p>
+        <div className="text-[11px] font-bold mb-2" style={{ fontFamily: 'var(--ff-sans)', color: '#CBD5E1' }}>{title}</div>
+        <p className="text-[11.5px]" style={{ fontFamily: 'var(--ff-sans)', color: '#94A3B8', lineHeight: 1.75 }}>{children}</p>
       </div>
     </div>
   );
@@ -84,7 +84,7 @@ export default function DocumentationPage() {
               Your session is valid for 30 days of activity, then requires re-authentication.
             </Step>
             <div className="p-3 mt-2" style={{ border: '1px solid rgba(194,52,77,0.2)', background: 'rgba(194,52,77,0.04)' }}>
-              <p className="text-[10.5px]" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#94A3B8', lineHeight: 1.7 }}>
+              <p className="text-[10.5px]" style={{ fontFamily: 'var(--ff-sans)', color: '#94A3B8', lineHeight: 1.7 }}>
                 <strong style={{ color: '#C2344D' }}>CRITICAL:</strong> Your access ID is your only credential and cannot be recovered. There is no password reset. There is no account recovery. Store it before closing the window.
               </p>
             </div>
@@ -108,8 +108,8 @@ export default function DocumentationPage() {
                 },
               ].map(mod => (
                 <div key={mod.name} className="p-3.5" style={{ border: '1px solid rgba(255,255,255,0.04)', background: 'rgba(255,255,255,0.015)' }}>
-                  <div className="text-[9px] tracking-[0.18em] font-black mb-1.5" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#64748B' }}>{mod.name}</div>
-                  <p className="text-[11px]" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#94A3B8', lineHeight: 1.7 }}>{mod.desc}</p>
+                  <div className="text-[9px] tracking-[0.18em] font-black mb-1.5" style={{ fontFamily: 'var(--ff-sans)', color: '#64748B' }}>{mod.name}</div>
+                  <p className="text-[11px]" style={{ fontFamily: 'var(--ff-sans)', color: '#94A3B8', lineHeight: 1.7 }}>{mod.desc}</p>
                 </div>
               ))}
             </div>
@@ -128,8 +128,8 @@ export default function DocumentationPage() {
                 { key: 'SIDEBAR REGISTRY', val: 'Left sidebar shows all indicators with signal state (color-coded by current zone). Click any row to scroll directly to that panel.' },
               ].map(item => (
                 <div key={item.key} className="grid grid-cols-1 sm:grid-cols-[160px_1fr] gap-1 sm:gap-3 items-start py-2" style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                  <span className="text-[9px] sm:text-[10px] tracking-[0.14em] font-bold pt-0.5" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#475569' }}>{item.key}</span>
-                  <span className="text-[11px]" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#94A3B8', lineHeight: 1.7 }}>{item.val}</span>
+                  <span className="text-[9px] sm:text-[10px] tracking-[0.14em] font-bold pt-0.5" style={{ fontFamily: 'var(--ff-sans)', color: '#475569' }}>{item.key}</span>
+                  <span className="text-[11px]" style={{ fontFamily: 'var(--ff-sans)', color: '#94A3B8', lineHeight: 1.7 }}>{item.val}</span>
                 </div>
               ))}
             </div>
@@ -145,8 +145,8 @@ export default function DocumentationPage() {
                 { key: 'ALERT THRESHOLD', val: 'Large moves above configured thresholds are highlighted with elevated visual weight.' },
               ].map(item => (
                 <div key={item.key} className="grid grid-cols-1 sm:grid-cols-[160px_1fr] gap-1 sm:gap-3 items-start py-2" style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                  <span className="text-[9px] sm:text-[10px] tracking-[0.14em] font-bold pt-0.5" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#475569' }}>{item.key}</span>
-                  <span className="text-[11px]" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#94A3B8', lineHeight: 1.7 }}>{item.val}</span>
+                  <span className="text-[9px] sm:text-[10px] tracking-[0.14em] font-bold pt-0.5" style={{ fontFamily: 'var(--ff-sans)', color: '#475569' }}>{item.key}</span>
+                  <span className="text-[11px]" style={{ fontFamily: 'var(--ff-sans)', color: '#94A3B8', lineHeight: 1.7 }}>{item.val}</span>
                 </div>
               ))}
             </div>
@@ -162,8 +162,8 @@ export default function DocumentationPage() {
                 { key: 'SPECTRUM DISPLAY', val: 'The spectrum view on the terminal landing page uses layered rendering to show relative protocol size at a glance.' },
               ].map(item => (
                 <div key={item.key} className="grid grid-cols-1 sm:grid-cols-[160px_1fr] gap-1 sm:gap-3 items-start py-2" style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                  <span className="text-[9px] sm:text-[10px] tracking-[0.14em] font-bold pt-0.5" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#475569' }}>{item.key}</span>
-                  <span className="text-[11px]" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#94A3B8', lineHeight: 1.7 }}>{item.val}</span>
+                  <span className="text-[9px] sm:text-[10px] tracking-[0.14em] font-bold pt-0.5" style={{ fontFamily: 'var(--ff-sans)', color: '#475569' }}>{item.key}</span>
+                  <span className="text-[11px]" style={{ fontFamily: 'var(--ff-sans)', color: '#94A3B8', lineHeight: 1.7 }}>{item.val}</span>
                 </div>
               ))}
             </div>
@@ -182,7 +182,7 @@ export default function DocumentationPage() {
               ].map(([key, action]) => (
                 <div key={key} className="flex gap-3 items-start p-2.5" style={{ border: '1px solid rgba(255,255,255,0.04)', background: 'rgba(255,255,255,0.01)' }}>
                   <Code>{key}</Code>
-                  <span className="text-[10.5px] min-w-0 flex-1" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#64748B', lineHeight: 1.6 }}>{action}</span>
+                  <span className="text-[10.5px] min-w-0 flex-1" style={{ fontFamily: 'var(--ff-sans)', color: '#64748B', lineHeight: 1.6 }}>{action}</span>
                 </div>
               ))}
             </div>
@@ -201,8 +201,8 @@ export default function DocumentationPage() {
                 { name: 'Etherscan', desc: 'Ethereum blockchain explorer and transaction data.' },
               ].map(src => (
                 <div key={src.name} className="p-3.5" style={{ border: '1px solid rgba(255,255,255,0.04)', background: 'rgba(255,255,255,0.015)' }}>
-                  <div className="text-[9px] tracking-[0.18em] font-black mb-1.5" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#64748B' }}>{src.name}</div>
-                  <p className="text-[11px]" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#94A3B8', lineHeight: 1.7 }}>{src.desc}</p>
+                  <div className="text-[9px] tracking-[0.18em] font-black mb-1.5" style={{ fontFamily: 'var(--ff-sans)', color: '#64748B' }}>{src.name}</div>
+                  <p className="text-[11px]" style={{ fontFamily: 'var(--ff-sans)', color: '#94A3B8', lineHeight: 1.7 }}>{src.desc}</p>
                 </div>
               ))}
             </div>
@@ -210,8 +210,8 @@ export default function DocumentationPage() {
           </Section>
 
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3 pt-4" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-            <Link href="/methodology" className="text-[10px] text-[#475569] hover:text-[#94A3B8] transition-colors" style={{ fontFamily: 'Inter, system-ui, sans-serif', letterSpacing: '0.10em', textDecoration: 'none' }}>Methodology →</Link>
-            <Link href="/changelog" className="text-[10px] text-[#475569] hover:text-[#94A3B8] transition-colors" style={{ fontFamily: 'Inter, system-ui, sans-serif', letterSpacing: '0.10em', textDecoration: 'none' }}>Changelog →</Link>
+            <Link href="/methodology" className="text-[10px] text-[#475569] hover:text-[#94A3B8] transition-colors" style={{ fontFamily: 'var(--ff-sans)', letterSpacing: '0.10em', textDecoration: 'none' }}>Methodology →</Link>
+            <Link href="/changelog" className="text-[10px] text-[#475569] hover:text-[#94A3B8] transition-colors" style={{ fontFamily: 'var(--ff-sans)', letterSpacing: '0.10em', textDecoration: 'none' }}>Changelog →</Link>
           </div>
         </div>
       </div>

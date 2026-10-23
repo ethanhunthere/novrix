@@ -15,7 +15,7 @@ export default function RouteLoading() {
         alignItems: 'center',
         justifyContent: 'center',
         color: '#71717A',
-        fontFamily: 'var(--font-jetbrains-mono), JetBrains Mono, monospace',
+        fontFamily: 'var(--ff-mono)',
         fontSize: 11,
         letterSpacing: '0.18em',
         textTransform: 'uppercase',

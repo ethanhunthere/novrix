@@ -35,7 +35,7 @@ interface ApiResponse {
   stats: AddressStats;
 }
 
-const MONO = "'JetBrains Mono', monospace";
+const MONO = 'var(--ff-mono)';
 const ACCENT = '#0EA5C8';
 
 /* ═══════════════════════════════════════════════════════════

@@ -1,20 +1,19 @@
-import type { CSSProperties, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import FooterHome from '@/components/layout/FooterHome';
 
-const INK = '#EDE9E2';
-const MUTED = 'rgba(237, 233, 226, 0.56)';
-const FAINT = 'rgba(237, 233, 226, 0.34)';
-const HAIRLINE = 'rgba(237, 233, 226, 0.08)';
-const ACCENT = '#C75566';
+const INK = '#F5F1EA';
+const MUTED = 'rgba(245, 241, 234, 0.60)';
+const FAINT = 'rgba(245, 241, 234, 0.48)';
+const HAIRLINE = 'rgba(245, 241, 234, 0.08)';
+const ACCENT = '#C2344D';
 
 const MODULES = [
   {
     index: '01',
     label: 'SENTIMENT',
     href: '/sentiment',
-    accent: '#C75566',
     title: 'Market mood, minus the noise.',
     lede: 'See what holders are doing, where pressure is building, and whether price is moving with real support.',
     notes: [
@@ -27,7 +26,6 @@ const MODULES = [
     index: '02',
     label: 'TRACKING',
     href: '/tracking',
-    accent: '#7E9CB8',
     title: 'Big movement, in context.',
     lede: 'Follow notable wallet activity, exchange flow, and address context without living inside explorers.',
     notes: [
@@ -40,7 +38,6 @@ const MODULES = [
     index: '03',
     label: 'METRILYTICS',
     href: '/metrilytics',
-    accent: '#C2946B',
     title: 'Protocol health, clearly read.',
     lede: 'Read liquidity, fees, yield, and usage as one picture of network strength.',
     notes: [
@@ -62,13 +59,13 @@ function Arrow() {
 function Eyebrow({ children }: { children: ReactNode }) {
   return (
     <div className="flex items-center gap-3">
-      <span aria-hidden="true" style={{ width: '26px', height: '1px', background: 'rgba(199, 85, 102, 0.55)' }} />
+      <span aria-hidden="true" style={{ width: '26px', height: '1px', background: 'rgba(194, 52, 77, 0.68)' }} />
       <span
         style={{
-          fontFamily: 'var(--font-jetbrains-mono), monospace',
-          fontSize: '10px',
+          fontFamily: 'var(--ff-mono)',
+          fontSize: '11px',
           fontWeight: 500,
-          letterSpacing: '0.28em',
+          letterSpacing: '0.22em',
           textTransform: 'uppercase',
           color: MUTED,
         }}
@@ -95,7 +92,7 @@ export default function Home() {
             className="absolute inset-0 pointer-events-none"
             style={{
               background:
-                'radial-gradient(ellipse 55% 48% at 22% 0%, rgba(199, 85, 102, 0.055), transparent 70%)',
+                'radial-gradient(ellipse 58% 48% at 20% 0%, rgba(194, 52, 77, 0.07), transparent 70%)',
             }}
           />
           <div className="relative mx-auto w-full" style={{ maxWidth: '1180px' }}>
@@ -104,17 +101,18 @@ export default function Home() {
             <h1
               className="mt-7 mb-8"
               style={{
-                fontSize: 'clamp(2.7rem, 7.6vw, 7.5rem)',
-                lineHeight: 0.94,
-                letterSpacing: '-0.045em',
-                fontWeight: 800,
+                fontFamily: 'var(--ff-display)',
+                fontSize: 'clamp(3rem, 8.2vw, 8.25rem)',
+                lineHeight: 0.9,
+                letterSpacing: '-0.022em',
+                fontWeight: 500,
               }}
             >
-              <span className="block" style={{ color: 'rgba(237, 233, 226, 0.42)', fontWeight: 500 }}>
+              <span className="block" style={{ color: 'rgba(245, 241, 234, 0.46)', fontStyle: 'italic', fontWeight: 400 }}>
                 Trinity of
               </span>
               <span className="block" style={{ color: INK }}>
-                Intelligence<span style={{ color: ACCENT }}>.</span>
+                Intelligence<span style={{ color: ACCENT, fontStyle: 'normal' }}>.</span>
               </span>
             </h1>
 
@@ -136,16 +134,18 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="hidden lg:flex flex-col items-end gap-2 pb-1" aria-hidden="true">
-                <span style={{ fontFamily: 'var(--font-jetbrains-mono), monospace', fontSize: '10px', letterSpacing: '0.24em', color: FAINT, textTransform: 'uppercase' }}>
-                  Sentiment
-                </span>
-                <span style={{ fontFamily: 'var(--font-jetbrains-mono), monospace', fontSize: '10px', letterSpacing: '0.24em', color: FAINT, textTransform: 'uppercase' }}>
-                  Tracking
-                </span>
-                <span style={{ fontFamily: 'var(--font-jetbrains-mono), monospace', fontSize: '10px', letterSpacing: '0.24em', color: FAINT, textTransform: 'uppercase' }}>
-                  Metrilytics
-                </span>
+              <div className="hidden lg:flex flex-col items-end gap-3 pb-1" aria-hidden="true">
+                {MODULES.map((item) => (
+                  <div key={item.label} className="flex items-center gap-3">
+                    <span style={{ width: '20px', height: '1px', background: 'rgba(194, 52, 77, 0.35)' }} />
+                    <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '10.5px', letterSpacing: '0.16em', color: FAINT }}>
+                      {item.index}
+                    </span>
+                    <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '10.5px', letterSpacing: '0.18em', color: MUTED, textTransform: 'uppercase' }}>
+                      {item.label}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -153,10 +153,10 @@ export default function Home() {
               className="mt-14 pt-5 flex flex-wrap items-center justify-between gap-x-8 gap-y-2"
               style={{ borderTop: `1px solid ${HAIRLINE}` }}
             >
-              <span style={{ fontFamily: 'var(--font-jetbrains-mono), monospace', fontSize: '10px', letterSpacing: '0.2em', color: FAINT, textTransform: 'uppercase' }}>
+              <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '10.5px', letterSpacing: '0.18em', color: FAINT, textTransform: 'uppercase' }}>
                 Market mood · Wallet movement · Protocol health
               </span>
-              <span style={{ fontFamily: 'var(--font-jetbrains-mono), monospace', fontSize: '10px', letterSpacing: '0.2em', color: FAINT, textTransform: 'uppercase' }}>
+              <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '10.5px', letterSpacing: '0.18em', color: FAINT, textTransform: 'uppercase' }}>
                 Free · Open source · No ads
               </span>
             </div>
@@ -178,10 +178,11 @@ export default function Home() {
                 <h2
                   className="mt-5"
                   style={{
-                    fontSize: 'clamp(1.9rem, 3.6vw, 3.2rem)',
-                    lineHeight: 1.02,
-                    letterSpacing: '-0.035em',
-                    fontWeight: 700,
+                    fontFamily: 'var(--ff-display)',
+                    fontSize: 'clamp(2.1rem, 4vw, 3.75rem)',
+                    lineHeight: 0.98,
+                    letterSpacing: '-0.022em',
+                    fontWeight: 500,
                     color: INK,
                   }}
                 >
@@ -195,25 +196,24 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10 lg:gap-x-12">
               {MODULES.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   className="home-module-card"
-                  style={{ '--accent': item.accent } as CSSProperties}
                 >
-                  <div className="home-module-top flex items-center justify-between gap-4 pb-5 mb-6">
+                  <div className="flex items-center justify-between gap-4 pb-5 mb-6">
                     <div className="flex items-center gap-3">
                       <span
                         aria-hidden="true"
                         className="home-module-dot block w-1.5 h-1.5 rotate-45"
                       />
-                      <span className="home-module-label" style={{ fontFamily: 'var(--font-jetbrains-mono), monospace', fontSize: '10px', fontWeight: 600, letterSpacing: '0.24em' }}>
+                      <span className="home-module-label" style={{ fontFamily: 'var(--ff-mono)', fontSize: '10.5px', fontWeight: 500, letterSpacing: '0.2em' }}>
                         {item.label}
                       </span>
                     </div>
-                    <span className="home-module-index" style={{ fontFamily: 'var(--font-jetbrains-mono), monospace', fontSize: '10px', letterSpacing: '0.16em' }}>
+                    <span className="home-module-index" style={{ fontFamily: 'var(--ff-mono)', fontSize: '10.5px', letterSpacing: '0.14em' }}>
                       {item.index}
                     </span>
                   </div>
@@ -221,10 +221,11 @@ export default function Home() {
                   <h3
                     className="mb-4"
                     style={{
-                      fontSize: 'clamp(1.3rem, 1.1rem + 0.8vw, 1.7rem)',
-                      lineHeight: 1.15,
-                      letterSpacing: '-0.025em',
-                      fontWeight: 600,
+                      fontFamily: 'var(--ff-display)',
+                      fontSize: 'clamp(1.5rem, 1.2rem + 0.9vw, 1.95rem)',
+                      lineHeight: 1.08,
+                      letterSpacing: '-0.015em',
+                      fontWeight: 500,
                       color: INK,
                     }}
                   >
@@ -236,8 +237,8 @@ export default function Home() {
 
                   <ul className="home-module-notes mt-6 mb-8 space-y-2.5" style={{ listStyle: 'none', padding: 0 }}>
                     {item.notes.map((note) => (
-                      <li key={note} className="pl-4" style={{ position: 'relative', color: 'rgba(237, 233, 226, 0.46)', fontSize: '0.85rem', lineHeight: 1.6 }}>
-                        <span aria-hidden="true" style={{ position: 'absolute', left: 0, top: '0.68em', width: '8px', height: '1px', background: 'rgba(237, 233, 226, 0.22)' }} />
+                      <li key={note} className="pl-4" style={{ position: 'relative', color: 'rgba(245, 241, 234, 0.56)', fontSize: '0.85rem', lineHeight: 1.6 }}>
+                        <span aria-hidden="true" style={{ position: 'absolute', left: 0, top: '0.68em', width: '8px', height: '1px', background: 'rgba(245, 241, 234, 0.22)' }} />
                         {note}
                       </li>
                     ))}
@@ -245,7 +246,7 @@ export default function Home() {
 
                   <span
                     className="home-module-cta mt-auto inline-flex items-center gap-2"
-                    style={{ fontFamily: 'var(--font-jetbrains-mono), monospace', fontSize: '10px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase' }}
+                    style={{ fontFamily: 'var(--ff-mono)', fontSize: '10.5px', fontWeight: 500, letterSpacing: '0.18em', textTransform: 'uppercase' }}
                   >
                     {item.cta}
                     <Arrow />
@@ -271,12 +272,13 @@ export default function Home() {
                 <h2
                   className="mt-5"
                   style={{
-                    fontSize: 'clamp(1.8rem, 3.2vw, 2.9rem)',
-                    lineHeight: 1.04,
-                    letterSpacing: '-0.035em',
-                    fontWeight: 700,
+                    fontFamily: 'var(--ff-display)',
+                    fontSize: 'clamp(2rem, 3.8vw, 3.5rem)',
+                    lineHeight: 0.98,
+                    letterSpacing: '-0.022em',
+                    fontWeight: 500,
                     color: INK,
-                    maxWidth: '640px',
+                    maxWidth: '680px',
                   }}
                 >
                   Start with a question, not a chart.
@@ -312,7 +314,7 @@ export default function Home() {
               <Link
                 href="/insights"
                 className="inline-flex items-center gap-2 shrink-0"
-                style={{ fontFamily: 'var(--font-jetbrains-mono), monospace', fontSize: '10px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: MUTED }}
+                style={{ fontFamily: 'var(--ff-mono)', fontSize: '10.5px', fontWeight: 500, letterSpacing: '0.18em', textTransform: 'uppercase', color: MUTED }}
               >
                 Read insights
                 <Arrow />

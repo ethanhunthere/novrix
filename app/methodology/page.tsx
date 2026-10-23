@@ -28,7 +28,7 @@ function Section({ id, title, children }: { id: string; title: string; children:
     <div id={id} className="mb-10 scroll-mt-16 sm:scroll-mt-20">
       <div className="flex items-start gap-3 mb-4">
         <div style={{ width: '1px', height: '14px', background: 'rgba(71,85,105,0.4)' }} />
-        <h2 className="min-w-0 flex-1 text-[13px] tracking-[0.18em] font-black leading-relaxed break-words" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#CBD5E1' }}>{title}</h2>
+        <h2 className="min-w-0 flex-1 text-[13px] tracking-[0.18em] font-black leading-relaxed break-words" style={{ fontFamily: 'var(--ff-sans)', color: '#CBD5E1' }}>{title}</h2>
       </div>
       <div className="p-4 sm:p-5" style={{ background: 'linear-gradient(135deg, #040912 0%, #050A16 60%, #040810 100%)', border: '1px solid rgba(255,255,255,0.06)', contain: 'paint layout' }}>
         {children}
@@ -38,7 +38,7 @@ function Section({ id, title, children }: { id: string; title: string; children:
 }
 
 function Para({ children }: { children: React.ReactNode }) {
-  return <p className="text-[12.5px] leading-relaxed mb-4 last:mb-0" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#94A3B8', lineHeight: 1.85 }}>{children}</p>;
+  return <p className="text-[12.5px] leading-relaxed mb-4 last:mb-0" style={{ fontFamily: 'var(--ff-sans)', color: '#94A3B8', lineHeight: 1.85 }}>{children}</p>;
 }
 
 export default function MethodologyPage() {
@@ -90,8 +90,8 @@ export default function MethodologyPage() {
                 },
               ].map(src => (
                 <div key={src.name} className="p-4" style={{ border: '1px solid rgba(255,255,255,0.04)', background: 'rgba(255,255,255,0.015)' }}>
-                  <div className="text-[12px] font-bold mb-1.5" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#CBD5E1' }}>{src.name}</div>
-                  <p className="text-[11px]" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#94A3B8', lineHeight: 1.7 }}>{src.desc}</p>
+                  <div className="text-[12px] font-bold mb-1.5" style={{ fontFamily: 'var(--ff-sans)', color: '#CBD5E1' }}>{src.name}</div>
+                  <p className="text-[11px]" style={{ fontFamily: 'var(--ff-sans)', color: '#94A3B8', lineHeight: 1.7 }}>{src.desc}</p>
                 </div>
               ))}
             </div>
@@ -99,7 +99,7 @@ export default function MethodologyPage() {
 
           <Section id="update-schedule" title="UPDATE SCHEDULE">
             <div className="overflow-x-auto">
-              <table className="w-full text-[11px]" style={{ fontFamily: 'Inter, system-ui, sans-serif', borderCollapse: 'collapse' }}>
+              <table className="w-full text-[11px]" style={{ fontFamily: 'var(--ff-sans)', borderCollapse: 'collapse' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
                     {['DATA TYPE', 'SOURCE', 'SCHEDULE', 'LATENCY'].map(h => (
@@ -144,8 +144,8 @@ export default function MethodologyPage() {
                 <div key={item.title} className="flex gap-3 items-start">
                   <div style={{ width: '2px', background: 'rgba(100,116,139,0.25)', flexShrink: 0, marginTop: '2px', alignSelf: 'stretch' }} />
                   <div>
-                    <div className="text-[8.5px] tracking-[0.14em] font-bold mb-1.5" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#64748B' }}>{item.title}</div>
-                    <p className="text-[11.5px]" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#94A3B8', lineHeight: 1.75 }}>{item.body}</p>
+                    <div className="text-[8.5px] tracking-[0.14em] font-bold mb-1.5" style={{ fontFamily: 'var(--ff-sans)', color: '#64748B' }}>{item.title}</div>
+                    <p className="text-[11.5px]" style={{ fontFamily: 'var(--ff-sans)', color: '#94A3B8', lineHeight: 1.75 }}>{item.body}</p>
                   </div>
                 </div>
               ))}
@@ -165,8 +165,8 @@ export default function MethodologyPage() {
                 <div key={item.title} className="flex gap-3 items-start">
                   <div style={{ width: '2px', background: 'rgba(100,116,139,0.25)', flexShrink: 0, marginTop: '2px', alignSelf: 'stretch' }} />
                   <div>
-                    <div className="text-[8.5px] tracking-[0.14em] font-bold mb-1.5" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#64748B' }}>{item.title}</div>
-                    <p className="text-[11.5px]" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#94A3B8', lineHeight: 1.75 }}>{item.body}</p>
+                    <div className="text-[8.5px] tracking-[0.14em] font-bold mb-1.5" style={{ fontFamily: 'var(--ff-sans)', color: '#64748B' }}>{item.title}</div>
+                    <p className="text-[11.5px]" style={{ fontFamily: 'var(--ff-sans)', color: '#94A3B8', lineHeight: 1.75 }}>{item.body}</p>
                   </div>
                 </div>
               ))}
@@ -188,8 +188,8 @@ export default function MethodologyPage() {
                 <div key={src.name} className="flex gap-4">
                   <div style={{ width: '2px', background: 'rgba(100,116,139,0.25)', flexShrink: 0, marginTop: '2px' }} />
                   <div>
-                    <div className="text-[12px] font-bold mb-1" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#CBD5E1' }}>{src.name}</div>
-                    <p className="text-[11.5px] leading-relaxed" style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#94A3B8', lineHeight: 1.75 }}>{src.desc}</p>
+                    <div className="text-[12px] font-bold mb-1" style={{ fontFamily: 'var(--ff-sans)', color: '#CBD5E1' }}>{src.name}</div>
+                    <p className="text-[11.5px] leading-relaxed" style={{ fontFamily: 'var(--ff-sans)', color: '#94A3B8', lineHeight: 1.75 }}>{src.desc}</p>
                   </div>
                 </div>
               ))}
@@ -198,8 +198,8 @@ export default function MethodologyPage() {
           </Section>
 
           <div className="flex items-center gap-6 pt-4" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-            <Link href="/documentation" className="text-[10px] text-[#475569] hover:text-[#94A3B8] transition-colors" style={{ fontFamily: 'Inter, system-ui, sans-serif', letterSpacing: '0.10em', textDecoration: 'none' }}>Documentation →</Link>
-            <Link href="/sentiment" className="text-[10px] text-[#475569] hover:text-[#94A3B8] transition-colors" style={{ fontFamily: 'Inter, system-ui, sans-serif', letterSpacing: '0.10em', textDecoration: 'none' }}>Sentiment Module →</Link>
+            <Link href="/documentation" className="text-[10px] text-[#475569] hover:text-[#94A3B8] transition-colors" style={{ fontFamily: 'var(--ff-sans)', letterSpacing: '0.10em', textDecoration: 'none' }}>Documentation →</Link>
+            <Link href="/sentiment" className="text-[10px] text-[#475569] hover:text-[#94A3B8] transition-colors" style={{ fontFamily: 'var(--ff-sans)', letterSpacing: '0.10em', textDecoration: 'none' }}>Sentiment Module →</Link>
           </div>
         </div>
       </div>

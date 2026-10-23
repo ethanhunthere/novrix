@@ -63,7 +63,7 @@ export const PanelHeader = ({
         <span
           className="text-[12px] tracking-[0.18em] shrink-0 uppercase font-black px-2 py-1"
           style={{
-            fontFamily: 'JetBrains Mono, monospace',
+            fontFamily: 'var(--ff-mono)',
             color: accentColor,
             textShadow: `0 0 12px ${accentColor}70`,
             background: `${accentColor}15`,
@@ -75,19 +75,19 @@ export const PanelHeader = ({
         {tag && tag !== 'LIVE' && (
           <span style={{
             fontSize: '8px', letterSpacing: '0.12em', fontWeight: 600, padding: '3px 6px',
-            fontFamily: 'JetBrains Mono, monospace', color: '#64748B',
+            fontFamily: 'var(--ff-mono)', color: '#64748B',
             background: 'rgba(10,20,36,0.8)', border: '1px solid rgba(50,70,100,0.7)',
           }}>{tag}</span>
         )}
         <div className="w-px h-4 shrink-0" style={{ background: 'rgba(20,36,64,0.9)' }} />
         <span
           className="min-w-0 text-[17px] font-semibold"
-          style={{ fontFamily: 'Inter, JetBrains Mono, monospace', color: '#E4E4E7', letterSpacing: '0.008em', fontWeight: 600, overflowWrap: 'anywhere' }}
+          style={{ fontFamily: 'var(--ff-sans)', color: '#E4E4E7', letterSpacing: '0.008em', fontWeight: 600, overflowWrap: 'anywhere' }}
         >
           {title}
         </span>
         {desc && (
-          <span className="min-w-0" style={{ fontFamily: "'Inter', system-ui, sans-serif", fontSize: '12.5px', fontWeight: 400, color: 'rgba(160,180,210,0.60)', letterSpacing: '0.02em', fontStyle: 'italic', overflowWrap: 'anywhere' }}>
+          <span className="min-w-0" style={{ fontFamily: 'var(--ff-sans)', fontSize: '12.5px', fontWeight: 400, color: 'rgba(160,180,210,0.60)', letterSpacing: '0.02em', fontStyle: 'italic', overflowWrap: 'anywhere' }}>
             — {desc}
           </span>
         )}
@@ -102,7 +102,7 @@ export const PanelHeader = ({
               style={{
                 fontSize: '28px', fontWeight: 800,
                 color: accentColor,
-                fontFamily: 'JetBrains Mono, monospace', letterSpacing: '-0.02em',
+                fontFamily: 'var(--ff-mono)', letterSpacing: '-0.02em',
                 textShadow: `0 0 32px ${accentColor}70, 0 0 10px ${accentColor}40`,
               }}
             >
@@ -114,7 +114,7 @@ export const PanelHeader = ({
                 style={{
                   color: zone.color, background: `${zone.color}20`,
                   border: `1px solid ${zone.color}B3`,
-                  fontFamily: 'JetBrains Mono, monospace',
+                  fontFamily: 'var(--ff-mono)',
                   boxShadow: `0 0 16px ${zone.color}28, inset 0 1px 0 ${zone.color}20`,
                   letterSpacing: '0.12em',
                 }}
@@ -124,7 +124,7 @@ export const PanelHeader = ({
             )}
           </div>
           {lastUpdated && (
-            <span style={{ fontSize: '9px', letterSpacing: '0.14em', fontFamily: 'JetBrains Mono, monospace', color: 'rgba(150,170,200,0.62)', fontWeight: 600 }}>
+            <span style={{ fontSize: '9px', letterSpacing: '0.14em', fontFamily: 'var(--ff-mono)', color: 'rgba(150,170,200,0.62)', fontWeight: 600 }}>
               last updated: {lastUpdated}
             </span>
           )}
@@ -185,7 +185,7 @@ export const FngTooltip = ({ active, payload }: { active?: boolean; payload?: Ar
     <div style={{
       background: '#0E0E18', border: `1px solid rgba(255,255,255,0.15)`,
       borderTop: `2px solid ${color}`, borderRadius: '1px',
-      fontFamily: 'JetBrains Mono, monospace', padding: '14px 18px',
+      fontFamily: 'var(--ff-mono)', padding: '14px 18px',
       boxShadow: `0 8px 32px rgba(0,0,0,0.80)`, minWidth: '180px', pointerEvents: 'none',
     }}>
       <div style={{ color: '#8A9BB0', fontSize: '13px', marginBottom: '2px', letterSpacing: '0.12em' }}>{date}</div>
@@ -229,7 +229,7 @@ export const PrecisionTooltip = ({
     <div style={{
       background: '#0E0E18', border: `1px solid rgba(255,255,255,0.15)`,
       borderTop: `2px solid ${accentColor}`, borderRadius: '1px',
-      fontFamily: 'JetBrains Mono, monospace', padding: '14px 18px',
+      fontFamily: 'var(--ff-mono)', padding: '14px 18px',
       boxShadow: `0 8px 32px rgba(0,0,0,0.80)`, minWidth: '190px', pointerEvents: 'none',
     }}>
       <div style={{ color: '#8A9BB0', fontSize: '13px', marginBottom: '2px', letterSpacing: '0.12em' }}>{date}</div>
@@ -292,7 +292,7 @@ export const ChartSkeleton = ({ height = 320 }: { height?: number }) => (
       }
     `}</style>
     <div style={{ position: 'absolute', bottom: '6px', left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-      <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '8.5px', color: '#64748B', letterSpacing: '0.20em' }}>SYNCHRONIZING</span>
+      <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '8.5px', color: '#64748B', letterSpacing: '0.20em' }}>SYNCHRONIZING</span>
     </div>
   </div>
 );
@@ -333,7 +333,7 @@ export const TfSelector = ({ value, onChange, opts }: { value: string; onChange:
             key={tf.value}
             onClick={() => onChange(tf.value)}
             style={{
-              fontFamily: 'JetBrains Mono, monospace', fontSize: '12px', letterSpacing: '0.11em',
+              fontFamily: 'var(--ff-mono)', fontSize: '12px', letterSpacing: '0.11em',
               padding: '6px 10px', borderTop: 'none', borderBottom: 'none', borderLeft: 'none',
               borderRight: i < options.length - 1 ? '1px solid rgba(14,26,52,0.98)' : 'none',
               background: active ? 'rgba(194,52,77,0.20)' : 'transparent',
@@ -366,7 +366,7 @@ export const LineToggle = ({ items }: {
         key={item.key}
         onClick={item.onClick}
         style={{
-          fontFamily: 'JetBrains Mono, monospace', fontSize: '9px', letterSpacing: '0.13em',
+          fontFamily: 'var(--ff-mono)', fontSize: '9px', letterSpacing: '0.13em',
           padding: '6px 10px', display: 'flex', alignItems: 'center', gap: '6px',
           borderTop: `2px solid ${item.active ? item.color : 'transparent'}`,
           borderBottom: 'none', borderLeft: 'none',
@@ -466,10 +466,10 @@ export const LiveClock = () => {
   }, []);
   return (
     <>
-      <div className="text-[15px] tabular-nums font-bold leading-none" style={{ fontFamily: 'JetBrains Mono, monospace', color: '#FFFFFF', letterSpacing: '0.04em' }}>
+      <div className="text-[15px] tabular-nums font-bold leading-none" style={{ fontFamily: 'var(--ff-mono)', color: '#FFFFFF', letterSpacing: '0.04em' }}>
         {t.slice(11)}
       </div>
-      <div className="text-[11px] tabular-nums mt-0.5" style={{ fontFamily: 'JetBrains Mono, monospace', color: '#5A6A7A' }}>
+      <div className="text-[11px] tabular-nums mt-0.5" style={{ fontFamily: 'var(--ff-mono)', color: '#5A6A7A' }}>
         {t.slice(0, 10)}
       </div>
     </>

@@ -59,7 +59,7 @@ const SentimentSidebar = memo(function SentimentSidebar({
                 letterSpacing: '0.24em',
                 fontWeight: 700,
                 textTransform: 'uppercase',
-                fontFamily: 'JetBrains Mono, monospace',
+                fontFamily: 'var(--ff-mono)',
                 color: '#6B7D9A',
               }}>
                 Intel Registry
@@ -102,7 +102,7 @@ const SentimentSidebar = memo(function SentimentSidebar({
                 borderRadius: '6px',
                 color: '#C8D4E4',
                 fontSize: '13px',
-                fontFamily: 'Inter, system-ui, sans-serif',
+                fontFamily: 'var(--ff-sans)',
                 letterSpacing: '0.01em',
                 outline: 'none',
                 caretColor: '#3B82F6',
@@ -152,7 +152,7 @@ const SentimentSidebar = memo(function SentimentSidebar({
                   fontWeight: 700,
                   letterSpacing: '0.14em',
                   textTransform: 'uppercase',
-                  fontFamily: 'Inter, system-ui, sans-serif',
+                  fontFamily: 'var(--ff-sans)',
                   color: isOpen ? '#E2E8F0' : '#6B7D9A',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
@@ -165,7 +165,7 @@ const SentimentSidebar = memo(function SentimentSidebar({
                   <span style={{
                     fontSize: '13px',
                     color: isOpen ? cat.accent : '#3A4558',
-                    fontFamily: 'Inter, system-ui, sans-serif',
+                    fontFamily: 'var(--ff-sans)',
                     lineHeight: 1,
                     transition: 'color 160ms ease, transform 200ms ease',
                     transform: isOpen ? 'rotate(0deg)' : 'rotate(-90deg)',
@@ -192,7 +192,7 @@ const SentimentSidebar = memo(function SentimentSidebar({
                             textTransform: 'uppercase',
                             fontWeight: 700,
                             color: '#4A5568',
-                            fontFamily: 'Inter, system-ui, sans-serif',
+                            fontFamily: 'var(--ff-sans)',
                           }}>
                             {divItem.dividerLabel}
                           </span>
@@ -235,7 +235,7 @@ const SentimentSidebar = memo(function SentimentSidebar({
                           fontWeight: isSelected ? 600 : 400,
                           lineHeight: '1.5',
                           color: isSelected ? '#F1F5F9' : '#A0AEC0',
-                          fontFamily: 'Inter, system-ui, sans-serif',
+                          fontFamily: 'var(--ff-sans)',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
                           whiteSpace: 'nowrap',
@@ -253,7 +253,7 @@ const SentimentSidebar = memo(function SentimentSidebar({
                         {indItem.freq && (
                           <span style={{
                             fontSize: '10px',
-                            fontFamily: 'JetBrains Mono, monospace',
+                            fontFamily: 'var(--ff-mono)',
                             fontWeight: 600,
                             color: '#4A5568',
                             letterSpacing: '0.04em',

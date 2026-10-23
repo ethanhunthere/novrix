@@ -26,7 +26,7 @@ function UtcClock() {
 
   if (!utc) return null;
   return (
-    <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '9px', color: '#64748B', letterSpacing: '0.14em' }}>
+    <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', color: '#64748B', letterSpacing: '0.14em' }}>
       UTC {utc}
     </span>
   );
@@ -38,7 +38,7 @@ export default function FooterTerminal() {
       style={{
         background: '#020407',
         borderTop: '1px solid rgba(255,255,255,0.04)',
-        fontFamily: 'JetBrains Mono, monospace',
+        fontFamily: 'var(--ff-mono)',
       }}
     >
       <div className="max-w-[1800px] mx-auto px-6 lg:px-10 xl:px-16 2xl:px-24">
@@ -46,7 +46,7 @@ export default function FooterTerminal() {
 
           {/* Left: Brand */}
           <span
-            style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '9px', fontWeight: 700, letterSpacing: '0.18em', color: '#475569' }}
+            style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', fontWeight: 700, letterSpacing: '0.18em', color: '#475569' }}
           >
             NOVRIX<span style={{ color: '#334155' }}>.IO</span>
           </span>
@@ -57,7 +57,7 @@ export default function FooterTerminal() {
           {/* Right: System status */}
           <div className="flex items-center gap-1.5">
             <span
-              style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '8px', letterSpacing: '0.16em', color: '#475569' }}
+              style={{ fontFamily: 'var(--ff-mono)', fontSize: '8px', letterSpacing: '0.16em', color: '#475569' }}
             >
               SYS READY
             </span>

@@ -318,7 +318,7 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
           <ChartSkeleton height={ch(panel.panelId)} />
         ) : panel.data.length === 0 ? (
           <div style={{ height: `${ch(panel.panelId)}px`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: '#52525B', letterSpacing: '0.16em' }}>AWAITING DATA SYNC</span>
+            <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '10px', color: '#52525B', letterSpacing: '0.16em' }}>AWAITING DATA SYNC</span>
           </div>
         ) : (() => {
           const isFred = panel.panelId.startsWith('fred-') || !!panel.useFredTfOpts;
@@ -357,17 +357,17 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
                     <ReferenceArea key={`band-${i}`} y1={band.y1} y2={band.y2} fill={band.fill} fillOpacity={band.fillOpacity} />
                   ))}
                   <XAxis dataKey="index" stroke="none"
-                    tick={{ fill: '#8AAEC8', fontSize: 12, fontFamily: 'JetBrains Mono, monospace' }}
+                    tick={{ fill: '#8AAEC8', fontSize: 12, fontFamily: 'var(--ff-mono)' }}
                     ticks={getXAxisTicks(panel.data, panel.timeframe)}
                     tickFormatter={(i: number) => formatXAxisTick(panel.data, i, panel.timeframe)}
                     interval={0}
                     height={26} />
                   <YAxis domain={['auto', 'auto']} stroke="none"
-                    tick={{ fill: '#8AAEC8', fontSize: 12, fontFamily: 'JetBrains Mono, monospace' }}
+                    tick={{ fill: '#8AAEC8', fontSize: 12, fontFamily: 'var(--ff-mono)' }}
                     tickFormatter={panel.yAxisTick} width={isMaximized ? 84 : 68} />
                   {showBtc && showBtcPrice[panel.indicatorKey] && !panel.btcSameAxis && (
                     <YAxis yAxisId="btcPrice" orientation="right" scale="log" domain={['auto', 'auto']} stroke="none"
-                      tick={{ fill: '#6B7A8D', fontSize: 11, fontFamily: 'JetBrains Mono, monospace' }}
+                      tick={{ fill: '#6B7A8D', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
                       tickFormatter={(v: number) => v >= 1e3 ? `$${(v/1e3).toFixed(0)}K` : `$${v}`} width={isMaximized ? 74 : 62} />
                   )}
                   <Tooltip cursor={{ stroke: 'rgba(160,215,255,0.85)', strokeWidth: 2 }} animationDuration={0} isAnimationActive={false}
@@ -389,7 +389,7 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
                   {showIndicator[panel.indicatorKey] && <Area type="monotone" dataKey={valueKey} stroke={zoneLineGradient ? `url(#${zoneLineGradient.gradientId})` : (zone?.color ?? lineColor)} strokeWidth={PRIMARY_LINE_STROKE_WIDTH} fill={`url(#${panel.gradientId})`} animationDuration={0} isAnimationActive={false} dot={false} />}
                   {showBtc && showBtcPrice[panel.indicatorKey] && <Area type="monotone" dataKey="btcPrice" {...(panel.btcSameAxis ? {} : { yAxisId: "btcPrice" })} stroke={BTC_PRICE_LINE} strokeWidth={1.5} fill="none" animationDuration={0} isAnimationActive={false} dot={false} />}
                   {(panel.timeframe === '1460' || panel.timeframe === '999999') && getHalvingIndices(chartData).map((h) => (
-                    <ReferenceLine key={h.index} x={h.index} stroke="rgba(247,147,26,0.18)" strokeDasharray="2 4" label={{ value: `${h.year}↑`, position: 'top', fill: 'rgba(247,147,26,0.38)', fontSize: 9, fontFamily: 'JetBrains Mono, monospace' }} />
+                    <ReferenceLine key={h.index} x={h.index} stroke="rgba(247,147,26,0.18)" strokeDasharray="2 4" label={{ value: `${h.year}↑`, position: 'top', fill: 'rgba(247,147,26,0.38)', fontSize: 9, fontFamily: 'var(--ff-mono)' }} />
                   ))}
                 </AreaChart>
               </ResponsiveContainer>

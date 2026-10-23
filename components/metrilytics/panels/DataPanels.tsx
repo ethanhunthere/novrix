@@ -6,7 +6,7 @@ import {
   PieChart, Pie, Cell,
 } from 'recharts';
 
-const MONO = 'var(--font-jetbrains-mono), JetBrains Mono, monospace';
+const MONO = 'var(--ff-mono)';
 
 /* ═══════════════════════════════════════════════════════════
    HELPERS

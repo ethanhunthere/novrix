@@ -1,14 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --font-inter: 'Inter', sans-serif;
-  --font-jetbrains-mono: 'JetBrains Mono', monospace;
+  --ff-display: var(--font-newsreader), 'Newsreader', Georgia, 'Times New Roman', serif;
+  --ff-sans: var(--font-geist-sans), 'Geist Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --ff-mono: var(--font-geist-mono), 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
   /* Legacy accent — preserved for component compatibility */
   --color-accent: #C2344D;
-  --color-accent-bright: #D9485F;
-  --color-accent-dim: #9A2238;
-  --color-accent-muted: #6B1828;
-  --color-steel: #94A3B8;
+  --color-accent-bright: #D95168;
+  --color-accent-dim: #8E2234;
+  --color-accent-muted: #5E1624;
+  --color-steel: #A9A29A;
 
   /* ──────────────────────────────────────────────────────────
      NOVRIX INSTITUTIONAL DESIGN SYSTEM — 2026
@@ -16,24 +17,24 @@
      Every value is deliberate. Nothing is decorative.
   ────────────────────────────────────────────────────────── */
 
-  /* Backgrounds — cold near-black spectrum */
-  --bg-base:     #0A0A0F;
-  --bg-surface:  #111117;
-  --bg-raised:   #1A1A22;
-  --bg-elevated: #242430;
+  /* Backgrounds — warm near-black spectrum */
+  --bg-base:     #0A0908;
+  --bg-surface:  #11100E;
+  --bg-raised:   #181512;
+  --bg-elevated: #211D19;
 
   /* Borders — alpha-based, structural not decorative */
-  --border-subtle:  rgba(255, 255, 255, 0.06);
-  --border-default: rgba(255, 255, 255, 0.08);
-  --border-strong:  rgba(255, 255, 255, 0.15);
+  --border-subtle:  rgba(245, 241, 234, 0.06);
+  --border-default: rgba(245, 241, 234, 0.09);
+  --border-strong:  rgba(245, 241, 234, 0.16);
   --border-accent:  rgba(194, 52, 77, 0.30);
 
   /* Text — never pure white, always calibrated */
-  --text-heading:   #FAFAFA;
-  --text-primary:   #E4E4E7;
-  --text-secondary: #A1A1AA;
-  --text-tertiary:  rgba(255, 255, 255, 0.40);
-  --text-ghost:     rgba(255, 255, 255, 0.25);
+  --text-heading:   #F5F1EA;
+  --text-primary:   #E6E0D8;
+  --text-secondary: #A9A29A;
+  --text-tertiary:  rgba(245, 241, 234, 0.40);
+  --text-ghost:     rgba(245, 241, 234, 0.25);
 
   /* Semantic status indicators */
   --status-nominal:  #10B981;
@@ -52,8 +53,9 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-inter);
-  --font-mono: var(--font-jetbrains-mono);
+  --font-sans: var(--ff-sans);
+  --font-mono: var(--ff-mono);
+  --font-display: var(--ff-display);
 
   /* Custom breakpoints — calibrated for 320px phones through 5K ultrawide */
   --breakpoint-3xs: 320px;
@@ -116,7 +118,7 @@
 }
 
 html {
-  background: #0A0A0F;
+  background: #0A0908;
   -webkit-text-size-adjust: 100%;
   -moz-text-size-adjust: 100%;
   text-size-adjust: 100%;
@@ -126,7 +128,7 @@ html {
 body {
   margin: 0;
   padding: 0;
-  font-family: var(--font-inter), sans-serif;
+  font-family: var(--ff-sans);
   background: var(--bg-base);
   color: var(--text-primary);
   overflow-x: hidden;
@@ -134,7 +136,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1, 'tnum' 1, 'zero' 1;
-  font-weight: 350;
+  font-weight: 400;
   line-height: 1.65;
 }
 
@@ -306,7 +308,7 @@ body {
   justify-content: center;
   gap: 10px;
   padding: 14px 32px;
-  font-family: var(--font-jetbrains-mono), monospace;
+  font-family: var(--ff-mono), monospace;
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
@@ -914,7 +916,7 @@ hr {
 
 /* Headings \u2014 irradiation-corrected weight for dark backgrounds */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-inter), sans-serif;
+  font-family: var(--ff-sans);
   font-weight: 600;
   color: var(--text-heading);
   letter-spacing: -0.03em;
@@ -1193,7 +1195,7 @@ html.novrix-kinetic-mounted .kinetic-text-shell {
    feedback is CSS transitions only.
    ═══════════════════════════════════════════════════════════ */
 .home-shell {
-  background: #0a0a0c;
+  background: #0A0908;
 }
 
 .home-btn {
@@ -1204,10 +1206,10 @@ html.novrix-kinetic-mounted .kinetic-text-shell {
   min-height: 46px;
   padding: 0 22px;
   border-radius: 2px;
-  font-family: var(--font-jetbrains-mono), monospace;
+  font-family: var(--ff-mono);
   font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.18em;
+  font-weight: 500;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   text-decoration: none;
   white-space: nowrap;
@@ -1223,52 +1225,48 @@ html.novrix-kinetic-mounted .kinetic-text-shell {
 }
 
 .home-btn-primary {
-  color: #111113;
-  background: #ede9e2;
-  border: 1px solid #ede9e2;
+  color: #0A0908;
+  background: #F5F1EA;
+  border: 1px solid #F5F1EA;
 }
 
 .home-btn-primary:hover {
-  background: #faf8f4;
-  border-color: #faf8f4;
+  background: #FFFCF6;
+  border-color: #FFFCF6;
 }
 
 .home-btn-ghost {
-  color: #d8d3ca;
+  color: rgba(245, 241, 234, 0.68);
   background: transparent;
-  border: 1px solid rgba(237, 233, 226, 0.16);
+  border: 1px solid rgba(245, 241, 234, 0.16);
 }
 
 .home-btn-ghost:hover {
-  color: #f4f1ec;
-  border-color: rgba(199, 85, 102, 0.5);
+  color: #F5F1EA;
+  border-color: rgba(194, 52, 77, 0.55);
 }
 
 .home-module-card {
+  --accent: #C2344D;
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: clamp(22px, 2.2vw, 32px);
-  border: 1px solid rgba(237, 233, 226, 0.075);
-  border-radius: 3px;
-  background: rgba(255, 255, 255, 0.018);
+  padding: clamp(24px, 2.4vw, 34px) 0 0;
+  border: 0;
+  border-top: 1px solid rgba(245, 241, 234, 0.09);
+  border-radius: 0;
+  background: transparent;
   text-decoration: none;
-  transition: background-color 220ms ease, border-color 220ms ease, transform 220ms ease;
+  transition: border-color 220ms ease;
 }
 
 .home-module-card:hover {
-  background: rgba(255, 255, 255, 0.032);
-  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
-  transform: translateY(-2px);
+  border-top-color: rgba(194, 52, 77, 0.55);
 }
 
 .home-module-card:focus-visible {
-  outline: 1px solid color-mix(in srgb, var(--accent) 65%, transparent);
-  outline-offset: 2px;
-}
-
-.home-module-top {
-  border-bottom: 1px solid rgba(237, 233, 226, 0.07);
+  outline: 1px solid rgba(194, 52, 77, 0.65);
+  outline-offset: 4px;
 }
 
 .home-module-dot {
@@ -1276,15 +1274,15 @@ html.novrix-kinetic-mounted .kinetic-text-shell {
 }
 
 .home-module-label {
-  color: color-mix(in srgb, var(--accent) 78%, #ede9e2);
+  color: rgba(245, 241, 234, 0.54);
 }
 
 .home-module-index {
-  color: rgba(237, 233, 226, 0.28);
+  color: rgba(245, 241, 234, 0.38);
 }
 
 .home-module-cta {
-  color: rgba(237, 233, 226, 0.5);
+  color: rgba(245, 241, 234, 0.56);
   transition: color 200ms ease;
 }
 
@@ -1293,7 +1291,7 @@ html.novrix-kinetic-mounted .kinetic-text-shell {
 }
 
 .home-module-card:hover .home-module-cta {
-  color: #f4f1ec;
+  color: #F5F1EA;
 }
 
 .home-module-card:hover .home-module-cta .arrow {
@@ -1307,9 +1305,5 @@ html.novrix-kinetic-mounted .kinetic-text-shell {
   .home-module-cta,
   .home-module-cta .arrow {
     transition: none;
-  }
-
-  .home-module-card:hover {
-    transform: none;
   }
 }

@@ -44,8 +44,8 @@ import DexProtocolPanel from './panels/DexProtocolPanel';
 import ConcentrationPanel from './panels/ConcentrationPanel';
 import { ChainActivityPanel, StakingPanel, RwaPanel } from './panels/DataPanels';
 
-const MONO = 'var(--font-jetbrains-mono), JetBrains Mono, monospace';
-const SANS = 'var(--font-inter), Inter, sans-serif';
+const MONO = 'var(--ff-mono)';
+const SANS = 'var(--ff-sans)';
 const AMBER = '#E8960C';
 const BLUE = '#38BDF8';
 const GREEN = '#22C55E';
