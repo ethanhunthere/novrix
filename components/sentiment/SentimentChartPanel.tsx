@@ -190,9 +190,8 @@ function buildZoneGradientStops(
   chartHeight: number,
   panelId: string
 ): { gradientId: string; stops: Array<{ offset: string; color: string }> } | null {
-  // We still need *some* data to decide whether to render the gradient at all,
-  // but the stops themselves are identical to the FNG line.
-  if (chartHeight <= 0) return null;
+  // Only use the multi-stop vertical gradient for sentiment oscillator / FNG panels
+  if (chartHeight <= 0 || (panelId !== 'fng' && panelId !== 'sentiment-oscillator')) return null;
   const extent = getValueExtent(data, valueKey);
   if (!extent) return null;
 

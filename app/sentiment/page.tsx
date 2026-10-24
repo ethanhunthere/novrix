@@ -432,16 +432,16 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
   });
   const [maximizedPanel, setMaximizedPanel] = useState<string | null>(null);
   // NOVRIX INTELLIGENCE timeframe states
-  const [vtpxTimeframe, setVtpxTimeframe] = useState('3650');
-  const [shaxTimeframe, setShaxTimeframe] = useState('3650');
-  const [smfxTimeframe, setSmfxTimeframe] = useState('3650');
-  const [levrTimeframe, setLevrTimeframe] = useState('3650');
-  const [rcfxTimeframe, setRcfxTimeframe] = useState('3650');
-  const [cprxTimeframe, setCprxTimeframe] = useState('3650');
-  const [rpixTimeframe, setRpixTimeframe] = useState('3650');
-  const [crrxTimeframe, setCrrxTimeframe] = useState('3650');
-  const [sgrxTimeframe, setSgrxTimeframe] = useState('3650');
-  const [domxTimeframe, setDomxTimeframe] = useState('3650');
+  const [vtpxTimeframe, setVtpxTimeframe] = useState('365');
+  const [shaxTimeframe, setShaxTimeframe] = useState('365');
+  const [smfxTimeframe, setSmfxTimeframe] = useState('365');
+  const [levrTimeframe, setLevrTimeframe] = useState('365');
+  const [rcfxTimeframe, setRcfxTimeframe] = useState('365');
+  const [cprxTimeframe, setCprxTimeframe] = useState('365');
+  const [rpixTimeframe, setRpixTimeframe] = useState('365');
+  const [crrxTimeframe, setCrrxTimeframe] = useState('365');
+  const [sgrxTimeframe, setSgrxTimeframe] = useState('365');
+  const [domxTimeframe, setDomxTimeframe] = useState('365');
   const [capturedPanel, setCapturedPanel] = useState<string | null>(null);
   const [selectedIndicator, setSelectedIndicator] = useState<string | null>(null);
   const DEFAULT_OVERVIEW_IDS = useMemo(() => new Set([

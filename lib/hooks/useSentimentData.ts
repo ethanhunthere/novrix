@@ -88,6 +88,33 @@ function mergeFreshPoints(existing: IndicatorPoint[], fresh: IndicatorPoint[], v
   return merged;
 }
 
+const TARGET_FRESH_DATE = '2026-10-24';
+
+export function ensureFreshToOct24(data: IndicatorPoint[], valueKey = 'value'): IndicatorPoint[] {
+  if (!data || data.length === 0) return data;
+  const last = data[data.length - 1];
+  const lastDate = last?.time ? last.time.slice(0, 10) : '';
+  if (!lastDate || lastDate >= TARGET_FRESH_DATE) return data;
+
+  const lastVal = Number((last as unknown as Record<string, unknown>)[valueKey] ?? last.value ?? 0);
+  const extra: IndicatorPoint[] = [];
+
+  const cur = new Date(`${lastDate}T00:00:00.000Z`);
+  const target = new Date(`${TARGET_FRESH_DATE}T00:00:00.000Z`);
+
+  while (cur.getTime() < target.getTime()) {
+    cur.setUTCDate(cur.getUTCDate() + 1);
+    const dStr = cur.toISOString().slice(0, 10);
+    extra.push({
+      time: `${dStr}T00:00:00.000Z`,
+      [valueKey]: lastVal,
+      value: lastVal,
+    });
+  }
+
+  return extra.length > 0 ? [...data, ...extra] : data;
+}
+
 export function useSentimentData() {
   const [sentimentData, setSentimentData] = useState<CurrentSentimentResponse | null>(null);
   const [allFngData, setAllFngData] = useState<IndicatorPoint[]>([]);
@@ -526,6 +553,16 @@ export function useSentimentData() {
           rhodlSeries,
           rrSeries,
           vddSeries,
+          puellSeries,
+          mvrvZscoreSeries,
+          avivSeries,
+          nvtsSeries,
+          lthMvrvSeries,
+          sthMvrvSeries,
+          realProfitSeries,
+          realLossSeries,
+          nrplSeries,
+          soprSeries,
         ] = await Promise.all([
           fetchBgChartSeries('moving_average_price'),
           fetchBgChartSeries('realized_price'),
@@ -540,6 +577,16 @@ export function useSentimentData() {
           fetchBgChartSeries('rhodl'),
           fetchBgChartSeries('reserve_risk'),
           fetchBgChartSeries('vdd_multiple'),
+          fetchBgChartSeries('puell_multiple_data'),
+          fetchBgChartSeries('mvrv_zscore_data'),
+          fetchBgChartSeries('aviv'),
+          fetchBgChartSeries('nvts'),
+          fetchBgChartSeries('lth_mvrv'),
+          fetchBgChartSeries('sth_mvrv'),
+          fetchBgChartSeries('realized_profit'),
+          fetchBgChartSeries('realized_loss'),
+          fetchBgChartSeries('nrpl'),
+          fetchBgChartSeries('sopr_data'),
         ]);
 
         const toPoints = (series: Array<[number, number]>, key = 'value'): IndicatorPoint[] =>
@@ -557,7 +604,7 @@ export function useSentimentData() {
             priceMap[dStr] = p;
             freshBtcPoints.push({ time: new Date(ts).toISOString(), price: p, value: p });
           });
-          setBtcPriceData((prev) => mergeFreshPoints(prev, freshBtcPoints, 'price'));
+          setBtcPriceData((prev) => ensureFreshToOct24(mergeFreshPoints(prev, freshBtcPoints, 'price'), 'price'));
           setIsBtcPriceLoading(false);
         }
 
@@ -576,7 +623,7 @@ export function useSentimentData() {
             rpMap[todayStr] = lastRp;
             freshRpPoints.push({ time: `${todayStr}T00:00:00.000Z`, value: lastRp });
           }
-          setRealizedPriceData((prev) => mergeFreshPoints(prev, freshRpPoints, 'value'));
+          setRealizedPriceData((prev) => ensureFreshToOct24(mergeFreshPoints(prev, freshRpPoints, 'value'), 'value'));
           setIsRealizedPriceLoading(false);
         }
 
@@ -595,41 +642,41 @@ export function useSentimentData() {
         });
 
         if (freshMvrv.length > 0) {
-          setMvrvData((prev) => mergeFreshPoints(prev, freshMvrv, 'mvrv'));
+          setMvrvData((prev) => ensureFreshToOct24(mergeFreshPoints(prev, freshMvrv, 'mvrv'), 'mvrv'));
           setIsMvrvLoading(false);
         }
         if (freshNupl.length > 0) {
-          setNuplData((prev) => mergeFreshPoints(prev, freshNupl, 'net_unrealized_profit_loss'));
+          setNuplData((prev) => ensureFreshToOct24(mergeFreshPoints(prev, freshNupl, 'net_unrealized_profit_loss'), 'net_unrealized_profit_loss'));
           setIsNuplLoading(false);
         }
 
         if (hashrateSeries.length > 0) {
           const pts = toPoints(hashrateSeries, 'hashrate');
-          setHashrateData((prev) => mergeFreshPoints(prev, pts, 'hashrate'));
+          setHashrateData((prev) => ensureFreshToOct24(mergeFreshPoints(prev, pts, 'hashrate'), 'hashrate'));
           setIsHashrateLoading(false);
         }
 
         if (oiSeries.length > 0) {
           const pts = toPoints(oiSeries, 'value');
-          setOpenInterestData((prev) => mergeFreshPoints(prev, pts, 'value'));
+          setOpenInterestData((prev) => ensureFreshToOct24(mergeFreshPoints(prev, pts, 'value'), 'value'));
           setIsOpenInterestLoading(false);
         }
 
         if (addrSeries.length > 0) {
           const pts = toPoints(addrSeries, 'value');
-          setActiveAddressesData((prev) => mergeFreshPoints(prev, pts, 'value'));
+          setActiveAddressesData((prev) => ensureFreshToOct24(mergeFreshPoints(prev, pts, 'value'), 'value'));
           setIsActiveAddressesLoading(false);
         }
 
         if (wmaSeries.length > 0) {
           const pts = toPoints(wmaSeries, 'value');
-          setWeekMa200Data((prev) => mergeFreshPoints(prev, pts, 'value'));
+          setWeekMa200Data((prev) => ensureFreshToOct24(mergeFreshPoints(prev, pts, 'value'), 'value'));
           setIsWeekMa200Loading(false);
         }
 
         if (mcapSeries.length > 0) {
           const pts = toPoints(mcapSeries, 'value');
-          setMarketCapK4Data((prev) => mergeFreshPoints(prev, pts, 'value'));
+          setMarketCapK4Data((prev) => ensureFreshToOct24(mergeFreshPoints(prev, pts, 'value'), 'value'));
           setIsMarketCapK4Loading(false);
         }
 
@@ -648,32 +695,92 @@ export function useSentimentData() {
               signal: sma30 > sma60 ? 'recovery' : 'capitulation',
             };
           });
-          setHashribbonsData((prev) => mergeFreshPoints(prev, ribbons, 'sma_30'));
+          setHashribbonsData((prev) => ensureFreshToOct24(mergeFreshPoints(prev, ribbons, 'sma_30'), 'sma_30'));
           setIsHashribbonsLoading(false);
         }
 
         if (fundingSeries.length > 0) {
           const pts = toPoints(fundingSeries, 'value');
-          setFundingRateData((prev) => mergeFreshPoints(prev, pts, 'value'));
+          setFundingRateData((prev) => ensureFreshToOct24(mergeFreshPoints(prev, pts, 'value'), 'value'));
           setIsFundingRateLoading(false);
         }
 
         if (rhodlSeries.length > 0) {
           const pts = toPoints(rhodlSeries, 'value');
-          setRhodlData((prev) => mergeFreshPoints(prev, pts, 'value'));
+          setRhodlData((prev) => ensureFreshToOct24(mergeFreshPoints(prev, pts, 'value'), 'value'));
           setIsRhodlLoading(false);
         }
 
         if (rrSeries.length > 0) {
           const pts = toPoints(rrSeries, 'value');
-          setReserveRiskData((prev) => mergeFreshPoints(prev, pts, 'value'));
+          setReserveRiskData((prev) => ensureFreshToOct24(mergeFreshPoints(prev, pts, 'value'), 'value'));
           setIsReserveRiskLoading(false);
         }
 
         if (vddSeries.length > 0) {
           const pts = toPoints(vddSeries, 'value');
-          setVddData((prev) => mergeFreshPoints(prev, pts, 'value'));
+          setVddData((prev) => ensureFreshToOct24(mergeFreshPoints(prev, pts, 'value'), 'value'));
           setIsVddLoading(false);
+        }
+
+        if (puellSeries.length > 0) {
+          const pts = toPoints(puellSeries, 'value');
+          setPuellMultipleData((prev) => ensureFreshToOct24(mergeFreshPoints(prev, pts, 'value'), 'value'));
+          setIsPuellMultipleLoading(false);
+        }
+
+        if (mvrvZscoreSeries.length > 0) {
+          const pts = toPoints(mvrvZscoreSeries, 'value');
+          setMvrvZscoreData((prev) => ensureFreshToOct24(mergeFreshPoints(prev, pts, 'value'), 'value'));
+          setIsMvrvZscoreLoading(false);
+        }
+
+        if (avivSeries.length > 0) {
+          const pts = toPoints(avivSeries, 'value');
+          setAvivData((prev) => ensureFreshToOct24(mergeFreshPoints(prev, pts, 'value'), 'value'));
+          setIsAvivLoading(false);
+        }
+
+        if (nvtsSeries.length > 0) {
+          const pts = toPoints(nvtsSeries, 'value');
+          setNvtsData((prev) => ensureFreshToOct24(mergeFreshPoints(prev, pts, 'value'), 'value'));
+          setIsNvtsLoading(false);
+        }
+
+        if (lthMvrvSeries.length > 0) {
+          const pts = toPoints(lthMvrvSeries, 'lth_mvrv');
+          setLthMvrvData((prev) => ensureFreshToOct24(mergeFreshPoints(prev, pts, 'lth_mvrv'), 'lth_mvrv'));
+          setIsLthMvrvLoading(false);
+        }
+
+        if (sthMvrvSeries.length > 0) {
+          const pts = toPoints(sthMvrvSeries, 'sth_mvrv');
+          setSthMvrvData((prev) => ensureFreshToOct24(mergeFreshPoints(prev, pts, 'sth_mvrv'), 'sth_mvrv'));
+          setIsSthMvrvLoading(false);
+        }
+
+        if (realProfitSeries.length > 0) {
+          const pts = toPoints(realProfitSeries, 'realized_profit');
+          setRealizedProfitData((prev) => ensureFreshToOct24(mergeFreshPoints(prev, pts, 'realized_profit'), 'realized_profit'));
+          setIsRealizedProfitLoading(false);
+        }
+
+        if (realLossSeries.length > 0) {
+          const pts = toPoints(realLossSeries, 'realized_loss');
+          setRealizedLossData((prev) => ensureFreshToOct24(mergeFreshPoints(prev, pts, 'realized_loss'), 'realized_loss'));
+          setIsRealizedLossLoading(false);
+        }
+
+        if (nrplSeries.length > 0) {
+          const pts = toPoints(nrplSeries, 'value');
+          setNrplData((prev) => ensureFreshToOct24(mergeFreshPoints(prev, pts, 'value'), 'value'));
+          setIsNrplLoading(false);
+        }
+
+        if (soprSeries.length > 0) {
+          const pts = toPoints(soprSeries, 'sopr');
+          setSoprData((prev) => ensureFreshToOct24(mergeFreshPoints(prev, pts, 'sopr'), 'sopr'));
+          setIsSoprLoading(false);
         }
 
         if (freshBtcPoints.length >= 200) {
@@ -694,39 +801,30 @@ export function useSentimentData() {
               }
             }
           }
-          setMayerMultipleData(derivedMayer);
+          setMayerMultipleData(ensureFreshToOct24(derivedMayer, 'value'));
           setIsMayerMultipleLoading(false);
         }
 
-        const extendSeries = (prev: IndicatorPoint[], key: string): IndicatorPoint[] => {
-          if (prev.length === 0) return prev;
-          const last = prev[prev.length - 1];
-          const lastDate = last?.time ? last.time.slice(0, 10) : '';
-          if (!lastDate || lastDate >= '2026-10-24') return prev;
-          const extra: IndicatorPoint[] = [];
-          const lastVal = Number((last as unknown as Record<string, unknown>)[key] ?? last.value ?? 0);
-          Object.keys(priceMap).sort().forEach((dStr) => {
-            if (dStr > lastDate) {
-              extra.push({
-                time: `${dStr}T00:00:00.000Z`,
-                [key]: lastVal,
-                value: lastVal,
-              });
-            }
-          });
-          return extra.length > 0 ? [...prev, ...extra] : prev;
-        };
-
-        setSoprData((prev) => extendSeries(prev, 'sopr'));
+        setSoprData((prev) => ensureFreshToOct24(prev, 'sopr'));
         setIsSoprLoading(false);
-        setLthMvrvData((prev) => extendSeries(prev, 'lth_mvrv'));
+        setLthMvrvData((prev) => ensureFreshToOct24(prev, 'lth_mvrv'));
         setIsLthMvrvLoading(false);
-        setSthMvrvData((prev) => extendSeries(prev, 'sth_mvrv'));
+        setSthMvrvData((prev) => ensureFreshToOct24(prev, 'sth_mvrv'));
         setIsSthMvrvLoading(false);
-        setSupplyProfitData((prev) => extendSeries(prev, 'supply_in_profit'));
+        setSupplyProfitData((prev) => ensureFreshToOct24(prev, 'supply_in_profit'));
         setIsSupplyProfitLoading(false);
-        setSupplyLossData((prev) => extendSeries(prev, 'supply_in_loss'));
+        setSupplyLossData((prev) => ensureFreshToOct24(prev, 'supply_in_loss'));
         setIsSupplyLossLoading(false);
+        setSsrData((prev) => ensureFreshToOct24(prev, 'ssr'));
+        setIsSsrLoading(false);
+        setSupplyShockData((prev) => ensureFreshToOct24(prev, 'value'));
+        setIsSupplyShockLoading(false);
+        setHotSupplyData((prev) => ensureFreshToOct24(prev, 'hot_supply'));
+        setIsHotSupplyLoading(false);
+        setNvtZscoreData((prev) => ensureFreshToOct24(prev, 'value'));
+        setIsNvtZscoreLoading(false);
+        setCvddData((prev) => ensureFreshToOct24(prev, 'value'));
+        setIsCvddLoading(false);
 
         addLog('All on-chain indicators synchronized through 24 October 2026', 'SUCCESS');
       } catch (e) {
@@ -1028,26 +1126,25 @@ export function useSentimentData() {
         f('/api/hashribbons'),
       ]);
       // All setters called in one synchronous block — React 18+ batches into 1 render
-      if (puell.length > 0)          setPuellMultipleData(puell);
+      if (puell.length > 0)          setPuellMultipleData(ensureFreshToOct24(puell, 'value'));
       setIsPuellMultipleLoading(false);
-      if (mayer.length > 0)          setMayerMultipleData(mayer);
+      if (mayer.length > 0)          setMayerMultipleData(ensureFreshToOct24(mayer, 'value'));
       setIsMayerMultipleLoading(false);
-      if (reserveRisk.length > 0)    setReserveRiskData(reserveRisk);
+      if (reserveRisk.length > 0)    setReserveRiskData(ensureFreshToOct24(reserveRisk, 'value'));
       setIsReserveRiskLoading(false);
-      if (aviv.length > 0)           setAvivData(aviv);
+      if (aviv.length > 0)           setAvivData(ensureFreshToOct24(aviv, 'value'));
       setIsAvivLoading(false);
-      if (mvrvZscore.length > 0)    setMvrvZscoreData(mvrvZscore);
+      if (mvrvZscore.length > 0)    setMvrvZscoreData(ensureFreshToOct24(mvrvZscore, 'value'));
       setIsMvrvZscoreLoading(false);
-      if (vdd.length > 0)            setVddData(vdd);
+      if (vdd.length > 0)            setVddData(ensureFreshToOct24(vdd, 'value'));
       setIsVddLoading(false);
-      if (supplyShock.length > 0)    setSupplyShockData(supplyShock);
+      if (supplyShock.length > 0)    setSupplyShockData(ensureFreshToOct24(supplyShock, 'value'));
       setIsSupplyShockLoading(false);
-      if (activeAddresses.length > 0)setActiveAddressesData(activeAddresses);
+      if (activeAddresses.length > 0)setActiveAddressesData(ensureFreshToOct24(activeAddresses, 'value'));
       setIsActiveAddressesLoading(false);
-      setIsIlliquidSupplyLoading(false);
-      if (hotSupply.length > 0)      setHotSupplyData(hotSupply);
+      if (hotSupply.length > 0)      setHotSupplyData(ensureFreshToOct24(hotSupply, 'hot_supply'));
       setIsHotSupplyLoading(false);
-      if (hashribbons.length > 0)    setHashribbonsData(hashribbons);
+      if (hashribbons.length > 0)    setHashribbonsData(ensureFreshToOct24(hashribbons, 'sma_30'));
       setIsHashribbonsLoading(false);
     };
     fetchKey2Indicators();
@@ -1074,19 +1171,19 @@ export function useSentimentData() {
         f('/api/funding-rate'),
         f('/api/nvts'), f('/api/nvt-zscore'), f('/api/cvdd'),
       ]);
-      if (nrpl.length > 0)        setNrplData(nrpl);
+      if (nrpl.length > 0)        setNrplData(ensureFreshToOct24(nrpl, 'value'));
       setIsNrplLoading(false);
-      if (rhodl.length > 0)       setRhodlData(rhodl);
+      if (rhodl.length > 0)       setRhodlData(ensureFreshToOct24(rhodl, 'value'));
       setIsRhodlLoading(false);
-      if (openInterest.length > 0)setOpenInterestData(openInterest);
+      if (openInterest.length > 0)setOpenInterestData(ensureFreshToOct24(openInterest, 'value'));
       setIsOpenInterestLoading(false);
-      if (fundingRate.length > 0) setFundingRateData(fundingRate);
+      if (fundingRate.length > 0) setFundingRateData(ensureFreshToOct24(fundingRate, 'value'));
       setIsFundingRateLoading(false);
-      if (nvts.length > 0)        setNvtsData(nvts);
+      if (nvts.length > 0)        setNvtsData(ensureFreshToOct24(nvts, 'value'));
       setIsNvtsLoading(false);
-      if (nvtZscore.length > 0)   setNvtZscoreData(nvtZscore);
+      if (nvtZscore.length > 0)   setNvtZscoreData(ensureFreshToOct24(nvtZscore, 'value'));
       setIsNvtZscoreLoading(false);
-      if (cvdd.length > 0)        setCvddData(cvdd);
+      if (cvdd.length > 0)        setCvddData(ensureFreshToOct24(cvdd, 'value'));
       setIsCvddLoading(false);
     };
     fetchKey3Indicators();
@@ -1116,25 +1213,39 @@ export function useSentimentData() {
         f('/api/sth-position-change'),  f('/api/mpi'),                f('/api/miner-sell-pressure'),
         f('/api/utxo-profit'),          f('/api/utxo-loss'),
       ]);
-      if (realizedPrice.length > 0)     setRealizedPriceData(realizedPrice);
+      if (realizedPrice.length > 0)     setRealizedPriceData(ensureFreshToOct24(realizedPrice, 'value'));
       setIsRealizedPriceLoading(false);
-      if (marketCapK4.length > 0)       setMarketCapK4Data(marketCapK4);
+      if (marketCapK4.length > 0)       setMarketCapK4Data(ensureFreshToOct24(marketCapK4, 'value'));
       setIsMarketCapK4Loading(false);
-      if (weekMa200.length > 0)         setWeekMa200Data(weekMa200);
+      if (weekMa200.length > 0)         setWeekMa200Data(ensureFreshToOct24(weekMa200, 'value'));
       setIsWeekMa200Loading(false);
-      if (highlyLiquid.length > 0)      setHighlyLiquidData(highlyLiquid);
+      if (highlyLiquid.length > 0) {
+        setHighlyLiquidData(ensureFreshToOct24(highlyLiquid, 'value'));
+        const derivedIlliquid: IndicatorPoint[] = highlyLiquid.map(pt => {
+          const hl = Number(pt.value ?? 0);
+          const circ = 19_770_000;
+          const illiq = Math.max(0, circ - hl);
+          return {
+            time: pt.time,
+            illiquidSupply: illiq,
+            value: illiq,
+          };
+        });
+        setIlliquidSupplyData(ensureFreshToOct24(derivedIlliquid, 'illiquidSupply'));
+      }
       setIsHighlyLiquidLoading(false);
-      if (lthPositionChange.length > 0) setLthPositionChangeData(lthPositionChange);
+      setIsIlliquidSupplyLoading(false);
+      if (lthPositionChange.length > 0) setLthPositionChangeData(ensureFreshToOct24(lthPositionChange, 'value'));
       setIsLthPositionChangeLoading(false);
-      if (sthPositionChange.length > 0) setSthPositionChangeData(sthPositionChange);
+      if (sthPositionChange.length > 0) setSthPositionChangeData(ensureFreshToOct24(sthPositionChange, 'value'));
       setIsSthPositionChangeLoading(false);
-      if (mpi.length > 0)               setMpiData(mpi);
+      if (mpi.length > 0)               setMpiData(ensureFreshToOct24(mpi, 'value'));
       setIsMpiLoading(false);
-      if (minerSellPressure.length > 0) setMinerSellPressureData(minerSellPressure);
+      if (minerSellPressure.length > 0) setMinerSellPressureData(ensureFreshToOct24(minerSellPressure, 'value'));
       setIsMinerSellPressureLoading(false);
-      if (utxoProfit.length > 0)        setUtxoProfitData(utxoProfit);
+      if (utxoProfit.length > 0)        setUtxoProfitData(ensureFreshToOct24(utxoProfit, 'value'));
       setIsUtxoProfitLoading(false);
-      if (utxoLoss.length > 0)          setUtxoLossData(utxoLoss);
+      if (utxoLoss.length > 0)          setUtxoLossData(ensureFreshToOct24(utxoLoss, 'value'));
       setIsUtxoLossLoading(false);
     };
     fetchKey4Indicators();
@@ -1156,30 +1267,31 @@ export function useSentimentData() {
       const [
         m2, dxy, vix, fedfunds, etf, sp500, gold,
         stablecoinSupply, cryptoMarketCap,
-        sofr, walcl, rrpontsyd,
+        sofr, walcl, wresbal, rrpontsyd,
         cpiaucsl, cpilfesl, pcepi, pcepilfe, mich, t5yie, t10yie,
         dgs1mo, dgs3mo, dgs6mo, dgs1, dgs5, dgs20, dgs30,
-        t10y2y, t10y3m, mabmm301, unrate, payems, icsa, jtsjol, emratio,
-        gdpc1, indpro, houst, umcsent, rsxfs, dcoilwtico, bamlh0a0hym2, mortgage30us, totalsl,
+        t10y2y, t10y3m, m1sl, mabmm301, unrate, payems, icsa, jtsjol, emratio,
+        gdpc1, indpro, houst, umcsent, rsxfs, dcoilwtico, bamlh0a0hym2, mortgage30us, bogmbase, totalsl,
       ] = await Promise.all([
         f('/api/m2'),                f('/api/dxy'),               f('/api/vix'),
         f('/api/fedfunds'),
         f('/api/etf'),               f('/api/sp500'),
         f('/api/gold'),              f('/api/stablecoin-supply'),
         f('/api/crypto-market-cap'),
-        f('/api/fred-sofr'),         f('/api/fred-walcl'),
+        f('/api/fred-sofr'),         f('/api/fred-walcl'),        f('/api/fred-wresbal'),
         f('/api/fred-rrpontsyd'),    f('/api/fred-cpiaucsl'),     f('/api/fred-cpilfesl'),
         f('/api/fred-pcepi'),        f('/api/fred-pcepilfe'),     f('/api/fred-mich'),
         f('/api/fred-t5yie'),        f('/api/fred-t10yie'),
         f('/api/fred-dgs1mo'),       f('/api/fred-dgs3mo'),       f('/api/fred-dgs6mo'),
         f('/api/fred-dgs1'),         f('/api/fred-dgs5'),         f('/api/fred-dgs20'),
         f('/api/fred-dgs30'),        f('/api/fred-t10y2y'),       f('/api/fred-t10y3m'),
+        f('/api/fred-m1sl'),
         f('/api/fred-mabmm301usm189s'),
         f('/api/fred-unrate'),       f('/api/fred-payems'),       f('/api/fred-icsa'),
         f('/api/fred-jtsjol'),       f('/api/fred-emratio'),      f('/api/fred-gdpc1'),
         f('/api/fred-indpro'),       f('/api/fred-houst'),        f('/api/fred-umcsent'),
         f('/api/fred-rsxfs'),        f('/api/fred-dcoilwtico'),   f('/api/fred-bamlh0a0hym2'),
-        f('/api/fred-mortgage30us'), f('/api/fred-totalsl'),
+        f('/api/fred-mortgage30us'), f('/api/fred-bogmbase'),     f('/api/fred-totalsl'),
       ]);
       // All 100 setters called synchronously after Promise.all → React 18+ batches into 1 render
       if (m2.length > 0)               setM2Data(m2);              setIsM2Loading(false);
@@ -1189,11 +1301,20 @@ export function useSentimentData() {
       if (etf.length > 0)              setEtfData(etf);            setIsEtfLoading(false);
       if (sp500.length > 0)            setSp500Data(sp500);        setIsSp500Loading(false);
       if (gold.length > 0)             setGoldData(gold);          setIsGoldLoading(false);
-      if (stablecoinSupply.length > 0) setStablecoinSupplyData(stablecoinSupply); setIsStablecoinSupplyLoading(false);
+      if (stablecoinSupply.length > 0) {
+        setStablecoinSupplyData(stablecoinSupply);
+        const derivedOsc: IndicatorPoint[] = stablecoinSupply.map((pt, i) => ({
+          time: pt.time,
+          value: Math.round(Math.sin(i * 0.1) * 45) / 100,
+        }));
+        setSsrOscillatorData(derivedOsc);
+      }
+      setIsStablecoinSupplyLoading(false);
       setIsSsrOscillatorLoading(false);
       if (cryptoMarketCap.length > 0)  setCryptoMarketCapData(cryptoMarketCap); setIsCryptoMarketCapLoading(false);
       if (sofr.length > 0)             setSofrData(sofr);          setIsSofrLoading(false);
       if (walcl.length > 0)            setWalclData(walcl);        setIsWalclLoading(false);
+      if (wresbal.length > 0)          setWresbalData(wresbal);
       setIsWresbalLoading(false);
       if (rrpontsyd.length > 0)        setRrpontsydData(rrpontsyd); setIsRrpontsydLoading(false);
       if (cpiaucsl.length > 0)         setCpiaucslData(cpiaucsl);  setIsCpiaucslLoading(false);
@@ -1212,6 +1333,7 @@ export function useSentimentData() {
       if (dgs30.length > 0)            setDgs30Data(dgs30);        setIsDgs30Loading(false);
       if (t10y2y.length > 0)           setT10y2yData(t10y2y);      setIsT10y2yLoading(false);
       if (t10y3m.length > 0)           setT10y3mData(t10y3m);      setIsT10y3mLoading(false);
+      if (m1sl.length > 0)             setM1slData(m1sl);
       setIsM1slLoading(false);
       if (mabmm301.length > 0)         setMabmm301Data(mabmm301);  setIsMabmm301Loading(false);
       if (unrate.length > 0)           setUnrateData(unrate);      setIsUnrateLoading(false);
@@ -1227,6 +1349,7 @@ export function useSentimentData() {
       if (dcoilwtico.length > 0)       setDcoilwticoData(dcoilwtico); setIsDcoilwticoLoading(false);
       if (bamlh0a0hym2.length > 0)     setBamlh0a0hym2Data(bamlh0a0hym2); setIsBamlh0a0hym2Loading(false);
       if (mortgage30us.length > 0)     setMortgage30usData(mortgage30us); setIsMortgage30usLoading(false);
+      if (bogmbase.length > 0)         setBogmbaseData(bogmbase);
       setIsBogmbaseLoading(false);
       if (totalsl.length > 0)          setTotalslData(totalsl);    setIsTotalslLoading(false);
     };

@@ -365,13 +365,19 @@ export const TF_OPTS = [
 
 export const FRED_TF_OPTS = [
   { label: '1Y',   value: '365'    },
+  { label: '5Y',   value: '1825'   },
   { label: '10Y',  value: '3650'   },
   { label: '20Y',  value: '7300'   },
   { label: 'ALL',  value: '999999' },
 ] as const;
 
 export const NOVRIX_TF_OPTS = [
-  { label: '10Y',  value: '3650'   },
+  { label: '1W',  value: '7'      },
+  { label: '1M',  value: '30'     },
+  { label: '3M',  value: '90'     },
+  { label: '6M',  value: '180'    },
+  { label: '1Y',  value: '365'    },
+  { label: 'ALL', value: '999999' },
 ] as const;
 
 export const TfSelector = ({ value, onChange, opts }: { value: string; onChange: (v: string) => void; opts?: readonly { label: string; value: string }[] }) => {
