@@ -24,8 +24,18 @@ const CORS = {
 const CACHE = 'public, s-maxage=3600, stale-while-revalidate=7200';
 
 export const onRequest: PagesFunction<Env> = async (context) => {
-  const { request, env } = context;
+  const { request, env, waitUntil } = context;
   if (request.method === 'OPTIONS') return new Response(null, { headers: CORS });
+
+  const cache = typeof caches !== 'undefined' ? caches.default : null;
+  const cacheKey = new Request(request.url, request);
+
+  if (cache) {
+    try {
+      const cached = await cache.match(cacheKey);
+      if (cached) return cached;
+    } catch {}
+  }
 
   try {
     const result = await env.DB.prepare(
@@ -37,10 +47,14 @@ export const onRequest: PagesFunction<Env> = async (context) => {
         time: `${row.date}T00:00:00Z`,
         value: row.value,
       }));
-      return new Response(
+      const response = new Response(
         JSON.stringify({ success: true, data, payload: data.length, source: 'd1' }),
         { headers: { ...CORS, 'Cache-Control': CACHE } }
       );
+      if (cache) {
+        try { waitUntil(cache.put(cacheKey, response.clone())); } catch {}
+      }
+      return response;
     }
   } catch (e) {
     console.error('[m2] D1 error:', e);
@@ -49,22 +63,57 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   try {
     // FRED M2SL: M2 Money Stock, billions of dollars, monthly, seasonally adjusted
     const key = env.FRED_API_KEY ?? '';
-    if (!key) throw new Error('FRED_API_KEY not configured');
-    const params = new URLSearchParams({ series_id: 'M2SL', api_key: key, file_type: 'json', observation_start: '1990-01-01' });
-    const res = await fetch(
-      `https://api.stlouisfed.org/fred/series/observations?${params}`,
-      { headers: { 'User-Agent': 'NOVRIX Terminal/1.0' }, signal: AbortSignal.timeout(15000) }
-    );
-    if (!res.ok) throw new Error(`FRED JSON API status ${res.status}`);
-    const json: { observations: Array<{ date: string; value: string }> } = await res.json();
-    const data = (json.observations ?? [])
-      .filter(o => o.value && o.value !== '.')
-      .map(o => ({ time: `${o.date}T00:00:00Z`, value: parseFloat(o.value) * 1_000_000_000 }))
-      .filter(item => !isNaN(item.value));
-    return new Response(
-      JSON.stringify({ success: true, data, payload: data.length, source: 'fred_fallback' }),
-      { headers: { ...CORS, 'Cache-Control': CACHE } }
-    );
+    let data: Array<{ time: string; value: number }> = [];
+
+    if (key) {
+      try {
+        const params = new URLSearchParams({ series_id: 'M2SL', api_key: key, file_type: 'json', observation_start: '1990-01-01' });
+        const res = await fetch(
+          `https://api.stlouisfed.org/fred/series/observations?${params}`,
+          { headers: { 'User-Agent': 'NOVRIX Terminal/1.0' }, signal: AbortSignal.timeout(10000) }
+        );
+        if (res.ok) {
+          const json: { observations: Array<{ date: string; value: string }> } = await res.json();
+          data = (json.observations ?? [])
+            .filter(o => o.value && o.value !== '.')
+            .map(o => ({ time: `${o.date}T00:00:00Z`, value: parseFloat(o.value) * 1_000_000_000 }))
+            .filter(item => !isNaN(item.value));
+        }
+      } catch (e) {
+        console.warn('[m2] FRED API error, falling back to CSV:', e);
+      }
+    }
+
+    if (data.length === 0) {
+      const csvRes = await fetch(
+        `https://fred.stlouisfed.org/graph/fredgraph.csv?id=M2SL`,
+        { headers: { 'User-Agent': 'NOVRIX Terminal/1.0' }, signal: AbortSignal.timeout(10000) }
+      );
+      if (!csvRes.ok) throw new Error(`FRED CSV status ${csvRes.status}`);
+      const text = await csvRes.text();
+      const lines = text.trim().split('\n');
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+        const [date, valStr] = line.split(',');
+        if (!date || !valStr || valStr === '.') continue;
+        const num = parseFloat(valStr);
+        if (!isNaN(num)) data.push({ time: `${date}T00:00:00Z`, value: num * 1_000_000_000 });
+      }
+    }
+
+    if (data.length > 0) {
+      const response = new Response(
+        JSON.stringify({ success: true, data, payload: data.length, source: 'fred_fallback' }),
+        { headers: { ...CORS, 'Cache-Control': CACHE } }
+      );
+      if (cache) {
+        try { waitUntil(cache.put(cacheKey, response.clone())); } catch {}
+      }
+      return response;
+    }
+
+    throw new Error('No data from FRED');
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     console.error('[m2] Fallback failed:', message);

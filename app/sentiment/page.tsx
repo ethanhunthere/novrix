@@ -141,10 +141,13 @@ if (typeof window !== 'undefined') {
   if (raw) {
     try {
       const { d, t } = JSON.parse(raw);
-      if (Date.now() - t < SS_TTL && d) {
+      const hasRows = d && d.success && d.data && Object.values(d.data as Record<string, unknown>).some((arr) => Array.isArray(arr) && arr.length > 0);
+      if (Date.now() - t < SS_TTL && hasRows) {
         // Serve instantly — zero network request
         registerPromise(PRELOAD_URL, Promise.resolve(d));
         servedFromCache = true;
+      } else {
+        sessionStorage.removeItem(SS_KEY);
       }
     } catch {
       sessionStorage.removeItem(SS_KEY);
@@ -158,7 +161,13 @@ if (typeof window !== 'undefined') {
         if (!r.ok) return null;
         return r.json().then((data: unknown) => {
           try {
-            sessionStorage.setItem(SS_KEY, JSON.stringify({ d: data, t: Date.now() }));
+            const res = data as { success?: boolean; data?: Record<string, unknown> };
+            if (res && res.success && res.data && Object.keys(res.data).length > 0) {
+              const hasRows = Object.values(res.data).some((arr) => Array.isArray(arr) && arr.length > 0);
+              if (hasRows) {
+                sessionStorage.setItem(SS_KEY, JSON.stringify({ d: data, t: Date.now() }));
+              }
+            }
           } catch { /* storage quota — ignore */ }
           return data;
         });
@@ -447,6 +456,9 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
   // Top panels render immediately; offscreen panels mount when scrolled near viewport (600px margin)
   const [visiblePanels, setVisiblePanels] = useState<Set<string>>(() => new Set([
     'sentiment-oscillator', 'nupl', 'mvrv', 'lth-mvrv', 'sopr', 'sth-mvrv', 'ssr',
+    'realized-price', 'hashrate', 'open-interest', 'fedfunds', 'supply-loss',
+    'supply-profit', 'realized-profit', 'realized-loss', 'dominance', 'hashribbons',
+    '200-week-ma', 'social-sentiment', 'trending', 'trending-coins'
   ]));
 
   const observerRef = useRef<IntersectionObserver | null>(null);

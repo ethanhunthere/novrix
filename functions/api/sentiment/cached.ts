@@ -37,18 +37,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     `).first<SentimentRecord>();
 
     if (!result) {
-      return new Response(JSON.stringify({
-        success: false,
-        error: 'No sentiment data available',
-        message: 'Database is empty. Run sentiment_engine.py to populate data.'
-      }), {
-        status: 404,
-        headers: {
-          'Content-Type': 'application/json',
-          'Cache-Control': 'public, max-age=300, s-maxage=600', // 5min client, 10min edge
-          'Access-Control-Allow-Origin': '*'
-        }
-      });
+      throw new Error('Database is empty');
     }
 
     // Calculate data age
@@ -87,18 +76,63 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     });
 
   } catch (error) {
-    console.error('[ERROR] Failed to fetch cached sentiment data:', error);
-    
+    console.warn('[WARN] D1 sentiment fetch failed, falling back to alternative.me:', error);
+
+    try {
+      const fallbackRes = await fetch('https://api.alternative.me/fng/?limit=1', {
+        headers: { 'User-Agent': 'NOVRIX Terminal/1.0' },
+        signal: AbortSignal.timeout(5000),
+      });
+
+      if (fallbackRes.ok) {
+        const json = await fallbackRes.json() as { data: Array<{ value: string; value_classification: string; timestamp: string }> };
+        if (json.data && json.data.length > 0) {
+          const item = json.data[0];
+          const score = parseInt(item.value, 10);
+          const isoTime = new Date(parseInt(item.timestamp, 10) * 1000).toISOString();
+          return new Response(JSON.stringify({
+            success: true,
+            data: {
+              score,
+              label: item.value_classification,
+              timestamp: isoTime,
+              dominance: null,
+              eth_dominance: null,
+              volatility: null,
+              social_volume: null,
+              trendDirection: score < 50 ? 'bearish' : 'bullish',
+            },
+            metadata: {
+              dataAge: 'live',
+              source: 'alternative.me',
+              cached: false,
+              lastUpdate: isoTime,
+            },
+          }), {
+            status: 200,
+            headers: {
+              'Content-Type': 'application/json',
+              'Cache-Control': 'public, max-age=180, s-maxage=300',
+              'Access-Control-Allow-Origin': '*',
+              'X-Data-Source': 'alternative-me-fallback',
+            },
+          });
+        }
+      }
+    } catch (fallbackError) {
+      console.error('[ERROR] Alternative.me fallback also failed:', fallbackError);
+    }
+
     return new Response(JSON.stringify({
       success: false,
-      error: 'Database query failed',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      error: 'Database query and fallback failed',
+      message: error instanceof Error ? error.message : 'Unknown error',
     }), {
       status: 500,
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      }
+        'Access-Control-Allow-Origin': '*',
+      },
     });
   }
 };

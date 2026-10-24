@@ -517,7 +517,7 @@ export function useSentimentData() {
           url: string,
           label: string,
         ) => {
-          if (Array.isArray(data) && data.length > 0 && !isSeriesStale(data)) {
+          if (Array.isArray(data) && data.length > 0) {
             setData(data);
             setLoading(false);
             return;
@@ -540,7 +540,7 @@ export function useSentimentData() {
         applyBulkOrFallback(d.hashrate,       setHashrateData,       setIsHashrateLoading,       '/api/hashrate',        'Hashrate');
 
         // BTC Price: from bulk if available (need full history ~2013), else data endpoint.
-        if (d.btcPrice && d.btcPrice.length > 2000 && !isSeriesStale(d.btcPrice, 0)) {
+        if (d.btcPrice && d.btcPrice.length > 0) {
           setBtcPriceData(d.btcPrice);
           setIsBtcPriceLoading(false);
           addLog(`BTC Price: ${d.btcPrice.length} records`, 'SUCCESS');

@@ -182,8 +182,28 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     return json({ success: false, error: 'Method not allowed' }, { status: 405, headers: { 'Cache-Control': 'no-store' } });
   }
 
+  const cache = typeof caches !== 'undefined' ? caches.default : null;
+  const cacheKey = new Request(context.request.url, context.request);
+
+  if (cache) {
+    try {
+      const match = await cache.match(cacheKey);
+      if (match) return match;
+    } catch (e) {
+      console.warn(`[BGeometrics cache match error] path=${pathname}`, e);
+    }
+  }
+
   try {
-    return await readD1Indicator(context.env, config);
+    const response = await readD1Indicator(context.env, config);
+    if (cache && response.status === 200) {
+      try {
+        context.waitUntil(cache.put(cacheKey, response.clone()));
+      } catch (e) {
+        console.warn(`[BGeometrics cache put error] path=${pathname}`, e);
+      }
+    }
+    return response;
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     console.error(`[BGeometrics D1 API] path=${pathname} error=${message}`);

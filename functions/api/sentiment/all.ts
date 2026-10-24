@@ -139,7 +139,8 @@ async function runBatch(db: D1Database): Promise<Record<string, unknown[] | null
   }
 }
 
-export const onRequest: PagesFunction<Env> = async ({ request, env }) => {
+export const onRequest: PagesFunction<Env> = async (context) => {
+  const { request, env, waitUntil } = context;
   if (request.method === 'OPTIONS') return new Response(null, { headers: CORS });
 
   if (request.method !== 'GET') {
@@ -149,12 +150,42 @@ export const onRequest: PagesFunction<Env> = async ({ request, env }) => {
     );
   }
 
+  const cache = typeof caches !== 'undefined' ? caches.default : null;
+  const cacheKey = new Request(request.url, request);
+
+  if (cache) {
+    try {
+      const cachedResponse = await cache.match(cacheKey);
+      if (cachedResponse) return cachedResponse;
+    } catch (e) {
+      console.warn('[sentiment/all] cache match error:', e);
+    }
+  }
+
   try {
     const data = await runBatch(env.DB);
+    const hasAnyData = Object.values(data).some((v) => Array.isArray(v) && v.length > 0);
+    if (!hasAnyData) {
+      return new Response(
+        JSON.stringify({ success: false, error: 'All D1 indicator tables empty or unavailable', data }),
+        { status: 503, headers: { ...CORS, 'Cache-Control': 'no-store' } },
+      );
+    }
+
     const partial = Object.values(data).some((v) => v === null);
-    return new Response(JSON.stringify({ success: true, data, partial, source: 'd1-batch' }), {
+    const response = new Response(JSON.stringify({ success: true, data, partial, source: 'd1-batch' }), {
       headers: { ...CORS, 'Cache-Control': CACHE },
     });
+
+    if (cache && !partial) {
+      try {
+        waitUntil(cache.put(cacheKey, response.clone()));
+      } catch (e) {
+        console.warn('[sentiment/all] cache put error:', e);
+      }
+    }
+
+    return response;
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     console.error(`[sentiment/all] D1 batch error: ${message}`);
