@@ -66,6 +66,29 @@ const SentimentSidebar = memo(function SentimentSidebar({
               </span>
               <div style={{ width: '34px', height: '2px', background: 'var(--accent-novrix)', borderRadius: '1px' }} />
             </div>
+            {selectedIndicator && (
+              <button
+                type="button"
+                onClick={() => setSelectedIndicator(null)}
+                className="px-2 py-1 text-[10px] font-mono tracking-wider uppercase transition-colors"
+                style={{
+                  background: 'rgba(245,241,234,0.06)',
+                  border: '1px solid var(--border-default)',
+                  color: 'var(--text-secondary)',
+                  cursor: 'pointer',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = 'var(--text-heading)';
+                  e.currentTarget.style.borderColor = 'var(--accent-novrix)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'var(--text-secondary)';
+                  e.currentTarget.style.borderColor = 'var(--border-default)';
+                }}
+              >
+                Reset Filter
+              </button>
+            )}
           </div>
         </div>
       </div>

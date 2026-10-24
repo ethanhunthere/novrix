@@ -1,4 +1,4 @@
-export const SENTIMENT_DATA_VERSION = 'bgeo-fresh-20260510';
+export const SENTIMENT_DATA_VERSION = 'bgeo-fresh-20261024b';
 
 export function withSentimentDataVersion(url: string): string {
   if (!url.startsWith('/api/') || url.includes(`v=${SENTIMENT_DATA_VERSION}`)) {

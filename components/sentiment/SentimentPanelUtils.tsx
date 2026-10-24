@@ -6,8 +6,9 @@
  * SentimentChartPanel.tsx and any other components that need them.
  */
 
-import { useState, useEffect, forwardRef } from 'react';
+import { useState, useEffect, forwardRef, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { getIndicatorMetadata, type IndicatorMetadata } from '@/lib/sentiment/indicatorMetadata';
 
 // updateFreq thresholds: bg=BGeometrics(daily), d=FRED daily, w=weekly, m=monthly, q=quarterly
 // Each entry is [liveMaxDays, staleMaxDays] — beyond staleMax is OFFLINE
@@ -25,6 +26,8 @@ export const PanelHeader = ({
   accentColor = '#C2344D',
   lastUpdated,
   updateFreq = 'bg',
+  panelId,
+  info,
   onScreenshot,
   onMaximize,
   isMaximized,
@@ -38,10 +41,14 @@ export const PanelHeader = ({
   accentColor?: string;
   lastUpdated?: string | null;
   updateFreq?: 'bg' | 'd' | 'w' | 'm' | 'q';
+  panelId?: string;
+  info?: IndicatorMetadata;
   onScreenshot?: () => void;
   onMaximize?: () => void;
   isMaximized?: boolean;
 }) => {
+  const [showInfo, setShowInfo] = useState(false);
+  const meta = info ?? (panelId ? getIndicatorMetadata(panelId) : undefined) ?? getIndicatorMetadata(code) ?? getIndicatorMetadata(title);
 
 
   return (
@@ -129,6 +136,137 @@ export const PanelHeader = ({
             </span>
           )}
         </div>
+      )}
+      {meta && (
+        <>
+          <div className="w-px h-6 shrink-0" style={{ background: 'var(--border-default)' }} />
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setShowInfo((v) => !v)}
+              onMouseEnter={() => setShowInfo(true)}
+              onMouseLeave={() => setShowInfo(false)}
+              onFocus={() => setShowInfo(true)}
+              onBlur={() => setShowInfo(false)}
+              data-no-capture
+              aria-label={`Indicator Intel for ${title}`}
+              className="w-8 h-8 flex items-center justify-center transition-all"
+              style={{
+                background: showInfo ? `${accentColor}20` : 'transparent',
+                border: `1px solid ${showInfo ? accentColor : 'var(--border-default)'}`,
+                color: showInfo ? accentColor : 'var(--text-tertiary)',
+                boxShadow: showInfo ? `0 0 14px ${accentColor}40` : 'none',
+              }}
+              title="Indicator intelligence & methodology"
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="16" x2="12" y2="12" />
+                <line x1="12" y1="8" x2="12.01" y2="8" />
+              </svg>
+            </button>
+
+            {showInfo && (
+              <div
+                className="absolute right-0 top-full mt-2.5 z-[99999] pointer-events-auto select-text text-left"
+                style={{
+                  width: 'min(380px, calc(100vw - 36px))',
+                  background: 'rgba(12, 10, 9, 0.98)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(245, 241, 234, 0.16)',
+                  borderTop: `2px solid ${accentColor}`,
+                  boxShadow: '0 24px 60px rgba(0,0,0,0.95), 0 0 0 1px rgba(0,0,0,0.6)',
+                  borderRadius: '2px',
+                  padding: '16px 18px',
+                }}
+                onMouseEnter={() => setShowInfo(true)}
+                onMouseLeave={() => setShowInfo(false)}
+              >
+                {/* Header Tag & Source */}
+                <div className="flex items-center justify-between gap-2 mb-2 pb-2 border-b border-[rgba(245,241,234,0.08)]">
+                  <div className="flex items-center gap-1.5">
+                    <span
+                      className="px-1.5 py-0.5 text-[9px] font-black uppercase tracking-[0.14em]"
+                      style={{
+                        fontFamily: 'var(--ff-mono)',
+                        color: accentColor,
+                        background: `${accentColor}18`,
+                        border: `1px solid ${accentColor}45`,
+                      }}
+                    >
+                      {meta.code}
+                    </span>
+                    <span
+                      className="text-[9px] uppercase tracking-[0.12em] font-semibold text-[rgba(245,241,234,0.55)]"
+                      style={{ fontFamily: 'var(--ff-mono)' }}
+                    >
+                      {meta.category}
+                    </span>
+                  </div>
+                  <span className="text-[8.5px] font-mono tracking-[0.06em] text-[rgba(245,241,234,0.45)] truncate max-w-[170px]" title={meta.source}>
+                    {meta.source}
+                  </span>
+                </div>
+
+                {/* Title */}
+                <div className="text-[15px] font-bold text-[var(--text-heading)] mb-2" style={{ fontFamily: 'var(--ff-sans)' }}>
+                  {meta.title}
+                </div>
+
+                {/* Core Job */}
+                <div className="mb-3">
+                  <div className="text-[8.5px] uppercase tracking-[0.18em] font-bold text-[rgba(245,241,234,0.4)] mb-1" style={{ fontFamily: 'var(--ff-mono)' }}>
+                    CORE THESIS &amp; JOB
+                  </div>
+                  <p className="text-[12px] leading-[1.5] text-[rgba(245,241,234,0.85)] font-normal" style={{ fontFamily: 'var(--ff-sans)' }}>
+                    {meta.job}
+                  </p>
+                </div>
+
+                {/* Interpretation High vs Low */}
+                <div className="space-y-1.5 mb-3 pt-2 border-t border-[rgba(245,241,234,0.06)]">
+                  <div className="text-[8.5px] uppercase tracking-[0.18em] font-bold text-[rgba(245,241,234,0.4)] mb-1" style={{ fontFamily: 'var(--ff-mono)' }}>
+                    INTERPRETATION GUIDE
+                  </div>
+                  <div className="text-[11px] leading-[1.45] text-[rgba(245,241,234,0.78)]">
+                    <span className="font-bold text-[#F87171] uppercase tracking-[0.06em] mr-1.5 font-mono text-[10px]">ELEVATED / HIGH:</span>
+                    {meta.interpretation.high}
+                  </div>
+                  <div className="text-[11px] leading-[1.45] text-[rgba(245,241,234,0.78)]">
+                    <span className="font-bold text-[#34D399] uppercase tracking-[0.06em] mr-1.5 font-mono text-[10px]">DEPRESSED / LOW:</span>
+                    {meta.interpretation.low}
+                  </div>
+                </div>
+
+                {/* Key Cycle Signal */}
+                <div
+                  className="p-2 mb-2.5 rounded-[1px]"
+                  style={{
+                    background: 'rgba(245,241,234,0.03)',
+                    border: '1px solid rgba(245,241,234,0.1)',
+                  }}
+                >
+                  <div className="text-[8px] uppercase tracking-[0.2em] font-bold text-[var(--accent-novrix)] mb-0.5" style={{ fontFamily: 'var(--ff-mono)' }}>
+                    KEY CYCLE SIGNAL
+                  </div>
+                  <div className="text-[11px] leading-[1.4] text-[rgba(245,241,234,0.92)] font-medium">
+                    {meta.interpretation.signal}
+                  </div>
+                </div>
+
+                {/* Formula / Zone Footer */}
+                {meta.formula && (
+                  <div className="pt-2 border-t border-[rgba(245,241,234,0.06)] flex items-center justify-between text-[9px] font-mono text-[rgba(245,241,234,0.5)]">
+                    <span className="tracking-[0.12em] uppercase">FORMULA:</span>
+                    <span className="text-[rgba(245,241,234,0.8)] font-semibold truncate ml-2 max-w-[260px] text-right" title={meta.formula}>
+                      {meta.formula}
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </>
       )}
       {onScreenshot && <div className="w-px h-6 shrink-0" style={{ background: 'var(--border-default)' }} />}
       {onScreenshot && (

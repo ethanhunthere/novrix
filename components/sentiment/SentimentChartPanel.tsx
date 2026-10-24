@@ -305,6 +305,7 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
             accentColor={valueColor}
             lastUpdated={lastDate}
             updateFreq={panel.updateFreq}
+            panelId={panel.panelId}
             onScreenshot={() => capturePanel(panel.panelId)}
             onMaximize={() => setMaximizedPanel(maximizedPanel === panel.panelId ? null : panel.panelId)}
             isMaximized={maximizedPanel === panel.panelId}

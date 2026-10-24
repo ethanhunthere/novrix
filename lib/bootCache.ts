@@ -55,7 +55,7 @@ function put(url: string, promise: Promise<unknown>): void {
 async function fetchWithRetry(url: string, retries = 2, delayMs = 500): Promise<unknown> {
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
-      const r = await fetch(url, { credentials: 'include' });
+      const r = await fetch(url);
       if (r.ok) return await r.json();
       if (attempt < retries) await new Promise((res) => setTimeout(res, delayMs * (attempt + 1)));
     } catch {

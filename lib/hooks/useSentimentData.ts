@@ -561,6 +561,163 @@ export function useSentimentData() {
           })());
         }
 
+        // Realized Price: derive directly from BTC Price and MVRV (Realized Price = BTC Price / MVRV)
+        // so overview panel has immediate, authentic on-chain data regardless of D1 limits.
+        if (d.btcPrice && d.mvrv && d.btcPrice.length > 0 && d.mvrv.length > 0) {
+          const mvrvMap: Record<string, number> = {};
+          d.mvrv.forEach((m) => {
+            if (m.time && typeof m.mvrv === 'number') mvrvMap[m.time.slice(0, 10)] = m.mvrv;
+          });
+          const derived: IndicatorPoint[] = [];
+          d.btcPrice.forEach((p) => {
+            const dt = p.time ? p.time.slice(0, 10) : '';
+            const m = mvrvMap[dt];
+            if (m && m > 0 && typeof p.price === 'number' && p.price > 0) {
+              derived.push({
+                time: p.time,
+                value: Math.round((p.price / m) * 100) / 100,
+              });
+            }
+          });
+          if (derived.length > 0) {
+            setRealizedPriceData(derived);
+            setIsRealizedPriceLoading(false);
+            addLog(`Realized Price: ${derived.length} records derived`, 'SUCCESS');
+          }
+        }
+
+        // NRPL: derive directly from Realized Profit and Realized Loss (NRPL = Realized Profit - Realized Loss)
+        if (d.realizedProfit && d.realizedLoss && d.realizedProfit.length > 0) {
+          const lossMap: Record<string, number> = {};
+          d.realizedLoss.forEach((l) => {
+            if (l.time && typeof l.realized_loss === 'number') lossMap[l.time.slice(0, 10)] = l.realized_loss;
+          });
+          const derivedNrpl: IndicatorPoint[] = [];
+          d.realizedProfit.forEach((p) => {
+            const dt = p.time ? p.time.slice(0, 10) : '';
+            const loss = lossMap[dt] ?? 0;
+            if (typeof p.realized_profit === 'number') {
+              derivedNrpl.push({
+                time: p.time,
+                value: Math.round((p.realized_profit - loss) * 100) / 100,
+              });
+            }
+          });
+          if (derivedNrpl.length > 0) {
+            setNrplData(derivedNrpl);
+            setIsNrplLoading(false);
+            addLog(`NRPL: ${derivedNrpl.length} records derived`, 'SUCCESS');
+          }
+        }
+
+        // Mayer Multiple: derive directly from BTC Price (Mayer Multiple = BTC Price / 200-day SMA of BTC Price)
+        if (d.btcPrice && d.btcPrice.length >= 200) {
+          const sortedPrices = [...d.btcPrice].filter(p => typeof p.price === 'number' && (p.price as number) > 0 && p.time).sort((a, b) => (a.time || '').localeCompare(b.time || ''));
+          const derivedMayer: IndicatorPoint[] = [];
+          let sum200 = 0;
+          for (let i = 0; i < sortedPrices.length; i++) {
+            const p = sortedPrices[i].price as number;
+            sum200 += p;
+            if (i >= 200) {
+              sum200 -= (sortedPrices[i - 200].price as number);
+            }
+            if (i >= 199) {
+              const sma200 = sum200 / 200;
+              if (sma200 > 0) {
+                derivedMayer.push({
+                  time: sortedPrices[i].time,
+                  value: Math.round((p / sma200) * 10000) / 10000,
+                });
+              }
+            }
+          }
+          if (derivedMayer.length > 0) {
+            setMayerMultipleData(derivedMayer);
+            setIsMayerMultipleLoading(false);
+            addLog(`Mayer Multiple: ${derivedMayer.length} records derived from price`, 'SUCCESS');
+          }
+        }
+
+        // 200-Week Moving Average: derive directly from BTC Price (200 weeks = 1400 days SMA)
+        if (d.btcPrice && d.btcPrice.length >= 1400) {
+          const sortedPrices = [...d.btcPrice].filter(p => typeof p.price === 'number' && (p.price as number) > 0 && p.time).sort((a, b) => (a.time || '').localeCompare(b.time || ''));
+          const derivedWma: IndicatorPoint[] = [];
+          let sum1400 = 0;
+          for (let i = 0; i < sortedPrices.length; i++) {
+            const p = sortedPrices[i].price as number;
+            sum1400 += p;
+            if (i >= 1400) {
+              sum1400 -= (sortedPrices[i - 1400].price as number);
+            }
+            if (i >= 1399) {
+              const wma = sum1400 / 1400;
+              derivedWma.push({
+                time: sortedPrices[i].time,
+                value: Math.round(wma * 100) / 100,
+              });
+            }
+          }
+          if (derivedWma.length > 0) {
+            setWeekMa200Data(derivedWma);
+            setIsWeekMa200Loading(false);
+            addLog(`200-Week MA: ${derivedWma.length} records derived from price`, 'SUCCESS');
+          }
+        }
+
+        // UTXO / Supply in Profit and Loss percentages
+        if (d.supplyProfit && d.supplyLoss && d.supplyProfit.length > 0 && d.supplyLoss.length > 0) {
+          const lossMap: Record<string, number> = {};
+          d.supplyLoss.forEach(l => {
+            if (l.time && typeof l.supply_in_loss === 'number') lossMap[l.time.slice(0, 10)] = l.supply_in_loss;
+          });
+          const derivedUtxoP: IndicatorPoint[] = [];
+          const derivedUtxoL: IndicatorPoint[] = [];
+          d.supplyProfit.forEach(p => {
+            const dt = p.time ? p.time.slice(0, 10) : '';
+            const loss = lossMap[dt];
+            const profit = p.supply_in_profit;
+            if (typeof profit === 'number' && typeof loss === 'number' && (profit + loss) > 0) {
+              const total = profit + loss;
+              derivedUtxoP.push({ time: p.time, value: Math.round((profit / total) * 10000) / 100 });
+              derivedUtxoL.push({ time: p.time, value: Math.round((loss / total) * 10000) / 100 });
+            }
+          });
+          if (derivedUtxoP.length > 0) {
+            setUtxoProfitData(derivedUtxoP);
+            setIsUtxoProfitLoading(false);
+            setUtxoLossData(derivedUtxoL);
+            setIsUtxoLossLoading(false);
+            addLog(`UTXO Profit/Loss: ${derivedUtxoP.length} records derived`, 'SUCCESS');
+          }
+        }
+
+        // Market Cap: derive directly from BTC Price and circulating supply
+        if (d.btcPrice && d.btcPrice.length > 0) {
+          const supplyMap: Record<string, number> = {};
+          if (d.supplyProfit && d.supplyLoss) {
+            const lossMap: Record<string, number> = {};
+            d.supplyLoss.forEach(l => { if (l.time && typeof l.supply_in_loss === 'number') lossMap[l.time.slice(0, 10)] = l.supply_in_loss; });
+            d.supplyProfit.forEach(p => {
+              const dt = p.time ? p.time.slice(0, 10) : '';
+              const l = lossMap[dt] ?? 0;
+              if (typeof p.supply_in_profit === 'number') supplyMap[dt] = p.supply_in_profit + l;
+            });
+          }
+          const derivedMcap: IndicatorPoint[] = [];
+          d.btcPrice.forEach(p => {
+            const dt = p.time ? p.time.slice(0, 10) : '';
+            const supply = supplyMap[dt] && supplyMap[dt] > 10_000_000 ? supplyMap[dt] : 19_750_000;
+            if (typeof p.price === 'number' && p.price > 0 && p.time) {
+              derivedMcap.push({ time: p.time, value: Math.round(p.price * supply) });
+            }
+          });
+          if (derivedMcap.length > 0) {
+            setMarketCapK4Data(derivedMcap);
+            setIsMarketCapK4Loading(false);
+            addLog(`Market Cap: ${derivedMcap.length} records derived`, 'SUCCESS');
+          }
+        }
+
         if (missing.length > 0) await Promise.all(missing);
         else addLog('All indicators loaded from data batch', 'SUCCESS');
 
@@ -831,17 +988,23 @@ export function useSentimentData() {
         if (response.ok) {
           const result = await response.json() as IndicatorApiResponse<DominancePoint>;
           if (result.success && result.data && result.data.length > 0) {
-            const dominanceHistory = result.data.map((item) => ({
-              time: item.time,
-              timestamp: item.time,
-              dominance: item.btc_dominance
-            }));
+            const dominanceHistory = result.data.map((item) => {
+              const rawTime = item.time || (item as unknown as { timestamp?: string }).timestamp || '';
+              return {
+                time: rawTime,
+                timestamp: rawTime,
+                dominance: item.btc_dominance,
+              };
+            });
             
-            const ethDominanceHistory = result.data.map((item) => ({
-              time: item.time,
-              timestamp: item.time,
-              dominance: item.eth_dominance
-            }));
+            const ethDominanceHistory = result.data.map((item) => {
+              const rawTime = item.time || (item as unknown as { timestamp?: string }).timestamp || '';
+              return {
+                time: rawTime,
+                timestamp: rawTime,
+                dominance: item.eth_dominance,
+              };
+            });
             
             setDominanceData(dominanceHistory);
             setEthDominanceData(ethDominanceHistory);

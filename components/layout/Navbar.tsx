@@ -9,6 +9,7 @@ const ITEMS = [
   { href: '/',         label: 'Home' },
   { href: '/insights', label: 'Insights' },
   { href: '/sentiment', label: 'Sentiment' },
+  { href: '/documentation', label: 'Docs' },
 ];
 
 export default function Navbar() {

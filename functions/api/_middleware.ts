@@ -183,7 +183,9 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   }
 
   const cache = typeof caches !== 'undefined' ? caches.default : null;
-  const cacheKey = new Request(context.request.url, context.request);
+  const canonicalUrl = new URL(context.request.url);
+  canonicalUrl.search = ''; // ignore query parameters for canonical D1 indicator caching
+  const cacheKey = new Request(canonicalUrl.toString(), { method: 'GET' });
 
   if (cache) {
     try {

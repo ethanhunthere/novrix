@@ -37,7 +37,7 @@ import { useTerminalModulePrefetch } from '@/lib/hooks/useTerminalModulePrefetch
 // sessionStorage cache (keyed by sentiment data version, TTL: 1 hour) ensures returning
 // users within the same session get instant data — no network request at all.
 const PRELOAD_URL = SENTIMENT_PRELOAD_URL;
-const SS_KEY = 'nvrix-ind-bgeo-fresh-20260510';
+const SS_KEY = `nvrix-ind-${SENTIMENT_DATA_VERSION}`;
 const SS_TTL = 3600_000; // 1 hour in ms
 const SENTIMENT_BAND_RED = '#EF4444';
 const SENTIMENT_BAND_GREEN = '#10B981';
@@ -156,7 +156,7 @@ if (typeof window !== 'undefined') {
 
   if (!servedFromCache) {
     // Fire the network fetch at module import time — before any component mounts
-    const networkPromise: Promise<unknown> = fetch(PRELOAD_URL, { credentials: 'include' })
+    const networkPromise: Promise<unknown> = fetch(PRELOAD_URL)
       .then(r => {
         if (!r.ok) return null;
         return r.json().then((data: unknown) => {
@@ -444,7 +444,29 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
   const [domxTimeframe, setDomxTimeframe] = useState('3650');
   const [capturedPanel, setCapturedPanel] = useState<string | null>(null);
   const [selectedIndicator, setSelectedIndicator] = useState<string | null>(null);
-  const DEFAULT_OVERVIEW_IDS = useMemo(() => new Set(['indicator-fear-greed', 'indicator-nupl', 'indicator-mvrv', 'indicator-realized-price', 'indicator-sopr', 'indicator-sth-mvrv', 'indicator-hashrate', 'indicator-open-interest', 'indicator-fedfunds']), []);
+  const DEFAULT_OVERVIEW_IDS = useMemo(() => new Set([
+    'indicator-fear-greed',
+    'indicator-nupl',
+    'indicator-mvrv',
+    'indicator-realized-price',
+    'indicator-sopr',
+    'indicator-sth-mvrv',
+    'indicator-lth-mvrv',
+    'indicator-ssr',
+    'indicator-hashrate',
+    'indicator-supply-profit',
+    'indicator-supply-loss',
+    'indicator-nrpl',
+    'indicator-mayer-multiple',
+    'indicator-puell-multiple',
+    'indicator-open-interest',
+    'indicator-dxy',
+    'indicator-m2',
+    'indicator-fedfunds',
+    'indicator-vix',
+    'indicator-gold',
+    'indicator-sp500'
+  ]), []);
 
   const [openAccordion, setOpenAccordion] = useState<string | null>('sentiment');
   const [registrySearch, setRegistrySearch] = useState('');
@@ -458,7 +480,8 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
     'sentiment-oscillator', 'nupl', 'mvrv', 'lth-mvrv', 'sopr', 'sth-mvrv', 'ssr',
     'realized-price', 'hashrate', 'open-interest', 'fedfunds', 'supply-loss',
     'supply-profit', 'realized-profit', 'realized-loss', 'dominance', 'hashribbons',
-    '200-week-ma', 'social-sentiment', 'trending', 'trending-coins'
+    '200-week-ma', 'social-sentiment', 'trending', 'trending-coins', 'dxy',
+    'nrpl', 'mayer-multiple', 'puell-multiple', 'm2', 'vix', 'gold', 'sp500'
   ]));
 
   const observerRef = useRef<IntersectionObserver | null>(null);
@@ -1208,7 +1231,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
   // every major bottom (2015, 2018-19, 2022) the ratio converged toward 1,
   // and below 1 veterans themselves are underwater — generational max pain.
   const vtpxChartData = useMemo(() => {
-    const full = alignByDate(lthMvrvChartData, 'lth_mvrv', sthMvrvChartData, 'mvrv', (lth, sth) => {
+    const full = alignByDate(lthMvrvChartData, 'lth_mvrv', sthMvrvChartData, 'value', (lth, sth) => {
       return sth > 0 ? lth / sth : null;
     });
     return sliceByTimeframe(full, vtpxTimeframe);
@@ -2551,6 +2574,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 value={sentiment ? String(sentiment.score) : null}
                 zone={sentiment ? { label: (sentiment.label as string).toUpperCase(), color: getSentimentColor(sentiment.score) } : null}
                 tag=""
+                panelId="sentiment-oscillator"
                 accentColor={getSentimentColor(sentiment?.score)}
                 lastUpdated={sentiment?.timestamp ? new Date(sentiment.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : null}
                 onScreenshot={() => capturePanel('sentiment-oscillator')}
@@ -2768,6 +2792,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 value={dominanceData.length > 0 ? `${Number(dominanceData[dominanceData.length - 1].dominance).toFixed(1)}%` : null}
                 zone={null}
                 tag="1Y"
+                panelId="dominance"
                 accentColor="#F7931A"
                 lastUpdated={dominanceData.length > 0 ? new Date(dominanceData[dominanceData.length - 1].time).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : null}
                 onScreenshot={() => capturePanel('dominance')}
@@ -2951,7 +2976,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             ))}
 
             {/* ── Panel: Puell Multiple ── */}
-            {bgeoPanels.filter(p => p.panelId === 'puell-multiple' && p.id === selectedIndicator).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'puell-multiple' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -2973,7 +2998,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             ))}
 
             {/* ── Panel: Mayer Multiple ── */}
-            {bgeoPanels.filter(p => p.panelId === 'mayer-multiple' && p.id === selectedIndicator).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'mayer-multiple' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -3089,6 +3114,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                     value={last?.signal ? (last.signal as string).toUpperCase() : val}
                     zone={zone}
                     tag=""
+                    panelId="hashribbons"
                     accentColor={zoneColor}
                     lastUpdated={lastDate}
                     onScreenshot={() => capturePanel('hashribbons')}
@@ -3227,7 +3253,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             ))}
 
             {/* ── Panel: NRPL ── */}
-            {bgeoPanels.filter(p => p.panelId === 'nrpl' && p.id === selectedIndicator).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'nrpl' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -3407,6 +3433,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                     code="WMA200" title="200-Week Moving Average" desc="Long-term trend reference (historically = cycle bottom)" accentColor={zoneColor}
                     value={last != null ? `$${Math.round(Number(last)).toLocaleString()}` : null}
                     zone={zone} tag="" lastUpdated={lastDate}
+                    panelId="200-week-ma"
                     onScreenshot={() => capturePanel('200-week-ma')}
                     onMaximize={() => setMaximizedPanel(maximizedPanel === '200-week-ma' ? null : '200-week-ma')}
                     isMaximized={maximizedPanel === '200-week-ma'}
@@ -3603,6 +3630,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 value={socialSentiment ? `${socialSentiment.avgBullish.toFixed(1)}%` : null}
                 zone={socialSentiment ? { label: socialSentiment.avgBullish > 55 ? 'BULLISH' : socialSentiment.avgBullish < 45 ? 'BEARISH' : 'NEUTRAL', color: socialSentiment.avgBullish > 55 ? '#00FF88' : socialSentiment.avgBullish < 45 ? '#C2344D' : '#F7931A' } : null}
                 tag=""
+                panelId="social-sentiment"
                 accentColor="#A855F7"
                 onScreenshot={() => capturePanel('social-sentiment')}
                 onMaximize={() => setMaximizedPanel(maximizedPanel === 'social-sentiment' ? null : 'social-sentiment')}
@@ -3734,6 +3762,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 title="Trending Coins"
                 desc="top by social activity score"
                 tag=""
+                panelId="trending"
                 accentColor="#F59E0B"
                 onScreenshot={() => capturePanel('trending')}
                 onMaximize={() => setMaximizedPanel(maximizedPanel === 'trending' ? null : 'trending')}

@@ -151,7 +151,9 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   }
 
   const cache = typeof caches !== 'undefined' ? caches.default : null;
-  const cacheKey = new Request(request.url, request);
+  const canonicalUrl = new URL(request.url);
+  canonicalUrl.search = '';
+  const cacheKey = new Request(canonicalUrl.toString(), { method: 'GET' });
 
   if (cache) {
     try {
