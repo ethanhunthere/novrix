@@ -114,10 +114,6 @@
   Cache-Control: no-store, no-cache, must-revalidate
   Pragma: no-cache
 
-# News feed updates frequently enough that 30s is the right ceiling.
-/api/news/*
-  Cache-Control: public, max-age=0, s-maxage=30, stale-while-revalidate=300
-
 # Macroeconomic series (FRED) updates daily at most.
 /api/fred-*
   Cache-Control: public, max-age=0, s-maxage=900, stale-while-revalidate=3600
