@@ -11,7 +11,7 @@ const HAIRLINE = 'rgba(245, 241, 234, 0.08)';
 const PLATFORM_NAV = [
   { label: 'Home', href: '/' },
   { label: 'Insights', href: '/insights' },
-  { label: 'Terminal', href: '/terminal' },
+  { label: 'Sentiment', href: '/sentiment' },
   { label: 'Operations', href: '/donations' },
 ];
 

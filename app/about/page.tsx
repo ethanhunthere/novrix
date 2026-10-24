@@ -76,7 +76,7 @@ export default function AboutPage() {
               className="text-[13px] leading-relaxed"
               style={{ fontFamily: 'var(--ff-sans)', color: '#94A3B8', lineHeight: 1.85 }}
             >
-              NOVRIX provides comprehensive on-chain analytics, market sentiment data, whale transaction tracking, and multi-chain protocol analytics. All data is updated on automated schedules with fallback mechanisms to ensure continuity.
+              NOVRIX reads crypto market sentiment through on-chain and macro indicators. All data is updated on automated schedules with fallback mechanisms to ensure continuity.
             </p>
             <div
               className="mt-5 pt-5 flex flex-wrap gap-2"
@@ -166,7 +166,6 @@ export default function AboutPage() {
                 { key: 'DATABASE', value: 'Cloudflare edge storage. On-chain indicator history, price data, account authentication.' },
                 { key: 'ON-CHAIN DATA', value: 'BGeometrics API for Bitcoin on-chain metrics. Updated daily at 04:00 UTC.' },
                 { key: 'SENTIMENT DATA', value: 'Alternative.me Fear & Greed Index. Full historical series. Updated daily at 04:00 UTC.' },
-                { key: 'WHALE TRACKING', value: 'Etherscan API for on-chain transaction monitoring across configured whale addresses.' },
                 { key: 'AUTH', value: 'NOVRIX ID — numeric access key generated on first use. No email, no password. Session cookie only.' },
                 { key: 'THIRD PARTIES', value: 'Cloudflare handles CDN and DNS at the network level.' },
               ].map(row => (

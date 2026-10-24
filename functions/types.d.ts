@@ -13,8 +13,6 @@ declare global {
     DB: D1Database;
     AUTH_DB: D1Database;
     INSIGHTS_DB: D1Database;
-    TRACKING_DB: D1Database;
-    METRILYTICS_DB: D1Database;
     ALLOWED_ORIGIN?: string;
   }
 

@@ -1,6 +1,6 @@
 const siteUrl = "https://novrix.io";
 const ogImageUrl = `${siteUrl}/og-image.png`;
-const ogImageAlt = "NOVRIX - Trinity of Intelligence";
+const ogImageAlt = "NOVRIX - Sentiment Intelligence";
 
 export const defaultOgImages = [
   {

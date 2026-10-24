@@ -5,20 +5,20 @@ import { defaultOgImages, defaultTwitterImages } from '@/lib/og-config';
 
 export const metadata = {
   title: 'NOVRIX - Methodology',
-  description: 'Data sources, update frequencies, and interpretation guidance for all NOVRIX on-chain metrics. How we calculate sentiment, tracking, and metrilytics data.',
+  description: 'Data sources, update frequencies, and interpretation guidance for all NOVRIX on-chain metrics. How we calculate sentiment data.',
   keywords: ['NOVRIX methodology', 'on-chain metrics explained', 'crypto indicator definitions', 'data sources', 'analytics methodology'],
   alternates: {
     canonical: 'https://novrix.io/methodology',
   },
   openGraph: {
     title: 'NOVRIX - Methodology',
-    description: 'Data sources, update frequencies, and interpretation guidance for all NOVRIX on-chain metrics. How we calculate sentiment, tracking, and metrilytics data.',
+    description: 'Data sources, update frequencies, and interpretation guidance for all NOVRIX on-chain metrics. How we calculate sentiment data.',
     url: 'https://novrix.io/methodology',
     images: defaultOgImages,
   },
   twitter: {
     title: 'NOVRIX - Methodology',
-    description: 'Data sources, update frequencies, and interpretation guidance for all NOVRIX on-chain metrics. How we calculate sentiment, tracking, and metrilytics data.',
+    description: 'Data sources, update frequencies, and interpretation guidance for all NOVRIX on-chain metrics. How we calculate sentiment data.',
     images: defaultTwitterImages,
   },
 };
@@ -83,11 +83,6 @@ export default function MethodologyPage() {
                   desc: 'Market cap history for dominance calculation and trending coins data. Updated daily.',
                   url: 'coingecko.com',
                 },
-                {
-                  name: 'Etherscan',
-                  desc: 'On-chain transaction data for whale tracking module. Real-time.',
-                  url: 'etherscan.io',
-                },
               ].map(src => (
                 <div key={src.name} className="p-4" style={{ border: '1px solid rgba(255,255,255,0.04)', background: 'rgba(255,255,255,0.015)' }}>
                   <div className="text-[12px] font-bold mb-1.5" style={{ fontFamily: 'var(--ff-sans)', color: '#CBD5E1' }}>{src.name}</div>
@@ -112,11 +107,9 @@ export default function MethodologyPage() {
                     ['On-Chain Metrics', 'BGeometrics', '04:00 UTC daily', '~1h after publish'],
                     ['Fear & Greed Index', 'Alternative.me', '04:00 UTC daily', '~3h after publish'],
                     ['Macro Indicators', 'FRED', 'Daily / Weekly / Monthly', 'Varies by indicator'],
-                    ['DeFi Analytics', 'DeFiLlama', 'Hourly', '~15 min'],
                     ['Market Dominance', 'CMC + CoinGecko', '04:00 UTC daily', '~1h after publish'],
                     ['Social Sentiment', 'CoinGecko', 'On-demand', 'Real-time'],
                     ['Trending Coins', 'CoinGecko', 'On-demand', 'Real-time'],
-                    ['Whale Transactions', 'Etherscan', 'On-demand', 'Real-time'],
                   ].map(row => (
                     <tr key={row[0]} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
                       {row.map((cell, i) => (

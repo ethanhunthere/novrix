@@ -114,10 +114,6 @@
   Cache-Control: no-store, no-cache, must-revalidate
   Pragma: no-cache
 
-# Address/tracking lookups: per-address payloads are stable for ~5 minutes.
-/api/address/*
-  Cache-Control: public, max-age=0, s-maxage=300, stale-while-revalidate=900
-
 # News feed updates frequently enough that 30s is the right ceiling.
 /api/news/*
   Cache-Control: public, max-age=0, s-maxage=30, stale-while-revalidate=300

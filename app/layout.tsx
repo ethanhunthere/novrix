@@ -2,10 +2,6 @@ import type { Metadata, Viewport } from "next";
 import type React from "react";
 import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import "./globals.css";
-import { CLIProvider } from "@/lib/state/CLIContext";
-import { AuthGateProvider } from "@/lib/state/AuthGateContext";
-import GlobalCLI from "@/components/cli/GlobalCLI";
-import AuthGate from "@/components/auth/AuthGate";
 
 const geistSans = Geist({
   subsets: ["latin"],
@@ -21,7 +17,6 @@ const geistMono = Geist_Mono({
 
 const newsreader = Newsreader({
   subsets: ["latin"],
-  style: ["normal", "italic"],
   variable: "--font-newsreader",
   display: "swap",
 });
@@ -34,8 +29,8 @@ const maskIcon = '/safari-pinned-tab.svg';
 const ogImage = '/og-image.png';
 const siteManifest = '/site.webmanifest';
 const siteUrl = "https://novrix.io";
-const siteTitle = "NOVRIX - Trinity of Intelligence";
-const siteDescription = "NOVRIX is an on-chain intelligence terminal with three modules: Sentiment (market psychology indicators), Tracking (whale monitoring across 12 chains), and Metrilytics (DeFi analytics). Open source.";
+const siteTitle = "NOVRIX - Sentiment Intelligence";
+const siteDescription = "NOVRIX reads crypto market sentiment as one calm surface: on-chain and macro indicators, without the noise. Open source.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -63,7 +58,7 @@ export const metadata: Metadata = {
     apple: appleTouchIcon,
   },
   openGraph: {
-    images: [{ url: ogImage, width: 1200, height: 630, alt: 'NOVRIX — Trinity of Intelligence' }],
+    images: [{ url: ogImage, width: 1200, height: 630, alt: 'NOVRIX — Sentiment Intelligence' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -122,14 +117,6 @@ export default function RootLayout({
               "@type": "WebSite",
               name: "NOVRIX",
               url: siteUrl,
-              potentialAction: {
-                "@type": "SearchAction",
-                target: {
-                  "@type": "EntryPoint",
-                  urlTemplate: `${siteUrl}/terminal?search={search_term_string}`,
-                },
-                "query-input": "required name=search_term_string",
-              },
             }),
           }}
         />
@@ -150,13 +137,10 @@ export default function RootLayout({
                 priceCurrency: "USD",
               },
               featureList: [
-                "Sentiment Intelligence — 17 market psychology indicators with macro overlays",
-                "Tracking Intelligence — Whale monitoring across 12 blockchain networks",
-                "Metrilytics Intelligence — DeFi protocol analytics and TVL tracking",
-                "Real-time data aggregation from multiple sources",
+                "Sentiment Intelligence — market psychology indicators with macro overlays",
+                "On-chain and macro data aggregation from multiple sources",
                 "Interactive charts with multiple timeframes",
-                "Command-line interface for power users",
-                "Dark-mode terminal interface",
+                "Dark-mode interface",
               ],
             }),
           }}
@@ -178,13 +162,7 @@ export default function RootLayout({
           }}
         />
 
-        <AuthGateProvider>
-          <CLIProvider>
-            {children}
-            <GlobalCLI />
-          </CLIProvider>
-          <AuthGate />
-        </AuthGateProvider>
+        {children}
       </body>
     </html>
   );

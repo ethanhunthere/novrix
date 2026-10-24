@@ -8,10 +8,8 @@ import { usePathname } from 'next/navigation';
 const ITEMS = [
   { href: '/',         label: 'Home' },
   { href: '/insights', label: 'Insights' },
-  { href: '/terminal', label: 'Terminal' },
+  { href: '/sentiment', label: 'Sentiment' },
 ];
-
-const TERMINAL_ROUTES = ['/terminal', '/sentiment', '/tracking', '/metrilytics'];
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -21,7 +19,6 @@ export default function Navbar() {
 
   const isActive = (href: string) => {
     if (href === '/') return norm === '/';
-    if (href === '/terminal') return TERMINAL_ROUTES.includes(norm);
     return norm === href || norm.startsWith(href + '/');
   };
 

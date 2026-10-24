@@ -1,15 +1,14 @@
 # NOVRIX
 
-NOVRIX is an on-chain intelligence terminal built for crypto traders, researchers, and analysts. It aggregates market data from multiple sources into a unified interface with three core analytical modules.
+NOVRIX is an open-source crypto sentiment intelligence surface. It aggregates on-chain and macro indicators into a single calm interface built for traders, researchers, and analysts.
 
 ## What NOVRIX Is
 
-An open-source web application that provides real-time and historical on-chain intelligence. The platform collects data from blockchain networks, exchange APIs, and market aggregators to present actionable metrics through interactive charts, tables, and a command-line interface.
+A web application that presents real-time and historical market sentiment data through interactive charts. NOVRIX collects data from public providers and serves it from the edge. No account required.
 
-## The Three Modules
+## Sentiment Intelligence
 
-### 1. Sentiment Intelligence (SE-01)
-Market psychology indicators and macroeconomic overlays. 17 active metrics including:
+Market psychology indicators and macroeconomic overlays, including:
 - NUPL (Net Unrealized Profit/Loss)
 - MVRV-Z Score
 - NRPL (Net Realized Profit/Loss)
@@ -19,64 +18,27 @@ Market psychology indicators and macroeconomic overlays. 17 active metrics inclu
 - Bitcoin Halving markers
 - Macroeconomic overlays (FRED data)
 
-Data sources: Glassnode, Alternative.me, FRED (Federal Reserve Economic Data), CoinGecko.
-
-### 2. Tracking Intelligence (TR-02)
-Whale monitoring and significant capital movement tracking across 12 blockchain networks:
-- Exchange flow analysis (inflow/outflow)
-- Entity registry with labeled addresses
-- Real-time large transaction feed
-- Address-level deep dives
-- Weekly volume charts
-- Transaction flow visualization
-
-Supported chains: Bitcoin, Ethereum, Solana, BNB Chain, Arbitrum, Optimism, Base, Polygon, Avalanche, Fantom, zkSync Era, Linea.
-
-### 3. Metrilytics Intelligence (ME-03)
-DeFi protocol analytics and market health metrics:
-- Total Value Locked (TVL) tracking
-- Protocol revenue analysis
-- Yield opportunity scanning
-- Liquidity depth metrics
-- Derivative positioning data
-- Protocol health scores
-
-Data sources: DeFiLlama, CoinGecko, Binance, direct RPC node queries.
+Data sources: BGeometrics, Alternative.me, FRED (Federal Reserve Economic Data), CoinGecko, CoinMarketCap.
 
 ## Platform Architecture
 
-- **Frontend**: Next.js 14 with React, TypeScript, Tailwind CSS
-- **Data Layer**: REST API with Redis caching, WebSocket for real-time feeds
-- **Authentication**: NOVRIX ID system with 12-digit numeric access keys
-- **CLI**: Global command-line interface accessible via keyboard shortcut (Cmd/Ctrl + K)
-- **Terminal**: Dark-mode precision interface with multi-panel layouts
+- **Frontend**: Next.js 16, React 19, TypeScript, Tailwind CSS
+- **Data Layer**: Static export with edge-cached REST endpoints on Cloudflare Pages
+- **Interface**: Dark-mode, chart-first reading surface
 
 ## Open Source
 
 NOVRIX is open source. The codebase is available for audit, contribution, and self-hosting. The platform operates on community contributions and maintains no corporate affiliation or venture capital backing.
 
-## Data Sources
-
-- Glassnode (on-chain metrics)
-- DeFiLlama (DeFi protocol data)
-- CoinGecko (market prices and metadata)
-- Binance (exchange data and derivatives)
-- FRED (macroeconomic indicators)
-- Direct RPC nodes (12 blockchain networks)
-- Blockchain explorers (transaction data)
-
 ## Site Structure
 
 | Path | Description |
 |------|-------------|
-| / | Homepage — Platform overview and module previews |
-| /sentiment | Sentiment Intelligence module |
-| /tracking | Tracking Intelligence module |
-| /metrilytics | Metrilytics Intelligence module |
-| /terminal | Terminal gateway (module selection) |
+| / | Homepage — what NOVRIX reads and why |
+| /sentiment | Sentiment Intelligence surface |
 | /insights | Editorial content and market analysis |
 | /about | Platform information and mission |
-| /documentation | User guide and feature documentation |
+| /documentation | User guide |
 | /methodology | Data sources and calculation methods |
 | /changelog | Development history and releases |
 | /donations | Community funding page |

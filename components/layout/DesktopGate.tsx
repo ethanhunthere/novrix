@@ -8,10 +8,7 @@ const INTER = 'var(--ff-sans)';
 const MONO  = 'var(--ff-mono)';
 
 function getGateTarget(pathname: string | null): string {
-  if (pathname?.startsWith('/tracking')) return 'the tracking module';
-  if (pathname?.startsWith('/sentiment')) return 'the sentiment module';
-  if (pathname?.startsWith('/metrilytics')) return 'the metrilytics module';
-  if (pathname?.startsWith('/terminal')) return 'terminal';
+  if (pathname?.startsWith('/sentiment')) return 'sentiment';
   return 'this page';
 }
 

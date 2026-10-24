@@ -1,7 +1,7 @@
 'use client';
 
 /* ═══════════════════════════════════════════════════════════════════════
-   NOVRIX TERMINAL FOOTER — Sentiment / Tracking / Metrilytics
+   NOVRIX TERMINAL FOOTER — Sentiment
    Minimal one-line status bar. Looks like the bottom of a terminal session.
    One line. Maximum information density. Minimum visual weight.
    ═══════════════════════════════════════════════════════════════════════ */

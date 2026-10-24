@@ -11,21 +11,6 @@
     <priority>0.90</priority>
   </url>
   <url>
-    <loc>https://novrix.io/terminal</loc>
-    <lastmod>2026-05-11</lastmod>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://novrix.io/tracking</loc>
-    <lastmod>2026-05-11</lastmod>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://novrix.io/metrilytics</loc>
-    <lastmod>2026-05-11</lastmod>
-    <priority>0.90</priority>
-  </url>
-  <url>
     <loc>https://novrix.io/insights</loc>
     <lastmod>2026-05-11</lastmod>
     <priority>0.80</priority>

@@ -1,12 +1,16 @@
 {
-  "name": "NOVRIX — Trinity of Intelligence",
+  "name": "NOVRIX \u2014 Sentiment Intelligence",
   "short_name": "NOVRIX",
-  "description": "NOVRIX is an on-chain intelligence terminal with three modules: Sentiment (market psychology indicators), Tracking (whale monitoring across 12 chains), and Metrilytics (DeFi analytics). Open source.",
+  "description": "NOVRIX reads crypto market sentiment through on-chain and macro indicators. Open source.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0A0A0F",
   "theme_color": "#0A0A0F",
-  "categories": ["finance", "productivity", "utilities"],
+  "categories": [
+    "finance",
+    "productivity",
+    "utilities"
+  ],
   "orientation": "any",
   "lang": "en",
   "dir": "ltr",
@@ -35,28 +39,37 @@
   ],
   "shortcuts": [
     {
+      "name": "Home",
+      "short_name": "Home",
+      "url": "/",
+      "icons": [
+        {
+          "src": "/icon.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
       "name": "Sentiment",
       "short_name": "Sentiment",
       "url": "/sentiment",
-      "icons": [{ "src": "/icon.png", "sizes": "96x96" }]
+      "icons": [
+        {
+          "src": "/icon.png",
+          "sizes": "96x96"
+        }
+      ]
     },
     {
-      "name": "Tracking",
-      "short_name": "Tracking",
-      "url": "/tracking",
-      "icons": [{ "src": "/icon.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "Metrilytics",
-      "short_name": "Metrilytics",
-      "url": "/metrilytics",
-      "icons": [{ "src": "/icon.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "Terminal",
-      "short_name": "Terminal",
-      "url": "/terminal",
-      "icons": [{ "src": "/icon.png", "sizes": "96x96" }]
+      "name": "Insights",
+      "short_name": "Insights",
+      "url": "/insights",
+      "icons": [
+        {
+          "src": "/icon.png",
+          "sizes": "96x96"
+        }
+      ]
     }
   ],
   "related_applications": [],

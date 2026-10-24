@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   experimental: {
     // Tree-shake named imports from large barrel packages
-    optimizePackageImports: ['recharts', 'framer-motion', 'gsap'],
+    optimizePackageImports: ['recharts', 'framer-motion'],
     // CSS optimization via Lightning CSS
     optimizeCss: true,
     // Parallelize script loading for static export

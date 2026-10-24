@@ -1,10 +1,18 @@
 {
   "name": "NOVRIX",
   "short_name": "NOVRIX",
-  "description": "Trinity of Intelligence — Institutional on-chain intelligence terminal",
+  "description": "Sentiment intelligence \u2014 on-chain and macro market reading, without the noise",
   "icons": [
-    { "src": "/android-chrome-192x192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/android-chrome-512x512.png", "sizes": "512x512", "type": "image/png" }
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
   ],
   "theme_color": "#0A0A0F",
   "background_color": "#0A0A0F",
