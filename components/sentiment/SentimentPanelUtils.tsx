@@ -48,9 +48,9 @@ export const PanelHeader = ({
   <div
     className="flex flex-col xl:flex-row xl:items-center xl:justify-between px-4 sm:px-5 border-b"
     style={{
-      background: 'linear-gradient(90deg, rgba(255,255,255,0.018) 0%, rgba(3,8,20,0.98) 20%, rgba(3,7,18,0.98) 100%)',
-      borderBottomColor: 'rgba(255,255,255,0.06)',
-      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04), inset 0 -1px 0 rgba(0,0,0,0.4)',
+      background: 'linear-gradient(90deg, rgba(245,241,234,0.018) 0%, rgba(10,9,8,0.98) 20%, rgba(10,9,8,0.98) 100%)',
+      borderBottomColor: 'rgba(245,241,234,0.09)',
+      boxShadow: 'inset 0 1px 0 rgba(245,241,234,0.04), inset 0 -1px 0 rgba(0,0,0,0.4)',
       minHeight: '64px',
     }}
   >
@@ -75,19 +75,19 @@ export const PanelHeader = ({
         {tag && tag !== 'LIVE' && (
           <span style={{
             fontSize: '8px', letterSpacing: '0.12em', fontWeight: 600, padding: '3px 6px',
-            fontFamily: 'var(--ff-mono)', color: '#64748B',
-            background: 'rgba(10,20,36,0.8)', border: '1px solid rgba(50,70,100,0.7)',
+            fontFamily: 'var(--ff-mono)', color: 'var(--text-tertiary)',
+            background: 'var(--bg-raised)', border: '1px solid var(--border-default)',
           }}>{tag}</span>
         )}
-        <div className="w-px h-4 shrink-0" style={{ background: 'rgba(20,36,64,0.9)' }} />
+        <div className="w-px h-4 shrink-0" style={{ background: 'var(--border-default)' }} />
         <span
           className="min-w-0 text-[17px] font-semibold"
-          style={{ fontFamily: 'var(--ff-sans)', color: '#E4E4E7', letterSpacing: '0.008em', fontWeight: 600, overflowWrap: 'anywhere' }}
+          style={{ fontFamily: 'var(--ff-sans)', color: 'var(--text-heading)', letterSpacing: '0.008em', fontWeight: 600, overflowWrap: 'anywhere' }}
         >
           {title}
         </span>
         {desc && (
-          <span className="min-w-0" style={{ fontFamily: 'var(--ff-sans)', fontSize: '12.5px', fontWeight: 400, color: 'rgba(160,180,210,0.60)', letterSpacing: '0.02em', fontStyle: 'italic', overflowWrap: 'anywhere' }}>
+          <span className="min-w-0" style={{ fontFamily: 'var(--ff-sans)', fontSize: '12.5px', fontWeight: 400, color: 'rgba(245,241,234,0.56)', letterSpacing: '0.02em', fontStyle: 'italic', overflowWrap: 'anywhere' }}>
             — {desc}
           </span>
         )}
@@ -124,21 +124,21 @@ export const PanelHeader = ({
             )}
           </div>
           {lastUpdated && (
-            <span style={{ fontSize: '9px', letterSpacing: '0.14em', fontFamily: 'var(--ff-mono)', color: 'rgba(150,170,200,0.62)', fontWeight: 600 }}>
+            <span style={{ fontSize: '9px', letterSpacing: '0.14em', fontFamily: 'var(--ff-mono)', color: 'rgba(245,241,234,0.58)', fontWeight: 600 }}>
               last updated: {lastUpdated}
             </span>
           )}
         </div>
       )}
-      {onScreenshot && <div className="w-px h-6 shrink-0" style={{ background: 'rgba(16,30,56,0.9)' }} />}
+      {onScreenshot && <div className="w-px h-6 shrink-0" style={{ background: 'var(--border-default)' }} />}
       {onScreenshot && (
         <button
           onClick={onScreenshot}
           data-no-capture
           className="w-8 h-8 flex items-center justify-center"
-          style={{ background: 'transparent', border: '1px solid rgba(50,70,100,0.6)', color: '#64748B' }}
-          onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = '#94A3B8'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(80,110,160,0.7)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(80,110,160,0.06)'; }}
-          onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = '#64748B'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(50,70,100,0.6)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}
+          style={{ background: 'transparent', border: '1px solid var(--border-default)', color: 'var(--text-tertiary)' }}
+          onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-secondary)'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--border-strong)'; (e.currentTarget as HTMLButtonElement).style.background = 'var(--bg-raised)'; }}
+          onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-tertiary)'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--border-default)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}
           title="Capture panel"
         >
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -147,15 +147,15 @@ export const PanelHeader = ({
           </svg>
         </button>
       )}
-      {onMaximize && <div className="w-px h-6 shrink-0" style={{ background: 'rgba(16,30,56,0.9)' }} />}
+      {onMaximize && <div className="w-px h-6 shrink-0" style={{ background: 'var(--border-default)' }} />}
       {onMaximize && (
         <button
           onClick={onMaximize}
           data-no-capture
           className="w-8 h-8 flex items-center justify-center"
-          style={{ background: 'transparent', border: '1px solid rgba(50,70,100,0.6)', color: '#64748B' }}
-          onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = '#94A3B8'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(80,110,160,0.7)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(80,110,160,0.06)'; }}
-          onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = '#64748B'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(50,70,100,0.6)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}
+          style={{ background: 'transparent', border: '1px solid var(--border-default)', color: 'var(--text-tertiary)' }}
+          onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-secondary)'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--border-strong)'; (e.currentTarget as HTMLButtonElement).style.background = 'var(--bg-raised)'; }}
+          onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-tertiary)'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--border-default)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}
           title={isMaximized ? 'Minimize panel' : 'Maximize panel'}
         >
           {isMaximized ? (
@@ -183,17 +183,17 @@ export const FngTooltip = ({ active, payload }: { active?: boolean; payload?: Ar
   const label = val >= 80 ? 'EXTREME GREED' : val >= 60 ? 'GREED' : val >= 45 ? 'NEUTRAL' : val >= 25 ? 'FEAR' : 'EXTREME FEAR';
   return (
     <div style={{
-      background: '#0E0E18', border: `1px solid rgba(255,255,255,0.15)`,
+      background: 'var(--bg-raised)', border: `1px solid rgba(255,255,255,0.15)`,
       borderTop: `2px solid ${color}`, borderRadius: '1px',
       fontFamily: 'var(--ff-mono)', padding: '14px 18px',
       boxShadow: `0 8px 32px rgba(0,0,0,0.80)`, minWidth: '180px', pointerEvents: 'none',
     }}>
-      <div style={{ color: '#8A9BB0', fontSize: '13px', marginBottom: '2px', letterSpacing: '0.12em' }}>{date}</div>
-      <div style={{ height: '1px', background: 'rgba(30,60,100,0.9)', margin: '9px 0' }} />
-      <div style={{ color: '#6A8EAA', fontSize: '10px', letterSpacing: '0.15em', marginBottom: '7px', textTransform: 'uppercase' }}>Fear &amp; Greed Index</div>
+      <div style={{ color: 'var(--text-secondary)', fontSize: '13px', marginBottom: '2px', letterSpacing: '0.12em' }}>{date}</div>
+      <div style={{ height: '1px', background: 'var(--border-default)', margin: '9px 0' }} />
+      <div style={{ color: 'var(--text-tertiary)', fontSize: '10px', letterSpacing: '0.15em', marginBottom: '7px', textTransform: 'uppercase' }}>Fear &amp; Greed Index</div>
       <div style={{ display: 'flex', alignItems: 'center', gap: '11px' }}>
         <span style={{ color, fontSize: '18px', fontWeight: 800, lineHeight: 1, textShadow: `0 0 20px ${color}60`, fontVariantNumeric: 'tabular-nums' }}>{val}</span>
-        <span style={{ color: '#6A8EAA', fontSize: '12px', fontWeight: 600, marginTop: '2px' }}>/100</span>
+        <span style={{ color: 'var(--text-tertiary)', fontSize: '12px', fontWeight: 600, marginTop: '2px' }}>/100</span>
         <span style={{
           fontSize: '12px', fontWeight: 800, letterSpacing: '0.13em', padding: '4px 9px',
           color, background: `${color}20`, border: `1px solid ${color}B3`,
@@ -227,16 +227,16 @@ export const PrecisionTooltip = ({
   if (!rows.length) return null;
   return (
     <div style={{
-      background: '#0E0E18', border: `1px solid rgba(255,255,255,0.15)`,
+      background: 'var(--bg-raised)', border: `1px solid rgba(255,255,255,0.15)`,
       borderTop: `2px solid ${accentColor}`, borderRadius: '1px',
       fontFamily: 'var(--ff-mono)', padding: '14px 18px',
       boxShadow: `0 8px 32px rgba(0,0,0,0.80)`, minWidth: '190px', pointerEvents: 'none',
     }}>
-      <div style={{ color: '#8A9BB0', fontSize: '13px', marginBottom: '2px', letterSpacing: '0.12em' }}>{date}</div>
-      <div style={{ height: '1px', background: 'rgba(30,60,100,0.9)', margin: '9px 0' }} />
+      <div style={{ color: 'var(--text-secondary)', fontSize: '13px', marginBottom: '2px', letterSpacing: '0.12em' }}>{date}</div>
+      <div style={{ height: '1px', background: 'var(--border-default)', margin: '9px 0' }} />
       {rows.map((row, i) => (
         <div key={i} style={{ marginBottom: i < rows.length - 1 ? '12px' : 0 }}>
-          <div style={{ color: '#6A8EAA', fontSize: '10px', letterSpacing: '0.15em', marginBottom: '6px', textTransform: 'uppercase' }}>{row.label}</div>
+          <div style={{ color: 'var(--text-tertiary)', fontSize: '10px', letterSpacing: '0.15em', marginBottom: '6px', textTransform: 'uppercase' }}>{row.label}</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '11px', flexWrap: 'nowrap' }}>
             <span style={{
               color: row.color, fontSize: '18px', fontWeight: 800, lineHeight: 1,
@@ -266,21 +266,21 @@ const SKELETON_BARS = Array.from({ length: 48 }, (_, i) => ({
 }));
 
 export const ChartSkeleton = ({ height = 320 }: { height?: number }) => (
-  <div style={{ height: `${height}px`, position: 'relative', overflow: 'hidden', background: 'rgba(3,5,12,0.6)' }}>
+  <div style={{ height: `${height}px`, position: 'relative', overflow: 'hidden', background: 'rgba(10,9,8,0.6)' }}>
     {[20, 38, 56, 74].map(pct => (
-      <div key={pct} style={{ position: 'absolute', left: '52px', right: '8px', top: `${pct}%`, height: '1px', background: 'rgba(22,45,85,0.14)' }} />
+      <div key={pct} style={{ position: 'absolute', left: '52px', right: '8px', top: `${pct}%`, height: '1px', background: 'rgba(245,241,234,0.05)' }} />
     ))}
     {[20, 38, 56, 74].map(pct => (
-      <div key={pct} style={{ position: 'absolute', left: '8px', top: `${pct}%`, transform: 'translateY(-3px)', width: '36px', height: '5px', background: 'rgba(22,45,85,0.12)' }} />
+      <div key={pct} style={{ position: 'absolute', left: '8px', top: `${pct}%`, transform: 'translateY(-3px)', width: '36px', height: '5px', background: 'rgba(245,241,234,0.05)' }} />
     ))}
     <div style={{ position: 'absolute', bottom: '24px', left: '52px', right: '8px', top: '8px', display: 'flex', alignItems: 'flex-end', gap: '2px' }}>
       {SKELETON_BARS.map(bar => (
-        <div key={bar.id} style={{ flex: 1, height: `${bar.h}%`, background: 'rgba(22,45,85,0.12)' }} />
+        <div key={bar.id} style={{ flex: 1, height: `${bar.h}%`, background: 'rgba(245,241,234,0.05)' }} />
       ))}
     </div>
     <div style={{
       position: 'absolute', top: 0, bottom: 0, left: '52px', width: '1px',
-      background: 'linear-gradient(180deg, transparent 0%, rgba(100,160,220,0.25) 40%, rgba(100,160,220,0.4) 50%, rgba(100,160,220,0.25) 60%, transparent 100%)',
+      background: 'linear-gradient(180deg, transparent 0%, rgba(245,241,234,0.18) 40%, rgba(245,241,234,0.28) 50%, rgba(245,241,234,0.18) 60%, transparent 100%)',
       animation: 'skeletonScan 3s ease-in-out infinite',
     }} />
     <style>{`
@@ -292,7 +292,7 @@ export const ChartSkeleton = ({ height = 320 }: { height?: number }) => (
       }
     `}</style>
     <div style={{ position: 'absolute', bottom: '6px', left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-      <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '8.5px', color: '#64748B', letterSpacing: '0.20em' }}>SYNCHRONIZING</span>
+      <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '8.5px', color: 'var(--text-tertiary)', letterSpacing: '0.20em' }}>SYNCHRONIZING</span>
     </div>
   </div>
 );
@@ -323,7 +323,7 @@ export const TfSelector = ({ value, onChange, opts }: { value: string; onChange:
     <div style={{
       display: 'flex', alignItems: 'stretch', flexWrap: 'wrap',
       border: '1px solid rgba(14,26,52,0.98)',
-      background: 'rgba(2,5,14,0.98)',
+      background: 'var(--bg-base)',
       boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.018)',
     }}>
       {options.map((tf, i) => {
@@ -337,13 +337,13 @@ export const TfSelector = ({ value, onChange, opts }: { value: string; onChange:
               padding: '6px 10px', borderTop: 'none', borderBottom: 'none', borderLeft: 'none',
               borderRight: i < options.length - 1 ? '1px solid rgba(14,26,52,0.98)' : 'none',
               background: active ? 'rgba(194,52,77,0.20)' : 'transparent',
-              color: active ? '#E8405A' : 'rgba(255,255,255,0.45)',
+              color: active ? '#E8405A' : 'rgba(245,241,234,0.45)',
               fontWeight: active ? 800 : 500, cursor: 'pointer', lineHeight: 1,
               textTransform: 'uppercase',
               boxShadow: active ? `inset 0 0 0 1px rgba(194,52,77,0.80)` : `inset 0 0 0 0px transparent`,
             }}
-            onMouseEnter={(e) => { if (!active) { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.70)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.04)'; } }}
-            onMouseLeave={(e) => { if (!active) { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.45)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; } }}
+            onMouseEnter={(e) => { if (!active) { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(245,241,234,0.72)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(245,241,234,0.04)'; } }}
+            onMouseLeave={(e) => { if (!active) { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(245,241,234,0.45)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; } }}
           >
             {tf.label}
           </button>
@@ -359,7 +359,7 @@ export const LineToggle = ({ items }: {
   <div style={{
     display: 'flex', alignItems: 'stretch', flexWrap: 'wrap',
     border: '1px solid rgba(14,26,52,0.98)',
-    background: 'rgba(2,5,14,0.98)',
+    background: 'var(--bg-base)',
   }}>
     {items.map((item, i) => (
       <button
@@ -372,11 +372,11 @@ export const LineToggle = ({ items }: {
           borderBottom: 'none', borderLeft: 'none',
           borderRight: i < items.length - 1 ? '1px solid rgba(14,26,52,0.98)' : 'none',
           background: item.active ? `${item.color}14` : 'transparent',
-          color: item.active ? item.color : '#4E6A88',
+          color: item.active ? item.color : 'var(--text-tertiary)',
           fontWeight: item.active ? 700 : 500, cursor: 'pointer', lineHeight: 1, textTransform: 'uppercase',
         }}
       >
-        <div style={{ width: '14px', height: '1.5px', background: item.active ? item.color : 'rgba(78,106,136,0.4)' }} />
+        <div style={{ width: '14px', height: '1.5px', background: item.active ? item.color : 'rgba(245,241,234,0.3)' }} />
         {item.label}
       </button>
     ))}
@@ -466,10 +466,10 @@ export const LiveClock = () => {
   }, []);
   return (
     <>
-      <div className="text-[15px] tabular-nums font-bold leading-none" style={{ fontFamily: 'var(--ff-mono)', color: '#FFFFFF', letterSpacing: '0.04em' }}>
+      <div className="text-[15px] tabular-nums font-bold leading-none" style={{ fontFamily: 'var(--ff-mono)', color: 'var(--text-heading)', letterSpacing: '0.04em' }}>
         {t.slice(11)}
       </div>
-      <div className="text-[11px] tabular-nums mt-0.5" style={{ fontFamily: 'var(--ff-mono)', color: '#5A6A7A' }}>
+      <div className="text-[11px] tabular-nums mt-0.5" style={{ fontFamily: 'var(--ff-mono)', color: 'var(--text-secondary)' }}>
         {t.slice(0, 10)}
       </div>
     </>
@@ -569,7 +569,7 @@ export const PanelMaximizeWrapper = forwardRef<HTMLDivElement, PanelMaximizeWrap
           onWheel={(e) => e.stopPropagation()}
           style={{
             position: 'fixed', inset: 0, zIndex: 9990,
-            background: 'rgba(2,4,10,0.78)',
+            background: 'rgba(10,9,8,0.86)',
             backdropFilter: 'blur(8px)',
             WebkitBackdropFilter: 'blur(8px)',
             overscrollBehavior: 'contain',
@@ -582,7 +582,7 @@ export const PanelMaximizeWrapper = forwardRef<HTMLDivElement, PanelMaximizeWrap
             transform: 'translate(-50%, -50%)',
             width: 'min(78vw, 1280px)', height: 'min(76vh, 820px)', zIndex: 9991,
             display: 'flex', flexDirection: 'column',
-            boxShadow: '0 0 0 1px rgba(40,80,160,0.28), 0 40px 140px rgba(0,0,0,0.97), 0 0 80px rgba(0,0,0,0.6)',
+            boxShadow: '0 0 0 1px rgba(245,241,234,0.10), 0 40px 140px rgba(0,0,0,0.8), 0 0 80px rgba(0,0,0,0.6)',
             overflow: 'hidden',
             overscrollBehavior: 'contain',
           }}

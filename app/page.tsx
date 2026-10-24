@@ -65,8 +65,7 @@ export default function Home() {
                 maxWidth: '14ch',
               }}
             >
-              Sentiment, without the noise
-              <span style={{ color: ACCENT }}>.</span>
+              Sentiment, without the noise.
             </h1>
 
             <p

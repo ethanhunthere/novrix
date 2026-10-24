@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import Link from 'next/link';
 
 interface ErrorBoundaryProps {
   error: Error & { digest?: string };
@@ -9,29 +10,95 @@ interface ErrorBoundaryProps {
 
 export default function RootErrorBoundary({ error, reset }: ErrorBoundaryProps) {
   useEffect(() => {
-    // Log to console in development; in production this would go to Sentry.
     console.error('Root error boundary caught:', error);
   }, [error]);
 
   return (
-    <html lang="en" className="dark">
-      <body className="min-h-screen flex items-center justify-center bg-[#09090B] text-white">
-        <div className="text-center px-6">
-          <h1 className="text-4xl font-bold mb-4">Something went wrong</h1>
-          <p className="text-neutral-400 mb-8 max-w-md mx-auto">
-            An unexpected error occurred. Try refreshing the page, or contact support if the problem persists.
-          </p>
-          <button
-            onClick={reset}
-            className="px-6 py-3 bg-white text-black font-semibold rounded-lg hover:bg-neutral-200 transition-colors"
+    <html lang="en">
+      <body
+        style={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'var(--bg-base)',
+          color: 'var(--text-primary)',
+          margin: 0,
+        }}
+      >
+        <div style={{ maxWidth: '480px', padding: '32px 20px' }}>
+          <div
+            style={{
+              fontFamily: 'var(--ff-mono)',
+              fontSize: '10px',
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+              color: 'var(--text-tertiary)',
+              marginBottom: '16px',
+            }}
           >
-            Try again
-          </button>
-          {process.env.NODE_ENV === 'development' && (
-            <pre className="mt-8 text-left text-xs text-red-400 bg-red-950/30 p-4 rounded-lg overflow-auto max-w-2xl mx-auto">
-              {error.message}\n{error.stack}
-            </pre>
-          )}
+            Error
+          </div>
+          <h1
+            style={{
+              fontFamily: 'var(--ff-display)',
+              fontSize: 'clamp(30px, 7vw, 40px)',
+              fontWeight: 500,
+              lineHeight: 1.08,
+              letterSpacing: '-0.02em',
+              color: 'var(--text-heading)',
+              margin: 0,
+            }}
+          >
+            This page failed to load.
+          </h1>
+          <p
+            style={{
+              fontFamily: 'var(--ff-sans)',
+              fontSize: '15px',
+              lineHeight: 1.7,
+              color: 'var(--text-secondary)',
+              margin: '16px 0 28px',
+            }}
+          >
+            The error came from this page, not from your connection. Try again, or return home and open a different surface.
+          </p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
+            <button
+              onClick={reset}
+              style={{
+                minHeight: '44px',
+                padding: '0 18px',
+                fontFamily: 'var(--ff-sans)',
+                fontSize: '14px',
+                fontWeight: 500,
+                color: 'var(--bg-base)',
+                background: 'var(--text-heading)',
+                border: '1px solid var(--text-heading)',
+                borderRadius: '6px',
+                cursor: 'pointer',
+              }}
+            >
+              Try again
+            </button>
+            <Link
+              href="/"
+              style={{
+                minHeight: '44px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                padding: '0 18px',
+                fontFamily: 'var(--ff-sans)',
+                fontSize: '14px',
+                color: 'var(--text-primary)',
+                border: '1px solid var(--border-default)',
+                borderRadius: '6px',
+                textDecoration: 'none',
+              }}
+            >
+              Return home
+            </Link>
+          </div>
         </div>
       </body>
     </html>

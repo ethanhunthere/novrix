@@ -110,6 +110,7 @@
 
 html {
   background: #0A0908;
+  color-scheme: dark;
   -webkit-text-size-adjust: 100%;
   -moz-text-size-adjust: 100%;
   text-size-adjust: 100%;
@@ -153,18 +154,18 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(245, 241, 234, 0.14);
   border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.20);
+  background: rgba(245, 241, 234, 0.24);
 }
 
 /* Firefox scrollbar */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+  scrollbar-color: rgba(245, 241, 234, 0.14) transparent;
 }
 
 /* Hide horizontal scrollbar for mobile navigation */
@@ -243,9 +244,7 @@ tbody tr:hover {
   outline: 1px solid rgba(194, 52, 77, 0.60);
   outline-offset: 2px;
 }
-/* Suppress ALL browser default focus outlines on interactive divs/buttons */
-[role="button"]:focus,
-[role="button"]:focus-visible,
+/* Suppress browser default focus styling only for non-keyboard focus */
 div:focus:not(:focus-visible),
 button:focus:not(:focus-visible) {
   outline: none !important;
@@ -283,8 +282,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Text selection \u2014 NOVRIX brand red highlight */
 ::selection {
-  background: rgba(194, 52, 77, 0.25);
-  color: #FAFAFA;
+  background: rgba(194, 52, 77, 0.32);
+  color: var(--text-heading);
 }
 
 /* HR dividers \u2014 structural, never decorative */

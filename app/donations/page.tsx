@@ -1,195 +1,175 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
+import Navbar from '@/components/layout/Navbar';
 import FooterHome from '@/components/layout/FooterHome';
 
-const INTER = 'var(--ff-sans)';
-const MONO  = 'var(--ff-mono)';
+const SANS = 'var(--ff-sans)';
+const DISPLAY = 'var(--ff-display)';
+const MONO = 'var(--ff-mono)';
 
 const ZEC_ADDRESS = 'u1gjdr3v4tutx7g9jf045sxm35m380q2phsmnhvzs2sygwcxq0w79whuv0k8mksue6fk9k2x5dgt43knkqfjqt2rrf3kr48pkcqqflsux0uzkpkrul2eh4wyql00agn6rkuayw5zuuhf4ehaar8805a2acengl2hrgqzzmsczhlqrxm3l5';
 const BTC_ADDRESS = '18d6ybiWceKC3QwAGveMUijVyBMbNvUZmd';
 const XMR_ADDRESS = '495CrEJ9p8CPn8YUiU5zv2MCjTuQ167cDR5F1ejrb5RRHzu8vTeUgJjY4kCMirkcP9VRFcBXKPXQN4XJpj35H7YmEqeHpU6';
 
+const ADDRESSES = [
+  { symbol: 'ZEC', name: 'Zcash', address: ZEC_ADDRESS, qrSrc: '/zecqrcode.png' },
+  { symbol: 'BTC', name: 'Bitcoin', address: BTC_ADDRESS, qrSrc: '/btcqrcode.png' },
+  { symbol: 'XMR', name: 'Monero', address: XMR_ADDRESS, qrSrc: '/xmrqrcode.png' },
+];
 
-function addrShort(addr: string) {
-  if (addr.length <= 20) return addr;
-  return `${addr.slice(0, 10)}...${addr.slice(-8)}`;
+function shortAddress(address: string) {
+  if (address.length <= 24) return address;
+  return `${address.slice(0, 12)}…${address.slice(-8)}`;
 }
-
-function AddressCard({
-  symbol,
-  address,
-  qrSrc,
-  copied,
-  onCopy,
-}: {
-  symbol: string;
-  address: string;
-  qrSrc: string;
-  copied: boolean;
-  onCopy: () => void;
-}) {
-  const fullNames: Record<string, string> = { ZEC: 'Zcash', BTC: 'Bitcoin', XMR: 'Monero' };
-  return (
-    <div
-      className="flex flex-col items-center"
-      style={{
-        background: '#FAFAFA',
-        border: '1px solid rgba(0,0,0,0.06)',
-        borderRadius: '12px',
-        padding: 'clamp(20px, 2.5vw, 28px)',
-        gap: '16px',
-      }}
-    >
-      {/* QR Code */}
-      <div
-        style={{
-          background: '#FFFFFF',
-          padding: '8px',
-          borderRadius: '8px',
-          border: '1px solid rgba(0,0,0,0.05)',
-        }}
-      >
-        <img
-          src={qrSrc}
-          alt={`${symbol} QR`}
-          style={{
-            display: 'block',
-            borderRadius: '4px',
-            width: 'clamp(120px, 16vw, 150px)',
-            height: 'clamp(120px, 16vw, 150px)',
-            imageRendering: 'pixelated',
-          }}
-        />
-      </div>
-
-      {/* Label */}
-      <div style={{ textAlign: 'center' }}>
-        <span style={{ fontFamily: MONO, fontSize: '11px', letterSpacing: '0.12em', color: '#64748B', textTransform: 'uppercase' }}>
-          {fullNames[symbol]}
-        </span>
-      </div>
-
-      {/* Address */}
-      <div
-        style={{
-          background: '#F1F5F9',
-          borderRadius: '6px',
-          padding: '10px 14px',
-          fontFamily: MONO,
-          fontSize: '12px',
-          color: '#334155',
-          letterSpacing: '0.02em',
-          wordBreak: 'break-all',
-          lineHeight: 1.4,
-          textAlign: 'center',
-          width: '100%',
-        }}
-      >
-        {addrShort(address)}
-      </div>
-
-      {/* Copy */}
-      <button
-        onClick={onCopy}
-        style={{
-          fontFamily: MONO,
-          fontSize: '10px',
-          letterSpacing: '0.1em',
-          textTransform: 'uppercase',
-          color: copied ? '#0891B2' : '#64748B',
-          background: 'transparent',
-          border: '1px solid rgba(0,0,0,0.1)',
-          borderRadius: '6px',
-          padding: '8px 16px',
-          cursor: 'pointer',
-          transition: 'all 150ms ease',
-        }}
-        onMouseEnter={e => { if (!copied) { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.2)'; e.currentTarget.style.color = '#0F172A'; } }}
-        onMouseLeave={e => { if (!copied) { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.1)'; e.currentTarget.style.color = '#64748B'; } }}
-      >
-        {copied ? 'Copied' : 'Copy'}
-      </button>
-    </div>
-  );
-}
-
 
 export default function DonationsPage() {
-  const [copied, setCopied] = useState(false);
-  const [btcCopied, setBtcCopied] = useState(false);
-  const [xmrCopied, setXmrCopied] = useState(false);
+  const [copied, setCopied] = useState<string | null>(null);
+  const [failed, setFailed] = useState<string | null>(null);
 
-  const ADDRESSES = [
-    { symbol: 'ZEC', address: ZEC_ADDRESS, qrSrc: '/zecqrcode.png', copied, setCopied: setCopied },
-    { symbol: 'BTC', address: BTC_ADDRESS, qrSrc: '/btcqrcode.png', copied: btcCopied, setCopied: setBtcCopied },
-    { symbol: 'XMR', address: XMR_ADDRESS, qrSrc: '/xmrqrcode.png', copied: xmrCopied, setCopied: setXmrCopied },
-  ];
+  const copy = async (symbol: string, address: string) => {
+    try {
+      await navigator.clipboard.writeText(address);
+      setFailed(null);
+      setCopied(symbol);
+      window.setTimeout(() => setCopied(current => (current === symbol ? null : current)), 2000);
+    } catch {
+      setFailed(symbol);
+    }
+  };
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: '#0A0A0F', color: '#FAFAFA' }}>
-      {/* Top bar */}
-      <div style={{ padding: 'clamp(16px, 2vw, 32px) clamp(16px, 3vw, 48px) clamp(8px, 1vw, 16px)' }}>
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2.5"
-          style={{ fontFamily: MONO, fontSize: 'clamp(10px, 1vw, 11px)', letterSpacing: '0.12em', color: '#475569', textDecoration: 'none', textTransform: 'uppercase' }}
-        >
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M19 12H5M12 19l-7-7 7-7" />
-          </svg>
-          Return to NOVRIX
-        </Link>
-      </div>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-base)' }}>
+      <Navbar />
 
-      {/* Main content */}
-      <main className="flex-1 flex flex-col">
-        <section style={{ padding: 'clamp(24px, 3vw, 48px) clamp(16px, 3vw, 48px) clamp(40px, 6vw, 80px)' }}>
-          <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
-            <p
+      <main style={{ flex: 1, width: '100%' }}>
+        <div style={{ maxWidth: '1060px', margin: '0 auto', padding: 'clamp(56px, 8vw, 104px) var(--container-pad) clamp(72px, 10vw, 120px)' }}>
+          <header style={{ maxWidth: '640px' }}>
+            <h1
               style={{
-                fontFamily: INTER,
-                fontSize: 'clamp(14px, 1.4vw, 17px)',
-                fontWeight: 400,
-                color: '#9398A4',
-                lineHeight: 1.7,
-                maxWidth: '640px',
-                margin: '0 0 clamp(32px, 5vw, 56px)',
+                fontFamily: DISPLAY,
+                fontSize: 'clamp(36px, 5.4vw, 58px)',
+                fontWeight: 500,
+                lineHeight: 1.02,
+                letterSpacing: '-0.025em',
+                color: 'var(--text-heading)',
+                margin: 0,
+                textWrap: 'balance',
               }}
             >
-              I built this thing because I was bored and annoyed at existing crypto tools. Turns out other people like it too. If you wanna throw some crypto my way so I can keep making it better, cool. If not, also cool. Either way it&apos;s staying free and open source.
+              Operations funding
+            </h1>
+            <p
+              style={{
+                fontFamily: SANS,
+                fontSize: 'clamp(16px, 1.5vw, 18px)',
+                lineHeight: 1.7,
+                color: 'var(--text-secondary)',
+                margin: '20px 0 0',
+              }}
+            >
+              I built this because I was bored and annoyed at existing crypto tools. Other people found it useful. If you want to throw some crypto at the infrastructure bill, cool. If not, also cool. It stays free and open source either way.
             </p>
-          </div>
-          {/* Cards Grid — single col mobile, 2 col tablet, 3 col desktop */}
+          </header>
+
+          <div style={{ height: '1px', background: 'var(--border-subtle)', margin: 'clamp(36px, 5vw, 52px) 0' }} />
+
           <div
-            style={{
-              maxWidth: '1400px',
-              margin: '0 auto',
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))',
-              gap: 'clamp(16px, 2vw, 24px)',
-            }}
+            className="grid grid-cols-1 md:grid-cols-3"
+            style={{ gap: 'clamp(16px, 2vw, 24px)' }}
           >
-            {ADDRESSES.map(addr => (
-              <AddressCard
-                key={addr.symbol}
-                symbol={addr.symbol}
-                address={addr.address}
-                qrSrc={addr.qrSrc}
-                copied={addr.copied}
-                onCopy={async () => {
-                  await navigator.clipboard.writeText(addr.address);
-                  addr.setCopied(true);
-                  setTimeout(() => addr.setCopied(false), 2000);
-                }}
-              />
-            ))}
+            {ADDRESSES.map(item => {
+              const isCopied = copied === item.symbol;
+              const isFailed = failed === item.symbol;
+              return (
+                <div
+                  key={item.symbol}
+                  style={{
+                    background: 'var(--bg-surface)',
+                    border: '1px solid var(--border-subtle)',
+                    borderRadius: '8px',
+                    padding: 'clamp(20px, 2.4vw, 28px)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '16px',
+                  }}
+                >
+                  <div style={{ background: '#FFFFFF', padding: '8px', borderRadius: '4px' }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={item.qrSrc}
+                      alt={`${item.name} donation address QR code`}
+                      width={144}
+                      height={144}
+                      style={{ display: 'block', width: 'clamp(120px, 15vw, 144px)', height: 'auto', imageRendering: 'pixelated' }}
+                    />
+                  </div>
+
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontFamily: SANS, fontSize: '15px', color: 'var(--text-primary)' }}>{item.name}</div>
+                    <div style={{ fontFamily: MONO, fontSize: '10px', letterSpacing: '0.16em', color: 'var(--text-tertiary)', marginTop: '4px' }}>
+                      {item.symbol}
+                    </div>
+                  </div>
+
+                  <code
+                    style={{
+                      fontFamily: MONO,
+                      fontSize: '11.5px',
+                      lineHeight: 1.5,
+                      color: 'var(--text-secondary)',
+                      background: 'var(--bg-raised)',
+                      border: '1px solid var(--border-subtle)',
+                      padding: '10px 12px',
+                      width: '100%',
+                      textAlign: 'center',
+                      overflowWrap: 'anywhere',
+                    }}
+                  >
+                    {shortAddress(item.address)}
+                  </code>
+
+                  <button
+                    type="button"
+                    onClick={() => copy(item.symbol, item.address)}
+                    aria-live="polite"
+                    className="donation-copy"
+                    style={{
+                      minHeight: '44px',
+                      width: '100%',
+                      fontFamily: SANS,
+                      fontSize: '13px',
+                      fontWeight: 500,
+                      color: isFailed ? 'var(--status-critical)' : isCopied ? 'var(--accent-novrix)' : 'var(--text-primary)',
+                      background: 'transparent',
+                      border: `1px solid ${isCopied ? 'var(--border-accent)' : 'var(--border-default)'}`,
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {isFailed ? 'Copy failed — select the address' : isCopied ? 'Copied' : 'Copy address'}
+                  </button>
+                </div>
+              );
+            })}
           </div>
-        </section>
+
+          <p style={{ fontFamily: SANS, fontSize: '13px', lineHeight: 1.7, color: 'var(--text-tertiary)', margin: '24px 0 0', maxWidth: '620px' }}>
+            Donations cover data provider access and hosting. Nothing here unlocks a feature, and nothing is tracked.
+          </p>
+        </div>
       </main>
 
       <FooterHome />
+
+      <style>{`
+        .donation-copy { transition: color 160ms var(--ease-standard), border-color 160ms var(--ease-standard), background 160ms var(--ease-standard); }
+        .donation-copy:hover { background: var(--bg-raised); }
+        .donation-copy:active { transform: scale(.98); }
+        .donation-copy:focus-visible { outline: 1px solid var(--accent-novrix); outline-offset: 3px; }
+        @media (prefers-reduced-motion: reduce) { .donation-copy { transition: none; } .donation-copy:active { transform: none; } }
+      `}</style>
     </div>
   );
 }

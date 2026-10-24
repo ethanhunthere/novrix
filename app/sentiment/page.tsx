@@ -487,6 +487,9 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
 
   useEffect(() => {
     if (maximizedPanel) {
+      // Panel visibility is driven by the lazy-load observer; maximizing must
+      // force the panel into the observed set before it can scroll into view.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setVisiblePanels((prev) => {
         if (prev.has(maximizedPanel)) return prev;
         const next = new Set(prev);
@@ -499,6 +502,9 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
   useEffect(() => {
     if (selectedIndicator) {
       const panelId = selectedIndicator.replace(/^indicator-/, '');
+      // Same as maximize: selecting a registry row must force that panel into
+      // the observed set so its chart mounts immediately.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setVisiblePanels((prev) => {
         if (prev.has(panelId)) return prev;
         const next = new Set(prev);
@@ -2534,8 +2540,8 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
               ref={setPanelRef('sentiment-oscillator')}
               data-panel="sentiment-oscillator"
               onMouseEnter={preloadCapture}
-              className="bg-[#0D1420] border overflow-hidden scroll-mt-4"
-              style={{ position: 'relative', background: 'linear-gradient(135deg, #040912 0%, #050A16 60%, #040810 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 8px 40px rgba(0,0,0,0.7)' }}
+              className="bg-[var(--bg-surface)] border overflow-hidden scroll-mt-4"
+              style={{ position: 'relative', background: 'linear-gradient(135deg, var(--bg-surface) 0%, #14110F 60%, var(--bg-base) 100%)', border: '1px solid var(--border-default)', boxShadow: '0 8px 40px rgba(0,0,0,0.45)' }}
             >
               <PanelHeader
                 code="FNG"
@@ -2550,7 +2556,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 onMaximize={() => setMaximizedPanel(maximizedPanel === 'sentiment-oscillator' ? null : 'sentiment-oscillator')}
                 isMaximized={maximizedPanel === 'sentiment-oscillator'}
               />
-              <div className="px-4 pt-3 pb-4" style={{ background: 'linear-gradient(180deg, rgba(3,5,10,0.85) 0%, rgba(4,7,12,0.55) 12%, rgba(5,8,14,0.22) 28%, transparent 55%)' }}>
+              <div className="px-4 pt-3 pb-4" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
                 {(!visiblePanels.has('sentiment-oscillator') || isLoading) ? (
                   <ChartSkeleton height={264} />
                 ) : (
@@ -2633,7 +2639,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                               <ReferenceArea y1={75} y2={100} fill="#EF4444" fillOpacity={SENTIMENT_BAND_OPACITY} />
                               <XAxis
                                 dataKey="index" stroke="none"
-                                tick={{ fill: '#8AAEC8', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
+                                tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
                                 ticks={calculateTicks()}
                                 tickFormatter={formatXAxis}
                                 height={22}
@@ -2641,11 +2647,11 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                               <YAxis
                                 domain={[0, 100]}
                                 stroke="none"
-                                tick={{ fill: '#8AAEC8', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
+                                tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
                                 width={24}
                               />
                               <Tooltip
-                                cursor={{ stroke: 'rgba(160,215,255,0.85)', strokeWidth: 2 }}
+                                cursor={{ stroke: 'rgba(245,241,234,0.65)', strokeWidth: 2 }}
                                 animationDuration={0}
                                 isAnimationActive={false}
                                 content={<FngTooltip />}
@@ -2751,8 +2757,8 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
               ref={setPanelRef('dominance')}
               data-panel="dominance"
               onMouseEnter={preloadCapture}
-              className="bg-[#0D1420] border overflow-hidden scroll-mt-4"
-              style={{ position: 'relative', background: 'linear-gradient(135deg, #040912 0%, #050A16 60%, #040810 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 8px 40px rgba(0,0,0,0.7)' }}
+              className="bg-[var(--bg-surface)] border overflow-hidden scroll-mt-4"
+              style={{ position: 'relative', background: 'linear-gradient(135deg, var(--bg-surface) 0%, #14110F 60%, var(--bg-base) 100%)', border: '1px solid var(--border-default)', boxShadow: '0 8px 40px rgba(0,0,0,0.45)' }}
             >
               <PanelHeader
                 code="DOM"
@@ -2767,7 +2773,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 onMaximize={() => setMaximizedPanel(maximizedPanel === 'dominance' ? null : 'dominance')}
                 isMaximized={maximizedPanel === 'dominance'}
               />
-              <div className="px-4 pt-3 pb-4" style={{ background: 'linear-gradient(180deg, rgba(3,5,10,0.85) 0%, rgba(4,7,12,0.55) 12%, rgba(5,8,14,0.22) 28%, transparent 55%)' }}>
+              <div className="px-4 pt-3 pb-4" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
                 {(!visiblePanels.has('dominance') || isDominanceLoading) ? (
                   <ChartSkeleton height={320} />
                 ) : dominanceChartDataWithPrice.length === 0 ? (
@@ -2795,21 +2801,21 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                             <stop offset="95%" stopColor="#627EEA" stopOpacity={0}/>
                           </linearGradient>
                         </defs>
-                        <CartesianGrid strokeDasharray="3 6" stroke="rgba(130,175,220,0.04)" vertical={false} />
+                        <CartesianGrid strokeDasharray="3 6" stroke="rgba(245,241,234,0.05)" vertical={false} />
                         <XAxis dataKey="index" stroke="none"
-                          tick={{ fill: '#8AAEC8', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
+                          tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
                           ticks={getXAxisTicks(dominanceChartDataWithPrice, '365')}
                           tickFormatter={(i: number) => formatXAxisTick(dominanceChartDataWithPrice, i, '365')}
                           height={22} />
                         <YAxis domain={['auto', 'auto']} stroke="none"
-                          tick={{ fill: '#8AAEC8', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
+                          tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
                           tickFormatter={(v) => `${v.toFixed(0)}%`} width={52} />
                         {showBtcPrice['dominance'] && (
                           <YAxis yAxisId="btcPrice" orientation="right" scale="log" domain={['auto', 'auto']} stroke="none"
-                            tick={{ fill: '#6B7A8D', fontSize: 10, fontFamily: 'var(--ff-mono)' }}
+                            tick={{ fill: '#8C857C', fontSize: 10, fontFamily: 'var(--ff-mono)' }}
                             tickFormatter={(v) => v >= 1e3 ? `$${(v/1e3).toFixed(0)}K` : `$${v}`} width={46} />
                         )}
-                        <Tooltip cursor={{ stroke: 'rgba(160,215,255,0.85)', strokeWidth: 2 }} animationDuration={0} isAnimationActive={false}
+                        <Tooltip cursor={{ stroke: 'rgba(245,241,234,0.65)', strokeWidth: 2 }} animationDuration={0} isAnimationActive={false}
                           content={(props) => (
                             <PrecisionTooltip {...props} accentColor="#F7931A" getRows={(pt, pl) => {
                               const rows: Array<{ label: string; value: string; color: string }> = [];
@@ -3064,8 +3070,8 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
               ref={setPanelRef('hashribbons')}
               data-panel="hashribbons"
               onMouseEnter={preloadCapture}
-              className="bg-[#0D1420] border overflow-hidden scroll-mt-4"
-              style={{ position: 'relative', background: 'linear-gradient(135deg, #040912 0%, #050A16 60%, #040810 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 8px 40px rgba(0,0,0,0.7)' }}
+              className="bg-[var(--bg-surface)] border overflow-hidden scroll-mt-4"
+              style={{ position: 'relative', background: 'linear-gradient(135deg, var(--bg-surface) 0%, #14110F 60%, var(--bg-base) 100%)', border: '1px solid var(--border-default)', boxShadow: '0 8px 40px rgba(0,0,0,0.45)' }}
             >
               {(() => {
                 const last = hashribbonsChartData.length > 0 ? hashribbonsChartData[hashribbonsChartData.length - 1] : null;
@@ -3088,7 +3094,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                     onMaximize={() => setMaximizedPanel(maximizedPanel === 'hashribbons' ? null : 'hashribbons')}
                     isMaximized={maximizedPanel === 'hashribbons'}
                   />
-              <div className="px-4 pt-3 pb-4" style={{ background: 'linear-gradient(180deg, rgba(3,5,10,0.85) 0%, rgba(4,7,12,0.55) 12%, rgba(5,8,14,0.22) 28%, transparent 55%)' }}>
+              <div className="px-4 pt-3 pb-4" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
                 {(!visiblePanels.has('hashribbons') || isHashribbonsLoading) ? <ChartSkeleton height={320} /> : (
                   <div>
                     <div className="flex items-center justify-between mb-3">
@@ -3111,18 +3117,18 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                             <stop offset="95%" stopColor="#60A5FA" stopOpacity={0} />
                           </linearGradient>
                         </defs>
-                        <CartesianGrid strokeDasharray="3 6" stroke="rgba(130,175,220,0.04)" vertical={false} />
-                        <XAxis dataKey="index" stroke="none" tick={{ fill: '#8AAEC8', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
+                        <CartesianGrid strokeDasharray="3 6" stroke="rgba(245,241,234,0.05)" vertical={false} />
+                        <XAxis dataKey="index" stroke="none" tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
                           ticks={getXAxisTicks(hashribbonsChartData, hashribbonsTimeframe)}
                           tickFormatter={(i: number) => formatXAxisTick(hashribbonsChartData, i, hashribbonsTimeframe)} height={22} />
-                        <YAxis stroke="none" tick={{ fill: '#8AAEC8', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
+                        <YAxis stroke="none" tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
                           tickFormatter={(v) => v >= 1e6 ? `${(v/1e6).toFixed(0)}E` : v >= 1e3 ? `${(v/1e3).toFixed(0)}P` : `${v.toFixed(0)}T`} width={52} />
                         {showBtcPrice['hashribbons'] && (
                           <YAxis yAxisId="btcPrice" orientation="right" scale="log" domain={['auto', 'auto']} stroke="none"
-                            tick={{ fill: '#6B7A8D', fontSize: 10, fontFamily: 'var(--ff-mono)' }}
+                            tick={{ fill: '#8C857C', fontSize: 10, fontFamily: 'var(--ff-mono)' }}
                             tickFormatter={(v) => v >= 1e3 ? `$${(v/1e3).toFixed(0)}K` : `$${v}`} width={46} />
                         )}
-                        <Tooltip cursor={{ stroke: 'rgba(160,215,255,0.85)', strokeWidth: 2 }} animationDuration={0} isAnimationActive={false}
+                        <Tooltip cursor={{ stroke: 'rgba(245,241,234,0.65)', strokeWidth: 2 }} animationDuration={0} isAnimationActive={false}
                           content={(props) => (
                             <PrecisionTooltip {...props} accentColor="#F7931A" getRows={(pt, pl) => {
                               const rows: Array<{ label: string; value: string; color: string }> = [];
@@ -3385,8 +3391,8 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
               ref={setPanelRef('200-week-ma')}
               data-panel="200-week-ma"
               onMouseEnter={preloadCapture}
-              className="bg-[#0D1420] border overflow-hidden scroll-mt-4"
-              style={{ position: 'relative', background: 'linear-gradient(135deg, #040912 0%, #050A16 60%, #040810 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 8px 40px rgba(0,0,0,0.7)' }}
+              className="bg-[var(--bg-surface)] border overflow-hidden scroll-mt-4"
+              style={{ position: 'relative', background: 'linear-gradient(135deg, var(--bg-surface) 0%, #14110F 60%, var(--bg-base) 100%)', border: '1px solid var(--border-default)', boxShadow: '0 8px 40px rgba(0,0,0,0.45)' }}
             >
               {(() => {
                 const last = weekMa200ChartData.length > 0 ? weekMa200ChartData[weekMa200ChartData.length - 1].value : null;
@@ -3404,7 +3410,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                     onMaximize={() => setMaximizedPanel(maximizedPanel === '200-week-ma' ? null : '200-week-ma')}
                     isMaximized={maximizedPanel === '200-week-ma'}
                   />
-              <div className="px-4 pt-3 pb-4" style={{ background: 'linear-gradient(180deg, rgba(3,5,10,0.85) 0%, rgba(4,7,12,0.55) 12%, rgba(5,8,14,0.22) 28%, transparent 55%)' }}>
+              <div className="px-4 pt-3 pb-4" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
                 {(!visiblePanels.has('200-week-ma') || isWeekMa200Loading) ? <ChartSkeleton height={320} /> : weekMa200ChartData.length === 0 ? (
                   <div style={{ height: '320px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', color: '#52525B', letterSpacing: '0.18em' }}>AWAITING DATA SYNC</span>
@@ -3426,13 +3432,13 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                             <stop offset="95%" stopColor="#00E5FF" stopOpacity={0} />
                           </linearGradient>
                         </defs>
-                        <CartesianGrid strokeDasharray="3 6" stroke="rgba(130,175,220,0.04)" vertical={false} />
-                        <XAxis dataKey="index" stroke="none" tick={{ fill: '#8AAEC8', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
+                        <CartesianGrid strokeDasharray="3 6" stroke="rgba(245,241,234,0.05)" vertical={false} />
+                        <XAxis dataKey="index" stroke="none" tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
                           ticks={getXAxisTicks(weekMa200ChartData, weekMa200Timeframe)}
                           tickFormatter={(i: number) => formatXAxisTick(weekMa200ChartData, i, weekMa200Timeframe)} height={22} />
-                        <YAxis domain={['auto', 'auto']} stroke="none" tick={{ fill: '#8AAEC8', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
+                        <YAxis domain={['auto', 'auto']} stroke="none" tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
                           tickFormatter={(v) => `$${v >= 1000 ? `${(v/1000).toFixed(0)}K` : v.toFixed(0)}`} width={52} />
-                        <Tooltip cursor={{ stroke: 'rgba(160,215,255,0.85)', strokeWidth: 2 }} animationDuration={0} isAnimationActive={false}
+                        <Tooltip cursor={{ stroke: 'rgba(245,241,234,0.65)', strokeWidth: 2 }} animationDuration={0} isAnimationActive={false}
                           content={(props) => (
                             <PrecisionTooltip {...props} accentColor="#00E5FF" getRows={(pt, pl) => {
                               const rows: Array<{ label: string; value: string; color: string }> = [];
@@ -3585,8 +3591,8 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
               id="indicator-social-sentiment"
               ref={setPanelRef('social-sentiment')}
               data-panel="social-sentiment"
-              className="bg-[#0D1420] border overflow-hidden"
-              style={{ position: 'relative', background: 'linear-gradient(135deg, #040912 0%, #050A16 60%, #040810 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 8px 40px rgba(0,0,0,0.7)' }}
+              className="bg-[var(--bg-surface)] border overflow-hidden"
+              style={{ position: 'relative', background: 'linear-gradient(135deg, var(--bg-surface) 0%, #14110F 60%, var(--bg-base) 100%)', border: '1px solid var(--border-default)', boxShadow: '0 8px 40px rgba(0,0,0,0.45)' }}
               onMouseEnter={preloadCapture}
             >
               <PanelHeader
@@ -3601,7 +3607,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 onMaximize={() => setMaximizedPanel(maximizedPanel === 'social-sentiment' ? null : 'social-sentiment')}
                 isMaximized={maximizedPanel === 'social-sentiment'}
               />
-              <div className="px-4 pt-3 pb-4" style={{ background: 'linear-gradient(180deg, rgba(3,5,10,0.85) 0%, rgba(4,7,12,0.55) 12%, rgba(5,8,14,0.22) 28%, transparent 55%)' }}>
+              <div className="px-4 pt-3 pb-4" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
                 {(!visiblePanels.has('social-sentiment') || isSocialLoading) ? (
                   <ChartSkeleton height={200} />
                 ) : socialSentiment ? (
@@ -3718,8 +3724,8 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
               id="indicator-trending"
               ref={setPanelRef('trending')}
               data-panel="trending-coins"
-              className="bg-[#0D1420] border overflow-hidden"
-              style={{ position: 'relative', background: 'linear-gradient(135deg, #040912 0%, #050A16 60%, #040810 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 8px 40px rgba(0,0,0,0.7)' }}
+              className="bg-[var(--bg-surface)] border overflow-hidden"
+              style={{ position: 'relative', background: 'linear-gradient(135deg, var(--bg-surface) 0%, #14110F 60%, var(--bg-base) 100%)', border: '1px solid var(--border-default)', boxShadow: '0 8px 40px rgba(0,0,0,0.45)' }}
               onMouseEnter={preloadCapture}
             >
               <PanelHeader
@@ -3732,7 +3738,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 onMaximize={() => setMaximizedPanel(maximizedPanel === 'trending' ? null : 'trending')}
                 isMaximized={maximizedPanel === 'trending'}
               />
-              <div className="px-4 pt-3 pb-4" style={{ background: 'linear-gradient(180deg, rgba(3,5,10,0.85) 0%, rgba(4,7,12,0.55) 12%, rgba(5,8,14,0.22) 28%, transparent 55%)' }}>
+              <div className="px-4 pt-3 pb-4" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
                 {(!visiblePanels.has('trending-coins') || isSocialLoading) ? (
                   <ChartSkeleton height={200} />
                 ) : trendingCoins.length > 0 ? (

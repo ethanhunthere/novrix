@@ -46,11 +46,11 @@ const SentimentSidebar = memo(function SentimentSidebar({
       initial={{ opacity: 0, x: -16 }}
       animate={{ opacity: 1, x: 0 }}
       className="overflow-hidden lg:sticky lg:top-4 lg:self-start lg:max-h-[calc(100vh-6rem)] lg:flex lg:flex-col"
-      style={{ background: '#0B0D12', border: '1px solid #1E2435' }}
+      style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-default)' }}
     >
       {/* ── Sidebar header ── */}
       <div className="shrink-0">
-        <div className="px-5 pt-5 pb-4" style={{ background: '#080A0F', borderBottom: '1px solid #1A2030' }}>
+        <div className="px-5 pt-5 pb-4" style={{ background: 'var(--bg-base)', borderBottom: '1px solid var(--border-subtle)' }}>
           {/* INTEL REGISTRY label with accent underline */}
           <div className="flex items-center justify-between mb-1">
             <div className="flex flex-col gap-1.5">
@@ -60,26 +60,26 @@ const SentimentSidebar = memo(function SentimentSidebar({
                 fontWeight: 700,
                 textTransform: 'uppercase',
                 fontFamily: 'var(--ff-mono)',
-                color: '#6B7D9A',
+                color: 'var(--text-tertiary)',
               }}>
                 Intel Registry
               </span>
-              <div style={{ width: '34px', height: '2px', background: '#3B82F6', borderRadius: '1px' }} />
+              <div style={{ width: '34px', height: '2px', background: 'var(--accent-novrix)', borderRadius: '1px' }} />
             </div>
           </div>
         </div>
       </div>
 
-      <div className="overflow-y-auto flex-1" style={{ scrollbarWidth: 'thin', scrollbarColor: '#2A3040 #111316' }}>
+      <div className="overflow-y-auto flex-1" style={{ scrollbarWidth: 'thin', scrollbarColor: 'var(--border-default) var(--bg-base)' }}>
         {/* ── Search ── */}
-        <div className="px-4 py-3" style={{ borderBottom: '1px solid #151B26', background: '#0D0F14' }}>
+        <div className="px-4 py-3" style={{ borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-raised)' }}>
           <div className="relative">
             <svg
               width="14"
               height="14"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="#4A5568"
+              stroke="var(--text-ghost)"
               strokeWidth="2.5"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -97,24 +97,24 @@ const SentimentSidebar = memo(function SentimentSidebar({
                 width: '100%',
                 height: '40px',
                 padding: '0 12px 0 36px',
-                background: '#11141C',
-                border: '1px solid #1E2635',
+                background: 'var(--bg-raised)',
+                border: '1px solid var(--border-default)',
                 borderRadius: '6px',
-                color: '#C8D4E4',
+                color: 'var(--text-primary)',
                 fontSize: '13px',
                 fontFamily: 'var(--ff-sans)',
                 letterSpacing: '0.01em',
                 outline: 'none',
-                caretColor: '#3B82F6',
+                caretColor: 'var(--accent-novrix)',
                 boxSizing: 'border-box',
                 transition: 'border-color 180ms ease, box-shadow 180ms ease',
               }}
               onFocus={(e) => {
-                e.currentTarget.style.borderColor = '#3B82F688';
-                e.currentTarget.style.boxShadow = '0 0 0 3px rgba(59,130,246,0.08)';
+                e.currentTarget.style.borderColor = 'var(--border-accent)';
+                e.currentTarget.style.boxShadow = '0 0 0 3px var(--border-accent)';
               }}
               onBlur={(e) => {
-                e.currentTarget.style.borderColor = '#1E2635';
+                e.currentTarget.style.borderColor = 'var(--border-default)';
                 e.currentTarget.style.boxShadow = 'none';
               }}
             />
@@ -128,7 +128,7 @@ const SentimentSidebar = memo(function SentimentSidebar({
           if (q && visibleIndicators.length === 0) return null;
           const isOpen = q ? true : openAccordion === cat.id;
           return (
-            <div key={cat.id} style={{ borderBottom: '1px solid #161C28' }}>
+            <div key={cat.id} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
               {/* Category header */}
               <div
                 role="button"
@@ -138,14 +138,14 @@ const SentimentSidebar = memo(function SentimentSidebar({
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   padding: '13px 18px',
-                  background: isOpen ? '#131925' : '#0B0D12',
-                  borderLeft: `3px solid ${isOpen ? cat.accent : '#1A2030'}`,
+                  background: isOpen ? 'var(--bg-raised)' : 'var(--bg-surface)',
+                  borderLeft: `3px solid ${isOpen ? cat.accent : 'var(--border-subtle)'}`,
                   cursor: q ? 'default' : 'pointer',
                   userSelect: 'none',
                   transition: 'background 160ms ease, border-left-color 160ms ease',
                 }}
-                onMouseEnter={(e) => { if (!q && !isOpen) { e.currentTarget.style.background = '#10151E'; e.currentTarget.style.borderLeftColor = cat.accent + 'AA'; } }}
-                onMouseLeave={(e) => { if (!q && !isOpen) { e.currentTarget.style.background = '#0B0D12'; e.currentTarget.style.borderLeftColor = '#1A2030'; } }}
+                onMouseEnter={(e) => { if (!q && !isOpen) { e.currentTarget.style.background = 'var(--bg-surface)'; e.currentTarget.style.borderLeftColor = cat.accent + 'AA'; } }}
+                onMouseLeave={(e) => { if (!q && !isOpen) { e.currentTarget.style.background = 'var(--bg-surface)'; e.currentTarget.style.borderLeftColor = 'var(--border-subtle)'; } }}
               >
                 <span style={{
                   fontSize: '12px',
@@ -153,7 +153,7 @@ const SentimentSidebar = memo(function SentimentSidebar({
                   letterSpacing: '0.14em',
                   textTransform: 'uppercase',
                   fontFamily: 'var(--ff-sans)',
-                  color: isOpen ? '#E2E8F0' : '#6B7D9A',
+                  color: isOpen ? 'var(--text-heading)' : 'var(--text-tertiary)',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
@@ -164,7 +164,7 @@ const SentimentSidebar = memo(function SentimentSidebar({
                 {!q && (
                   <span style={{
                     fontSize: '13px',
-                    color: isOpen ? cat.accent : '#3A4558',
+                    color: isOpen ? cat.accent : 'var(--text-ghost)',
                     fontFamily: 'var(--ff-sans)',
                     lineHeight: 1,
                     transition: 'color 160ms ease, transform 200ms ease',
@@ -184,14 +184,14 @@ const SentimentSidebar = memo(function SentimentSidebar({
                       return (
                         <div key={`div-${divItem.dividerLabel}`} style={{
                           padding: '16px 18px 8px 21px',
-                          borderTop: idx === 0 ? 'none' : '1px solid #151B26',
+                          borderTop: idx === 0 ? 'none' : '1px solid var(--border-subtle)',
                         }}>
                           <span style={{
                             fontSize: '10px',
                             letterSpacing: '0.18em',
                             textTransform: 'uppercase',
                             fontWeight: 700,
-                            color: '#4A5568',
+                            color: 'var(--text-ghost)',
                             fontFamily: 'var(--ff-sans)',
                           }}>
                             {divItem.dividerLabel}
@@ -218,13 +218,13 @@ const SentimentSidebar = memo(function SentimentSidebar({
                           gap: '11px',
                           padding: '0 18px 0 21px',
                           cursor: 'pointer',
-                          background: isSelected ? '#131B2A' : 'transparent',
+                          background: isSelected ? 'var(--bg-raised)' : 'transparent',
                           borderLeft: isSelected ? `3px solid ${cat.accent}` : '3px solid transparent',
                           userSelect: 'none',
                           outline: 'none',
                           transition: 'background 140ms ease',
                         }}
-                        onMouseEnter={(e) => { if (!isSelected) e.currentTarget.style.background = '#0F141E'; }}
+                        onMouseEnter={(e) => { if (!isSelected) e.currentTarget.style.background = 'var(--bg-surface)'; }}
                         onMouseLeave={(e) => { if (!isSelected) e.currentTarget.style.background = 'transparent'; }}
                       >
                         {/* Freq indicator spacer */}
@@ -234,7 +234,7 @@ const SentimentSidebar = memo(function SentimentSidebar({
                           fontSize: '14px',
                           fontWeight: isSelected ? 600 : 400,
                           lineHeight: '1.5',
-                          color: isSelected ? '#F1F5F9' : '#A0AEC0',
+                          color: isSelected ? 'var(--text-heading)' : 'var(--text-secondary)',
                           fontFamily: 'var(--ff-sans)',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
@@ -244,7 +244,7 @@ const SentimentSidebar = memo(function SentimentSidebar({
                           {hi ? (
                             <>
                               {hi.before}
-                              <span style={{ color: '#F87171', fontWeight: 600 }}>{hi.match}</span>
+                              <span style={{ color: 'var(--accent-bright)', fontWeight: 600 }}>{hi.match}</span>
                               {hi.after}
                             </>
                           ) : indItem.name}
@@ -255,7 +255,7 @@ const SentimentSidebar = memo(function SentimentSidebar({
                             fontSize: '10px',
                             fontFamily: 'var(--ff-mono)',
                             fontWeight: 600,
-                            color: '#4A5568',
+                            color: 'var(--text-ghost)',
                             letterSpacing: '0.04em',
                             flexShrink: 0,
                           }}>

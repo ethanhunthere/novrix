@@ -26,7 +26,7 @@ function UtcClock() {
 
   if (!utc) return null;
   return (
-    <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', color: '#64748B', letterSpacing: '0.14em' }}>
+    <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', color: 'var(--text-tertiary)', letterSpacing: '0.14em' }}>
       UTC {utc}
     </span>
   );
@@ -36,8 +36,8 @@ export default function FooterTerminal() {
   return (
     <footer
       style={{
-        background: '#020407',
-        borderTop: '1px solid rgba(255,255,255,0.04)',
+        background: 'var(--bg-base)',
+        borderTop: '1px solid var(--border-subtle)',
         fontFamily: 'var(--ff-mono)',
       }}
     >
@@ -46,9 +46,9 @@ export default function FooterTerminal() {
 
           {/* Left: Brand */}
           <span
-            style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', fontWeight: 700, letterSpacing: '0.18em', color: '#475569' }}
+            style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', fontWeight: 700, letterSpacing: '0.18em', color: 'var(--text-ghost)' }}
           >
-            NOVRIX<span style={{ color: '#334155' }}>.IO</span>
+            NOVRIX<span style={{ color: 'var(--text-ghost)' }}>.IO</span>
           </span>
 
           {/* Center: UTC clock */}
@@ -57,7 +57,7 @@ export default function FooterTerminal() {
           {/* Right: System status */}
           <div className="flex items-center gap-1.5">
             <span
-              style={{ fontFamily: 'var(--ff-mono)', fontSize: '8px', letterSpacing: '0.16em', color: '#475569' }}
+              style={{ fontFamily: 'var(--ff-mono)', fontSize: '8px', letterSpacing: '0.16em', color: 'var(--text-ghost)' }}
             >
               SYS READY
             </span>

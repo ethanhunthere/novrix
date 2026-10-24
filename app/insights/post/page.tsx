@@ -32,20 +32,21 @@ interface AuthorLink {
    ═══════════════════════════════════════════════════════════════════════ */
 
 const INTER = 'var(--ff-sans)';
+const DISPLAY = 'var(--ff-display)';
 const MONO  = 'var(--ff-mono)';
-const BG    = '#070A0F';
-const RULE  = 'rgba(255,255,255,0.055)';
+const BG    = 'var(--bg-base)';
+const RULE  = 'var(--border-subtle)';
 
 const CATEGORY_META: Record<string, { label: string; color: string }> = {
-  weekly_brief:  { label: 'WEEKLY BRIEF',   color: '#60A5FA' },
-  novrix_view:   { label: 'OUR VIEW',       color: '#C2344D' },
+  weekly_brief:  { label: 'WEEKLY BRIEF',   color: '#C9BFB2' },
+  novrix_view:   { label: 'OUR VIEW',       color: '#D95168' },
   privacy_watch: { label: 'DEEP DIVE',      color: '#D4A74A' },
 };
 
 const AUTHOR_META: Record<string, { color: string }> = {
-  Novrix:      { color: '#8FB7E8' },
+  Novrix:      { color: '#C9BFB2' },
   BullCase:    { color: '#D8B15E' },
-  TechLeaks24: { color: '#A78BFA' },
+  TechLeaks24: { color: '#B9A7C9' },
 };
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -105,11 +106,11 @@ function AuthorLinkLabels({ links }: { links?: AuthorLink[] }) {
             fontSize: '10px',
             fontWeight: 700,
             letterSpacing: '0.1em',
-            color: '#93C5FD',
+            color: '#D98D9B',
             textDecoration: 'none',
             textTransform: 'uppercase',
-            border: '1px solid rgba(147,197,253,0.18)',
-            background: 'rgba(147,197,253,0.06)',
+            border: '1px solid rgba(194,52,77,0.22)',
+            background: 'rgba(194,52,77,0.06)',
             borderRadius: '999px',
             padding: '4px 10px',
           }}
@@ -135,10 +136,10 @@ function MarkdownInlineLink({ href, children }: { href: string; children: React.
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        color: hovered ? '#E0F2FE' : '#7DD3FC',
+        color: hovered ? 'var(--text-heading)' : 'var(--text-primary)',
         textDecoration: 'none',
-        borderBottom: `1px solid ${hovered ? 'rgba(224,242,254,0.7)' : 'rgba(125,211,252,0.35)'}`,
-        background: hovered ? 'rgba(125,211,252,0.08)' : 'transparent',
+        borderBottom: `1px solid ${hovered ? 'var(--accent-novrix)' : 'var(--border-default)'}`,
+        background: hovered ? 'var(--bg-raised)' : 'transparent',
         transition: 'color 0.18s ease, border-color 0.18s ease, background 0.18s ease',
         cursor: 'pointer',
       }}
@@ -179,7 +180,7 @@ function InlineText({ text }: { text: string }) {
         }
         if (part.startsWith('**') && part.endsWith('**') && part.length > 4) {
           return (
-            <strong key={i} style={{ color: '#E2E8F0', fontWeight: 700 }}>
+            <strong key={i} style={{ color: 'var(--text-heading)', fontWeight: 700 }}>
               {part.slice(2, -2)}
             </strong>
           );
@@ -200,29 +201,30 @@ function renderBlock(block: string, idx: number): React.ReactNode {
   const lines = trimmed.split('\n');
   const first = lines[0];
 
-  // H2 — strip prefix, render as normal bold paragraph (not a heading)
+  // H2
   if (first.startsWith('## ')) {
     const text = lines.join(' ').trim().slice(3);
     return (
-      <p key={idx} style={{
-        fontFamily: INTER, fontSize: '17px', fontWeight: 600,
-        color: '#E2E8F0', lineHeight: 1.85, margin: 0,
+      <h2 key={idx} style={{
+        fontFamily: DISPLAY, fontSize: 'clamp(22px, 2.6vw, 27px)', fontWeight: 500,
+        color: 'var(--text-heading)', lineHeight: 1.25, letterSpacing: '-0.012em',
+        margin: '10px 0 0', textWrap: 'balance',
       }}>
         <InlineText text={text} />
-      </p>
+      </h2>
     );
   }
 
-  // H3 — strip prefix, render as normal paragraph
+  // H3
   if (first.startsWith('### ')) {
     const text = lines.join(' ').trim().slice(4);
     return (
-      <p key={idx} style={{
-        fontFamily: INTER, fontSize: '17px',
-        color: '#94A3B8', lineHeight: 1.85, margin: 0,
+      <h3 key={idx} style={{
+        fontFamily: INTER, fontSize: '18px', fontWeight: 600,
+        color: 'var(--text-primary)', lineHeight: 1.55, margin: 0,
       }}>
         <InlineText text={text} />
-      </p>
+      </h3>
     );
   }
 
@@ -249,8 +251,8 @@ function renderBlock(block: string, idx: number): React.ReactNode {
       }}>
         {lines.map((l, i) => (
           <p key={i} style={{
-            fontFamily: INTER, fontSize: '16px', fontStyle: 'italic',
-            color: '#94A3B8', lineHeight: 1.75, margin: 0,
+            fontFamily: DISPLAY, fontSize: 'clamp(19px, 2.2vw, 22px)', fontStyle: 'italic',
+            color: 'var(--text-primary)', lineHeight: 1.55, margin: 0,
           }}>
             <InlineText text={l.startsWith('> ') ? l.slice(2) : ''} />
           </p>
@@ -271,8 +273,8 @@ function renderBlock(block: string, idx: number): React.ReactNode {
       }}>
         {listLines.map((l, i) => (
           <li key={i} style={{
-            fontFamily: INTER, fontSize: '16px',
-            color: '#94A3B8', lineHeight: 1.75,
+            fontFamily: INTER, fontSize: '17px',
+            color: 'var(--text-secondary)', lineHeight: 1.75,
             listStyleType: 'disc',
           }}>
             <InlineText text={l.slice(2)} />
@@ -287,7 +289,7 @@ function renderBlock(block: string, idx: number): React.ReactNode {
   return (
     <p key={idx} style={{
       fontFamily: INTER, fontSize: '17px',
-      color: '#94A3B8', lineHeight: 1.85, margin: 0,
+      color: 'var(--text-secondary)', lineHeight: 1.85, margin: 0,
     }}>
       <InlineText text={text} />
     </p>
@@ -310,13 +312,13 @@ function MarkdownContent({ content }: { content: string }) {
 function ReadingSkeleton() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', paddingTop: '4px' }}>
-      <div style={{ height: '11px', width: '80px', background: 'rgba(255,255,255,0.04)', borderRadius: '2px' }} />
-      <div style={{ height: '38px', width: '85%', background: 'rgba(255,255,255,0.06)', borderRadius: '2px' }} />
-      <div style={{ height: '38px', width: '65%', background: 'rgba(255,255,255,0.04)', borderRadius: '2px' }} />
-      <div style={{ height: '11px', width: '120px', background: 'rgba(255,255,255,0.03)', borderRadius: '2px', marginTop: '4px' }} />
+      <div style={{ height: '11px', width: '80px', background: 'var(--border-subtle)', borderRadius: '2px' }} />
+      <div style={{ height: '38px', width: '85%', background: 'var(--border-default)', borderRadius: '2px' }} />
+      <div style={{ height: '38px', width: '65%', background: 'var(--border-subtle)', borderRadius: '2px' }} />
+      <div style={{ height: '11px', width: '120px', background: 'var(--border-subtle)', borderRadius: '2px', marginTop: '4px' }} />
       <div style={{ height: '1px', background: RULE, marginTop: '12px' }} />
       {[100, 90, 95, 70, 85, 60].map((w, i) => (
-        <div key={i} style={{ height: '16px', width: `${w}%`, background: 'rgba(255,255,255,0.04)', borderRadius: '2px' }} />
+        <div key={i} style={{ height: '16px', width: `${w}%`, background: 'var(--border-subtle)', borderRadius: '2px' }} />
       ))}
     </div>
   );
@@ -350,7 +352,7 @@ function PostContent() {
   }, [slug]);
 
   const cat = post
-    ? (CATEGORY_META[post.category] ?? { label: post.category.toUpperCase().replace('_', ' '), color: '#475569' })
+    ? (CATEGORY_META[post.category] ?? { label: post.category.toUpperCase().replace('_', ' '), color: 'var(--text-tertiary)' })
     : null;
 
   return (
@@ -361,7 +363,7 @@ function PostContent() {
         <div style={{
           maxWidth: '740px',
           margin: '0 auto',
-          padding: '56px 32px 100px',
+          padding: 'clamp(44px, 6vw, 72px) var(--container-pad) 100px',
         }}>
 
           {/* Back link */}
@@ -369,14 +371,13 @@ function PostContent() {
             <a
               href="/insights"
               style={{
-                fontFamily: MONO,
-                fontSize: '11px',
-                letterSpacing: '0.14em',
-                color: '#334155',
+                fontFamily: INTER,
+                fontSize: '13.5px',
+                color: 'var(--text-secondary)',
                 textDecoration: 'none',
               }}
             >
-              ← BACK TO DISPATCH
+              Back to Insights
             </a>
           </div>
 
@@ -390,10 +391,10 @@ function PostContent() {
               textAlign: 'center',
               border: `1px solid ${RULE}`,
             }}>
-              <div style={{ fontFamily: MONO, fontSize: '13px', color: '#334155', letterSpacing: '0.14em', marginBottom: '10px' }}>
+              <div style={{ fontFamily: MONO, fontSize: '13px', color: 'var(--text-ghost)', letterSpacing: '0.14em', marginBottom: '10px' }}>
                 POST NOT FOUND
               </div>
-              <div style={{ fontFamily: INTER, fontSize: '14px', color: '#1E293B' }}>
+              <div style={{ fontFamily: INTER, fontSize: '14px', color: 'var(--text-tertiary)' }}>
                 The requested article could not be found.
               </div>
             </div>
@@ -407,10 +408,10 @@ function PostContent() {
                 <div style={{
                   width: '100%',
                   height: 'clamp(240px, 30vw, 400px)',
-                  borderRadius: '16px',
+                  borderRadius: '8px',
                   overflow: 'hidden',
-                  marginBottom: '36px',
-                  border: '1px solid rgba(255,255,255,0.05)',
+                  marginBottom: '40px',
+                  border: '1px solid var(--border-subtle)',
                 }}>
                   <img
                     src={post.cover_image}
@@ -444,7 +445,7 @@ function PostContent() {
                 <span style={{
                   fontFamily: MONO,
                   fontSize: '12px',
-                  color: '#475569',
+                  color: 'var(--text-secondary)',
                   letterSpacing: '0.06em',
                 }}>
                   {formatDate(post.published_at)}
@@ -454,9 +455,9 @@ function PostContent() {
               {/* Title */}
               <h1 style={{
                 fontFamily: 'var(--ff-display)',
-                fontSize: 'clamp(30px, 5vw, 44px)',
+                fontSize: 'clamp(34px, 5.4vw, 48px)',
                 fontWeight: 500,
-                color: '#F1F5F9',
+                color: 'var(--text-heading)',
                 letterSpacing: '-0.02em',
                 lineHeight: 1.06,
                 margin: '0 0 14px',
@@ -469,7 +470,7 @@ function PostContent() {
                 <span style={{
                   fontFamily: MONO,
                   fontSize: '12px',
-                  color: (AUTHOR_META[post.author] ?? { color: '#334155' }).color,
+                  color: (AUTHOR_META[post.author] ?? { color: 'var(--text-ghost)' }).color,
                   letterSpacing: '0.08em',
                 }}>
                   {post.author}
@@ -503,11 +504,11 @@ function PostContent() {
               )}
 
               {/* Disclaimer */}
-              <div style={{ marginTop: '64px', paddingTop: '24px', borderTop: `1px solid rgba(255,255,255,0.04)` }}>
+              <div style={{ marginTop: '64px', paddingTop: '24px', borderTop: `1px solid var(--border-subtle)` }}>
                 <p style={{
                   fontFamily: INTER,
-                  fontSize: '12px',
-                  color: '#334155',
+                  fontSize: '13px',
+                  color: 'var(--text-secondary)',
                   lineHeight: 1.7,
                   margin: 0,
                 }}>

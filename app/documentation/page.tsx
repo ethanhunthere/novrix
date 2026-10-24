@@ -1,6 +1,4 @@
-import Navbar from '@/components/layout/Navbar';
-import FooterHome from '@/components/layout/FooterHome';
-import Link from 'next/link';
+import { EditorialPage, DocSection, Prose, P, DataRow, InlineCode, PageLinks } from '@/components/layout/EditorialPage';
 import { defaultOgImages, defaultTwitterImages } from '@/lib/og-config';
 
 export const metadata = {
@@ -23,126 +21,84 @@ export const metadata = {
   },
 };
 
-function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
-  return (
-    <div id={id} className="mb-10 scroll-mt-16 sm:scroll-mt-20">
-      <div className="flex items-start gap-3 mb-4">
-        <div style={{ width: '1px', height: '14px', background: 'rgba(71,85,105,0.4)' }} />
-        <h2 className="min-w-0 flex-1 text-[13px] tracking-[0.18em] font-black leading-relaxed break-words" style={{ fontFamily: 'var(--ff-sans)', color: '#CBD5E1' }}>{title}</h2>
-      </div>
-      <div className="p-4 sm:p-5" style={{ background: 'linear-gradient(135deg, #040912 0%, #050A16 60%, #040810 100%)', border: '1px solid rgba(255,255,255,0.06)', contain: 'paint layout' }}>
-        {children}
-      </div>
-    </div>
-  );
-}
+const CONTROLS = [
+  ['Timeframe', 'Every panel switches between 1W, 1M, 6M, 1Y, 4Y, and ALL. The default is 1Y.'],
+  ['Price overlay', 'The PRICE toggle adds BTC price on a secondary log-scale axis so the indicator and price share one frame.'],
+  ['Maximize', 'The expand control fills most of the viewport with one panel. Escape, or a click outside, returns to the grid.'],
+  ['Export', 'The camera control captures that panel as a PNG. The NOVRIX watermark is left out of the export.'],
+  ['Halving markers', 'On 4Y and ALL, Bitcoin halvings appear as vertical reference lines.'],
+  ['Zone bands', 'Shaded bands mark each indicator’s historical zones. Green marks the lower or bullish range, red the upper or bearish range. Thresholds live in Methodology.'],
+  ['Registry', 'The left sidebar lists every indicator with its current zone state. Selecting a row jumps to that panel.'],
+];
 
-function Para({ children }: { children: React.ReactNode }) {
-  return <p className="text-[12.5px] leading-relaxed mb-4 last:mb-0" style={{ fontFamily: 'var(--ff-sans)', color: '#94A3B8', lineHeight: 1.85 }}>{children}</p>;
-}
-
-function Code({ children }: { children: React.ReactNode }) {
-  return (
-    <code className="px-1.5 py-0.5 text-[11px]" style={{ fontFamily: 'var(--ff-mono)', color: '#CBD5E1', background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.08)', overflowWrap: 'anywhere' }}>
-      {children}
-    </code>
-  );
-}
-
-function Step({ n, title, children }: { n: number; title: string; children: React.ReactNode }) {
-  return (
-    <div className="flex gap-4 mb-5 last:mb-0">
-      <div className="flex flex-col items-center gap-1 shrink-0">
-        <div className="w-6 h-6 flex items-center justify-center text-[9px] font-black" style={{ border: '1px solid rgba(100,116,139,0.3)', color: '#64748B', fontFamily: 'var(--ff-sans)', background: 'rgba(71,85,105,0.06)' }}>{n}</div>
-        <div style={{ width: '1px', flex: 1, background: 'rgba(71,85,105,0.2)' }} />
-      </div>
-      <div className="pb-4 min-w-0">
-        <div className="text-[11px] font-bold mb-2" style={{ fontFamily: 'var(--ff-sans)', color: '#CBD5E1' }}>{title}</div>
-        <p className="text-[11.5px]" style={{ fontFamily: 'var(--ff-sans)', color: '#94A3B8', lineHeight: 1.75 }}>{children}</p>
-      </div>
-    </div>
-  );
-}
+const PARTNERS = [
+  ['BGeometrics', 'Bitcoin on-chain metrics and historical series.'],
+  ['FRED', 'Federal Reserve Economic Data: rates, inflation, money supply, employment, and yields.'],
+  ['Alternative.me', 'Crypto Fear & Greed Index.'],
+  ['CoinGecko', 'Market prices, dominance inputs, and trending assets.'],
+  ['CoinMarketCap', 'Market capitalization and dominance.'],
+];
 
 export default function DocumentationPage() {
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: '#020508' }}>
-      <Navbar />
+    <EditorialPage
+      title="Documentation"
+      standfirst="How the sentiment workspace is organized, what each control changes, and where the numbers come from."
+    >
+      <DocSection title="Overview">
+        <Prose>
+          <P>NOVRIX reads crypto market sentiment through on-chain and macro indicators, presented as one surface.</P>
+          <P>Data is aggregated from established providers, cached at the edge, and served without an account or onboarding step.</P>
+        </Prose>
+      </DocSection>
 
-      <div className="w-full max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-16 2xl:px-24 py-14 flex-1">
-        <div className="max-w-3xl">
+      <DocSection title="The workspace">
+        <Prose>
+          <P>The Sentiment page holds a registry of indicator panels. Each panel has one chart, a current reading, and a zone state derived from the thresholds in Methodology.</P>
+          <P>Panels are grouped by what they measure: valuation, profitability, holder behavior, supply, miners, market structure, and macro. The registry mirrors those groups.</P>
+        </Prose>
+      </DocSection>
 
-          <Section id="overview" title="OVERVIEW">
-            <Para>NOVRIX reads crypto market sentiment through on-chain and macro indicators, presented as one calm surface.</Para>
-            <Para>Data is aggregated from established providers, cached, and served from the edge. No account, no onboarding, no noise.</Para>
-          </Section>
-
-          <Section id="sentiment" title="SENTIMENT MODULE">
-            <Para>Indicator panels covering on-chain valuation, flow, supply, network health, and social metrics.</Para>
-            <div className="space-y-2 mb-4">
-              {[
-                { key: 'TIMEFRAME SELECTOR', val: 'Each indicator panel has a timeframe selector: 1W, 1M, 6M, 1Y, 4Y, ALL. Defaults to 1Y. Click any to change the displayed window.' },
-                { key: 'BTC PRICE OVERLAY', val: 'All indicator charts support a BTC price overlay on a secondary log-scale Y-axis. Toggle it via the PRICE button in the panel controls.' },
-                { key: 'MAXIMIZE MODE', val: 'Click the expand icon in any panel header to maximize the panel to 85% viewport. Press Escape or click outside to minimize.' },
-                { key: 'SCREENSHOT', val: 'Click the camera icon in any panel header to capture a PNG export of that panel. The NOVRIX watermark is excluded from captures.' },
-                { key: 'HALVING MARKERS', val: 'In 4Y and ALL timeframes, Bitcoin halving events are marked with vertical reference lines.' },
-                { key: 'ZONE BANDS', val: 'Colored background bands show signal zones on each indicator chart (green for bullish territory, red for bearish). These correspond to the zone thresholds defined in Methodology.' },
-                { key: 'SIDEBAR REGISTRY', val: 'Left sidebar shows all indicators with signal state (color-coded by current zone). Click any row to scroll directly to that panel.' },
-              ].map(item => (
-                <div key={item.key} className="grid grid-cols-1 sm:grid-cols-[160px_1fr] gap-1 sm:gap-3 items-start py-2" style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                  <span className="text-[9px] sm:text-[10px] tracking-[0.14em] font-bold pt-0.5" style={{ fontFamily: 'var(--ff-sans)', color: '#475569' }}>{item.key}</span>
-                  <span className="text-[11px]" style={{ fontFamily: 'var(--ff-sans)', color: '#94A3B8', lineHeight: 1.7 }}>{item.val}</span>
-                </div>
-              ))}
-            </div>
-          </Section>
-
-          <Section id="keyboard" title="KEYBOARD INTERFACE">
-            <Para>NOVRIX is designed for keyboard-first navigation. Common shortcuts:</Para>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {[
-                ['Escape', 'Close maximized panel'],
-                ['Click panel expand', 'Maximize indicator panel to fullscreen'],
-                ['Click panel camera', 'Screenshot / export panel as PNG'],
-                ['Click timeframe button', 'Change chart timeframe (1W–ALL)'],
-                ['Click PRICE toggle', 'Show/hide BTC price overlay'],
-                ['Click sidebar item', 'Scroll to that indicator panel'],
-              ].map(([key, action]) => (
-                <div key={key} className="flex gap-3 items-start p-2.5" style={{ border: '1px solid rgba(255,255,255,0.04)', background: 'rgba(255,255,255,0.01)' }}>
-                  <Code>{key}</Code>
-                  <span className="text-[10.5px] min-w-0 flex-1" style={{ fontFamily: 'var(--ff-sans)', color: '#64748B', lineHeight: 1.6 }}>{action}</span>
-                </div>
-              ))}
-            </div>
-          </Section>
-
-          <Section id="credits" title="DATA PARTNERS">
-            <Para>NOVRIX integrates data from the following providers:</Para>
-            <div className="space-y-3">
-              {[
-                { name: 'BGeometrics', desc: 'Bitcoin on-chain metrics and historical data.' },
-                { name: 'FRED (Federal Reserve Economic Data)', desc: 'Macroeconomic indicators and financial data.' },
-                { name: 'Alternative.me', desc: 'Crypto Fear & Greed Index.' },
-                { name: 'CoinGecko', desc: 'Cryptocurrency market data and trending assets.' },
-                { name: 'CoinMarketCap', desc: 'Market capitalization and dominance data.' },
-              ].map(src => (
-                <div key={src.name} className="p-3.5" style={{ border: '1px solid rgba(255,255,255,0.04)', background: 'rgba(255,255,255,0.015)' }}>
-                  <div className="text-[9px] tracking-[0.18em] font-black mb-1.5" style={{ fontFamily: 'var(--ff-sans)', color: '#64748B' }}>{src.name}</div>
-                  <p className="text-[11px]" style={{ fontFamily: 'var(--ff-sans)', color: '#94A3B8', lineHeight: 1.7 }}>{src.desc}</p>
-                </div>
-              ))}
-            </div>
-            <Para>All data belongs to its respective owners. NOVRIX aggregates and presents this data for analytical purposes only.</Para>
-          </Section>
-
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 pt-4" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-            <Link href="/methodology" className="text-[10px] text-[#475569] hover:text-[#94A3B8] transition-colors" style={{ fontFamily: 'var(--ff-sans)', letterSpacing: '0.10em', textDecoration: 'none' }}>Methodology →</Link>
-            <Link href="/changelog" className="text-[10px] text-[#475569] hover:text-[#94A3B8] transition-colors" style={{ fontFamily: 'var(--ff-sans)', letterSpacing: '0.10em', textDecoration: 'none' }}>Changelog →</Link>
-          </div>
+      <DocSection title="Controls">
+        <div>
+          {CONTROLS.map(([label, body]) => (
+            <DataRow key={label} label={label}>{body}</DataRow>
+          ))}
         </div>
-      </div>
+      </DocSection>
 
-      <FooterHome />
-    </div>
+      <DocSection title="Pointer and keyboard">
+        <Prose>
+          <P>Every control is a button with a visible label or tooltip. Tab reaches the controls in reading order and the focus ring is visible.</P>
+          <P><InlineCode>Escape</InlineCode> closes a maximized panel. There are no hidden global shortcuts; navigation is the browser’s own.</P>
+        </Prose>
+      </DocSection>
+
+      <DocSection title="Screen requirement">
+        <Prose>
+          <P>The workspace needs a viewport of 1024px or wider so charts and controls stay legible. Below that width the page explains the requirement and returns you home.</P>
+          <P>Editorial pages, including this one, work from 375px up.</P>
+        </Prose>
+      </DocSection>
+
+      <DocSection title="Data partners">
+        <div>
+          {PARTNERS.map(([name, desc]) => (
+            <DataRow key={name} label={name}>{desc}</DataRow>
+          ))}
+        </div>
+        <Prose style={{ marginTop: '18px' }}>
+          <P>Data belongs to its respective owners. NOVRIX aggregates and presents it for analytical purposes only.</P>
+        </Prose>
+      </DocSection>
+
+      <DocSection title="Reading the numbers">
+        <Prose>
+          <P>Zone colors are interpretive guides, not trade signals. They show where a value sits relative to its historical range. The Methodology page covers thresholds, update schedules, and structural limitations.</P>
+        </Prose>
+      </DocSection>
+
+      <PageLinks items={[{ label: 'Methodology', href: '/methodology' }, { label: 'Changelog', href: '/changelog' }]} />
+    </EditorialPage>
   );
 }

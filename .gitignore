@@ -34,3 +34,8 @@ next-env.d.ts
 *.bak[0-9]
 fix_*.py
 package-lock.json
+
+# Agent/playbook working dirs
+.playbook/
+.agents/
+skills-lock.json

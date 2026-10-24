@@ -578,8 +578,7 @@ export default function InsightsPage() {
                 maxWidth: '15ch',
               }}
             >
-              What we think, and why
-              <span style={{ color: ACCENT }}>.</span>
+              What we think, and why.
             </h1>
 
             <p

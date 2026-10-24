@@ -281,12 +281,12 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
       ref={setPanelRef(panel.panelId)}
       data-panel={panel.panelId}
       onMouseEnter={preloadCapture}
-      className="bg-[#0D1420] border overflow-hidden scroll-mt-4"
+      className="bg-[var(--bg-surface)] border overflow-hidden scroll-mt-4"
       style={{
         position: 'relative',
-        background: 'linear-gradient(135deg, #040912 0%, #050A16 60%, #040810 100%)',
-        border: '1px solid rgba(255,255,255,0.06)',
-        boxShadow: '0 8px 40px rgba(0,0,0,0.7)',
+        background: 'linear-gradient(135deg, var(--bg-surface) 0%, #14110F 60%, var(--bg-base) 100%)',
+        border: '1px solid var(--border-default)',
+        boxShadow: '0 8px 40px rgba(0,0,0,0.45)',
       }}
     >
       {(() => {
@@ -312,13 +312,13 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
         );
       })()}
 
-      <div className="px-5 pt-4 pb-5" style={{ background: 'linear-gradient(180deg, rgba(3,5,10,0.85) 0%, rgba(4,7,12,0.55) 12%, rgba(5,8,14,0.22) 28%, transparent 55%)' }}>
+      <div className="px-5 pt-4 pb-5" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
 
         {(!visiblePanels.has(panel.panelId) || panel.isLoading || !rechartsReady) ? (
           <ChartSkeleton height={ch(panel.panelId)} />
         ) : panel.data.length === 0 ? (
           <div style={{ height: `${ch(panel.panelId)}px`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '10px', color: '#52525B', letterSpacing: '0.16em' }}>AWAITING DATA SYNC</span>
+            <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '10px', color: 'var(--text-secondary)', letterSpacing: '0.16em' }}>AWAITING DATA SYNC</span>
           </div>
         ) : (() => {
           const isFred = panel.panelId.startsWith('fred-') || !!panel.useFredTfOpts;
@@ -352,25 +352,25 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
                       </linearGradient>
                     )}
                   </defs>
-                  <CartesianGrid strokeDasharray="3 6" stroke="rgba(130,175,220,0.04)" vertical={false} />
+                  <CartesianGrid strokeDasharray="3 6" stroke="rgba(245,241,234,0.05)" vertical={false} />
                   {zoneBands.map((band, i) => (
                     <ReferenceArea key={`band-${i}`} y1={band.y1} y2={band.y2} fill={band.fill} fillOpacity={band.fillOpacity} />
                   ))}
                   <XAxis dataKey="index" stroke="none"
-                    tick={{ fill: '#8AAEC8', fontSize: 12, fontFamily: 'var(--ff-mono)' }}
+                    tick={{ fill: '#A9A29A', fontSize: 12, fontFamily: 'var(--ff-mono)' }}
                     ticks={getXAxisTicks(panel.data, panel.timeframe)}
                     tickFormatter={(i: number) => formatXAxisTick(panel.data, i, panel.timeframe)}
                     interval={0}
                     height={26} />
                   <YAxis domain={['auto', 'auto']} stroke="none"
-                    tick={{ fill: '#8AAEC8', fontSize: 12, fontFamily: 'var(--ff-mono)' }}
+                    tick={{ fill: '#A9A29A', fontSize: 12, fontFamily: 'var(--ff-mono)' }}
                     tickFormatter={panel.yAxisTick} width={isMaximized ? 84 : 68} />
                   {showBtc && showBtcPrice[panel.indicatorKey] && !panel.btcSameAxis && (
                     <YAxis yAxisId="btcPrice" orientation="right" scale="log" domain={['auto', 'auto']} stroke="none"
-                      tick={{ fill: '#6B7A8D', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
+                      tick={{ fill: '#8C857C', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
                       tickFormatter={(v: number) => v >= 1e3 ? `$${(v/1e3).toFixed(0)}K` : `$${v}`} width={isMaximized ? 74 : 62} />
                   )}
-                  <Tooltip cursor={{ stroke: 'rgba(160,215,255,0.85)', strokeWidth: 2 }} animationDuration={0} isAnimationActive={false}
+                  <Tooltip cursor={{ stroke: 'rgba(245,241,234,0.65)', strokeWidth: 2 }} animationDuration={0} isAnimationActive={false}
                     content={(props: Record<string, unknown>) => (
                       <PrecisionTooltip {...props} accentColor={metricColor} getRows={(pt, pl) => {
                         const rows: Array<{ label: string; value: string; color: string; zone?: { label: string; color: string } }> = [];
