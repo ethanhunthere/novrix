@@ -1,7 +1,19 @@
+import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import FooterHome from '@/components/layout/FooterHome';
+
+export const metadata: Metadata = {
+  title: 'Trinity of Intelligence',
+  description:
+    'On-chain intelligence: market sentiment, wallet movement, and protocol health, read together without the noise.',
+  openGraph: {
+    title: 'Trinity of Intelligence',
+    description:
+      'On-chain intelligence: market sentiment, wallet movement, and protocol health, read together without the noise.',
+  },
+};
 
 const INK = '#F5F1EA';
 const MUTED = 'rgba(245, 241, 234, 0.60)';
@@ -11,7 +23,6 @@ const ACCENT = '#C2344D';
 
 const MODULES = [
   {
-    index: '01',
     label: 'SENTIMENT',
     href: '/sentiment',
     title: 'Market mood, minus the noise.',
@@ -23,7 +34,6 @@ const MODULES = [
     cta: 'Open sentiment',
   },
   {
-    index: '02',
     label: 'TRACKING',
     href: '/tracking',
     title: 'Big movement, in context.',
@@ -35,7 +45,6 @@ const MODULES = [
     cta: 'Open tracking',
   },
   {
-    index: '03',
     label: 'METRILYTICS',
     href: '/metrilytics',
     title: 'Protocol health, clearly read.',
@@ -138,9 +147,6 @@ export default function Home() {
                 {MODULES.map((item) => (
                   <div key={item.label} className="flex items-center gap-3">
                     <span style={{ width: '20px', height: '1px', background: 'rgba(194, 52, 77, 0.35)' }} />
-                    <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '10.5px', letterSpacing: '0.16em', color: FAINT }}>
-                      {item.index}
-                    </span>
                     <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '10.5px', letterSpacing: '0.18em', color: MUTED, textTransform: 'uppercase' }}>
                       {item.label}
                     </span>
@@ -203,18 +209,13 @@ export default function Home() {
                   href={item.href}
                   className="home-module-card"
                 >
-                  <div className="flex items-center justify-between gap-4 pb-5 mb-6">
-                    <div className="flex items-center gap-3">
-                      <span
-                        aria-hidden="true"
-                        className="home-module-dot block w-1.5 h-1.5 rotate-45"
-                      />
-                      <span className="home-module-label" style={{ fontFamily: 'var(--ff-mono)', fontSize: '10.5px', fontWeight: 500, letterSpacing: '0.2em' }}>
-                        {item.label}
-                      </span>
-                    </div>
-                    <span className="home-module-index" style={{ fontFamily: 'var(--ff-mono)', fontSize: '10.5px', letterSpacing: '0.14em' }}>
-                      {item.index}
+                  <div className="flex items-center gap-3 pb-5 mb-6">
+                    <span
+                      aria-hidden="true"
+                      className="home-module-dot block w-1.5 h-1.5 rotate-45"
+                    />
+                    <span className="home-module-label" style={{ fontFamily: 'var(--ff-mono)', fontSize: '10.5px', fontWeight: 500, letterSpacing: '0.2em' }}>
+                      {item.label}
                     </span>
                   </div>
 
@@ -304,8 +305,8 @@ export default function Home() {
               style={{ borderTop: `1px solid ${HAIRLINE}` }}
             >
               <p style={{ color: FAINT, fontSize: '0.8rem', lineHeight: 1.6 }}>
-                NOVRIX is free, open source, and ad-free. If it earns a place in
-                your workflow, you can{' '}
+                Everything here is free, open source, and ad-free. If it earns
+                a place in your workflow, you can{' '}
                 <Link href="/donations" style={{ color: MUTED, textDecoration: 'underline', textUnderlineOffset: '3px' }}>
                   support operations
                 </Link>

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 const SANS = 'var(--ff-sans)';
 const MONO = 'var(--ff-mono)';
@@ -6,7 +7,6 @@ const INK = '#F5F1EA';
 const MUTED = 'rgba(245, 241, 234, 0.58)';
 const FAINT = 'rgba(245, 241, 234, 0.46)';
 const HAIRLINE = 'rgba(245, 241, 234, 0.08)';
-const ACCENT = '#C2344D';
 
 const PLATFORM_NAV = [
   { label: 'Home', href: '/' },
@@ -93,12 +93,12 @@ export default function FooterHome() {
           style={{ maxWidth: '1180px' }}
         >
           <div>
-            <div className="flex items-center gap-3">
-              <span aria-hidden="true" style={{ width: '6px', height: '6px', background: ACCENT, transform: 'rotate(45deg)' }} />
-              <span style={{ fontFamily: MONO, fontSize: '12px', fontWeight: 500, letterSpacing: '0.22em', color: INK }}>
-                NOVRIX
-              </span>
-            </div>
+            <Image
+              src="/logo.png" alt=""
+              width={30} height={30}
+              className="w-[30px] h-[30px] block"
+              style={{ pointerEvents: 'none' }}
+            />
             <p style={{ color: MUTED, fontSize: '14px', lineHeight: 1.65, maxWidth: '280px', margin: '16px 0 0' }}>
               On-chain intelligence, read as one calm surface.
             </p>
@@ -122,7 +122,7 @@ export default function FooterHome() {
             letterSpacing: '0.01em',
           }}
         >
-          <span>© 2026 NOVRIX</span>
+          <span>© All rights reserved.</span>
           <span>All data belongs to its respective owners.</span>
         </div>
       </div>
