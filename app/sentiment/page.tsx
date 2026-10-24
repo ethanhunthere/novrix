@@ -13,7 +13,7 @@ import {
   PanelHeader, FngTooltip, PrecisionTooltip, ChartSkeleton,
   TF_OPTS, FRED_TF_OPTS, NOVRIX_TF_OPTS, TfSelector, LineToggle,
   getXAxisTicks, formatXAxisTick, downsample,
-  LiveClock, PANEL_CODES, PanelMaximizeWrapper,
+  PANEL_CODES, PanelMaximizeWrapper,
   getHalvingIndices,
 } from '@/components/sentiment/SentimentPanelUtils';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceArea, ReferenceLine } from 'recharts';
@@ -2483,18 +2483,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
         zIndex: 0,
       }} />
 
-      <TerminalModulePageShell
-        header={{
-          sectionLabel: 'SENTIMENT',
-          title: 'SENTIMENT INTELLIGENCE',
-
-          subtitle: 'Maps market psychology through on-chain behavior',
-          accent: '#C2344D',
-          accentDark: '#8B1A1A',
-          background: '#0A0608',
-          clock: <LiveClock />,
-        }}
-      >
+      <TerminalModulePageShell>
 
         <div className="sentiment-comfort grid grid-cols-1 lg:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)] 2xl:grid-cols-[320px_minmax(0,1fr)] 3xl:grid-cols-[420px_minmax(0,1fr)] 4xl:grid-cols-[500px_minmax(0,1fr)] gap-6">
           {/* ─── Indicators Registry Sidebar ─── */}
