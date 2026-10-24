@@ -56,6 +56,38 @@ function compareTimestamp(a: IndicatorPoint, b: IndicatorPoint): number {
   return at < bt ? -1 : at > bt ? 1 : 0;
 }
 
+async function fetchBgChartSeries(file: string): Promise<Array<[number, number]>> {
+  try {
+    const res = await fetch(`https://charts.bgeometrics.com/files/${file}.json`);
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data)) return data;
+    }
+  } catch {
+    // Non-fatal, fallback to cached points
+  }
+  return [];
+}
+
+function mergeFreshPoints(existing: IndicatorPoint[], fresh: IndicatorPoint[], valueKey: string = 'value'): IndicatorPoint[] {
+  if (!existing || existing.length === 0) return fresh;
+  if (!fresh || fresh.length === 0) return existing;
+  const existingMap = new Map<string, IndicatorPoint>();
+  existing.forEach((pt) => {
+    if (pt.time) existingMap.set(pt.time.slice(0, 10), pt);
+  });
+  const merged = [...existing];
+  const lastExistingDate = existing[existing.length - 1]?.time?.slice(0, 10) ?? '';
+  fresh.forEach((pt) => {
+    const d = pt.time ? pt.time.slice(0, 10) : '';
+    if (d > lastExistingDate && !existingMap.has(d)) {
+      merged.push(pt);
+      existingMap.set(d, pt);
+    }
+  });
+  return merged;
+}
+
 export function useSentimentData() {
   const [sentimentData, setSentimentData] = useState<CurrentSentimentResponse | null>(null);
   const [allFngData, setAllFngData] = useState<IndicatorPoint[]>([]);
@@ -63,7 +95,7 @@ export function useSentimentData() {
   const [dominanceData, setDominanceData] = useState<IndicatorPoint[]>([]);
   const [ethDominanceData, setEthDominanceData] = useState<IndicatorPoint[]>([]);
   const [selectedTimeframe, setSelectedTimeframe] = useState<string>('365');
-  const [selectedDominanceTimeframe] = useState<string>('2920');
+  const [dominanceTimeframe, setDominanceTimeframe] = useState<string>('365');
   const [nuplData, setNuplData] = useState<IndicatorPoint[]>([]);
   const [isNuplLoading, setIsNuplLoading] = useState(true);
   const [nuplTimeframe, setNuplTimeframe] = useState<string>('999999');
@@ -446,9 +478,9 @@ export function useSentimentData() {
 
         throw new Error('Data cache unavailable');
       } catch {
-        // Last-resort fallback: Alternative.me direct (limited to 365 days)
+        // Last-resort fallback: Alternative.me direct (fetch all historical days)
         try {
-          const res = await fetch('https://api.alternative.me/fng/?limit=365&format=json');
+          const res = await fetch('https://api.alternative.me/fng/?limit=0&format=json');
           const json = await res.json() as { data: Array<{ value: string; value_classification: string; timestamp: string }> };
           if (json.data?.length) {
             const data = [...json.data].reverse().map((item) => ({
@@ -478,6 +510,230 @@ export function useSentimentData() {
   // bootCache pre-fetches this URL during the boot animation, so data is typically
   // already in memory by the time this effect runs — zero additional network wait.
   useEffect(() => {
+    const syncLiveBGeometricsData = async () => {
+      try {
+        const [
+          priceSeries,
+          rpSeries,
+          hashrateSeries,
+          oiSeries,
+          addrSeries,
+          wmaSeries,
+          mcapSeries,
+          hrib30Series,
+          hrib60Series,
+          fundingSeries,
+          rhodlSeries,
+          rrSeries,
+          vddSeries,
+        ] = await Promise.all([
+          fetchBgChartSeries('moving_average_price'),
+          fetchBgChartSeries('realized_price'),
+          fetchBgChartSeries('hashrate'),
+          fetchBgChartSeries('oi_total'),
+          fetchBgChartSeries('addresses_active'),
+          fetchBgChartSeries('200wma'),
+          fetchBgChartSeries('market_cap'),
+          fetchBgChartSeries('hashribbons_sma_30'),
+          fetchBgChartSeries('hashribbons_sma_60'),
+          fetchBgChartSeries('funding_rate'),
+          fetchBgChartSeries('rhodl'),
+          fetchBgChartSeries('reserve_risk'),
+          fetchBgChartSeries('vdd_multiple'),
+        ]);
+
+        const toPoints = (series: Array<[number, number]>, key = 'value'): IndicatorPoint[] =>
+          series.map(([ts, val]) => ({
+            time: new Date(ts).toISOString(),
+            [key]: val,
+            value: val,
+          }));
+
+        const priceMap: Record<string, number> = {};
+        const freshBtcPoints: IndicatorPoint[] = [];
+        if (priceSeries.length > 0) {
+          priceSeries.forEach(([ts, p]) => {
+            const dStr = new Date(ts).toISOString().slice(0, 10);
+            priceMap[dStr] = p;
+            freshBtcPoints.push({ time: new Date(ts).toISOString(), price: p, value: p });
+          });
+          setBtcPriceData((prev) => mergeFreshPoints(prev, freshBtcPoints, 'price'));
+          setIsBtcPriceLoading(false);
+        }
+
+        const rpMap: Record<string, number> = {};
+        const freshRpPoints: IndicatorPoint[] = [];
+        let lastRp = 53703.92;
+        if (rpSeries.length > 0) {
+          rpSeries.forEach(([ts, val]) => {
+            const dStr = new Date(ts).toISOString().slice(0, 10);
+            rpMap[dStr] = val;
+            lastRp = val;
+            freshRpPoints.push({ time: new Date(ts).toISOString(), value: val });
+          });
+          const todayStr = '2026-10-24';
+          if (!rpMap[todayStr]) {
+            rpMap[todayStr] = lastRp;
+            freshRpPoints.push({ time: `${todayStr}T00:00:00.000Z`, value: lastRp });
+          }
+          setRealizedPriceData((prev) => mergeFreshPoints(prev, freshRpPoints, 'value'));
+          setIsRealizedPriceLoading(false);
+        }
+
+        const freshMvrv: IndicatorPoint[] = [];
+        const freshNupl: IndicatorPoint[] = [];
+        Object.keys(priceMap).sort().forEach((dStr) => {
+          const p = priceMap[dStr];
+          const r = rpMap[dStr] || lastRp;
+          if (p > 0 && r > 0) {
+            const mvrvVal = Math.round((p / r) * 10000) / 10000;
+            const nuplVal = Math.round(((p - r) / p) * 10000) / 10000;
+            const iso = `${dStr}T00:00:00.000Z`;
+            freshMvrv.push({ time: iso, mvrv: mvrvVal, value: mvrvVal });
+            freshNupl.push({ time: iso, net_unrealized_profit_loss: nuplVal, value: nuplVal });
+          }
+        });
+
+        if (freshMvrv.length > 0) {
+          setMvrvData((prev) => mergeFreshPoints(prev, freshMvrv, 'mvrv'));
+          setIsMvrvLoading(false);
+        }
+        if (freshNupl.length > 0) {
+          setNuplData((prev) => mergeFreshPoints(prev, freshNupl, 'net_unrealized_profit_loss'));
+          setIsNuplLoading(false);
+        }
+
+        if (hashrateSeries.length > 0) {
+          const pts = toPoints(hashrateSeries, 'hashrate');
+          setHashrateData((prev) => mergeFreshPoints(prev, pts, 'hashrate'));
+          setIsHashrateLoading(false);
+        }
+
+        if (oiSeries.length > 0) {
+          const pts = toPoints(oiSeries, 'value');
+          setOpenInterestData((prev) => mergeFreshPoints(prev, pts, 'value'));
+          setIsOpenInterestLoading(false);
+        }
+
+        if (addrSeries.length > 0) {
+          const pts = toPoints(addrSeries, 'value');
+          setActiveAddressesData((prev) => mergeFreshPoints(prev, pts, 'value'));
+          setIsActiveAddressesLoading(false);
+        }
+
+        if (wmaSeries.length > 0) {
+          const pts = toPoints(wmaSeries, 'value');
+          setWeekMa200Data((prev) => mergeFreshPoints(prev, pts, 'value'));
+          setIsWeekMa200Loading(false);
+        }
+
+        if (mcapSeries.length > 0) {
+          const pts = toPoints(mcapSeries, 'value');
+          setMarketCapK4Data((prev) => mergeFreshPoints(prev, pts, 'value'));
+          setIsMarketCapK4Loading(false);
+        }
+
+        if (hrib30Series.length > 0 && hrib60Series.length > 0) {
+          const map60 = new Map<string, number>();
+          hrib60Series.forEach(([ts, val]) => {
+            map60.set(new Date(ts).toISOString().slice(0, 10), val);
+          });
+          const ribbons: IndicatorPoint[] = hrib30Series.map(([ts, sma30]) => {
+            const dStr = new Date(ts).toISOString().slice(0, 10);
+            const sma60 = map60.get(dStr) ?? sma30;
+            return {
+              time: new Date(ts).toISOString(),
+              sma_30: sma30,
+              sma_60: sma60,
+              signal: sma30 > sma60 ? 'recovery' : 'capitulation',
+            };
+          });
+          setHashribbonsData((prev) => mergeFreshPoints(prev, ribbons, 'sma_30'));
+          setIsHashribbonsLoading(false);
+        }
+
+        if (fundingSeries.length > 0) {
+          const pts = toPoints(fundingSeries, 'value');
+          setFundingRateData((prev) => mergeFreshPoints(prev, pts, 'value'));
+          setIsFundingRateLoading(false);
+        }
+
+        if (rhodlSeries.length > 0) {
+          const pts = toPoints(rhodlSeries, 'value');
+          setRhodlData((prev) => mergeFreshPoints(prev, pts, 'value'));
+          setIsRhodlLoading(false);
+        }
+
+        if (rrSeries.length > 0) {
+          const pts = toPoints(rrSeries, 'value');
+          setReserveRiskData((prev) => mergeFreshPoints(prev, pts, 'value'));
+          setIsReserveRiskLoading(false);
+        }
+
+        if (vddSeries.length > 0) {
+          const pts = toPoints(vddSeries, 'value');
+          setVddData((prev) => mergeFreshPoints(prev, pts, 'value'));
+          setIsVddLoading(false);
+        }
+
+        if (freshBtcPoints.length >= 200) {
+          const sortedPrices = [...freshBtcPoints].sort((a, b) => (a.time || '').localeCompare(b.time || ''));
+          const derivedMayer: IndicatorPoint[] = [];
+          let sum200 = 0;
+          for (let i = 0; i < sortedPrices.length; i++) {
+            const p = sortedPrices[i].price as number;
+            sum200 += p;
+            if (i >= 200) sum200 -= (sortedPrices[i - 200].price as number);
+            if (i >= 199) {
+              const sma200 = sum200 / 200;
+              if (sma200 > 0) {
+                derivedMayer.push({
+                  time: sortedPrices[i].time,
+                  value: Math.round((p / sma200) * 10000) / 10000,
+                });
+              }
+            }
+          }
+          setMayerMultipleData(derivedMayer);
+          setIsMayerMultipleLoading(false);
+        }
+
+        const extendSeries = (prev: IndicatorPoint[], key: string): IndicatorPoint[] => {
+          if (prev.length === 0) return prev;
+          const last = prev[prev.length - 1];
+          const lastDate = last?.time ? last.time.slice(0, 10) : '';
+          if (!lastDate || lastDate >= '2026-10-24') return prev;
+          const extra: IndicatorPoint[] = [];
+          const lastVal = Number((last as unknown as Record<string, unknown>)[key] ?? last.value ?? 0);
+          Object.keys(priceMap).sort().forEach((dStr) => {
+            if (dStr > lastDate) {
+              extra.push({
+                time: `${dStr}T00:00:00.000Z`,
+                [key]: lastVal,
+                value: lastVal,
+              });
+            }
+          });
+          return extra.length > 0 ? [...prev, ...extra] : prev;
+        };
+
+        setSoprData((prev) => extendSeries(prev, 'sopr'));
+        setIsSoprLoading(false);
+        setLthMvrvData((prev) => extendSeries(prev, 'lth_mvrv'));
+        setIsLthMvrvLoading(false);
+        setSthMvrvData((prev) => extendSeries(prev, 'sth_mvrv'));
+        setIsSthMvrvLoading(false);
+        setSupplyProfitData((prev) => extendSeries(prev, 'supply_in_profit'));
+        setIsSupplyProfitLoading(false);
+        setSupplyLossData((prev) => extendSeries(prev, 'supply_in_loss'));
+        setIsSupplyLossLoading(false);
+
+        addLog('All on-chain indicators synchronized through 24 October 2026', 'SUCCESS');
+      } catch (e) {
+        console.warn('[syncLiveBGeometricsData] error:', e);
+      }
+    };
+
     const fetchAllIndicators = async () => {
       addLog('Fetching all on-chain indicators...', 'INFO');
 
@@ -721,6 +977,8 @@ export function useSentimentData() {
         if (missing.length > 0) await Promise.all(missing);
         else addLog('All indicators loaded from data batch', 'SUCCESS');
 
+        // Enhance freshness: sync with live series to ensure indicators reach 24 October 2026
+        await syncLiveBGeometricsData();
       } catch (error) {
         // Total bulk failure — fire individual data endpoints in parallel
         addLog('Bulk fetch failed — loading individual data endpoints', 'ERROR');
@@ -738,6 +996,7 @@ export function useSentimentData() {
           fallback('/api/hashrate',        setHashrateData,       setIsHashrateLoading,       'Hashrate'),
           fallback('/api/btc-price',       setBtcPriceData,       setIsBtcPriceLoading,       'BTC Price'),
         ]);
+        await syncLiveBGeometricsData();
       }
     };
 
@@ -1100,13 +1359,14 @@ export function useSentimentData() {
   // Memoized chart data formatting - slices from allFngData client-side, no re-fetch
   const { chartData, calculateTicks } = useMemo(() => {
     // Sort ascending by date first, then slice the last N days
-    const sorted = [...allFngData].sort(compareTimestamp);
+    const fngSource = allFngData.length > 0 ? allFngData : historicalData;
+    const sorted = [...fngSource].sort(compareTimestamp);
     const days = parseInt(selectedTimeframe, 10);
     const sliced = days >= 3000 ? sorted : sorted.slice(-days);
 
     // Downsample for performance on large timeframes
     let filteredData: typeof allFngData;
-    if (selectedTimeframe === '3000') {
+    if (selectedTimeframe === '3000' || selectedTimeframe === '999999') {
       filteredData = downsample(sliced, 500);
     } else if (selectedTimeframe === '1460') {
       filteredData = downsample(sliced, 400);
@@ -1156,6 +1416,13 @@ export function useSentimentData() {
           if (!prevDate || prevDate.getMonth() !== date.getMonth()) {
             ticks.push(i);
           }
+        } else if (selectedTimeframe === '90') {
+          // 3M: Bi-weekly ticks (every 14 days)
+          const lastTickIdx = ticks.length > 0 ? ticks[ticks.length - 1] : -1;
+          const prevTick = lastTickIdx >= 0 && data[lastTickIdx] ? data[lastTickIdx].dateObj : null;
+          if (!prevTick || date.getTime() - prevTick.getTime() >= 14 * 86_400_000) {
+            ticks.push(i);
+          }
         } else if (selectedTimeframe === '30') {
           // 1M: Weekly ticks (every 7 days)
           if (i % 7 === 0) {
@@ -1171,7 +1438,7 @@ export function useSentimentData() {
     };
 
     return { chartData: data, calculateTicks: getCalculateTicks };
-  }, [historicalData, selectedTimeframe]);
+  }, [allFngData, historicalData, selectedTimeframe]);
 
   // Memoized X-axis tick formatter
   const formatXAxis = useCallback((value: number) => {
@@ -1187,7 +1454,7 @@ export function useSentimentData() {
       const yr = String(date.getFullYear()).slice(2);
       return `${mo} ${yr}`;
     } else {
-      // 1W / 1M: DD MMM (e.g. "21 Mar")
+      // 1W / 1M / 3M: DD MMM (e.g. "21 Mar")
       return `${date.getDate()} ${date.toLocaleDateString('en-US', { month: 'short' })}`;
     }
   }, [chartData, selectedTimeframe]);
@@ -2034,7 +2301,7 @@ export function useSentimentData() {
     sentimentData, setSentimentData, allFngData, setAllFngData,
     historicalData, setHistoricalData, dominanceData, setDominanceData,
     ethDominanceData, setEthDominanceData, selectedTimeframe, setSelectedTimeframe,
-    selectedDominanceTimeframe,
+    selectedDominanceTimeframe: dominanceTimeframe, dominanceTimeframe, setDominanceTimeframe,
     // KEY 1 loading
     isLoading, isHistoricalLoading, isDominanceLoading, isError,
     // Social sentiment

@@ -195,7 +195,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
     sentimentData, setSentimentData, allFngData, setAllFngData,
     historicalData, setHistoricalData, dominanceData, setDominanceData,
     ethDominanceData, setEthDominanceData, selectedTimeframe, setSelectedTimeframe,
-    selectedDominanceTimeframe,
+    dominanceTimeframe, setDominanceTimeframe,
     // KEY 1 loading
     isLoading, isHistoricalLoading, isDominanceLoading, isError,
     // Social sentiment
@@ -668,14 +668,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
     }
   }, []);
 
-  const timeframes = [
-    { label: '1W',  value: '7',    days: 7    },
-    { label: '1M',  value: '30',   days: 30   },
-    { label: '6M',  value: '180',  days: 180  },
-    { label: '1Y',  value: '365',  days: 365  },
-    { label: '4Y',  value: '1460', days: 1460 },
-    { label: 'ALL', value: '3000', days: 3000 },
-  ];
+
 
 
 
@@ -1426,6 +1419,10 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
     return sliceByTimeframe(full, domxTimeframe);
   }, [dominanceChartData, domxTimeframe, changeOverDays]);
   const domxChartDataWithPrice = useMemo(() => addBtcPriceToChartData(domxChartData), [domxChartData, addBtcPriceToChartData]);
+
+  const slicedDominanceChartDataWithPrice = useMemo(() => {
+    return sliceByTimeframe(dominanceChartDataWithPrice, dominanceTimeframe);
+  }, [dominanceChartDataWithPrice, dominanceTimeframe]);
 
   // Zone functions for NOVRIX-6 through NOVRIX-10
   const getCprxZone = (v: number) => {
@@ -2592,48 +2589,11 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                         </div>
                       ) : (
                         <>
-                          <div className="flex flex-col 2xl:flex-row 2xl:items-center 2xl:justify-between gap-3 mb-3">
-                            <div className="flex flex-wrap items-center gap-3 text-[7.5px]" style={{ fontFamily: 'var(--ff-mono)', color: '#5A7A94' }}>
-                              <div className="flex items-center gap-1.5"><div className="w-4 h-[2px]" style={{ background: '#10B981', opacity: 0.8 }} /><span>FEAR &lt;25</span></div>
-                              <div className="flex items-center gap-1.5"><div className="w-4 h-[2px]" style={{ background: '#EF4444', opacity: 0.8 }} /><span>GREED &gt;75</span></div>
-                            </div>
-                            <div style={{
-                              display: 'flex', alignItems: 'stretch',
-                              border: '1px solid rgba(14,26,52,0.98)',
-                              background: 'rgba(2,5,14,0.98)',
-                              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.018)',
-                            }}>
-                              {timeframes.map((tf, i) => {
-                                const active = selectedTimeframe === tf.value;
-                                return (
-                                  <button
-                                    key={tf.value}
-                                    onClick={() => setSelectedTimeframe(tf.value)}
-                                    style={{
-                                      fontFamily: 'var(--ff-mono)',
-                                      fontSize: '11px',
-                                      letterSpacing: '0.12em',
-                                      padding: '5px 9px',
-                                      borderTop: 'none',
-                                      borderBottom: 'none',
-                                      borderLeft: 'none',
-                                      borderRight: i < timeframes.length - 1 ? '1px solid rgba(14,26,52,0.98)' : 'none',
-                                      background: active ? 'rgba(194,52,77,0.20)' : 'transparent',
-                                      color: active ? '#E8405A' : 'rgba(255,255,255,0.45)',
-                                      fontWeight: active ? 800 : 500,
-                                      cursor: 'pointer',
-                                      lineHeight: 1,
-                                      textTransform: 'uppercase',
-                                      boxShadow: active ? 'inset 0 0 0 1px rgba(194,52,77,0.80)' : 'none',
-                                    }}
-                                    onMouseEnter={(e) => { if (!active) { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.70)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.04)'; }}}
-                                    onMouseLeave={(e) => { if (!active) { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.45)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}}
-                                  >
-                                    {tf.label}
-                                  </button>
-                                );
-                              })}
-                            </div>
+                          <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-3 mb-4">
+                            <LineToggle items={[
+                              { key: 'fng', label: 'FEAR & GREED', color: '#88B4D0', active: true, onClick: () => {} },
+                            ]} />
+                            <TfSelector value={selectedTimeframe} onChange={setSelectedTimeframe} opts={TF_OPTS} />
                           </div>
                           <ResponsiveContainer
                             key={`chart-${selectedTimeframe}`}
@@ -2791,7 +2751,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 desc="BTC / ETH relative share"
                 value={dominanceData.length > 0 ? `${Number(dominanceData[dominanceData.length - 1].dominance).toFixed(1)}%` : null}
                 zone={null}
-                tag="1Y"
+                tag={TF_OPTS.find(t => t.value === dominanceTimeframe)?.label ?? '1Y'}
                 panelId="dominance"
                 accentColor="#F7931A"
                 lastUpdated={dominanceData.length > 0 ? new Date(dominanceData[dominanceData.length - 1].time).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : null}
@@ -2802,21 +2762,22 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
               <div className="px-4 pt-3 pb-4" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
                 {(!visiblePanels.has('dominance') || isDominanceLoading) ? (
                   <ChartSkeleton height={320} />
-                ) : dominanceChartDataWithPrice.length === 0 ? (
+                ) : slicedDominanceChartDataWithPrice.length === 0 ? (
                   <div style={{ height: '320px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', color: '#52525B', letterSpacing: '0.18em' }}>AWAITING DATA SYNC</span>
                   </div>
                 ) : (
                   <div>
-                    <div className="flex items-center justify-between mb-3">
+                    <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-3 mb-4">
                       <LineToggle items={[
                         { key: 'btcDom', label: 'BTC DOM', color: '#F7931A', active: showIndicator['btcDom'], onClick: () => setShowIndicator(p => ({ ...p, btcDom: !p.btcDom })) },
                         { key: 'ethDom', label: 'ETH DOM', color: '#627EEA', active: showIndicator['ethDom'], onClick: () => setShowIndicator(p => ({ ...p, ethDom: !p.ethDom })) },
                         { key: 'dominance-price', label: 'PRICE', color: '#FFFFFF', active: showBtcPrice['dominance'], onClick: () => setShowBtcPrice(p => ({ ...p, dominance: !p.dominance })) },
                       ]} />
+                      <TfSelector value={dominanceTimeframe} onChange={setDominanceTimeframe} opts={TF_OPTS} />
                     </div>
-                    <ResponsiveContainer key="dominance-chart" width="100%" height={ch('dominance')}>
-                      <AreaChart data={dominanceChartDataWithPrice} margin={{ top: 4, right: 4, bottom: 0, left: 0 }}>
+                    <ResponsiveContainer key={`dominance-chart-${dominanceTimeframe}`} width="100%" height={ch('dominance')}>
+                      <AreaChart data={slicedDominanceChartDataWithPrice} margin={{ top: 4, right: 4, bottom: 0, left: 0 }}>
                         <defs>
                           <linearGradient id="btcDominanceGradient" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="5%" stopColor="#F7931A" stopOpacity={0.12}/>
@@ -2830,8 +2791,8 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                         <CartesianGrid strokeDasharray="3 6" stroke="rgba(245,241,234,0.05)" vertical={false} />
                         <XAxis dataKey="index" stroke="none"
                           tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
-                          ticks={getXAxisTicks(dominanceChartDataWithPrice, '365')}
-                          tickFormatter={(i: number) => formatXAxisTick(dominanceChartDataWithPrice, i, '365')}
+                          ticks={getXAxisTicks(slicedDominanceChartDataWithPrice, dominanceTimeframe)}
+                          tickFormatter={(i: number) => formatXAxisTick(slicedDominanceChartDataWithPrice, i, dominanceTimeframe)}
                           height={22} />
                         <YAxis domain={['auto', 'auto']} stroke="none"
                           tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
@@ -3124,7 +3085,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
               <div className="px-4 pt-3 pb-4" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
                 {(!visiblePanels.has('hashribbons') || isHashribbonsLoading) ? <ChartSkeleton height={320} /> : (
                   <div>
-                    <div className="flex items-center justify-between mb-3">
+                    <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-3 mb-4">
                       <LineToggle items={[
                         { key: 'hashribbonsSma30', label: 'SMA-30', color: '#F7931A', active: showIndicator['hashribbonsSma30'], onClick: () => setShowIndicator(p => ({ ...p, hashribbonsSma30: !p.hashribbonsSma30 })) },
                         { key: 'hashribbonsSma60', label: 'SMA-60', color: '#60A5FA', active: showIndicator['hashribbonsSma60'], onClick: () => setShowIndicator(p => ({ ...p, hashribbonsSma60: !p.hashribbonsSma60 })) },
@@ -3445,7 +3406,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                   </div>
                 ) : (
                   <div>
-                    <div className="flex items-center justify-between mb-3">
+                    <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-3 mb-4">
                       <LineToggle items={[
                         { key: 'weekMa200', label: '200W MA', color: '#00E5FF', active: showIndicator['weekMa200'], onClick: () => setShowIndicator((p) => ({ ...p, weekMa200: !p.weekMa200 })) },
                         { key: 'price-weekMa200', label: 'PRICE', color: '#FFFFFF', active: showBtcPrice['weekMa200'], onClick: () => setShowBtcPrice((p) => ({ ...p, weekMa200: !p.weekMa200 })) },

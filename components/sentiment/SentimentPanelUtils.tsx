@@ -68,16 +68,10 @@ export const PanelHeader = ({
       />
       <div className="flex flex-wrap items-center gap-2.5 min-w-0">
         <span
-          className="text-[12px] tracking-[0.18em] shrink-0 uppercase font-black px-2 py-1"
-          style={{
-            fontFamily: 'var(--ff-mono)',
-            color: accentColor,
-            textShadow: `0 0 12px ${accentColor}70`,
-            background: `${accentColor}15`,
-            border: `1px solid ${accentColor}60`,
-          }}
+          className="min-w-0 text-[17px] font-semibold"
+          style={{ fontFamily: 'var(--ff-sans)', color: 'var(--text-heading)', letterSpacing: '0.008em', fontWeight: 600, overflowWrap: 'anywhere' }}
         >
-          {code}
+          {title}
         </span>
         {tag && tag !== 'LIVE' && (
           <span style={{
@@ -86,13 +80,6 @@ export const PanelHeader = ({
             background: 'var(--bg-raised)', border: '1px solid var(--border-default)',
           }}>{tag}</span>
         )}
-        <div className="w-px h-4 shrink-0" style={{ background: 'var(--border-default)' }} />
-        <span
-          className="min-w-0 text-[17px] font-semibold"
-          style={{ fontFamily: 'var(--ff-sans)', color: 'var(--text-heading)', letterSpacing: '0.008em', fontWeight: 600, overflowWrap: 'anywhere' }}
-        >
-          {title}
-        </span>
         {desc && (
           <span className="min-w-0" style={{ fontFamily: 'var(--ff-sans)', fontSize: '12.5px', fontWeight: 400, color: 'rgba(245,241,234,0.56)', letterSpacing: '0.02em', fontStyle: 'italic', overflowWrap: 'anywhere' }}>
             — {desc}
@@ -168,99 +155,31 @@ export const PanelHeader = ({
 
             {showInfo && (
               <div
-                className="absolute right-0 top-full mt-2.5 z-[99999] pointer-events-auto select-text text-left"
+                className="absolute right-0 top-full mt-2 z-[99999] pointer-events-auto select-text text-left"
                 style={{
-                  width: 'min(380px, calc(100vw - 36px))',
+                  width: 'min(320px, calc(100vw - 36px))',
                   background: 'rgba(12, 10, 9, 0.98)',
-                  backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(245, 241, 234, 0.16)',
-                  borderTop: `2px solid ${accentColor}`,
-                  boxShadow: '0 24px 60px rgba(0,0,0,0.95), 0 0 0 1px rgba(0,0,0,0.6)',
+                  backdropFilter: 'blur(16px)',
+                  border: '1px solid var(--border-default)',
+                  boxShadow: '0 16px 40px rgba(0,0,0,0.85)',
                   borderRadius: '2px',
-                  padding: '16px 18px',
+                  padding: '12px 14px',
                 }}
                 onMouseEnter={() => setShowInfo(true)}
                 onMouseLeave={() => setShowInfo(false)}
               >
-                {/* Header Tag & Source */}
-                <div className="flex items-center justify-between gap-2 mb-2 pb-2 border-b border-[rgba(245,241,234,0.08)]">
-                  <div className="flex items-center gap-1.5">
-                    <span
-                      className="px-1.5 py-0.5 text-[9px] font-black uppercase tracking-[0.14em]"
-                      style={{
-                        fontFamily: 'var(--ff-mono)',
-                        color: accentColor,
-                        background: `${accentColor}18`,
-                        border: `1px solid ${accentColor}45`,
-                      }}
-                    >
-                      {meta.code}
-                    </span>
-                    <span
-                      className="text-[9px] uppercase tracking-[0.12em] font-semibold text-[rgba(245,241,234,0.55)]"
-                      style={{ fontFamily: 'var(--ff-mono)' }}
-                    >
-                      {meta.category}
-                    </span>
-                  </div>
-                  <span className="text-[8.5px] font-mono tracking-[0.06em] text-[rgba(245,241,234,0.45)] truncate max-w-[170px]" title={meta.source}>
-                    {meta.source}
-                  </span>
-                </div>
-
-                {/* Title */}
-                <div className="text-[15px] font-bold text-[var(--text-heading)] mb-2" style={{ fontFamily: 'var(--ff-sans)' }}>
+                <div className="text-[13px] font-semibold text-[var(--text-heading)] mb-1.5" style={{ fontFamily: 'var(--ff-sans)' }}>
                   {meta.title}
                 </div>
-
-                {/* Core Job */}
-                <div className="mb-3">
-                  <div className="text-[8.5px] uppercase tracking-[0.18em] font-bold text-[rgba(245,241,234,0.4)] mb-1" style={{ fontFamily: 'var(--ff-mono)' }}>
-                    CORE THESIS &amp; JOB
-                  </div>
-                  <p className="text-[12px] leading-[1.5] text-[rgba(245,241,234,0.85)] font-normal" style={{ fontFamily: 'var(--ff-sans)' }}>
-                    {meta.job}
-                  </p>
-                </div>
-
-                {/* Interpretation High vs Low */}
-                <div className="space-y-1.5 mb-3 pt-2 border-t border-[rgba(245,241,234,0.06)]">
-                  <div className="text-[8.5px] uppercase tracking-[0.18em] font-bold text-[rgba(245,241,234,0.4)] mb-1" style={{ fontFamily: 'var(--ff-mono)' }}>
-                    INTERPRETATION GUIDE
-                  </div>
-                  <div className="text-[11px] leading-[1.45] text-[rgba(245,241,234,0.78)]">
-                    <span className="font-bold text-[#F87171] uppercase tracking-[0.06em] mr-1.5 font-mono text-[10px]">ELEVATED / HIGH:</span>
-                    {meta.interpretation.high}
-                  </div>
-                  <div className="text-[11px] leading-[1.45] text-[rgba(245,241,234,0.78)]">
-                    <span className="font-bold text-[#34D399] uppercase tracking-[0.06em] mr-1.5 font-mono text-[10px]">DEPRESSED / LOW:</span>
-                    {meta.interpretation.low}
-                  </div>
-                </div>
-
-                {/* Key Cycle Signal */}
-                <div
-                  className="p-2 mb-2.5 rounded-[1px]"
-                  style={{
-                    background: 'rgba(245,241,234,0.03)',
-                    border: '1px solid rgba(245,241,234,0.1)',
-                  }}
-                >
-                  <div className="text-[8px] uppercase tracking-[0.2em] font-bold text-[var(--accent-novrix)] mb-0.5" style={{ fontFamily: 'var(--ff-mono)' }}>
-                    KEY CYCLE SIGNAL
-                  </div>
-                  <div className="text-[11px] leading-[1.4] text-[rgba(245,241,234,0.92)] font-medium">
-                    {meta.interpretation.signal}
-                  </div>
-                </div>
-
-                {/* Formula / Zone Footer */}
-                {meta.formula && (
-                  <div className="pt-2 border-t border-[rgba(245,241,234,0.06)] flex items-center justify-between text-[9px] font-mono text-[rgba(245,241,234,0.5)]">
-                    <span className="tracking-[0.12em] uppercase">FORMULA:</span>
-                    <span className="text-[rgba(245,241,234,0.8)] font-semibold truncate ml-2 max-w-[260px] text-right" title={meta.formula}>
-                      {meta.formula}
+                <p className="text-[11.5px] leading-[1.5] text-[rgba(245,241,234,0.75)] font-normal mb-2" style={{ fontFamily: 'var(--ff-sans)' }}>
+                  {meta.job}
+                </p>
+                {meta.interpretation?.signal && (
+                  <div className="pt-2 border-t border-[rgba(245,241,234,0.06)] text-[10.5px] leading-[1.4] text-[rgba(245,241,234,0.65)]" style={{ fontFamily: 'var(--ff-sans)' }}>
+                    <span className="text-[9px] uppercase tracking-[0.14em] font-bold text-[rgba(245,241,234,0.4)] mr-1.5" style={{ fontFamily: 'var(--ff-mono)' }}>
+                      SIGNAL:
                     </span>
+                    {meta.interpretation.signal}
                   </div>
                 )}
               </div>
@@ -438,9 +357,9 @@ export const ChartSkeleton = ({ height = 320 }: { height?: number }) => (
 export const TF_OPTS = [
   { label: '1W',  value: '7'      },
   { label: '1M',  value: '30'     },
+  { label: '3M',  value: '90'     },
   { label: '6M',  value: '180'    },
   { label: '1Y',  value: '365'    },
-  { label: '4Y',  value: '1460'   },
   { label: 'ALL', value: '999999' },
 ] as const;
 
@@ -537,6 +456,10 @@ export const getXAxisTicks = (data: Array<{ index: number; dateObj?: Date }>, tf
       // ~weekly ticks by DATE — index modulo breaks on downsampled series
       const prevTick = ticks.length > 0 ? (data[ticks[ticks.length - 1]]?.dateObj as Date | undefined) : undefined;
       if (!prevTick || cur.getTime() - prevTick.getTime() >= 6 * 86_400_000) ticks.push(i);
+    } else if (tf === '90') {
+      // ~bi-weekly ticks for 3M
+      const prevTick = ticks.length > 0 ? (data[ticks[ticks.length - 1]]?.dateObj as Date | undefined) : undefined;
+      if (!prevTick || cur.getTime() - prevTick.getTime() >= 14 * 86_400_000) ticks.push(i);
     } else if (tf === '180' || tf === '365') {
       if (!prev || cur.getMonth() !== prev.getMonth()) ticks.push(i);
     } else if (tf === '1460') {
@@ -562,7 +485,7 @@ export const getXAxisTicks = (data: Array<{ index: number; dateObj?: Date }>, tf
 export const formatXAxisTick = (data: Array<{ index: number; dateObj?: Date }>, index: number, tf: string): string => {
   const d = data[index]?.dateObj as Date | undefined;
   if (!d) return '';
-  if (tf === '7' || tf === '30') return `${d.getDate()} ${d.toLocaleDateString('en-US', { month: 'short' })}`;
+  if (tf === '7' || tf === '30' || tf === '90') return `${d.getDate()} ${d.toLocaleDateString('en-US', { month: 'short' })}`;
   if (tf === '3000' || tf === '3650' || tf === '7300' || tf === '999999') return String(d.getFullYear());
   const mo = d.toLocaleDateString('en-US', { month: 'short' });
   const yr = String(d.getFullYear()).slice(2);
