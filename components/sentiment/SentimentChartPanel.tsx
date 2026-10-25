@@ -20,6 +20,7 @@ import {
   PrecisionTooltip,
   getXAxisTicks,
   formatXAxisTick,
+  DateAxisTick,
   getHalvingIndices,
   FRED_TF_OPTS,
 } from '@/components/sentiment/SentimentPanelUtils';
@@ -334,7 +335,15 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
                 <TfSelector value={panel.timeframe} onChange={panel.setTimeframe} opts={panel.tfOpts ?? (isFred ? FRED_TF_OPTS : undefined)} />
               </div>
               <ResponsiveContainer key={`${panel.panelId}-${panel.timeframe}`} width="100%" height={ch(panel.panelId)}>
-                <AreaChart data={chartData} margin={{ top: 4, right: 4, bottom: 0, left: isMaximized ? 12 : 0 }}>
+                <AreaChart
+                  data={chartData}
+                  margin={{
+                    top: 6,
+                    right: showBtc && showBtcPrice[panel.indicatorKey] && !panel.btcSameAxis ? 6 : 14,
+                    bottom: 0,
+                    left: isMaximized ? 14 : 10,
+                  }}
+                >
                   <defs>
                     <linearGradient id={panel.gradientId} x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%"  stopColor={metricColor} stopOpacity={0.12} />
@@ -356,15 +365,28 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
                   {zoneBands.map((band, i) => (
                     <ReferenceArea key={`band-${i}`} y1={band.y1} y2={band.y2} fill={band.fill} fillOpacity={band.fillOpacity} />
                   ))}
-                  <XAxis dataKey="index" stroke="none"
-                    tick={{ fill: '#A9A29A', fontSize: 12, fontFamily: 'var(--ff-mono)' }}
+                  <XAxis
+                    dataKey="index"
+                    stroke="none"
                     ticks={getXAxisTicks(chartData, panel.timeframe)}
-                    tickFormatter={(i: number) => formatXAxisTick(chartData, i, panel.timeframe)}
+                    tick={(props: Record<string, unknown>) => (
+                      <DateAxisTick
+                        {...props}
+                        chartData={chartData}
+                        timeframe={panel.timeframe}
+                        fontSize={isMaximized ? 12 : 11}
+                      />
+                    )}
                     interval={0}
-                    height={26} />
-                  <YAxis domain={['auto', 'auto']} stroke="none"
+                    height={26}
+                  />
+                  <YAxis
+                    domain={['auto', 'auto']}
+                    stroke="none"
                     tick={{ fill: '#A9A29A', fontSize: 12, fontFamily: 'var(--ff-mono)' }}
-                    tickFormatter={panel.yAxisTick} width={isMaximized ? 84 : 68} />
+                    tickFormatter={panel.yAxisTick}
+                    width={isMaximized ? 84 : 70}
+                  />
                   {showBtc && showBtcPrice[panel.indicatorKey] && !panel.btcSameAxis && (
                     <YAxis yAxisId="btcPrice" orientation="right" scale="log" domain={['auto', 'auto']} stroke="none"
                       tick={{ fill: '#8C857C', fontSize: 11, fontFamily: 'var(--ff-mono)' }}

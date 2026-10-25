@@ -12,7 +12,7 @@ import SentimentChartPanel, { type SentimentPanelConfig } from '@/components/sen
 import {
   PanelHeader, FngTooltip, PrecisionTooltip, ChartSkeleton,
   TF_OPTS, FRED_TF_OPTS, NOVRIX_TF_OPTS, TfSelector, LineToggle,
-  getXAxisTicks, formatXAxisTick, downsample,
+  getXAxisTicks, formatXAxisTick, DateAxisTick, downsample,
   PANEL_CODES, PanelMaximizeWrapper,
   getHalvingIndices,
 } from '@/components/sentiment/SentimentPanelUtils';
@@ -2618,7 +2618,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                             width="100%"
                             height={ch('sentiment-oscillator')}
                           >
-                            <AreaChart data={chartData}>
+                            <AreaChart data={chartData} margin={{ top: 6, right: 14, bottom: 0, left: 10 }}>
                               <defs>
                                 <linearGradient id="fngFill" x1="0" y1="0" x2="0" y2="1">
                                   <stop offset="5%"  stopColor="#88B4D0" stopOpacity={0.12} />
@@ -2642,17 +2642,23 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                               <ReferenceArea y1={75} y2={100} fill="#EF4444" fillOpacity={SENTIMENT_BAND_OPACITY} />
                               <XAxis
                                 dataKey="index" stroke="none"
-                                tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
                                 ticks={getXAxisTicks(chartData, selectedTimeframe)}
-                                tickFormatter={(i: number) => formatXAxisTick(chartData, i, selectedTimeframe)}
+                                tick={(props: Record<string, unknown>) => (
+                                  <DateAxisTick
+                                    {...props}
+                                    chartData={chartData}
+                                    timeframe={selectedTimeframe}
+                                    fontSize={11}
+                                  />
+                                )}
                                 interval={0}
-                                height={22}
+                                height={24}
                               />
                               <YAxis
                                 domain={[0, 100]}
                                 stroke="none"
                                 tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
-                                width={28}
+                                width={38}
                                 ticks={[0, 25, 50, 75, 100]}
                               />
                               <Tooltip
@@ -2790,7 +2796,15 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                       <TfSelector value={dominanceTimeframe} onChange={setDominanceTimeframe} opts={TF_OPTS} />
                     </div>
                     <ResponsiveContainer key={`dominance-chart-${dominanceTimeframe}`} width="100%" height={ch('dominance')}>
-                      <AreaChart data={slicedDominanceChartDataWithPrice} margin={{ top: 4, right: 4, bottom: 0, left: 0 }}>
+                      <AreaChart
+                        data={slicedDominanceChartDataWithPrice}
+                        margin={{
+                          top: 6,
+                          right: showBtcPrice['dominance'] ? 6 : 14,
+                          bottom: 0,
+                          left: 10,
+                        }}
+                      >
                         <defs>
                           <linearGradient id="btcDominanceGradient" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="5%" stopColor="#F7931A" stopOpacity={0.12}/>
@@ -2802,15 +2816,24 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                           </linearGradient>
                         </defs>
                         <CartesianGrid strokeDasharray="3 6" stroke="rgba(245,241,234,0.05)" vertical={false} />
-                        <XAxis dataKey="index" stroke="none"
-                          tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
+                        <XAxis
+                          dataKey="index"
+                          stroke="none"
                           ticks={getXAxisTicks(slicedDominanceChartDataWithPrice, dominanceTimeframe)}
-                          tickFormatter={(i: number) => formatXAxisTick(slicedDominanceChartDataWithPrice, i, dominanceTimeframe)}
+                          tick={(props: Record<string, unknown>) => (
+                            <DateAxisTick
+                              {...props}
+                              chartData={slicedDominanceChartDataWithPrice}
+                              timeframe={dominanceTimeframe}
+                              fontSize={11}
+                            />
+                          )}
                           interval={0}
-                          height={22} />
+                          height={24}
+                        />
                         <YAxis domain={['auto', 'auto']} stroke="none"
                           tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
-                          tickFormatter={(v) => `${v.toFixed(0)}%`} width={52} />
+                          tickFormatter={(v) => `${v.toFixed(0)}%`} width={56} />
                         {showBtcPrice['dominance'] && (
                           <YAxis yAxisId="btcPrice" orientation="right" scale="log" domain={['auto', 'auto']} stroke="none"
                             tick={{ fill: '#8C857C', fontSize: 10, fontFamily: 'var(--ff-mono)' }}
@@ -3108,7 +3131,15 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                       <TfSelector value={hashribbonsTimeframe} onChange={setHashribbonsTimeframe} />
                     </div>
                     <ResponsiveContainer key={`hashribbons-chart-${hashribbonsTimeframe}`} width="100%" height={ch('hashribbons')}>
-                      <AreaChart data={hashribbonsChartDataWithPrice} margin={{ top: 4, right: 4, bottom: 0, left: 0 }}>
+                      <AreaChart
+                        data={hashribbonsChartDataWithPrice}
+                        margin={{
+                          top: 6,
+                          right: showBtcPrice['hashribbons'] ? 6 : 14,
+                          bottom: 0,
+                          left: 10,
+                        }}
+                      >
                         <defs>
                           <linearGradient id="hribSma30Fill" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="5%" stopColor="#F7931A" stopOpacity={0.10} />
@@ -3120,13 +3151,23 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                           </linearGradient>
                         </defs>
                         <CartesianGrid strokeDasharray="3 6" stroke="rgba(245,241,234,0.05)" vertical={false} />
-                        <XAxis dataKey="index" stroke="none" tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
+                        <XAxis
+                          dataKey="index"
+                          stroke="none"
                           ticks={getXAxisTicks(hashribbonsChartDataWithPrice, hashribbonsTimeframe)}
-                          tickFormatter={(i: number) => formatXAxisTick(hashribbonsChartDataWithPrice, i, hashribbonsTimeframe)}
+                          tick={(props: Record<string, unknown>) => (
+                            <DateAxisTick
+                              {...props}
+                              chartData={hashribbonsChartDataWithPrice}
+                              timeframe={hashribbonsTimeframe}
+                              fontSize={11}
+                            />
+                          )}
                           interval={0}
-                          height={22} />
+                          height={24}
+                        />
                         <YAxis stroke="none" tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
-                          tickFormatter={(v) => v >= 1e6 ? `${(v/1e6).toFixed(0)}E` : v >= 1e3 ? `${(v/1e3).toFixed(0)}P` : `${v.toFixed(0)}T`} width={52} />
+                          tickFormatter={(v) => v >= 1e6 ? `${(v/1e6).toFixed(0)}E` : v >= 1e3 ? `${(v/1e3).toFixed(0)}P` : `${v.toFixed(0)}T`} width={56} />
                         {showBtcPrice['hashribbons'] && (
                           <YAxis yAxisId="btcPrice" orientation="right" scale="log" domain={['auto', 'auto']} stroke="none"
                             tick={{ fill: '#8C857C', fontSize: 10, fontFamily: 'var(--ff-mono)' }}
@@ -3429,7 +3470,15 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                       <TfSelector value={weekMa200Timeframe} onChange={setWeekMa200Timeframe} />
                     </div>
                     <ResponsiveContainer key={`200-week-ma-${weekMa200Timeframe}`} width="100%" height={ch('200-week-ma')}>
-                      <AreaChart data={weekMa200ChartDataWithPrice} margin={{ top: 4, right: 4, bottom: 0, left: 0 }}>
+                      <AreaChart
+                        data={weekMa200ChartDataWithPrice}
+                        margin={{
+                          top: 6,
+                          right: showBtcPrice['weekMa200'] ? 6 : 14,
+                          bottom: 0,
+                          left: 10,
+                        }}
+                      >
                         <defs>
                           <linearGradient id="weekMa200Fill" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="5%" stopColor="#00E5FF" stopOpacity={0.10} />
@@ -3437,13 +3486,23 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                           </linearGradient>
                         </defs>
                         <CartesianGrid strokeDasharray="3 6" stroke="rgba(245,241,234,0.05)" vertical={false} />
-                        <XAxis dataKey="index" stroke="none" tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
+                        <XAxis
+                          dataKey="index"
+                          stroke="none"
                           ticks={getXAxisTicks(weekMa200ChartDataWithPrice, weekMa200Timeframe)}
-                          tickFormatter={(i: number) => formatXAxisTick(weekMa200ChartDataWithPrice, i, weekMa200Timeframe)}
+                          tick={(props: Record<string, unknown>) => (
+                            <DateAxisTick
+                              {...props}
+                              chartData={weekMa200ChartDataWithPrice}
+                              timeframe={weekMa200Timeframe}
+                              fontSize={11}
+                            />
+                          )}
                           interval={0}
-                          height={22} />
+                          height={24}
+                        />
                         <YAxis domain={['auto', 'auto']} stroke="none" tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
-                          tickFormatter={(v) => `$${v >= 1000 ? `${(v/1000).toFixed(0)}K` : v.toFixed(0)}`} width={52} />
+                          tickFormatter={(v) => `$${v >= 1000 ? `${(v/1000).toFixed(0)}K` : v.toFixed(0)}`} width={56} />
                         <Tooltip cursor={{ stroke: 'rgba(245,241,234,0.65)', strokeWidth: 2 }} animationDuration={0} isAnimationActive={false}
                           content={(props) => (
                             <PrecisionTooltip {...props} accentColor="#00E5FF" getRows={(pt, pl) => {

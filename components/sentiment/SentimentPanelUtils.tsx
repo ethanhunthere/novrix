@@ -474,13 +474,16 @@ export const resolveDate = (item: ChartDateItem | undefined): Date | undefined =
 
 export const getXAxisTicks = (data: ChartDateItem[], tf: string): number[] => {
   if (!data || data.length === 0) return [];
-  if (data.length <= 8) return data.map((_, i) => i);
+  if (data.length <= 4) return data.map((_, i) => i);
 
   const first = resolveDate(data[0]);
   const last = resolveDate(data[data.length - 1]);
   if (!first || !last) {
-    const count = Math.min(6, data.length);
-    return Array.from({ length: count }, (_, k) => Math.round((k * (data.length - 1)) / (count - 1)));
+    const count = Math.min(5, data.length);
+    const startK = data.length > 5 ? 1 : 0;
+    return Array.from({ length: count - startK }, (_, k) =>
+      Math.round(((k + startK) * (data.length - 1)) / (count - 1))
+    );
   }
 
   const spanDays = Math.abs(last.getTime() - first.getTime()) / 86_400_000;
@@ -508,36 +511,48 @@ export const getXAxisTicks = (data: ChartDateItem[], tf: string): number[] => {
   const targetTimes: number[] = [];
 
   if (spanDays <= 8 || tf === '7') {
-    // 1W: daily ticks across all points
-    return data.map((_, i) => i);
+    // 1W: 3-4 clean milestone points avoiding index 0
+    const count = Math.min(4, Math.max(2, data.length - 1));
+    const step = (data.length - 1) / count;
+    for (let k = 1; k <= count; k++) {
+      const idx = Math.min(Math.round(k * step), data.length - 1);
+      const d = resolveDate(data[idx]);
+      if (d) targetTimes.push(d.getTime());
+    }
   } else if (spanDays <= 45 || tf === '30') {
-    // 1M: weekly ticks (every 7 days)
+    // 1M: weekly ticks (every 7 days), starting ~6 days in
     const stepMs = 7 * 86_400_000;
-    for (let t = first.getTime(); t <= last.getTime(); t += stepMs) {
+    for (let t = first.getTime() + 6 * 86_400_000; t <= last.getTime(); t += stepMs) {
       targetTimes.push(t);
     }
-    if (last.getTime() - targetTimes[targetTimes.length - 1] > 3 * 86_400_000) {
+    if (last.getTime() - targetTimes[targetTimes.length - 1] > 4 * 86_400_000) {
       targetTimes.push(last.getTime());
     }
   } else if (spanDays <= 120 || tf === '90') {
-    // 3M: ~every 15 days
-    const stepMs = 15 * 86_400_000;
-    for (let t = first.getTime(); t <= last.getTime(); t += stepMs) {
+    // 3M: every 18 days, starting ~14 days in
+    const stepMs = 18 * 86_400_000;
+    for (let t = first.getTime() + 14 * 86_400_000; t <= last.getTime(); t += stepMs) {
       targetTimes.push(t);
     }
-    if (last.getTime() - targetTimes[targetTimes.length - 1] > 6 * 86_400_000) {
+    if (last.getTime() - targetTimes[targetTimes.length - 1] > 8 * 86_400_000) {
       targetTimes.push(last.getTime());
     }
   } else if (spanDays <= 220 || tf === '180') {
-    // 6M: 1st of every month
-    const cur = new Date(first.getFullYear(), first.getMonth() + 1, 1);
+    // 6M: 1st of month, ensuring first tick is at least 15 days from start
+    let cur = new Date(first.getFullYear(), first.getMonth() + 1, 1);
+    if (cur.getTime() - first.getTime() < 15 * 86_400_000) {
+      cur.setMonth(cur.getMonth() + 1);
+    }
     while (cur.getTime() <= last.getTime()) {
       targetTimes.push(cur.getTime());
       cur.setMonth(cur.getMonth() + 1);
     }
   } else if (spanDays <= 500 || tf === '365') {
-    // 1Y: 1st of every 2nd month (Nov, Jan, Mar, May, Jul, Sep)
-    const cur = new Date(first.getFullYear(), first.getMonth() + 1, 1);
+    // 1Y: every 2 months, ensuring first tick is at least 25 days from start
+    let cur = new Date(first.getFullYear(), first.getMonth() + 1, 1);
+    if (cur.getTime() - first.getTime() < 25 * 86_400_000) {
+      cur.setMonth(cur.getMonth() + 1);
+    }
     while (cur.getTime() <= last.getTime()) {
       targetTimes.push(cur.getTime());
       cur.setMonth(cur.getMonth() + 2);
@@ -545,28 +560,38 @@ export const getXAxisTicks = (data: ChartDateItem[], tf: string): number[] => {
   } else if (spanDays <= 1500 || tf === '1460') {
     // 2-4Y: Jan 1 of every year
     for (let y = first.getFullYear() + 1; y <= last.getFullYear(); y++) {
-      targetTimes.push(new Date(y, 0, 1).getTime());
+      const t = new Date(y, 0, 1).getTime();
+      if (t - first.getTime() >= 30 * 86_400_000) {
+        targetTimes.push(t);
+      }
     }
   } else if (spanDays <= 5500 || tf === '1825' || tf === '3650') {
     // 5-15Y (e.g. Bitcoin all-time): Jan 1 of every 2nd year (2014, 2016, 2018, 2020, 2022, 2024, 2026)
     const startYr = Math.ceil((first.getFullYear() + 1) / 2) * 2;
     for (let y = startYr; y <= last.getFullYear(); y += 2) {
-      targetTimes.push(new Date(y, 0, 1).getTime());
+      const t = new Date(y, 0, 1).getTime();
+      if (t - first.getTime() >= 30 * 86_400_000) {
+        targetTimes.push(t);
+      }
     }
   } else {
     // >15Y (e.g. FRED macro 20-50Y): Jan 1 of every 5th or 10th year
     const step = spanDays > 14_000 ? 10 : 5;
     const startYr = Math.ceil((first.getFullYear() + 1) / step) * step;
     for (let y = startYr; y <= last.getFullYear(); y += step) {
-      targetTimes.push(new Date(y, 0, 1).getTime());
+      const t = new Date(y, 0, 1).getTime();
+      if (t - first.getTime() >= 30 * 86_400_000) {
+        targetTimes.push(t);
+      }
     }
   }
 
-  // Ensure between 4 and 8 ticks
+  // Fallback if targetTimes has too few ticks
   if (targetTimes.length < 3) {
-    const count = Math.min(6, data.length);
+    const count = Math.min(5, data.length);
     const fallback: number[] = [];
-    for (let k = 0; k < count; k++) {
+    const startK = data.length > 5 ? 1 : 0;
+    for (let k = startK; k < count; k++) {
       fallback.push(Math.round((k * (data.length - 1)) / (count - 1)));
     }
     return Array.from(new Set(fallback)).sort((a, b) => a - b);
@@ -582,17 +607,22 @@ export const getXAxisTicks = (data: ChartDateItem[], tf: string): number[] => {
     }
   }
 
+  // Ensure the first tick is not jammed against the left edge (at least ~3% into data)
+  const minFirstIndex = data.length > 8 ? Math.max(1, Math.round(data.length * 0.03)) : 1;
+  const filtered = result.filter((idx) => idx >= minFirstIndex);
+  const finalTicks = filtered.length >= 2 ? filtered : result;
+
   // Bound to max 8 ticks so labels never crowd
-  if (result.length > 8) {
+  if (finalTicks.length > 8) {
     const thinned: number[] = [];
-    const step = (result.length - 1) / 7;
+    const step = (finalTicks.length - 1) / 7;
     for (let k = 0; k < 8; k++) {
-      thinned.push(result[Math.round(k * step)]);
+      thinned.push(finalTicks[Math.round(k * step)]);
     }
     return Array.from(new Set(thinned)).sort((a, b) => a - b);
   }
 
-  return result.sort((a, b) => a - b);
+  return finalTicks.sort((a, b) => a - b);
 };
 
 export const formatXAxisTick = (data: ChartDateItem[], index: number, tf: string): string => {
@@ -619,6 +649,69 @@ export const formatXAxisTick = (data: ChartDateItem[], index: number, tf: string
 
   // Multi-year ranges (4Y, 5Y, 10Y, 20Y, ALL): Full 4-digit Year (e.g. "2024", "2025", "2026")
   return String(d.getFullYear());
+};
+
+/**
+ * Boundary-aware X-Axis tick component.
+ * Ensures the first date tick never overflows to the left into the Y-axis value column (using textAnchor="start" and dx=+6)
+ * and the last date tick never overflows to the right outside the chart canvas (using textAnchor="end" and dx=-6).
+ */
+export interface DateAxisTickProps {
+  x?: number;
+  y?: number;
+  payload?: { value?: number | string };
+  index?: number;
+  visibleTicksCount?: number;
+  chartData?: ChartDateItem[];
+  timeframe?: string;
+  fontSize?: number;
+}
+
+export const DateAxisTick = (props: DateAxisTickProps) => {
+  const {
+    x = 0,
+    y = 0,
+    payload,
+    index = 0,
+    visibleTicksCount = 1,
+    chartData = [],
+    timeframe = '365',
+    fontSize = 11,
+  } = props;
+
+  if (!payload || payload.value == null) return null;
+
+  let label = '';
+  if (typeof payload.value === 'number' && chartData[payload.value]) {
+    label = formatXAxisTick(chartData, payload.value, timeframe);
+  } else if (typeof payload.value === 'string' && !isNaN(Number(payload.value)) && chartData[Number(payload.value)]) {
+    label = formatXAxisTick(chartData, Number(payload.value), timeframe);
+  } else {
+    label = String(payload.value);
+  }
+
+  if (!label) return null;
+
+  const isOnlyOne = visibleTicksCount <= 1;
+  const isFirst = !isOnlyOne && index === 0;
+  const isLast = !isOnlyOne && index === visibleTicksCount - 1;
+  const textAnchor = isFirst ? 'start' : isLast ? 'end' : 'middle';
+  const dx = isFirst ? 6 : isLast ? -6 : 0;
+
+  return (
+    <text
+      x={x}
+      y={y}
+      dy={13}
+      dx={dx}
+      textAnchor={textAnchor}
+      fill="#A9A29A"
+      fontSize={fontSize}
+      fontFamily="var(--ff-mono)"
+    >
+      {label}
+    </text>
+  );
 };
 
 export const getHalvingIndices = (data: Array<{ dateObj?: Date; rawDate?: string }>) => {
