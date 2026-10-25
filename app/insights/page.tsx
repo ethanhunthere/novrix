@@ -47,7 +47,6 @@ const ACCENT = '#C2344D';
 interface Section {
   key: string;
   api: string;
-  index: string;
   label: string;
   title: string;
   subtitle: string;
@@ -57,7 +56,6 @@ const SECTIONS: Section[] = [
   {
     key: 'our-view',
     api: 'novrix_view',
-    index: '01',
     label: 'Our View',
     title: 'Our read.',
     subtitle: 'Opinionated analysis on sentiment, positioning, and the forces moving the market.',
@@ -65,7 +63,6 @@ const SECTIONS: Section[] = [
   {
     key: 'deep-dive',
     api: 'privacy_watch',
-    index: '02',
     label: 'Deep Dive',
     title: 'The long read.',
     subtitle: 'Slower research into privacy technology, market structure, and the stories underneath the price.',
@@ -237,28 +234,17 @@ function CoverArt({ post, section, tall = false }: { post: NovrixPost; section: 
         borderLeft: `1px solid ${HAIRLINE}`,
         display: 'flex',
         alignItems: 'flex-end',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-end',
         padding: 'clamp(18px, 3vw, 32px)',
       }}
     >
       <span
         style={{
-          fontFamily: DISPLAY,
-          fontSize: 'clamp(3rem, 7vw, 5.5rem)',
-          lineHeight: 0.8,
-          color: 'rgba(245,241,234,0.07)',
-          letterSpacing: '-0.04em',
-        }}
-      >
-        {section.index}
-      </span>
-      <span
-        style={{
           fontFamily: MONO,
-          fontSize: '9px',
-          letterSpacing: '0.24em',
+          fontSize: '9.5px',
+          letterSpacing: '0.20em',
           textTransform: 'uppercase',
-          color: 'rgba(245,241,234,0.26)',
+          color: 'rgba(245,241,234,0.45)',
         }}
       >
         NOVRIX · {section.label}
@@ -373,7 +359,7 @@ function Feature({ post, section }: { post: NovrixPost; section: Section }) {
    ENTRY ROW
    ═══════════════════════════════════════════════════════════════════════ */
 
-function Entry({ post, index }: { post: NovrixPost; index: number }) {
+function Entry({ post }: { post: NovrixPost; index?: number }) {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -383,27 +369,12 @@ function Entry({ post, index }: { post: NovrixPost; index: number }) {
       onMouseLeave={() => setHovered(false)}
       style={{
         position: 'relative',
-        display: 'grid',
-        gridTemplateColumns: 'auto minmax(0, 1fr)',
-        gap: 'clamp(18px, 3vw, 40px)',
+        display: 'block',
         padding: 'clamp(22px, 3vh, 30px) 0',
         borderTop: `1px solid ${HAIRLINE}`,
         textDecoration: 'none',
       }}
     >
-      <span
-        style={{
-          fontFamily: MONO,
-          fontSize: '10px',
-          letterSpacing: '0.12em',
-          color: hovered ? ACCENT : 'rgba(245,241,234,0.26)',
-          paddingTop: '7px',
-          transition: 'color 180ms ease',
-        }}
-      >
-        {String(index).padStart(2, '0')}
-      </span>
-
       <div style={{ minWidth: 0 }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: '16px', flexWrap: 'wrap' }}>
           <h3
@@ -415,7 +386,7 @@ function Entry({ post, index }: { post: NovrixPost; index: number }) {
               lineHeight: 1.15,
               letterSpacing: '-0.018em',
               fontWeight: 500,
-              color: hovered ? '#FFFCF6' : 'rgba(245,241,234,0.9)',
+              color: hovered ? '#FFFCF6' : 'rgba(245,241,234,0.92)',
               margin: 0,
               transition: 'color 180ms ease',
             }}
@@ -428,9 +399,9 @@ function Entry({ post, index }: { post: NovrixPost; index: number }) {
         <p
           style={{
             fontFamily: SANS,
-            fontSize: '0.93rem',
+            fontSize: '0.94rem',
             lineHeight: 1.65,
-            color: 'rgba(245,241,234,0.48)',
+            color: 'rgba(245,241,234,0.72)',
             margin: '10px 0 0',
             maxWidth: '68ch',
             display: '-webkit-box',
@@ -445,7 +416,7 @@ function Entry({ post, index }: { post: NovrixPost; index: number }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', marginTop: '12px' }}>
           <Meta>{formatDate(post.published_at)}</Meta>
           <Dot />
-          <span style={{ fontFamily: SANS, fontSize: '12px', color: 'rgba(245,241,234,0.42)' }}>{post.author}</span>
+          <span style={{ fontFamily: SANS, fontSize: '12px', color: 'rgba(245,241,234,0.60)' }}>{post.author}</span>
           <AuthorLinks links={post.author_links} compact />
         </div>
       </div>
@@ -614,18 +585,14 @@ export default function InsightsPage() {
                     cursor: 'pointer',
                     display: 'inline-flex',
                     alignItems: 'baseline',
-                    gap: '10px',
                     padding: '18px 0 16px',
                     marginBottom: '-1px',
-                    color: isActive ? INK : 'rgba(245,241,234,0.40)',
+                    color: isActive ? INK : 'rgba(245,241,234,0.60)',
                     transition: 'color 180ms ease, border-color 180ms ease',
                   }}
                   aria-pressed={isActive}
                 >
-                  <span style={{ fontFamily: MONO, fontSize: '9px', letterSpacing: '0.12em', color: isActive ? ACCENT : 'rgba(245,241,234,0.24)' }}>
-                    {section.index}
-                  </span>
-                  <span style={{ fontFamily: SANS, fontSize: '13.5px', fontWeight: 500, letterSpacing: '0.01em' }}>
+                  <span style={{ fontFamily: SANS, fontSize: '14px', fontWeight: 500, letterSpacing: '0.01em' }}>
                     {section.label}
                   </span>
                 </button>

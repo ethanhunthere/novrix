@@ -90,23 +90,21 @@ export const PanelHeader = ({
             <span
               className="tabular-nums leading-none"
               style={{
-                fontSize: '28px', fontWeight: 800,
+                fontSize: '26px', fontWeight: 700,
                 color: accentColor,
                 fontFamily: 'var(--ff-mono)', letterSpacing: '-0.02em',
-                textShadow: `0 0 32px ${accentColor}70, 0 0 10px ${accentColor}40`,
               }}
             >
               {value}
             </span>
             {zone?.label && (
               <span
-                className="text-[12px] tracking-[0.12em] px-2.5 py-1.5 font-black shrink-0"
+                className="text-[11px] tracking-[0.10em] px-2 py-1 font-semibold shrink-0 uppercase"
                 style={{
-                  color: zone.color, background: `${zone.color}20`,
-                  border: `1px solid ${zone.color}B3`,
+                  color: zone.color, background: `${zone.color}15`,
+                  border: `1px solid ${zone.color}60`,
+                  borderRadius: '2px',
                   fontFamily: 'var(--ff-mono)',
-                  boxShadow: `0 0 16px ${zone.color}28, inset 0 1px 0 ${zone.color}20`,
-                  letterSpacing: '0.12em',
                 }}
               >
                 {zone.label}
@@ -135,10 +133,9 @@ export const PanelHeader = ({
               aria-label={`Indicator Intel for ${title}`}
               className="w-8 h-8 flex items-center justify-center transition-all"
               style={{
-                background: showInfo ? `${accentColor}20` : 'transparent',
+                background: showInfo ? `${accentColor}15` : 'transparent',
                 border: `1px solid ${showInfo ? accentColor : 'var(--border-default)'}`,
                 color: showInfo ? accentColor : 'var(--text-tertiary)',
-                boxShadow: showInfo ? `0 0 14px ${accentColor}40` : 'none',
               }}
             >
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -231,25 +228,24 @@ export const FngTooltip = ({ active, payload }: { active?: boolean; payload?: Ar
   if (!active || !payload?.length) return null;
   const val = Number(payload[0]?.value ?? 0);
   const date = payload[0]?.payload?.date || payload[0]?.payload?.dateFormatted || '';
-  const color = val >= 75 ? '#EF4444' : val >= 55 ? '#F7931A' : val >= 45 ? '#88B4D0' : '#10B981';
-  const label = val >= 80 ? 'EXTREME GREED' : val >= 60 ? 'GREED' : val >= 45 ? 'NEUTRAL' : val >= 25 ? 'FEAR' : 'EXTREME FEAR';
+  const color = val >= 75 ? '#EF4444' : val >= 55 ? '#F7931A' : val >= 45 ? '#88B4D0' : val >= 25 ? '#4CAF50' : '#10B981';
+  const label = val >= 75 ? 'EXTREME GREED' : val >= 55 ? 'GREED' : val >= 45 ? 'NEUTRAL' : val >= 25 ? 'FEAR' : 'EXTREME FEAR';
   return (
     <div style={{
-      background: 'var(--bg-raised)', border: `1px solid rgba(255,255,255,0.15)`,
-      borderTop: `2px solid ${color}`, borderRadius: '1px',
-      fontFamily: 'var(--ff-mono)', padding: '14px 18px',
-      boxShadow: `0 8px 32px rgba(0,0,0,0.80)`, minWidth: '180px', pointerEvents: 'none',
+      background: 'var(--bg-raised)', border: '1px solid var(--border-default)',
+      borderTop: `2px solid ${color}`, borderRadius: '2px',
+      fontFamily: 'var(--ff-mono)', padding: '12px 16px',
+      boxShadow: '0 8px 30px rgba(0,0,0,0.70)', minWidth: '180px', pointerEvents: 'none',
     }}>
-      <div style={{ color: 'var(--text-secondary)', fontSize: '13px', marginBottom: '2px', letterSpacing: '0.12em' }}>{date}</div>
-      <div style={{ height: '1px', background: 'var(--border-default)', margin: '9px 0' }} />
-      <div style={{ color: 'var(--text-tertiary)', fontSize: '10px', letterSpacing: '0.15em', marginBottom: '7px', textTransform: 'uppercase' }}>Fear &amp; Greed Index</div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '11px' }}>
-        <span style={{ color, fontSize: '18px', fontWeight: 800, lineHeight: 1, textShadow: `0 0 20px ${color}60`, fontVariantNumeric: 'tabular-nums' }}>{val}</span>
-        <span style={{ color: 'var(--text-tertiary)', fontSize: '12px', fontWeight: 600, marginTop: '2px' }}>/100</span>
+      <div style={{ color: 'var(--text-secondary)', fontSize: '12px', marginBottom: '2px', letterSpacing: '0.08em' }}>{date}</div>
+      <div style={{ height: '1px', background: 'var(--border-default)', margin: '8px 0' }} />
+      <div style={{ color: 'var(--text-tertiary)', fontSize: '10px', letterSpacing: '0.14em', marginBottom: '6px', textTransform: 'uppercase' }}>Fear &amp; Greed Index</div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <span style={{ color, fontSize: '18px', fontWeight: 700, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{val}</span>
         <span style={{
-          fontSize: '12px', fontWeight: 800, letterSpacing: '0.13em', padding: '4px 9px',
-          color, background: `${color}20`, border: `1px solid ${color}B3`,
-          boxShadow: `0 0 12px ${color}22`, flexShrink: 0, textTransform: 'uppercase',
+          fontSize: '11px', fontWeight: 700, letterSpacing: '0.10em', padding: '3px 8px',
+          color, background: `${color}18`, border: `1px solid ${color}60`,
+          borderRadius: '2px', flexShrink: 0, textTransform: 'uppercase',
         }}>{label}</span>
       </div>
     </div>
@@ -279,29 +275,27 @@ export const PrecisionTooltip = ({
   if (!rows.length) return null;
   return (
     <div style={{
-      background: 'var(--bg-raised)', border: `1px solid rgba(255,255,255,0.15)`,
-      borderTop: `2px solid ${accentColor}`, borderRadius: '1px',
-      fontFamily: 'var(--ff-mono)', padding: '14px 18px',
-      boxShadow: `0 8px 32px rgba(0,0,0,0.80)`, minWidth: '190px', pointerEvents: 'none',
+      background: 'var(--bg-raised)', border: '1px solid var(--border-default)',
+      borderTop: `2px solid ${accentColor}`, borderRadius: '2px',
+      fontFamily: 'var(--ff-mono)', padding: '12px 16px',
+      boxShadow: '0 8px 30px rgba(0,0,0,0.70)', minWidth: '190px', pointerEvents: 'none',
     }}>
-      <div style={{ color: 'var(--text-secondary)', fontSize: '13px', marginBottom: '2px', letterSpacing: '0.12em' }}>{date}</div>
-      <div style={{ height: '1px', background: 'var(--border-default)', margin: '9px 0' }} />
+      <div style={{ color: 'var(--text-secondary)', fontSize: '12px', marginBottom: '2px', letterSpacing: '0.08em' }}>{date}</div>
+      <div style={{ height: '1px', background: 'var(--border-default)', margin: '8px 0' }} />
       {rows.map((row, i) => (
-        <div key={i} style={{ marginBottom: i < rows.length - 1 ? '12px' : 0 }}>
-          <div style={{ color: 'var(--text-tertiary)', fontSize: '10px', letterSpacing: '0.15em', marginBottom: '6px', textTransform: 'uppercase' }}>{row.label}</div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '11px', flexWrap: 'nowrap' }}>
+        <div key={i} style={{ marginBottom: i < rows.length - 1 ? '10px' : 0 }}>
+          <div style={{ color: 'var(--text-tertiary)', fontSize: '10px', letterSpacing: '0.14em', marginBottom: '5px', textTransform: 'uppercase' }}>{row.label}</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'nowrap' }}>
             <span style={{
-              color: row.color, fontSize: '18px', fontWeight: 800, lineHeight: 1,
+              color: row.color, fontSize: '17px', fontWeight: 700, lineHeight: 1,
               letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums',
-              textShadow: `0 0 18px ${row.color}50`,
             }}>{row.value}</span>
             {row.zone && (
               <span style={{
-                fontSize: '12px', fontWeight: 800, letterSpacing: '0.13em',
-                padding: '4px 9px', textTransform: 'uppercase',
-                color: row.zone.color, background: `${row.zone.color}20`,
-                border: `1px solid ${row.zone.color}B3`,
-                boxShadow: `0 0 12px ${row.zone.color}22`, flexShrink: 0,
+                fontSize: '11px', fontWeight: 700, letterSpacing: '0.10em',
+                padding: '3px 8px', textTransform: 'uppercase',
+                color: row.zone.color, background: `${row.zone.color}18`,
+                border: `1px solid ${row.zone.color}60`, borderRadius: '2px', flexShrink: 0,
               }}>{row.zone.label}</span>
             )}
           </div>
@@ -692,11 +686,12 @@ export const DateAxisTick = (props: DateAxisTickProps) => {
 
   if (!label) return null;
 
-  const isOnlyOne = visibleTicksCount <= 1;
-  const isFirst = !isOnlyOne && index === 0;
-  const isLast = !isOnlyOne && index === visibleTicksCount - 1;
+  // Boundary protection:
+  // Ensure the left-most date tick NEVER enters into the left Y-axis value column territory.
+  const isFirst = index === 0 || x < 85;
+  const isLast = visibleTicksCount > 1 ? index === visibleTicksCount - 1 : false;
   const textAnchor = isFirst ? 'start' : isLast ? 'end' : 'middle';
-  const dx = isFirst ? 6 : isLast ? -6 : 0;
+  const dx = isFirst ? 10 : isLast ? -8 : 0;
 
   return (
     <text

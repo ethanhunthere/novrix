@@ -47,22 +47,45 @@ const lowerBand = (to: number) => ({ to, fill: SENTIMENT_BAND_GREEN, fillOpacity
 const upperBand = (from: number) => ({ from, fill: SENTIMENT_BAND_RED, fillOpacity: SENTIMENT_BAND_OPACITY });
 
 // Opt-in low/high reference bands. The shared renderer clamps these to the visible data extent.
-const NUPL_REFERENCE_BANDS = [lowerBand(-0.25), upperBand(0.75)];
-const MVRV_REFERENCE_BANDS = [lowerBand(1.0), upperBand(3.5)];
-const LTH_MVRV_REFERENCE_BANDS = [lowerBand(1.0), upperBand(5.0)];
-const SOPR_REFERENCE_BANDS = [lowerBand(1.0), upperBand(1.0)];
-const SSR_REFERENCE_BANDS = [lowerBand(5.0), upperBand(20.0)];
-const STH_MVRV_REFERENCE_BANDS = [lowerBand(0.8), upperBand(1.4)];
-const AVIV_REFERENCE_BANDS = [lowerBand(0.8), upperBand(5.0)];
-const MVRV_ZSCORE_REFERENCE_BANDS = [lowerBand(0.1), upperBand(7.0)];
-const PUELL_REFERENCE_BANDS = [lowerBand(0.5), upperBand(4.0)];
-const MAYER_REFERENCE_BANDS = [lowerBand(0.8), upperBand(2.4)];
-const RESERVE_RISK_REFERENCE_BANDS = [lowerBand(0.0026), upperBand(0.02)];
-const VDD_REFERENCE_BANDS = [lowerBand(0.5), upperBand(4.0)];
-const RHODL_REFERENCE_BANDS = [lowerBand(5000), upperBand(100000)];
-const NVTS_REFERENCE_BANDS = [lowerBand(45), upperBand(150)];
-const NVT_ZSCORE_REFERENCE_BANDS = [lowerBand(-1), upperBand(2)];
-const SSR_OSCILLATOR_REFERENCE_BANDS = [lowerBand(-0.5), upperBand(1.0)];
+const NUPL_REFERENCE_BANDS = [lowerBand(0.0), upperBand(0.65)];
+const MVRV_REFERENCE_BANDS = [lowerBand(1.0), upperBand(3.0)];
+const LTH_MVRV_REFERENCE_BANDS = [lowerBand(1.2), upperBand(3.5)];
+const SOPR_REFERENCE_BANDS = [lowerBand(0.98), upperBand(1.05)];
+const SSR_REFERENCE_BANDS = [lowerBand(6.0), upperBand(18.0)];
+const STH_MVRV_REFERENCE_BANDS = [lowerBand(0.85), upperBand(1.25)];
+const AVIV_REFERENCE_BANDS = [lowerBand(0.85), upperBand(2.5)];
+const MVRV_ZSCORE_REFERENCE_BANDS = [lowerBand(0.15), upperBand(4.5)];
+const PUELL_REFERENCE_BANDS = [lowerBand(0.55), upperBand(2.2)];
+const MAYER_REFERENCE_BANDS = [lowerBand(0.80), upperBand(2.0)];
+const RESERVE_RISK_REFERENCE_BANDS = [lowerBand(0.0026), upperBand(0.015)];
+const VDD_REFERENCE_BANDS = [lowerBand(0.60), upperBand(2.5)];
+const RHODL_REFERENCE_BANDS = [lowerBand(5000), upperBand(50000)];
+const NVTS_REFERENCE_BANDS = [lowerBand(45), upperBand(120)];
+const NVT_ZSCORE_REFERENCE_BANDS = [lowerBand(-1.0), upperBand(1.8)];
+const SSR_OSCILLATOR_REFERENCE_BANDS = [lowerBand(-0.5), upperBand(0.8)];
+const FUNDING_RATE_REFERENCE_BANDS = [lowerBand(0.0), upperBand(0.03)];
+const OPEN_INTEREST_REFERENCE_BANDS = [lowerBand(150000), upperBand(450000)];
+const NRPL_REFERENCE_BANDS = [lowerBand(0), upperBand(100000)];
+const MPI_REFERENCE_BANDS = [lowerBand(0.2), upperBand(2.0)];
+const MINER_SELL_PRESSURE_REFERENCE_BANDS = [lowerBand(0.10), upperBand(0.35)];
+const UTXO_PROFIT_REFERENCE_BANDS = [lowerBand(0.55), upperBand(0.95)];
+const UTXO_LOSS_REFERENCE_BANDS = [{ from: 0.35, fill: SENTIMENT_BAND_GREEN, fillOpacity: SENTIMENT_BAND_OPACITY }, { to: 0.05, fill: SENTIMENT_BAND_RED, fillOpacity: SENTIMENT_BAND_OPACITY }];
+const VTPX_REFERENCE_BANDS = [lowerBand(1.0), upperBand(4.0)];
+const SHAX_REFERENCE_BANDS = [{ from: 100_000, fill: SENTIMENT_BAND_GREEN, fillOpacity: SENTIMENT_BAND_OPACITY }, { to: -100_000, fill: SENTIMENT_BAND_RED, fillOpacity: SENTIMENT_BAND_OPACITY }];
+const SMFX_REFERENCE_BANDS = [{ from: 300_000, fill: SENTIMENT_BAND_GREEN, fillOpacity: SENTIMENT_BAND_OPACITY }, { to: -300_000, fill: SENTIMENT_BAND_RED, fillOpacity: SENTIMENT_BAND_OPACITY }];
+const LEVR_REFERENCE_BANDS = [lowerBand(1.0), upperBand(4.0)];
+const RCFX_REFERENCE_BANDS = [lowerBand(-2.0), upperBand(2.0)];
+const CPRX_REFERENCE_BANDS = [{ from: 0.80, fill: SENTIMENT_BAND_GREEN, fillOpacity: SENTIMENT_BAND_OPACITY }, { to: 0.20, fill: SENTIMENT_BAND_RED, fillOpacity: SENTIMENT_BAND_OPACITY }];
+const RPIX_REFERENCE_BANDS = [lowerBand(-0.3), upperBand(0.3)];
+const CRRX_REFERENCE_BANDS = [lowerBand(0.001), upperBand(0.08)];
+const SGRX_REFERENCE_BANDS = [lowerBand(25), upperBand(75)];
+const DOMX_REFERENCE_BANDS = [{ from: 2.0, fill: SENTIMENT_BAND_GREEN, fillOpacity: SENTIMENT_BAND_OPACITY }, { to: -2.0, fill: SENTIMENT_BAND_RED, fillOpacity: SENTIMENT_BAND_OPACITY }];
+const VIX_REFERENCE_BANDS = [lowerBand(15.0), upperBand(35.0)];
+const DXY_REFERENCE_BANDS = [lowerBand(95.0), upperBand(105.0)];
+const FEDFUNDS_REFERENCE_BANDS = [lowerBand(1.0), upperBand(5.0)];
+const SUPPLY_PROFIT_REFERENCE_BANDS = [lowerBand(0.55), upperBand(0.92)];
+const SUPPLY_LOSS_REFERENCE_BANDS = [{ from: 0.35, fill: SENTIMENT_BAND_GREEN, fillOpacity: SENTIMENT_BAND_OPACITY }, { to: 0.05, fill: SENTIMENT_BAND_RED, fillOpacity: SENTIMENT_BAND_OPACITY }];
+const CVDD_REFERENCE_BANDS = [lowerBand(20000), upperBand(60000)];
 
 // ── Zone-colored line gradient stops (match FNG palette) ────────────────────
 const red = '#EF4444', orange = '#F7931A', blue = '#88B4D0', green = '#10B981';
@@ -864,6 +887,68 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
     if (v >= 10000) return { label: 'MODERATE',   color: '#7AAAD0' };
     return                 { label: 'UNDERVALUED', color: '#10B981' };
   };
+  const getMvrvZscoreZone = (v: number) => {
+    if (v >= 5.0)  return { label: 'CYCLE PEAK',   color: '#EF4444' };
+    if (v >= 2.5)  return { label: 'OVERVALUED',   color: '#F7931A' };
+    if (v >= 1.0)  return { label: 'NEUTRAL',      color: '#88B4D0' };
+    if (v >= 0.15) return { label: 'FAIR VALUE',   color: '#4CAF50' };
+    return                { label: 'UNDERVALUED',  color: '#10B981' };
+  };
+  const getSupplyProfitZone = (v: number) => {
+    if (v >= 0.95) return { label: 'EUPHORIA',     color: '#EF4444' };
+    if (v >= 0.80) return { label: 'HIGH PROFIT',  color: '#F7931A' };
+    if (v >= 0.65) return { label: 'HEALTHY',      color: '#88B4D0' };
+    if (v >= 0.50) return { label: 'LOW PROFIT',   color: '#4CAF50' };
+    return                { label: 'CAPITULATION', color: '#10B981' };
+  };
+  const getSupplyLossZone = (v: number) => {
+    if (v >= 0.50) return { label: 'CAPITULATION', color: '#10B981' };
+    if (v >= 0.35) return { label: 'HIGH LOSS',    color: '#4CAF50' };
+    if (v >= 0.20) return { label: 'ELEVATED',     color: '#88B4D0' };
+    if (v >= 0.05) return { label: 'MINIMAL',      color: '#F7931A' };
+    return                { label: 'NEAR ZERO',    color: '#EF4444' };
+  };
+  const getRealizedProfitZone = (v: number) => {
+    if (v >= 2e9)  return { label: 'MASSIVE PROFIT', color: '#EF4444' };
+    if (v >= 5e8)  return { label: 'HIGH PROFIT',    color: '#F7931A' };
+    if (v >= 1e8)  return { label: 'MODERATE',       color: '#88B4D0' };
+    return                { label: 'LOW PROFIT',     color: '#10B981' };
+  };
+  const getRealizedLossZone = (v: number) => {
+    if (v >= 1e9)  return { label: 'CAPITULATION', color: '#10B981' };
+    if (v >= 3e8)  return { label: 'HEAVY LOSS',    color: '#4CAF50' };
+    if (v >= 5e7)  return { label: 'MODERATE',      color: '#88B4D0' };
+    return                { label: 'LOW LOSS',      color: '#F7931A' };
+  };
+  const getActiveAddressesZone = (v: number) => {
+    if (v >= 1000000) return { label: 'HIGH ACTIVITY',  color: '#10B981' };
+    if (v >= 800000)  return { label: 'STRONG ADOPTION', color: '#4CAF50' };
+    if (v >= 600000)  return { label: 'HEALTHY',         color: '#88B4D0' };
+    return                   { label: 'DORMANT',         color: '#F7931A' };
+  };
+  const getHotSupplyZone = (v: number) => {
+    if (v >= 4e6)  return { label: 'SPECULATION PEAK', color: '#EF4444' };
+    if (v >= 3e6)  return { label: 'HIGH SPECULATION', color: '#F7931A' };
+    if (v >= 2e6)  return { label: 'MODERATE',         color: '#88B4D0' };
+    return                { label: 'ILLIQUID HODL',    color: '#10B981' };
+  };
+  const getIlliquidSupplyZone = (v: number) => {
+    if (v >= 15e6) return { label: 'ACCUMULATION',  color: '#10B981' };
+    if (v >= 14e6) return { label: 'STRONG HODL',   color: '#4CAF50' };
+    if (v >= 13e6) return { label: 'MODERATE',      color: '#88B4D0' };
+    return                { label: 'DISTRIBUTION',  color: '#F7931A' };
+  };
+  const getSupplyShockZone = (v: number) => {
+    if (v >= 3.5)  return { label: 'EXTREME SHOCK', color: '#10B981' };
+    if (v >= 2.8)  return { label: 'STRONG SHOCK',  color: '#4CAF50' };
+    if (v >= 2.0)  return { label: 'MODERATE',      color: '#88B4D0' };
+    return                { label: 'LOW SHOCK',     color: '#F7931A' };
+  };
+  const getHashrateZone = (v: number) => {
+    if (v >= 7e8)  return { label: 'ATH SECURED',   color: '#10B981' };
+    if (v >= 5e8)  return { label: 'HIGH SECURITY', color: '#4CAF50' };
+    return                { label: 'EXPANDING',     color: '#88B4D0' };
+  };
   // KEY 5 macro zone helpers
   const getM2Zone = (v: number) => {
     if (v >= 21000000000000) return { label: 'EXPANDING', color: '#10B981' };
@@ -1526,6 +1611,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       id: 'indicator-mpi', accentColor: '#F59E0B', gradientId: 'mpiFill', tag: '',
       data: mpiChartData, dataWithPrice: mpiChartDataWithPrice, isLoading: isMpiLoading,
       timeframe: mpiTimeframe, setTimeframe: setMpiTimeframe, zoneFn: getMpiZone,
+      referenceBands: MPI_REFERENCE_BANDS,
       headerValue: (v: number) => v.toFixed(2), tooltipValue: (v: number) => v.toFixed(2),
       yAxisTick: (v: number) => v.toFixed(1),
     },
@@ -1534,6 +1620,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       id: 'indicator-miner-sell-pressure', accentColor: '#EF5350', gradientId: 'minerSellPressureFill', tag: '',
       data: minerSellPressureChartData, dataWithPrice: minerSellPressureChartDataWithPrice, isLoading: isMinerSellPressureLoading,
       timeframe: minerSellPressureTimeframe, setTimeframe: setMinerSellPressureTimeframe, zoneFn: getMinerSellPressureZone,
+      referenceBands: MINER_SELL_PRESSURE_REFERENCE_BANDS,
       headerValue: (v: number) => v.toFixed(4), tooltipValue: (v: number) => v.toFixed(4),
       yAxisTick: (v: number) => v.toFixed(3),
     },
@@ -1542,6 +1629,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       id: 'indicator-utxo-profit', accentColor: '#4CAF50', gradientId: 'utxoProfitFill', tag: '',
       data: utxoProfitChartData, dataWithPrice: utxoProfitChartDataWithPrice, isLoading: isUtxoProfitLoading,
       timeframe: utxoProfitTimeframe, setTimeframe: setUtxoProfitTimeframe, zoneFn: getUtxoProfitZone,
+      referenceBands: UTXO_PROFIT_REFERENCE_BANDS,
       headerValue: (v: number) => `${(v * 100).toFixed(1)}%`, tooltipValue: (v: number) => `${(v * 100).toFixed(2)}%`,
       yAxisTick: (v: number) => `${(v * 100).toFixed(0)}%`,
     },
@@ -1550,6 +1638,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       id: 'indicator-utxo-loss', accentColor: '#C2344D', gradientId: 'utxoLossFill', tag: '',
       data: utxoLossChartData, dataWithPrice: utxoLossChartDataWithPrice, isLoading: isUtxoLossLoading,
       timeframe: utxoLossTimeframe, setTimeframe: setUtxoLossTimeframe, zoneFn: getUtxoLossZone,
+      referenceBands: UTXO_LOSS_REFERENCE_BANDS,
       headerValue: (v: number) => `${(v * 100).toFixed(1)}%`, tooltipValue: (v: number) => `${(v * 100).toFixed(2)}%`,
       yAxisTick: (v: number) => `${(v * 100).toFixed(0)}%`,
     },
@@ -1571,6 +1660,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       id: 'indicator-vtpx', accentColor: '#FF6B35', gradientId: 'vtpxFill', tag: '', updateFreq: 'd',
       data: vtpxChartData, dataWithPrice: vtpxChartDataWithPrice, isLoading: isLthMvrvLoading || isSthMvrvLoading,
       timeframe: vtpxTimeframe, setTimeframe: setVtpxTimeframe, zoneFn: getVtpxZone, tfOpts: NOVRIX_TF_OPTS,
+      referenceBands: VTPX_REFERENCE_BANDS,
       headerValue: (v: number) => v.toFixed(2) + 'x', tooltipValue: (v: number) => v.toFixed(3) + 'x',
       yAxisTick: (v: number) => v.toFixed(1) + 'x',
     },
@@ -1579,6 +1669,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       id: 'indicator-shax', accentColor: '#FF6B35', gradientId: 'shaxFill', tag: '', updateFreq: 'd',
       data: shaxChartData, dataWithPrice: shaxChartDataWithPrice, isLoading: isIlliquidSupplyLoading,
       timeframe: shaxTimeframe, setTimeframe: setShaxTimeframe, zoneFn: getShaxZone, tfOpts: NOVRIX_TF_OPTS,
+      referenceBands: SHAX_REFERENCE_BANDS,
       headerValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(0)} BTC`, tooltipValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(0)} BTC`,
       yAxisTick: (v: number) => v >= 1000 ? `${(v/1000).toFixed(0)}K` : v >= -1000 ? v.toFixed(0) : `${(v/1000).toFixed(0)}K`,
     },
@@ -1587,6 +1678,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       id: 'indicator-smfx', accentColor: '#FF6B35', gradientId: 'smfxFill', tag: '', updateFreq: 'd',
       data: smfxChartData, dataWithPrice: smfxChartDataWithPrice, isLoading: isLthPositionChangeLoading || isSthPositionChangeLoading,
       timeframe: smfxTimeframe, setTimeframe: setSmfxTimeframe, zoneFn: getSmfxZone, tfOpts: NOVRIX_TF_OPTS,
+      referenceBands: SMFX_REFERENCE_BANDS,
       headerValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(0)} BTC`, tooltipValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(0)} BTC`,
       yAxisTick: (v: number) => v >= 1000 ? `${(v/1000).toFixed(0)}K` : v >= -1000 ? v.toFixed(0) : `${(v/1000).toFixed(0)}K`,
     },
@@ -1595,6 +1687,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       id: 'indicator-levr', accentColor: '#FF6B35', gradientId: 'levrFill', tag: '', updateFreq: 'd',
       data: levrChartData, dataWithPrice: levrChartDataWithPrice, isLoading: isOpenInterestLoading || isMarketCapK4Loading,
       timeframe: levrTimeframe, setTimeframe: setLevrTimeframe, zoneFn: getLevrZone, tfOpts: NOVRIX_TF_OPTS,
+      referenceBands: LEVR_REFERENCE_BANDS,
       headerValue: (v: number) => v.toFixed(2) + '%', tooltipValue: (v: number) => v.toFixed(3) + '%',
       yAxisTick: (v: number) => v.toFixed(1) + '%',
     },
@@ -1603,6 +1696,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       id: 'indicator-rcfx', accentColor: '#FF6B35', gradientId: 'rcfxFill', tag: '', updateFreq: 'd',
       data: rcfxChartData, dataWithPrice: rcfxChartDataWithPrice, isLoading: isRealizedPriceLoading || isMarketCapK4Loading,
       timeframe: rcfxTimeframe, setTimeframe: setRcfxTimeframe, zoneFn: getRcfxZone, tfOpts: NOVRIX_TF_OPTS,
+      referenceBands: RCFX_REFERENCE_BANDS,
       headerValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(2)}%`, tooltipValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(2)}%`,
       yAxisTick: (v: number) => `${v.toFixed(1)}%`,
     },
@@ -1611,6 +1705,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       id: 'indicator-cprx', accentColor: '#FF6B35', gradientId: 'cprxFill', tag: '', updateFreq: 'd',
       data: cprxChartData, dataWithPrice: cprxChartDataWithPrice, isLoading: isRealizedLossLoading || isRealizedProfitLoading,
       timeframe: cprxTimeframe, setTimeframe: setCprxTimeframe, zoneFn: getCprxZone, tfOpts: NOVRIX_TF_OPTS,
+      referenceBands: CPRX_REFERENCE_BANDS,
       headerValue: (v: number) => (v * 100).toFixed(1) + '%', tooltipValue: (v: number) => (v * 100).toFixed(2) + '%',
       yAxisTick: (v: number) => (v * 100).toFixed(0) + '%',
     },
@@ -1619,6 +1714,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       id: 'indicator-rpix', accentColor: '#FF6B35', gradientId: 'rpixFill', tag: '', updateFreq: 'd',
       data: rpixChartData, dataWithPrice: rpixChartDataWithPrice, isLoading: isNrplLoading || isMarketCapK4Loading,
       timeframe: rpixTimeframe, setTimeframe: setRpixTimeframe, zoneFn: getRpixZone, tfOpts: NOVRIX_TF_OPTS,
+      referenceBands: RPIX_REFERENCE_BANDS,
       headerValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(3)}%`, tooltipValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(3)}%`,
       yAxisTick: (v: number) => `${v.toFixed(1)}%`,
     },
@@ -1627,6 +1723,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       id: 'indicator-crrx', accentColor: '#FF6B35', gradientId: 'crrxFill', tag: '', updateFreq: 'd',
       data: crrxChartData, dataWithPrice: crrxChartDataWithPrice, isLoading: isMayerMultipleLoading || isReserveRiskLoading,
       timeframe: crrxTimeframe, setTimeframe: setCrrxTimeframe, zoneFn: getCrrxZone, tfOpts: NOVRIX_TF_OPTS,
+      referenceBands: CRRX_REFERENCE_BANDS,
       headerValue: (v: number) => v.toFixed(4), tooltipValue: (v: number) => v.toFixed(5),
       yAxisTick: (v: number) => v.toFixed(3),
     },
@@ -1635,6 +1732,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       id: 'indicator-sgrx', accentColor: '#FF6B35', gradientId: 'sgrxFill', tag: '', updateFreq: 'd',
       data: sgrxChartData, dataWithPrice: sgrxChartDataWithPrice, isLoading: isLoading,
       timeframe: sgrxTimeframe, setTimeframe: setSgrxTimeframe, zoneFn: getSgrxZone, tfOpts: NOVRIX_TF_OPTS,
+      referenceBands: SGRX_REFERENCE_BANDS,
       headerValue: (v: number) => v.toFixed(0), tooltipValue: (v: number) => v.toFixed(1),
       yAxisTick: (v: number) => v.toFixed(0),
     },
@@ -1643,6 +1741,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       id: 'indicator-domx', accentColor: '#FF6B35', gradientId: 'domxFill', tag: '', updateFreq: 'd',
       data: domxChartData, dataWithPrice: domxChartDataWithPrice, isLoading: isDominanceLoading,
       timeframe: domxTimeframe, setTimeframe: setDomxTimeframe, zoneFn: getDomxZone, tfOpts: NOVRIX_TF_OPTS,
+      referenceBands: DOMX_REFERENCE_BANDS,
       headerValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(1)} pp`, tooltipValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(2)} pp`,
       yAxisTick: (v: number) => `${v.toFixed(0)} pp`,
     },
@@ -1673,6 +1772,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       id: 'indicator-dxy', accentColor: '#60A5FA', gradientId: 'dxyFill', tag: '', hideBtcPrice: true, updateFreq: 'd',
       data: dxyChartData, dataWithPrice: dxyChartDataWithPrice, isLoading: isDxyLoading,
       timeframe: dxyTimeframe, setTimeframe: setDxyTimeframe, zoneFn: getDxyZone,
+      referenceBands: DXY_REFERENCE_BANDS,
       headerValue: (v: number) => v.toFixed(2), tooltipValue: (v: number) => v.toFixed(2),
       yAxisTick: (v: number) => v.toFixed(1),
     },
@@ -1681,6 +1781,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       id: 'indicator-vix', accentColor: '#F59E0B', gradientId: 'vixFill', tag: '', hideBtcPrice: true, updateFreq: 'd',
       data: vixChartData, dataWithPrice: vixChartDataWithPrice, isLoading: isVixLoading,
       timeframe: vixTimeframe, setTimeframe: setVixTimeframe, zoneFn: getVixZone,
+      referenceBands: VIX_REFERENCE_BANDS,
       headerValue: (v: number) => v.toFixed(2), tooltipValue: (v: number) => v.toFixed(2),
       yAxisTick: (v: number) => v.toFixed(1),
     },
@@ -1689,6 +1790,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       id: 'indicator-fedfunds', accentColor: '#F97316', gradientId: 'fedfundsFill', tag: '', hideBtcPrice: true, useFredTfOpts: true, updateFreq: 'm',
       data: fedfundsChartData, dataWithPrice: fedfundsChartDataWithPrice, isLoading: isFedfundsLoading,
       timeframe: fedfundsTimeframe, setTimeframe: setFedfundsTimeframe, zoneFn: getFedfundsZone,
+      referenceBands: FEDFUNDS_REFERENCE_BANDS,
       headerValue: (v: number) => `${v.toFixed(2)}%`, tooltipValue: (v: number) => `${v.toFixed(2)}%`,
       yAxisTick: (v: number) => `${v.toFixed(1)}%`,
     },
@@ -2142,7 +2244,8 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       panelId: 'supply-loss', indicatorKey: 'supplyLoss', code: 'SUP-L', title: 'Supply in Loss', desc: 'Total BTC supply at a loss: capitulation indicator', metricLabel: 'SUPPLY IN LOSS',
       id: 'indicator-supply-loss', accentColor: '#C2344D', gradientId: 'supplyLossGradient', tag: '', updateFreq: 'd',
       data: supplyLossChartData, dataWithPrice: supplyLossChartDataWithPrice, isLoading: isSupplyLossLoading,
-      timeframe: supplyLossTimeframe, setTimeframe: setSupplyLossTimeframe, zoneFn: noZone,
+      timeframe: supplyLossTimeframe, setTimeframe: setSupplyLossTimeframe, zoneFn: getSupplyLossZone,
+      referenceBands: SUPPLY_LOSS_REFERENCE_BANDS,
       headerValue: (v: number) => v >= 1e6 ? `${(v/1e6).toFixed(2)}M BTC` : v >= 1e3 ? `${(v/1e3).toFixed(1)}K BTC` : `${v.toFixed(2)} BTC`,
       tooltipValue: (v: number) => v >= 1e6 ? `${(v/1e6).toFixed(2)}M BTC` : v >= 1e3 ? `${(v/1e3).toFixed(1)}K BTC` : `${v.toFixed(2)} BTC`,
       yAxisTick: (v: number) => v >= 1e6 ? `${(v/1e6).toFixed(1)}M` : v >= 1e3 ? `${(v/1e3).toFixed(0)}K` : v.toFixed(0),
@@ -2151,7 +2254,8 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       panelId: 'supply-profit', indicatorKey: 'supplyProfit', code: 'SUP-P', title: 'Supply in Profit', desc: 'Total BTC supply currently in profit: conviction indicator', metricLabel: 'SUPPLY IN PROFIT',
       id: 'indicator-supply-profit', accentColor: '#00CC6E', gradientId: 'supplyProfitGradient', tag: '', updateFreq: 'd',
       data: supplyProfitChartData, dataWithPrice: supplyProfitChartDataWithPrice, isLoading: isSupplyProfitLoading,
-      timeframe: supplyProfitTimeframe, setTimeframe: setSupplyProfitTimeframe, zoneFn: noZone,
+      timeframe: supplyProfitTimeframe, setTimeframe: setSupplyProfitTimeframe, zoneFn: getSupplyProfitZone,
+      referenceBands: SUPPLY_PROFIT_REFERENCE_BANDS,
       headerValue: (v: number) => v >= 1e6 ? `${(v/1e6).toFixed(2)}M BTC` : v >= 1e3 ? `${(v/1e3).toFixed(1)}K BTC` : `${v.toFixed(2)} BTC`,
       tooltipValue: (v: number) => v >= 1e6 ? `${(v/1e6).toFixed(2)}M BTC` : v >= 1e3 ? `${(v/1e3).toFixed(1)}K BTC` : `${v.toFixed(2)} BTC`,
       yAxisTick: (v: number) => v >= 1e6 ? `${(v/1e6).toFixed(1)}M` : v >= 1e3 ? `${(v/1e3).toFixed(0)}K` : v.toFixed(0),
@@ -2160,7 +2264,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       panelId: 'realized-profit', indicatorKey: 'realizedProfit', code: 'R-PROF', title: 'Realized Profit', desc: 'Aggregate realized profit of all on-chain UTXOs moved', metricLabel: 'REALIZED PROFIT',
       id: 'indicator-realized-profit', accentColor: '#00CC6E', gradientId: 'realizedProfitGradient', tag: '', updateFreq: 'd',
       data: realizedProfitChartData, dataWithPrice: realizedProfitChartDataWithPrice, isLoading: isRealizedProfitLoading,
-      timeframe: realizedProfitTimeframe, setTimeframe: setRealizedProfitTimeframe, zoneFn: noZone,
+      timeframe: realizedProfitTimeframe, setTimeframe: setRealizedProfitTimeframe, zoneFn: getRealizedProfitZone,
       headerValue: (v: number) => formatCompactCurrency(v, 2),
       tooltipValue: (v: number) => formatCompactCurrency(v, 2),
       yAxisTick: (v: number) => formatCompactCurrency(v, 0),
@@ -2169,7 +2273,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       panelId: 'realized-loss', indicatorKey: 'realizedLoss', code: 'R-LOSS', title: 'Realized Loss', desc: 'Aggregate realized loss of all on-chain UTXOs moved', metricLabel: 'REALIZED LOSS',
       id: 'indicator-realized-loss', accentColor: '#FF4444', gradientId: 'realizedLossGradient', tag: '', updateFreq: 'd',
       data: realizedLossChartData, dataWithPrice: realizedLossChartDataWithPrice, isLoading: isRealizedLossLoading,
-      timeframe: realizedLossTimeframe, setTimeframe: setRealizedLossTimeframe, zoneFn: noZone,
+      timeframe: realizedLossTimeframe, setTimeframe: setRealizedLossTimeframe, zoneFn: getRealizedLossZone,
       headerValue: (v: number) => formatCompactCurrency(v, 2),
       tooltipValue: (v: number) => formatCompactCurrency(v, 2),
       yAxisTick: (v: number) => formatCompactCurrency(v, 0),
@@ -2187,7 +2291,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       panelId: 'hashrate', indicatorKey: 'hashrate', code: 'HASH', title: 'Network Hashrate', desc: 'Bitcoin network computational power: security & miner commitment', metricLabel: 'HASHRATE',
       id: 'indicator-hashrate', accentColor: '#F7931A', gradientId: 'hashrateGradient', tag: '', updateFreq: 'd',
       data: hashrateChartData, dataWithPrice: hashrateChartDataWithPrice, isLoading: isHashrateLoading,
-      timeframe: hashrateTimeframe, setTimeframe: setHashrateTimeframe, zoneFn: noZone,
+      timeframe: hashrateTimeframe, setTimeframe: setHashrateTimeframe, zoneFn: getHashrateZone,
       headerValue: (v: number) => v >= 1e6 ? `${(v/1e6).toFixed(0)} EH/s` : v >= 1e3 ? `${(v/1e3).toFixed(2)} PH/s` : `${v.toFixed(2)} TH/s`,
       tooltipValue: (v: number) => v >= 1e6 ? `${(v/1e6).toFixed(0)} EH/s` : v >= 1e3 ? `${(v/1e3).toFixed(2)} PH/s` : `${v.toFixed(2)} TH/s`,
       yAxisTick: (v: number) => v >= 1e6 ? `${(v/1e6).toFixed(0)}E` : v >= 1e3 ? `${(v/1e3).toFixed(0)}P` : `${v.toFixed(0)}T`,
@@ -2205,7 +2309,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       panelId: 'mvrv-zscore', indicatorKey: 'mvrvZscore', code: 'MVRVZ', title: 'MVRV Z-Score', desc: 'Standard deviations of MVRV from its mean: classic top and bottom signal', metricLabel: 'MVRV Z-SCORE',
       id: 'indicator-mvrv-zscore', accentColor: '#10B981', gradientId: 'mvrvZscoreFill', tag: '', updateFreq: 'd',
       data: mvrvZscoreChartData, dataWithPrice: mvrvZscoreChartDataWithPrice, isLoading: isMvrvZscoreLoading,
-      timeframe: mvrvZscoreTimeframe, setTimeframe: setMvrvZscoreTimeframe, zoneFn: noZone,
+      timeframe: mvrvZscoreTimeframe, setTimeframe: setMvrvZscoreTimeframe, zoneFn: getMvrvZscoreZone,
       referenceBands: MVRV_ZSCORE_REFERENCE_BANDS,
       headerValue: (v: number) => v.toFixed(2),
       tooltipValue: (v: number) => v.toFixed(3),
@@ -2215,7 +2319,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       panelId: 'supply-shock', indicatorKey: 'supplyShock', code: 'SSR2', title: 'Supply Shock Ratio', desc: 'Ratio of illiquid supply to exchange supply: rising = tightening supply', metricLabel: 'SUPPLY SHOCK',
       id: 'indicator-supply-shock', accentColor: '#06B6D4', gradientId: 'supplyShockFill', tag: '', updateFreq: 'd',
       data: supplyShockChartData, dataWithPrice: supplyShockChartDataWithPrice, isLoading: isSupplyShockLoading,
-      timeframe: supplyShockTimeframe, setTimeframe: setSupplyShockTimeframe, zoneFn: noZone,
+      timeframe: supplyShockTimeframe, setTimeframe: setSupplyShockTimeframe, zoneFn: getSupplyShockZone,
       headerValue: (v: number) => v.toFixed(4), tooltipValue: (v: number) => v.toFixed(4),
       yAxisTick: (v: number) => v.toFixed(2),
     },
@@ -2223,7 +2327,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       panelId: 'illiquid-supply', indicatorKey: 'illiquidSupply', code: 'ILLIQ', title: 'Illiquid Supply', desc: 'BTC held by entities that rarely sell: rising = accumulation', metricLabel: 'ILLIQUID',
       id: 'indicator-illiquid-supply', accentColor: '#10B981', gradientId: 'illiquidFill', tag: '', updateFreq: 'd', valueKey: 'illiquidSupply',
       data: illiquidSupplyChartData, dataWithPrice: illiquidSupplyChartDataWithPrice, isLoading: isIlliquidSupplyLoading,
-      timeframe: illiquidSupplyTimeframe, setTimeframe: setIlliquidSupplyTimeframe, zoneFn: noZone,
+      timeframe: illiquidSupplyTimeframe, setTimeframe: setIlliquidSupplyTimeframe, zoneFn: getIlliquidSupplyZone,
       headerValue: (v: number) => `${(v/1e6).toFixed(2)}M BTC`,
       tooltipValue: (v: number) => `${(v/1e6).toFixed(3)}M BTC`,
       yAxisTick: (v: number) => v >= 1e6 ? `${(v/1e6).toFixed(1)}M` : v >= 1e3 ? `${(v/1e3).toFixed(0)}K` : v.toFixed(0),
@@ -2232,7 +2336,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       panelId: 'hot-supply', indicatorKey: 'hotSupply', code: 'HOTSP', title: 'Hot Supply', desc: 'Bitcoin moved within the last 7 days: rising = short-term speculative activity', metricLabel: 'HOT BTC',
       id: 'indicator-hot-supply', accentColor: '#F87171', gradientId: 'hotSupplyFill', tag: '', updateFreq: 'd', valueKey: 'hotSupply',
       data: hotSupplyChartData, dataWithPrice: hotSupplyChartDataWithPrice, isLoading: isHotSupplyLoading,
-      timeframe: hotSupplyTimeframe, setTimeframe: setHotSupplyTimeframe, zoneFn: noZone,
+      timeframe: hotSupplyTimeframe, setTimeframe: setHotSupplyTimeframe, zoneFn: getHotSupplyZone,
       headerValue: (v: number) => `${(v/1e6).toFixed(3)}M BTC`,
       tooltipValue: (v: number) => `${(v/1e6).toFixed(4)}M BTC`,
       yAxisTick: (v: number) => v >= 1e6 ? `${(v/1e6).toFixed(2)}M` : v >= 1e3 ? `${(v/1e3).toFixed(0)}K` : v.toFixed(0),
@@ -2277,7 +2381,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       panelId: 'active-addresses', indicatorKey: 'activeAddresses', code: 'ACTADR', title: 'Active Addresses', desc: 'Unique Bitcoin addresses active per day: measures network adoption', metricLabel: 'ACTIVE ADDR',
       id: 'indicator-active-addresses', accentColor: '#34D399', gradientId: 'activeAddrFill', tag: '', updateFreq: 'd',
       data: activeAddressesChartData, dataWithPrice: activeAddressesChartDataWithPrice, isLoading: isActiveAddressesLoading,
-      timeframe: activeAddressesTimeframe, setTimeframe: setActiveAddressesTimeframe, zoneFn: noZone,
+      timeframe: activeAddressesTimeframe, setTimeframe: setActiveAddressesTimeframe, zoneFn: getActiveAddressesZone,
       headerValue: (v: number) => v >= 1e6 ? `${(v/1e6).toFixed(2)}M` : v >= 1e3 ? `${(v/1e3).toFixed(0)}K` : v.toFixed(0),
       tooltipValue: (v: number) => v >= 1e6 ? `${(v/1e6).toFixed(3)}M` : v >= 1e3 ? `${(v/1e3).toFixed(1)}K` : v.toFixed(0),
       yAxisTick: (v: number) => v >= 1e6 ? `${(v/1e6).toFixed(1)}M` : v >= 1e3 ? `${(v/1e3).toFixed(0)}K` : v.toFixed(0),
@@ -2287,6 +2391,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       id: 'indicator-open-interest', accentColor: '#60A5FA', gradientId: 'openInterestFill', tag: '', updateFreq: 'd',
       data: openInterestChartData, dataWithPrice: openInterestChartDataWithPrice, isLoading: isOpenInterestLoading,
       timeframe: openInterestTimeframe, setTimeframe: setOpenInterestTimeframe, zoneFn: getOpenInterestZone,
+      referenceBands: OPEN_INTEREST_REFERENCE_BANDS,
       headerValue: (v: number) => `${(v/1000).toFixed(1)}K`, tooltipValue: (v: number) => `${v.toLocaleString()} BTC`,
       yAxisTick: (v: number) => v >= 1e6 ? `${(v/1e6).toFixed(1)}M` : v >= 1000 ? `${(v/1000).toFixed(0)}K` : v.toFixed(0),
     },
@@ -2295,6 +2400,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       id: 'indicator-funding-rate', accentColor: '#A78BFA', gradientId: 'fundingRateFill', tag: '', updateFreq: 'd',
       data: fundingRateChartData, dataWithPrice: fundingRateChartDataWithPrice, isLoading: isFundingRateLoading,
       timeframe: fundingRateTimeframe, setTimeframe: setFundingRateTimeframe, zoneFn: getFundingRateZone,
+      referenceBands: FUNDING_RATE_REFERENCE_BANDS,
       headerValue: (v: number) => `${(v * 100).toFixed(4)}%`, tooltipValue: (v: number) => `${(v * 100).toFixed(4)}%`,
       yAxisTick: (v: number) => `${(v * 100).toFixed(3)}%`,
     },
@@ -2303,6 +2409,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       id: 'indicator-nrpl', accentColor: '#10B981', gradientId: 'nrplFill', tag: '', updateFreq: 'd',
       data: nrplChartData, dataWithPrice: nrplChartDataWithPrice, isLoading: isNrplLoading,
       timeframe: nrplTimeframe, setTimeframe: setNrplTimeframe, zoneFn: getNrplZone,
+      referenceBands: NRPL_REFERENCE_BANDS,
       headerValue: (v: number) => formatCompactCurrency(v, 2),
       tooltipValue: (v: number) => formatCompactCurrency(v, 2),
       yAxisTick: (v: number) => formatCompactCurrency(v, 0),
@@ -2339,6 +2446,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       id: 'indicator-cvdd', accentColor: '#F59E0B', gradientId: 'cvddFill', tag: '', updateFreq: 'd',
       data: cvddChartData, dataWithPrice: cvddChartDataWithPrice, isLoading: isCvddLoading,
       timeframe: cvddTimeframe, setTimeframe: setCvddTimeframe, zoneFn: getCvddZone,
+      referenceBands: CVDD_REFERENCE_BANDS,
       headerValue: (v: number) => `$${(v/1000).toFixed(1)}K`,
       tooltipValue: (v: number) => `$${v.toLocaleString(undefined, { maximumFractionDigits: 0 })}`,
       yAxisTick: (v: number) => v >= 1e3 ? `$${(v/1e3).toFixed(0)}K` : `$${v.toFixed(0)}`,
