@@ -43,10 +43,16 @@ const SentimentSidebar = memo(function SentimentSidebar({
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: -12 }}
+      initial={{ opacity: 0, x: -10 }}
       animate={{ opacity: 1, x: 0 }}
-      className="overflow-hidden lg:sticky lg:top-3 lg:self-start lg:h-[calc(100vh-2.5rem)] lg:flex lg:flex-col"
-      style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-default)' }}
+      className="w-full flex flex-col overflow-hidden"
+      style={{
+        height: 'calc(100vh - 68px)',
+        maxHeight: 'calc(100vh - 68px)',
+        background: 'var(--bg-surface)',
+        border: '1px solid var(--border-default)',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.40)',
+      }}
     >
       {/* ── Sidebar header ── */}
       <div className="shrink-0">
@@ -89,7 +95,7 @@ const SentimentSidebar = memo(function SentimentSidebar({
         </div>
       </div>
 
-      <div className="overflow-y-auto flex-1" style={{ scrollbarWidth: 'thin', scrollbarColor: 'var(--border-default) var(--bg-base)' }}>
+      <div className="overflow-y-auto flex-1 min-h-0" style={{ scrollbarWidth: 'thin', scrollbarColor: 'var(--border-default) var(--bg-base)' }}>
         {/* ── Search ── */}
         <div className="px-3 py-2" style={{ borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-raised)' }}>
           <div className="relative">

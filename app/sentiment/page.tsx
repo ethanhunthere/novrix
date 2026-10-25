@@ -2681,20 +2681,22 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
 
       <TerminalModulePageShell>
 
-        <div className="sentiment-comfort grid grid-cols-1 lg:grid-cols-[190px_minmax(0,1fr)] xl:grid-cols-[210px_minmax(0,1fr)] 2xl:grid-cols-[220px_minmax(0,1fr)] 3xl:grid-cols-[230px_minmax(0,1fr)] 4xl:grid-cols-[240px_minmax(0,1fr)] gap-5">
-          {/* ─── Indicators Registry Sidebar ─── */}
-          <SentimentSidebar
-            registryCats={registryCats}
-            registrySearch={registrySearch}
-            setRegistrySearch={setRegistrySearch}
-            openAccordion={openAccordion}
-            setOpenAccordion={setOpenAccordion}
-            selectedIndicator={selectedIndicator}
-            setSelectedIndicator={setSelectedIndicator}
-          />
+        <div className="sentiment-comfort flex flex-row items-start gap-6 w-full">
+          {/* ─── Indicators Registry Sidebar (Left side: short in width, bigger in height) ─── */}
+          <aside className="w-[190px] min-w-[190px] max-w-[190px] shrink-0 sticky top-[52px]">
+            <SentimentSidebar
+              registryCats={registryCats}
+              registrySearch={registrySearch}
+              setRegistrySearch={setRegistrySearch}
+              openAccordion={openAccordion}
+              setOpenAccordion={setOpenAccordion}
+              selectedIndicator={selectedIndicator}
+              setSelectedIndicator={setSelectedIndicator}
+            />
+          </aside>
 
-          {/* ─── Main Content ─── */}
-          <div className="min-w-0 space-y-5">
+          {/* ─── Main Content Panels (Right side) ─── */}
+          <div className="flex-1 min-w-0 space-y-5">
             {selectedIndicator !== null && (
               <button
                 onClick={() => setSelectedIndicator(null)}
