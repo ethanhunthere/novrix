@@ -48,40 +48,11 @@ export default function Home() {
 
       <main className="flex-1">
         <section
-          className="relative overflow-hidden"
           style={{
             padding: 'clamp(44px, 7vh, 76px) var(--container-pad) clamp(36px, 5vh, 56px)',
           }}
         >
-          {/* Subtle Ambient Cycle Flow Animation (100% GPU composited, zero main thread cost) */}
-          <div
-            className="absolute inset-0 pointer-events-none overflow-hidden select-none"
-            aria-hidden="true"
-            style={{ opacity: 0.35 }}
-          >
-            <div className="ambient-cycle-flow w-[120%] h-full">
-              <svg
-                className="w-full h-full"
-                preserveAspectRatio="none"
-                viewBox="0 0 1440 280"
-                fill="none"
-              >
-                <path
-                  d="M-40,140 C280,60 480,220 820,130 C1160,40 1340,210 1520,140"
-                  stroke="rgba(194, 52, 77, 0.20)"
-                  strokeWidth="1.2"
-                />
-                <path
-                  d="M-40,165 C320,230 520,90 860,170 C1200,250 1360,110 1520,165"
-                  stroke="rgba(245, 241, 234, 0.08)"
-                  strokeWidth="0.9"
-                  strokeDasharray="4 8"
-                />
-              </svg>
-            </div>
-          </div>
-
-          <div className="relative mx-auto w-full" style={{ maxWidth: '1180px', zIndex: 1 }}>
+          <div className="mx-auto w-full" style={{ maxWidth: '1180px' }}>
             <h1
               style={{
                 fontFamily: 'var(--ff-display)',
