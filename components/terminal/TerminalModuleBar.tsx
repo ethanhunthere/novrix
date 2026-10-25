@@ -65,7 +65,7 @@ export default function TerminalModuleBar() {
         >
           {btcPrice !== null
             ? `BTC $${Math.round(btcPrice).toLocaleString()}`
-            : 'BTC —'}
+            : 'BTC'}
         </span>
 
         <span

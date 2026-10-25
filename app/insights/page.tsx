@@ -261,7 +261,7 @@ function CoverArt({ post, section, tall = false }: { post: NovrixPost; section: 
           color: 'rgba(245,241,234,0.26)',
         }}
       >
-        NOVRIX / {section.label}
+        NOVRIX · {section.label}
       </span>
     </div>
   );

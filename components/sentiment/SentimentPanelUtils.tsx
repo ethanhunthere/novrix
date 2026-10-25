@@ -61,17 +61,13 @@ export const PanelHeader = ({
       minHeight: '64px',
     }}
   >
-    <div className="flex items-center gap-3.5 min-w-0 py-3">
-      <div
-        className="w-[2px] self-stretch shrink-0"
-        style={{ background: `linear-gradient(180deg, ${accentColor}90 0%, ${accentColor}00 100%)` }}
-      />
+    <div className="flex items-center gap-3 min-w-0 py-3">
       <div className="flex flex-wrap items-center gap-2.5 min-w-0">
         <span
           className="min-w-0 text-[17px] font-semibold"
           style={{ fontFamily: 'var(--ff-sans)', color: 'var(--text-heading)', letterSpacing: '0.008em', fontWeight: 600, overflowWrap: 'anywhere' }}
         >
-          {title}
+          {title ? title.replace(/—/g, '·').replace(/\s*\/\s*/g, ' & ') : ''}
         </span>
         {tag && tag !== 'LIVE' && (
           <span style={{
@@ -82,7 +78,7 @@ export const PanelHeader = ({
         )}
         {desc && (
           <span className="min-w-0" style={{ fontFamily: 'var(--ff-sans)', fontSize: '12.5px', fontWeight: 400, color: 'rgba(245,241,234,0.56)', letterSpacing: '0.02em', fontStyle: 'italic', overflowWrap: 'anywhere' }}>
-            — {desc}
+            {desc.replace(/\s*—\s*/g, ': ').replace(/\s*\/\s*/g, ' vs ')}
           </span>
         )}
       </div>

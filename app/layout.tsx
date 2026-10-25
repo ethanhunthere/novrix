@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     apple: appleTouchIcon,
   },
   openGraph: {
-    images: [{ url: ogImage, width: 1200, height: 630, alt: 'NOVRIX — Sentiment Intelligence' }],
+    images: [{ url: ogImage, width: 1200, height: 630, alt: 'NOVRIX · Sentiment Intelligence' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -137,7 +137,7 @@ export default function RootLayout({
                 priceCurrency: "USD",
               },
               featureList: [
-                "Sentiment Intelligence — market psychology indicators with macro overlays",
+                "Sentiment Intelligence: market psychology indicators with macro overlays",
                 "On-chain and macro data aggregation from multiple sources",
                 "Interactive charts with multiple timeframes",
                 "Dark-mode interface",

@@ -26,22 +26,15 @@ export default function TerminalIntelligenceHeader({
       <div className="px-4 lg:px-6 xl:px-8 2xl:px-10 pt-[14px] pb-0">
         <div className="flex items-center gap-0 mb-1.5">
           <span style={{ fontFamily: 'var(--ff-sans), sans-serif', fontSize: '11px', fontWeight: 400, letterSpacing: '0.02em', color: 'rgba(245,241,234,0.40)', textTransform: 'uppercase' }}>NOVRIX</span>
-          <span className="mx-1.5" style={{ fontFamily: 'var(--ff-sans), sans-serif', fontSize: '11px', color: 'rgba(245,241,234,0.22)' }}>{'//'}</span>
+          <span className="mx-2" style={{ fontFamily: 'var(--ff-sans), sans-serif', fontSize: '11px', color: 'rgba(245,241,234,0.28)' }}>·</span>
           <span style={{ fontFamily: 'var(--ff-sans), sans-serif', fontSize: '11px', fontWeight: 400, letterSpacing: '0.02em', color: 'rgba(245,241,234,0.40)', textTransform: 'uppercase' }}>INTELLIGENCE</span>
-          <span className="mx-1.5" style={{ fontFamily: 'var(--ff-sans), sans-serif', fontSize: '11px', color: 'rgba(245,241,234,0.22)' }}>{'//'}</span>
+          <span className="mx-2" style={{ fontFamily: 'var(--ff-sans), sans-serif', fontSize: '11px', color: 'rgba(245,241,234,0.28)' }}>·</span>
           <span style={{ fontFamily: 'var(--ff-sans), sans-serif', fontSize: '11px', fontWeight: 600, letterSpacing: '0.02em', color: 'rgba(245,241,234,0.72)', textTransform: 'uppercase' }}>{sectionLabel}</span>
           <div className="ml-4 h-px flex-1" style={{ background: `linear-gradient(90deg, ${accentDark}4D 0%, transparent 60%)` }} />
         </div>
 
         <div className="flex items-center justify-between gap-4 flex-wrap">
           <div className="min-w-0 flex items-stretch gap-4">
-            <div
-              className="w-[3px] self-stretch shrink-0"
-              style={{
-                background: `linear-gradient(180deg, ${accent} 0%, ${accentDark}14 100%)`,
-                boxShadow: `0 0 14px ${accentDark}80, 0 0 4px ${accentDark}CC`,
-              }}
-            />
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-3 mb-1">
                 <h1 style={{ fontFamily: 'var(--ff-sans), sans-serif', fontSize: '19px', fontWeight: 800, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--text-heading)', lineHeight: 1 }}>{title}</h1>
