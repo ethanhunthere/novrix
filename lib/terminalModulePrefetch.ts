@@ -8,7 +8,7 @@ export const SENTIMENT_PRELOAD_URL = withSentimentDataVersion('/api/sentiment/al
 export const SENTIMENT_PREFETCH_URLS = [
   SENTIMENT_PRELOAD_URL,
   withSentimentDataVersion('/api/sentiment/cached'),
-  withSentimentDataVersion('/api/fear-greed?days=3000'),
+  withSentimentDataVersion('/api/fear-greed?days=999999'),
 ];
 
 const MODULE_PREFETCH_URLS: Record<TerminalModuleKey, string[]> = {

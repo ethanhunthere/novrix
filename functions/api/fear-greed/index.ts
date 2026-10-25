@@ -44,14 +44,17 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   if (request.method === 'OPTIONS') return new Response(null, { headers: CORS });
 
   const url = new URL(request.url);
-  const days = Math.min(Math.max(1, parseInt(url.searchParams.get('days') || '365', 10)), 3000);
+  const rawDays = parseInt(url.searchParams.get('days') || '365', 10);
+  const isAll = isNaN(rawDays) || rawDays >= 3000 || rawDays <= 0;
+  const days = isAll ? 0 : rawDays;
 
   try {
     const stateRow = await env.DB.prepare(
-      `SELECT MAX(date) as latest FROM fear_greed_data`
-    ).first<{ latest: string | null }>();
+      `SELECT MAX(date) as latest, COUNT(*) as count FROM fear_greed_data`
+    ).first<{ latest: string | null; count: number }>();
 
     const latestDate = stateRow?.latest ?? null;
+    const count = stateRow?.count ?? 0;
     const isStale = !latestDate || (Date.now() - new Date(latestDate + 'T00:00:00Z').getTime()) > STALE_THRESHOLD_MS;
 
     if (isStale) {
@@ -76,43 +79,58 @@ export const onRequest: PagesFunction<Env> = async (context) => {
       }
     }
 
-    const cutoff = new Date();
-    cutoff.setDate(cutoff.getDate() - days);
-    const cutoffStr = cutoff.toISOString().split('T')[0];
+    if (count > 0) {
+      let result;
+      if (isAll) {
+        result = await env.DB.prepare(`
+          SELECT date, score, classification
+          FROM fear_greed_data
+          ORDER BY date ASC
+        `).all<{ date: string; score: number; classification: string }>();
+      } else {
+        const cutoff = new Date();
+        cutoff.setDate(cutoff.getDate() - days);
+        const cutoffStr = cutoff.toISOString().split('T')[0];
 
-    const result = await env.DB.prepare(`
-      SELECT date, score, classification
-      FROM fear_greed_data
-      WHERE date >= ?
-      ORDER BY date ASC
-    `).bind(cutoffStr).all<{ date: string; score: number; classification: string }>();
+        result = await env.DB.prepare(`
+          SELECT date, score, classification
+          FROM fear_greed_data
+          WHERE date >= ?
+          ORDER BY date ASC
+        `).bind(cutoffStr).all<{ date: string; score: number; classification: string }>();
+      }
 
-    if (result.results && result.results.length > 0) {
-      const data = result.results.map((r) => ({
-        score: r.score,
-        label: r.classification,
-        timestamp: `${r.date}T00:00:00Z`,
-        dominance: null,
-        eth_dominance: null,
-        trend_direction: r.score < 25 ? 'bearish' : r.score > 75 ? 'bullish' : 'neutral',
-      }));
+      if (result.results && result.results.length > 0) {
+        // If ALL was requested but D1 has sparse data (<1000 rows), drop to fallback to return full 2018+ history
+        if (!isAll || result.results.length >= 1000) {
+          const data = result.results.map((r) => ({
+            score: r.score,
+            label: r.classification,
+            timestamp: `${r.date}T00:00:00Z`,
+            dominance: null,
+            eth_dominance: null,
+            trend_direction: r.score < 25 ? 'bearish' : r.score > 75 ? 'bullish' : 'neutral',
+          }));
 
-      return new Response(JSON.stringify({ success: true, data, count: data.length }), {
-        headers: {
-          ...CORS,
-          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=7200',
-          'X-Data-Source': isStale ? 'cloudflare-d1-refreshed' : 'cloudflare-d1',
-        },
-      });
+          return new Response(JSON.stringify({ success: true, data, count: data.length }), {
+            headers: {
+              ...CORS,
+              'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=7200',
+              'X-Data-Source': isStale ? 'cloudflare-d1-refreshed' : 'cloudflare-d1',
+            },
+          });
+        }
+      }
     }
   } catch (e) {
     console.error('[FearGreed] D1 error:', e);
   }
 
-  // Fallback: Alternative.me direct
+  // Fallback: Alternative.me direct (limit=0 returns entire historical dataset from 2018)
   try {
+    const limitParam = isAll ? 0 : days;
     const res = await fetch(
-      `https://api.alternative.me/fng/?limit=${Math.min(days, 365)}&format=json`,
+      `https://api.alternative.me/fng/?limit=${limitParam}&format=json`,
       { headers: { Accept: 'application/json', 'User-Agent': 'NOVRIX Terminal' }, signal: AbortSignal.timeout(10000) },
     );
     if (!res.ok) throw new Error(`Alternative.me ${res.status}`);

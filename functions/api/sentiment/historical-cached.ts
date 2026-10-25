@@ -26,23 +26,9 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     const { DB } = context.env;
     const url = new URL(context.request.url);
     
-    // Get query parameters
-    const days = parseInt(url.searchParams.get('days') || '30', 10);
-    
-    // Validate days (support up to 8 years = 3650 days)
-    if (days < 1 || days > 3650) {
-      return new Response(JSON.stringify({
-        success: false,
-        error: 'Invalid days parameter',
-        message: 'Days must be between 1 and 3650 (8 years)'
-      }), {
-        status: 400,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*'
-        }
-      });
-    }
+    // Get query parameters (support up to 999999 for all-time)
+    const rawDays = parseInt(url.searchParams.get('days') || '30', 10);
+    const days = (isNaN(rawDays) || rawDays >= 3650 || rawDays <= 0) ? 3650 : rawDays;
 
     const cutoffDate = new Date(Date.now() - days * 86400000).toISOString();
 

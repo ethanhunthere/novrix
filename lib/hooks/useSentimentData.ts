@@ -502,22 +502,35 @@ export function useSentimentData() {
         addLog('Fetching Fear & Greed history...', 'INFO');
 
         // Try new dedicated endpoint first (served from bootCache if pre-fetched during boot)
-        let response = await fetchCached(withSentimentDataVersion('/api/fear-greed?days=3000'), { headers: { 'Accept': 'application/json' } });
+        let response = await fetchCached(withSentimentDataVersion('/api/fear-greed?days=999999'), { headers: { 'Accept': 'application/json' } });
         if (!response.ok) {
           // Fallback to historical-cached
-          response = await fetch('/api/sentiment/historical-cached?days=3000', { headers: { 'Accept': 'application/json' } });
+          response = await fetch('/api/sentiment/historical-cached?days=3650', { headers: { 'Accept': 'application/json' } });
         }
 
         if (response.ok) {
-          const result = await response.json() as { success: boolean; data: Array<{ time: string; value: string; value_classification: string; timestamp: string }> };
+          const result = await response.json() as { success: boolean; data: Array<{ time?: string; value?: string | number; score?: number; label?: string; value_classification?: string; timestamp?: string }> };
           if (result.success && result.data && result.data.length > 0) {
             // Deduplicate by date (keep first entry per day)
             const seen = new Set<string>();
             const dedupedData = result.data.filter((item) => {
-              const dateKey = item.timestamp.substring(0, 10);
-              if (seen.has(dateKey)) return false;
+              const dateKey = (item.timestamp || item.time || '').substring(0, 10);
+              if (!dateKey || seen.has(dateKey)) return false;
               seen.add(dateKey);
               return true;
+            }).map((item) => {
+              const iso = item.timestamp || item.time || '';
+              const scoreVal = Number(item.score ?? item.value ?? 0);
+              return {
+                time: iso,
+                timestamp: iso,
+                value: scoreVal,
+                score: scoreVal,
+                label: item.label ?? item.value_classification ?? '',
+                dominance: null,
+                eth_dominance: null,
+                trend_direction: (scoreVal < 25 ? 'bearish' : scoreVal > 75 ? 'bullish' : 'neutral') as 'bearish' | 'bullish' | 'neutral',
+              };
             });
             setAllFngData(dedupedData);
             setHistoricalData(dedupedData);
@@ -1535,7 +1548,18 @@ export function useSentimentData() {
     const fngSource = allFngData.length > 0 ? allFngData : historicalData;
     const sorted = fastSortAscending(fngSource);
     const days = parseInt(selectedTimeframe, 10);
-    const sliced = days >= 3000 ? sorted : sorted.slice(-days);
+    
+    let sliced = sorted;
+    if (!isNaN(days) && days < 3000) {
+      const cutoff = new Date();
+      cutoff.setDate(cutoff.getDate() - days);
+      const cutoffStr = cutoff.toISOString().slice(0, 10);
+      const dateFiltered = sorted.filter((d) => {
+        const t = d.timestamp ?? d.time;
+        return t ? t.slice(0, 10) >= cutoffStr : false;
+      });
+      sliced = dateFiltered.length >= 2 ? dateFiltered : sorted.slice(-days);
+    }
 
     // Downsample for performance on large timeframes
     let filteredData: typeof allFngData;
@@ -1548,13 +1572,18 @@ export function useSentimentData() {
     }
 
     const data = filteredData.map((item, index) => {
-      const date = new Date(item.timestamp ?? item.time);
+      const iso = item.timestamp ?? item.time ?? '';
+      const date = new Date(iso);
+      const scoreVal = Number(item.score ?? item.value ?? 0);
       
       return {
         index,
-        score: item.score,
-        timestamp: item.timestamp ?? item.time,
-        date: fastFormatDate(item.timestamp ?? item.time),
+        score: scoreVal,
+        value: scoreVal,
+        timestamp: iso,
+        time: iso,
+        date: fastFormatDate(iso),
+        dateFormatted: fastFormatDate(iso),
         dateObj: date
       };
     });
@@ -2020,14 +2049,16 @@ export function useSentimentData() {
     return sliced.map((item, idx) => { const dateObj = parseDate(item.time); return { index: idx, sma30: item.sma_30, sma60: item.sma_60, signal: item.signal, dateFormatted: fastFormatDate(item.time), dateObj }; });
   }, [hashribbonsData, hashribbonsTimeframe]);
 
-  const addBtcPriceToChartData = useCallback((chartData: ChartDataPoint[]) => {
-    if (!chartData || chartData.length === 0 || btcPriceData.length === 0) return chartData;
+  const addBtcPriceToChartData = useCallback(<T extends Record<string, unknown>>(chartData: T[]): Array<T & { btcPrice: number | null }> => {
+    if (!chartData || chartData.length === 0 || btcPriceData.length === 0) {
+      return chartData as Array<T & { btcPrice: number | null }>;
+    }
     return chartData.map((item) => {
       const dateKey = typeof item.timestamp === 'string'
         ? item.timestamp.slice(0, 10)
         : typeof item.time === 'string'
         ? item.time.slice(0, 10)
-        : item.dateObj
+        : item.dateObj instanceof Date
         ? formatDateKey(item.dateObj)
         : '';
       return { ...item, btcPrice: btcPriceLookup[dateKey] || null };
@@ -2036,6 +2067,7 @@ export function useSentimentData() {
   }, [btcPriceLookup, btcPriceData.length]);
 
   // Enhanced chart data with BTC price for existing indicators
+  const fngChartDataWithPrice = useMemo(() => addBtcPriceToChartData(chartData), [chartData, addBtcPriceToChartData]);
   const dominanceChartDataWithPrice = useMemo(() => addBtcPriceToChartData(dominanceChartData), [dominanceChartData, addBtcPriceToChartData]);
   const nuplChartDataWithPrice = useMemo(() => addBtcPriceToChartData(nuplChartData), [nuplChartData, addBtcPriceToChartData]);
   const mvrvChartDataWithPrice = useMemo(() => addBtcPriceToChartData(mvrvChartData), [mvrvChartData, addBtcPriceToChartData]);
@@ -2583,7 +2615,7 @@ export function useSentimentData() {
     bogmbaseData, isBogmbaseLoading, bogmbaseTimeframe, setBogmbaseTimeframe,
     totalslData, isTotalslLoading, totalslTimeframe, setTotalslTimeframe,
     // Derived chart data
-    sentiment, chartData, calculateTicks, formatXAxis,
+    sentiment, chartData, fngChartDataWithPrice, calculateTicks, formatXAxis,
     dominanceChartData, dominanceChartDataWithPrice,
     // KEY 2 chart data
     nuplChartData, nuplChartDataWithPrice,

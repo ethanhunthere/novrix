@@ -313,7 +313,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
     bogmbaseData, isBogmbaseLoading, bogmbaseTimeframe, setBogmbaseTimeframe,
     totalslData, isTotalslLoading, totalslTimeframe, setTotalslTimeframe,
     // Derived chart data
-    sentiment, chartData, calculateTicks, formatXAxis,
+    sentiment, chartData, fngChartDataWithPrice, calculateTicks, formatXAxis,
     dominanceChartData, dominanceChartDataWithPrice,
     nuplChartData, nuplChartDataWithPrice,
     mvrvChartData, mvrvChartDataWithPrice,
@@ -2717,70 +2717,187 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                         </div>
                       ) : (
                         <>
-                          <div className="flex flex-row items-center justify-between gap-3 mb-4 flex-wrap">
-                            <LineToggle items={[
-                              { key: 'fng', label: 'FEAR & GREED', color: '#88B4D0', active: true, onClick: () => {} },
-                            ]} />
-                            <TfSelector value={selectedTimeframe} onChange={setSelectedTimeframe} opts={TF_OPTS} />
-                          </div>
-                          <ResponsiveContainer
-                            key={`chart-${selectedTimeframe}`}
-                            width="100%"
-                            height={ch('sentiment-oscillator')}
-                            style={{ outline: 'none' }}
-                          >
-                            <AreaChart data={chartData} margin={{ top: 6, right: 14, bottom: 0, left: 10 }} style={{ outline: 'none' }}>
-                              <defs>
-                                <linearGradient id="fngFill" x1="0" y1="0" x2="0" y2="1">
-                                  <stop offset="5%"  stopColor="#88B4D0" stopOpacity={0.12} />
-                                  <stop offset="95%" stopColor="#88B4D0" stopOpacity={0} />
-                                </linearGradient>
-                                {/* Zone-colored stroke: domain [0,100], chartAreaH≈228 */}
-                                <linearGradient id="fngLine" x1="0" y1="0" x2="0" y2={ch('sentiment-oscillator') - 32} gradientUnits="userSpaceOnUse">
-                                  <stop offset="0%"      stopColor="#EF4444" />
-                                  <stop offset="25%"     stopColor="#EF4444" />
-                                  <stop offset="25.01%"  stopColor="#F7931A" />
-                                  <stop offset="45%"     stopColor="#F7931A" />
-                                  <stop offset="45.01%"  stopColor="#88B4D0" />
-                                  <stop offset="55%"     stopColor="#88B4D0" />
-                                  <stop offset="55.01%"  stopColor="#10B981" />
-                                  <stop offset="75%"     stopColor="#10B981" />
-                                  <stop offset="75.01%"  stopColor="#10B981" />
-                                  <stop offset="100%"    stopColor="#10B981" />
-                                </linearGradient>
-                              </defs>
-                              <ReferenceArea y1={0} y2={25} fill="#10B981" fillOpacity={SENTIMENT_BAND_OPACITY} />
-                              <ReferenceArea y1={75} y2={100} fill="#EF4444" fillOpacity={SENTIMENT_BAND_OPACITY} />
-                              <XAxis
-                                dataKey="index" stroke="none"
-                                ticks={getXAxisTicks(chartData, selectedTimeframe)}
-                                tick={(props: Record<string, unknown>) => (
-                                  <DateAxisTick
-                                    {...props}
-                                    chartData={chartData}
-                                    timeframe={selectedTimeframe}
-                                    fontSize={11}
-                                  />
-                                )}
-                                interval={0}
-                                height={24}
-                              />
-                              <YAxis
-                                domain={[0, 100]}
-                                stroke="none"
-                                tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
-                                width={38}
-                                ticks={[0, 25, 50, 75, 100]}
-                              />
-                              <Tooltip
-                                cursor={{ stroke: 'rgba(245,241,234,0.65)', strokeWidth: 2 }}
-                                animationDuration={0}
-                                isAnimationActive={false}
-                                content={<FngTooltip />}
-                              />
-                              <Area type="monotone" dataKey="score" stroke="url(#fngLine)" strokeWidth={2} fill="url(#fngFill)" animationDuration={0} isAnimationActive={false} />
-                            </AreaChart>
-                          </ResponsiveContainer>
+                          {(() => {
+                            const isBtcOn = !!showBtcPrice['sentiment-oscillator'];
+                            const isFngOn = showIndicator['sentiment-oscillator'] ?? true;
+                            const fngDataToRender = isBtcOn ? fngChartDataWithPrice : chartData;
+                            const isMaximized = maximizedPanel === 'sentiment-oscillator';
+
+                            return (
+                              <>
+                                <div className="flex flex-row items-center justify-between gap-3 mb-4 flex-wrap">
+                                  <LineToggle items={[
+                                    {
+                                      key: 'fng',
+                                      label: 'FEAR & GREED',
+                                      color: '#88B4D0',
+                                      active: isFngOn,
+                                      onClick: () => setShowIndicator((p) => ({ ...p, 'sentiment-oscillator': !isFngOn })),
+                                    },
+                                    {
+                                      key: 'price-fng',
+                                      label: 'PRICE',
+                                      color: '#FFFFFF',
+                                      active: isBtcOn,
+                                      onClick: () => setShowBtcPrice((p) => ({ ...p, 'sentiment-oscillator': !isBtcOn })),
+                                    },
+                                  ]} />
+                                  <TfSelector value={selectedTimeframe} onChange={setSelectedTimeframe} opts={TF_OPTS} />
+                                </div>
+                                <ResponsiveContainer
+                                  key={`chart-${selectedTimeframe}-${isBtcOn ? 'btc' : 'nobtc'}`}
+                                  width="100%"
+                                  height={ch('sentiment-oscillator')}
+                                  style={{ outline: 'none' }}
+                                >
+                                  <AreaChart
+                                    data={fngDataToRender}
+                                    margin={{
+                                      top: 6,
+                                      right: isBtcOn ? 6 : 14,
+                                      bottom: 0,
+                                      left: isMaximized ? 14 : 10,
+                                    }}
+                                    style={{ outline: 'none' }}
+                                  >
+                                    <defs>
+                                      <linearGradient id="fngFill" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%"  stopColor="#88B4D0" stopOpacity={0.12} />
+                                        <stop offset="95%" stopColor="#88B4D0" stopOpacity={0} />
+                                      </linearGradient>
+                                      {/* Zone-colored stroke: domain [0,100], chartAreaH≈228 */}
+                                      <linearGradient id="fngLine" x1="0" y1="0" x2="0" y2={ch('sentiment-oscillator') - 32} gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%"      stopColor="#EF4444" />
+                                        <stop offset="25%"     stopColor="#EF4444" />
+                                        <stop offset="25.01%"  stopColor="#F7931A" />
+                                        <stop offset="45%"     stopColor="#F7931A" />
+                                        <stop offset="45.01%"  stopColor="#88B4D0" />
+                                        <stop offset="55%"     stopColor="#88B4D0" />
+                                        <stop offset="55.01%"  stopColor="#10B981" />
+                                        <stop offset="75%"     stopColor="#10B981" />
+                                        <stop offset="75.01%"  stopColor="#10B981" />
+                                        <stop offset="100%"    stopColor="#10B981" />
+                                      </linearGradient>
+                                    </defs>
+                                    <CartesianGrid strokeDasharray="3 6" stroke="rgba(245,241,234,0.05)" vertical={false} />
+                                    <ReferenceArea y1={0} y2={25} fill="#10B981" fillOpacity={SENTIMENT_BAND_OPACITY} />
+                                    <ReferenceArea y1={75} y2={100} fill="#EF4444" fillOpacity={SENTIMENT_BAND_OPACITY} />
+                                    <XAxis
+                                      dataKey="index"
+                                      stroke="none"
+                                      ticks={getXAxisTicks(fngDataToRender, selectedTimeframe)}
+                                      tick={(props: Record<string, unknown>) => (
+                                        <DateAxisTick
+                                          {...props}
+                                          chartData={fngDataToRender}
+                                          timeframe={selectedTimeframe}
+                                          fontSize={isMaximized ? 12 : 11}
+                                        />
+                                      )}
+                                      interval={0}
+                                      height={24}
+                                    />
+                                    <YAxis
+                                      domain={[0, 100]}
+                                      stroke="none"
+                                      tick={{ fill: '#A9A29A', fontSize: isMaximized ? 12 : 11, fontFamily: 'var(--ff-mono)' }}
+                                      width={38}
+                                      ticks={[0, 25, 50, 75, 100]}
+                                    />
+                                    {isBtcOn && (
+                                      <YAxis
+                                        yAxisId="btcPrice"
+                                        orientation="right"
+                                        scale="log"
+                                        domain={['auto', 'auto']}
+                                        stroke="none"
+                                        tick={{ fill: '#8C857C', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
+                                        tickFormatter={(v: number) => (v >= 1e3 ? `$${(v / 1e3).toFixed(0)}K` : `$${v}`)}
+                                        width={isMaximized ? 74 : 62}
+                                      />
+                                    )}
+                                    <Tooltip
+                                      cursor={{ stroke: 'rgba(245,241,234,0.65)', strokeWidth: 2 }}
+                                      animationDuration={0}
+                                      isAnimationActive={false}
+                                      content={(props: Record<string, unknown>) => (
+                                        <PrecisionTooltip
+                                          {...props}
+                                          accentColor="#88B4D0"
+                                          getRows={(pt, pl) => {
+                                            const rows: Array<{ label: string; value: string; color: string; zone?: { label: string; color: string } }> = [];
+                                            const score = pt.score as number | undefined;
+                                            if (score != null) {
+                                              const zoneColor = getSentimentColor(score);
+                                              const zoneLabel = score >= 75 ? 'EXTREME GREED' : score >= 55 ? 'GREED' : score >= 45 ? 'NEUTRAL' : score >= 25 ? 'FEAR' : 'EXTREME FEAR';
+                                              rows.push({
+                                                label: 'FEAR & GREED',
+                                                value: String(score),
+                                                color: '#88B4D0',
+                                                zone: { label: zoneLabel, color: zoneColor },
+                                              });
+                                            }
+                                            if (isBtcOn) {
+                                              const btc = pl.find((p) => p.dataKey === 'btcPrice');
+                                              if (btc?.value) {
+                                                rows.push({
+                                                  label: 'BTC PRICE',
+                                                  value: `$${Math.round(Number(btc.value)).toLocaleString()}`,
+                                                  color: '#FFFFFF',
+                                                });
+                                              }
+                                            }
+                                            return rows;
+                                          }}
+                                        />
+                                      )}
+                                    />
+                                    {isFngOn && (
+                                      <Area
+                                        type="monotone"
+                                        dataKey="score"
+                                        stroke="url(#fngLine)"
+                                        strokeWidth={2}
+                                        fill="url(#fngFill)"
+                                        animationDuration={0}
+                                        isAnimationActive={false}
+                                        dot={false}
+                                      />
+                                    )}
+                                    {isBtcOn && (
+                                      <Area
+                                        type="monotone"
+                                        dataKey="btcPrice"
+                                        yAxisId="btcPrice"
+                                        stroke="#FFFFFF"
+                                        strokeWidth={1.5}
+                                        fill="none"
+                                        animationDuration={0}
+                                        isAnimationActive={false}
+                                        dot={false}
+                                      />
+                                    )}
+                                    {(selectedTimeframe === '999999' || selectedTimeframe === '3000' || selectedTimeframe === '1460') &&
+                                      getHalvingIndices(fngDataToRender).map((h) => (
+                                        <ReferenceLine
+                                          key={h.index}
+                                          x={h.index}
+                                          stroke="rgba(247,147,26,0.18)"
+                                          strokeDasharray="2 4"
+                                          label={{
+                                            value: `${h.year}↑`,
+                                            position: 'top',
+                                            fill: 'rgba(247,147,26,0.38)',
+                                            fontSize: 9,
+                                            fontFamily: 'var(--ff-mono)',
+                                          }}
+                                        />
+                                      ))}
+                                  </AreaChart>
+                                </ResponsiveContainer>
+                              </>
+                            );
+                          })()}
                         </>
                       )}
                     </div>
