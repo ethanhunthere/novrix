@@ -1171,7 +1171,7 @@ export function useSentimentData() {
       if (hashribbons.length > 0)    setHashribbonsData(ensureFreshToToday(hashribbons, 'sma_30'));
       setIsHashribbonsLoading(false);
     };
-    const timer = setTimeout(fetchKey2Indicators, 60);
+    const timer = setTimeout(fetchKey2Indicators, 1600);
     return () => clearTimeout(timer);
   }, []);
 
@@ -1211,7 +1211,7 @@ export function useSentimentData() {
       if (cvdd.length > 0)        setCvddData(ensureFreshToToday(cvdd, 'value'));
       setIsCvddLoading(false);
     };
-    const timer = setTimeout(fetchKey3Indicators, 120);
+    const timer = setTimeout(fetchKey3Indicators, 2400);
     return () => clearTimeout(timer);
   }, []);
 
@@ -1274,7 +1274,7 @@ export function useSentimentData() {
       if (utxoLoss.length > 0)          setUtxoLossData(ensureFreshToToday(utxoLoss, 'value'));
       setIsUtxoLossLoading(false);
     };
-    const timer = setTimeout(fetchKey4Indicators, 180);
+    const timer = setTimeout(fetchKey4Indicators, 3200);
     return () => clearTimeout(timer);
   }, []);
 
@@ -1381,7 +1381,7 @@ export function useSentimentData() {
       setIsBogmbaseLoading(false);
       if (totalsl.length > 0)          setTotalslData(ensureFreshToToday(totalsl, 'value'));    setIsTotalslLoading(false);
     };
-    const timer = setTimeout(fetchMacroIndicators, 240);
+    const timer = setTimeout(fetchMacroIndicators, 4200);
     return () => clearTimeout(timer);
   }, []);
   useEffect(() => {
@@ -1434,7 +1434,7 @@ export function useSentimentData() {
       }
     };
 
-    const timer = setTimeout(fetchDominanceData, 90);
+    const timer = setTimeout(fetchDominanceData, 1000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -1502,7 +1502,7 @@ export function useSentimentData() {
         setIsSocialLoading(false);
       }
     };
-    const timer = setTimeout(fetchSocialData, 450);
+    const timer = setTimeout(fetchSocialData, 5500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -1996,19 +1996,29 @@ export function useSentimentData() {
 
   // Pre-build BTC price lookup once — avoids rebuilding inside every WithPrice useMemo (204K → 4K iterations)
   const btcPriceLookup = useMemo((): Record<string, number> => {
+    if (btcPriceData.length === 0) return {};
     const lookup: Record<string, number> = {};
-    btcPriceData.forEach((p) => { if (p.time) lookup[p.time.split('T')[0]] = p.price ?? 0; });
+    for (let i = 0; i < btcPriceData.length; i++) {
+      const p = btcPriceData[i];
+      if (p.time) lookup[p.time.slice(0, 10)] = p.price ?? 0;
+    }
     return lookup;
   }, [btcPriceData]);
 
   const addBtcPriceToChartData = useCallback((chartData: ChartDataPoint[]) => {
-    if (btcPriceData.length === 0) return chartData;
+    if (!chartData || chartData.length === 0 || btcPriceData.length === 0) return chartData;
     return chartData.map((item) => {
-      const dateKey = item.dateObj ? formatDateKey(item.dateObj) : '';
+      const dateKey = typeof item.timestamp === 'string'
+        ? item.timestamp.slice(0, 10)
+        : typeof item.time === 'string'
+        ? item.time.slice(0, 10)
+        : item.dateObj
+        ? formatDateKey(item.dateObj)
+        : '';
       return { ...item, btcPrice: btcPriceLookup[dateKey] || null };
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [btcPriceLookup]);
+  }, [btcPriceLookup, btcPriceData.length]);
 
   // Enhanced chart data with BTC price for existing indicators
   const dominanceChartDataWithPrice = useMemo(() => addBtcPriceToChartData(dominanceChartData), [dominanceChartData, addBtcPriceToChartData]);

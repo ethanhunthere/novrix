@@ -89,10 +89,14 @@ export async function fetchCached(url: string, options?: RequestInit): Promise<R
   if (entry && Date.now() - entry.insertedAt <= TTL_MS) {
     const data = await entry.promise;
     if (data !== null) {
-      return new Response(JSON.stringify(data), {
+      // Zero-copy: avoid serializing back to string and re-parsing a 10MB JSON payload
+      return {
+        ok: true,
         status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      });
+        headers: new Headers({ 'Content-Type': 'application/json' }),
+        json: async () => data,
+        text: async () => (typeof data === 'string' ? data : JSON.stringify(data)),
+      } as unknown as Response;
     }
   }
   // Either expired or missing — drop the stale entry and re-fetch.

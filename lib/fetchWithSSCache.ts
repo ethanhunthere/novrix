@@ -36,6 +36,16 @@ function evictOldestIfNeeded(): void {
   }
 }
 
+function zeroCopyResponse(data: unknown): Response {
+  return {
+    ok: true,
+    status: 200,
+    headers: new Headers({ 'Content-Type': 'application/json' }),
+    json: async () => data,
+    text: async () => (typeof data === 'string' ? data : JSON.stringify(data)),
+  } as unknown as Response;
+}
+
 export async function fetchWithSSCache(url: string, options?: RequestInit): Promise<Response> {
   const requestUrl = withSentimentDataVersion(url);
   const cacheKey = ssCacheKey(requestUrl);
@@ -45,10 +55,7 @@ export async function fetchWithSSCache(url: string, options?: RequestInit): Prom
       try {
         const { d, t } = JSON.parse(raw);
         if (Date.now() - t < IND_SS_TTL && d) {
-          return new Response(JSON.stringify(d), {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' },
-          });
+          return zeroCopyResponse(d);
         }
       } catch {
         sessionStorage.removeItem(cacheKey);
@@ -58,18 +65,14 @@ export async function fetchWithSSCache(url: string, options?: RequestInit): Prom
   const response = await fetchCached(requestUrl, options);
   if (response.ok) {
     try {
-      const clone = response.clone();
-      const data = await clone.json() as ApiCachePayload;
+      const data = await response.json() as ApiCachePayload;
       // Only cache responses that actually contain data — prevents stale empty
       // responses from blocking future fetches when the DB hasn't been populated yet.
-      if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+      if (data.success && Array.isArray(data.data) && data.data.length > 0 && typeof window !== 'undefined') {
         evictOldestIfNeeded();
         sessionStorage.setItem(cacheKey, JSON.stringify({ d: data, t: Date.now() }));
       }
-      return new Response(JSON.stringify(data), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return zeroCopyResponse(data);
     } catch { /* quota exceeded or parse error — ignore */ }
   }
   return response;

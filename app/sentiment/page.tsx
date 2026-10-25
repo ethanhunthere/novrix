@@ -498,7 +498,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
 
 
 
-  // Top panels render immediately on frame 1; offscreen panels mount when scrolled near viewport (600px margin) or progressively during browser idle
+  // Top panels render immediately on frame 1; offscreen panels mount when scrolled near viewport (600px margin)
   const [visiblePanels, setVisiblePanels] = useState<Set<string>>(() => new Set([
     'sentiment-oscillator', 'nupl', 'mvrv'
   ]));
@@ -508,44 +508,8 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    // Progressive chunked hydration during browser idle time so secondary charts warm up with zero CPU lockup or mouse blocking on landing
-    const allOverviewPanelIds = [
-      'sentiment-oscillator', 'nupl', 'mvrv', 'lth-mvrv', 'sopr', 'sth-mvrv', 'ssr',
-      'realized-price', 'hashrate', 'open-interest', 'fedfunds', 'supply-loss',
-      'supply-profit', 'realized-profit', 'realized-loss', 'dominance', 'hashribbons',
-      '200-week-ma', 'social-sentiment', 'trending', 'trending-coins', 'dxy',
-      'nrpl', 'mayer-multiple', 'puell-multiple', 'm2', 'vix', 'gold', 'sp500'
-    ];
-
-    let idleIndex = 3;
-    const chunkSize = 4;
-    let timerId: ReturnType<typeof setTimeout> | null = null;
-    let idleId: number | null = null;
-
-    const hydrateNextChunk = () => {
-      if (idleIndex >= allOverviewPanelIds.length) return;
-      setVisiblePanels((prev) => {
-        const next = new Set(prev);
-        for (let i = 0; i < chunkSize && idleIndex < allOverviewPanelIds.length; i++, idleIndex++) {
-          next.add(allOverviewPanelIds[idleIndex]);
-        }
-        return next;
-      });
-      if (idleIndex < allOverviewPanelIds.length) {
-        if ('requestIdleCallback' in window) {
-          idleId = window.requestIdleCallback(hydrateNextChunk, { timeout: 350 });
-        } else {
-          timerId = setTimeout(hydrateNextChunk, 100);
-        }
-      }
-    };
-
-    if ('requestIdleCallback' in window) {
-      idleId = window.requestIdleCallback(hydrateNextChunk, { timeout: 200 });
-    } else {
-      timerId = setTimeout(hydrateNextChunk, 120);
-    }
-
+    // Offscreen panels are mounted strictly on-demand as user scrolls near them,
+    // keeping the main thread 100% responsive and clickable immediately on page landing.
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -576,8 +540,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
 
     return () => {
       observer.disconnect();
-      if (idleId !== null && 'cancelIdleCallback' in window) window.cancelIdleCallback(idleId);
-      if (timerId !== null) clearTimeout(timerId);
     };
   }, []);
 
