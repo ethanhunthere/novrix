@@ -498,19 +498,53 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
 
 
 
-  // Top panels render immediately; offscreen panels mount when scrolled near viewport (600px margin)
+  // Top panels render immediately on frame 1; offscreen panels mount when scrolled near viewport (600px margin) or progressively during browser idle
   const [visiblePanels, setVisiblePanels] = useState<Set<string>>(() => new Set([
-    'sentiment-oscillator', 'nupl', 'mvrv', 'lth-mvrv', 'sopr', 'sth-mvrv', 'ssr',
-    'realized-price', 'hashrate', 'open-interest', 'fedfunds', 'supply-loss',
-    'supply-profit', 'realized-profit', 'realized-loss', 'dominance', 'hashribbons',
-    '200-week-ma', 'social-sentiment', 'trending', 'trending-coins', 'dxy',
-    'nrpl', 'mayer-multiple', 'puell-multiple', 'm2', 'vix', 'gold', 'sp500'
+    'sentiment-oscillator', 'nupl', 'mvrv'
   ]));
 
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
+
+    // Progressive chunked hydration during browser idle time so secondary charts warm up with zero CPU lockup or mouse blocking on landing
+    const allOverviewPanelIds = [
+      'sentiment-oscillator', 'nupl', 'mvrv', 'lth-mvrv', 'sopr', 'sth-mvrv', 'ssr',
+      'realized-price', 'hashrate', 'open-interest', 'fedfunds', 'supply-loss',
+      'supply-profit', 'realized-profit', 'realized-loss', 'dominance', 'hashribbons',
+      '200-week-ma', 'social-sentiment', 'trending', 'trending-coins', 'dxy',
+      'nrpl', 'mayer-multiple', 'puell-multiple', 'm2', 'vix', 'gold', 'sp500'
+    ];
+
+    let idleIndex = 3;
+    const chunkSize = 4;
+    let timerId: ReturnType<typeof setTimeout> | null = null;
+    let idleId: number | null = null;
+
+    const hydrateNextChunk = () => {
+      if (idleIndex >= allOverviewPanelIds.length) return;
+      setVisiblePanels((prev) => {
+        const next = new Set(prev);
+        for (let i = 0; i < chunkSize && idleIndex < allOverviewPanelIds.length; i++, idleIndex++) {
+          next.add(allOverviewPanelIds[idleIndex]);
+        }
+        return next;
+      });
+      if (idleIndex < allOverviewPanelIds.length) {
+        if ('requestIdleCallback' in window) {
+          idleId = window.requestIdleCallback(hydrateNextChunk, { timeout: 350 });
+        } else {
+          timerId = setTimeout(hydrateNextChunk, 100);
+        }
+      }
+    };
+
+    if ('requestIdleCallback' in window) {
+      idleId = window.requestIdleCallback(hydrateNextChunk, { timeout: 200 });
+    } else {
+      timerId = setTimeout(hydrateNextChunk, 120);
+    }
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -540,7 +574,11 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       }
     });
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (idleId !== null && 'cancelIdleCallback' in window) window.cancelIdleCallback(idleId);
+      if (timerId !== null) clearTimeout(timerId);
+    };
   }, []);
 
   useEffect(() => {
@@ -2643,7 +2681,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
 
       <TerminalModulePageShell>
 
-        <div className="sentiment-comfort grid grid-cols-1 lg:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)] 2xl:grid-cols-[320px_minmax(0,1fr)] 3xl:grid-cols-[420px_minmax(0,1fr)] 4xl:grid-cols-[500px_minmax(0,1fr)] gap-6">
+        <div className="sentiment-comfort grid grid-cols-1 lg:grid-cols-[190px_minmax(0,1fr)] xl:grid-cols-[210px_minmax(0,1fr)] 2xl:grid-cols-[220px_minmax(0,1fr)] 3xl:grid-cols-[230px_minmax(0,1fr)] 4xl:grid-cols-[240px_minmax(0,1fr)] gap-5">
           {/* ─── Indicators Registry Sidebar ─── */}
           <SentimentSidebar
             registryCats={registryCats}
@@ -2725,8 +2763,9 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                             key={`chart-${selectedTimeframe}`}
                             width="100%"
                             height={ch('sentiment-oscillator')}
+                            style={{ outline: 'none' }}
                           >
-                            <AreaChart data={chartData} margin={{ top: 6, right: 14, bottom: 0, left: 10 }}>
+                            <AreaChart data={chartData} margin={{ top: 6, right: 14, bottom: 0, left: 10 }} style={{ outline: 'none' }}>
                               <defs>
                                 <linearGradient id="fngFill" x1="0" y1="0" x2="0" y2="1">
                                   <stop offset="5%"  stopColor="#88B4D0" stopOpacity={0.12} />
@@ -2903,9 +2942,10 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                       ]} />
                       <TfSelector value={dominanceTimeframe} onChange={setDominanceTimeframe} opts={TF_OPTS} />
                     </div>
-                    <ResponsiveContainer key={`dominance-chart-${dominanceTimeframe}`} width="100%" height={ch('dominance')}>
+                    <ResponsiveContainer key={`dominance-chart-${dominanceTimeframe}`} width="100%" height={ch('dominance')} style={{ outline: 'none' }}>
                       <AreaChart
                         data={slicedDominanceChartDataWithPrice}
+                        style={{ outline: 'none' }}
                         margin={{
                           top: 6,
                           right: showBtcPrice['dominance'] ? 6 : 14,
@@ -3238,9 +3278,10 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                       ]} />
                       <TfSelector value={hashribbonsTimeframe} onChange={setHashribbonsTimeframe} />
                     </div>
-                    <ResponsiveContainer key={`hashribbons-chart-${hashribbonsTimeframe}`} width="100%" height={ch('hashribbons')}>
+                    <ResponsiveContainer key={`hashribbons-chart-${hashribbonsTimeframe}`} width="100%" height={ch('hashribbons')} style={{ outline: 'none' }}>
                       <AreaChart
                         data={hashribbonsChartDataWithPrice}
+                        style={{ outline: 'none' }}
                         margin={{
                           top: 6,
                           right: showBtcPrice['hashribbons'] ? 6 : 14,
@@ -3577,9 +3618,10 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                       ]} />
                       <TfSelector value={weekMa200Timeframe} onChange={setWeekMa200Timeframe} />
                     </div>
-                    <ResponsiveContainer key={`200-week-ma-${weekMa200Timeframe}`} width="100%" height={ch('200-week-ma')}>
+                    <ResponsiveContainer key={`200-week-ma-${weekMa200Timeframe}`} width="100%" height={ch('200-week-ma')} style={{ outline: 'none' }}>
                       <AreaChart
                         data={weekMa200ChartDataWithPrice}
+                        style={{ outline: 'none' }}
                         margin={{
                           top: 6,
                           right: showBtcPrice['weekMa200'] ? 6 : 14,

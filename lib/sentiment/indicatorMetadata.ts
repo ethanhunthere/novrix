@@ -947,7 +947,7 @@ export const INDICATOR_METADATA: Record<string, IndicatorMetadata> = {
     job: 'Federal Reserve measure of broad US money supply including physical currency, checkable deposits, and money market funds.',
     interpretation: {
       high: 'M2 expansion injects fiat liquidity into global banking systems, debasing sovereign fiat and driving monetary asset inflation.',
-      low: 'M2 contraction (quantitative tightening) drains liquidity, pressuring risk assets and speculative valuations.',
+      low: 'M2 contraction (balance sheet runoff) drains liquidity, pressuring risk assets and speculative valuations.',
       signal: 'Bitcoin spot price exhibits a profound multi-year structural correlation with global M2 liquidity expansion.',
     },
     zones: 'Total broad fiat money stock ($T)',
@@ -1056,7 +1056,7 @@ export const INDICATOR_METADATA: Record<string, IndicatorMetadata> = {
     title: 'Fed Balance Sheet',
     category: 'Macroeconomics',
     accentColor: '#F97316',
-    job: 'Total assets held by the Federal Reserve System, measuring quantitative easing (expansion) or quantitative tightening (contraction).',
+    job: 'Total assets held by the Federal Reserve System, measuring balance sheet expansion or balance sheet contraction.',
     interpretation: {
       high: 'Balance sheet expansion (QE) injects trillions into primary dealers, lifting equity and digital asset valuations.',
       low: 'Balance sheet contraction (QT) rolls off Treasuries and MBS, reducing base banking liquidity.',
@@ -1155,7 +1155,7 @@ export const INDICATOR_METADATA: Record<string, IndicatorMetadata> = {
     job: 'Core Personal Consumption Expenditures price index (excluding food and energy), the primary metric of the Federal Reserve.',
     interpretation: {
       high: 'Core PCE exceeding expectations triggers immediate hawkish repricing of interest rate expectations in Treasury futures.',
-      low: 'Core PCE dropping toward 2.0% provides the primary quantitative trigger for central bank monetary easing.',
+      low: 'Core PCE dropping toward 2.0% provides the primary policy trigger for central bank monetary easing.',
       signal: 'The single most influential inflation data point for Federal Reserve interest rate policy.',
     },
     zones: 'Federal Reserve Exact 2.0% Target Metric',

@@ -26,20 +26,18 @@ export default function DesktopGate({
   const gateTarget = getGateTarget(pathname);
 
   useEffect(() => {
+    const screenW = window.screen?.width ?? 0;
+    const nextIsMobile = screenW > 0 ? screenW < 1080 : window.innerWidth < 1080;
+    setIsMobile(nextIsMobile);
+    onViewportCheck?.(nextIsMobile);
+    setChecked(true);
+
     const check = () => {
-      // Gate on the physical screen size, not the layout viewport: browser
-      // zoom shrinks window.innerWidth in CSS pixels, which used to flip
-      // desktop users into the mobile gate when zooming in (Chrome).
-      // window.screen.width is unaffected by page zoom.
-      const screenW = window.screen?.width ?? 0;
-      const nextIsMobile = screenW > 0 ? screenW < 1080 : window.innerWidth < 1080;
-      setIsMobile(nextIsMobile);
-      onViewportCheck?.(nextIsMobile);
+      const sW = window.screen?.width ?? 0;
+      const m = sW > 0 ? sW < 1080 : window.innerWidth < 1080;
+      setIsMobile(m);
+      onViewportCheck?.(m);
     };
-    queueMicrotask(() => {
-      check();
-      setChecked(true);
-    });
     let timer: ReturnType<typeof setTimeout>;
     const debounced = () => { clearTimeout(timer); timer = setTimeout(check, 150); };
     window.addEventListener('resize', debounced);

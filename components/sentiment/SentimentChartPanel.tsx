@@ -334,9 +334,11 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
                 ]} />
                 <TfSelector value={panel.timeframe} onChange={panel.setTimeframe} opts={panel.tfOpts ?? (isFred ? FRED_TF_OPTS : undefined)} />
               </div>
-              <ResponsiveContainer key={`${panel.panelId}-${panel.timeframe}`} width="100%" height={ch(panel.panelId)}>
-                <AreaChart
-                  data={chartData}
+              <div style={{ outline: 'none' }}>
+                <ResponsiveContainer key={`${panel.panelId}-${panel.timeframe}`} width="100%" height={ch(panel.panelId)} style={{ outline: 'none' }}>
+                  <AreaChart
+                    data={chartData}
+                    style={{ outline: 'none' }}
                   margin={{
                     top: 6,
                     right: showBtc && showBtcPrice[panel.indicatorKey] && !panel.btcSameAxis ? 6 : 14,
@@ -415,6 +417,7 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
                   ))}
                 </AreaChart>
               </ResponsiveContainer>
+              </div>
             </div>
           );
         })()}

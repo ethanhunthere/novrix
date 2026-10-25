@@ -214,6 +214,23 @@ body {
   100% { transform: translateX(200%); }
 }
 
+@keyframes ambientCycleFlow {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(-24px, -3px, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.ambient-cycle-flow {
+  animation: ambientCycleFlow 22s ease-in-out infinite;
+  will-change: transform;
+}
+
 /* Terminal Text Effects */
 /* Gradient Borders */
 /* Smooth Transitions */
@@ -246,9 +263,34 @@ tbody tr:hover {
 }
 /* Suppress browser default focus styling only for non-keyboard focus */
 div:focus:not(:focus-visible),
-button:focus:not(:focus-visible) {
+button:focus:not(:focus-visible),
+*:focus:not(:focus-visible) {
   outline: none !important;
   box-shadow: none;
+}
+
+/* Eliminate white focus outline when clicking inside charts or SVGs */
+.recharts-responsive-container,
+.recharts-responsive-container:focus,
+.recharts-responsive-container:focus-visible,
+.recharts-wrapper,
+.recharts-wrapper:focus,
+.recharts-wrapper:focus-visible,
+.recharts-surface,
+.recharts-surface:focus,
+.recharts-surface:focus-visible,
+svg.recharts-surface,
+svg.recharts-surface:focus,
+svg.recharts-surface:focus-visible,
+.recharts-wrapper svg,
+.recharts-wrapper svg:focus,
+.recharts-wrapper svg:focus-visible,
+.recharts-wrapper *:focus,
+.recharts-wrapper *:focus-visible,
+svg:focus,
+svg:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* Panel card active state — subtle bg shift, no outline */

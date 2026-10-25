@@ -61,7 +61,7 @@ export const PanelHeader = ({
       minHeight: '64px',
     }}
   >
-    <div className="flex items-center gap-3 min-w-0 py-3">
+    <div className="flex flex-col justify-center min-w-0 py-3">
       <div className="flex flex-wrap items-center gap-2.5 min-w-0">
         <span
           className="min-w-0 text-[17px] font-semibold"
@@ -82,38 +82,44 @@ export const PanelHeader = ({
           </span>
         )}
       </div>
+      {lastUpdated && (
+        <span style={{
+          fontSize: '10px',
+          letterSpacing: '0.08em',
+          fontFamily: 'var(--ff-mono)',
+          color: 'rgba(245,241,234,0.60)',
+          marginTop: '3px',
+          display: 'inline-block',
+          fontWeight: 500,
+        }}>
+          last updated: {lastUpdated}
+        </span>
+      )}
     </div>
     <div className="flex items-center gap-3 shrink-0 py-3">
       {value != null && (
-          <div className="flex flex-col items-end gap-0.5">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2">
+          <span
+            className="tabular-nums leading-none"
+            style={{
+              fontSize: '26px', fontWeight: 700,
+              color: accentColor,
+              fontFamily: 'var(--ff-mono)', letterSpacing: '-0.02em',
+            }}
+          >
+            {value}
+          </span>
+          {zone?.label && (
             <span
-              className="tabular-nums leading-none"
+              className="text-[11px] tracking-[0.10em] px-2 py-1 font-semibold shrink-0 uppercase"
               style={{
-                fontSize: '26px', fontWeight: 700,
-                color: accentColor,
-                fontFamily: 'var(--ff-mono)', letterSpacing: '-0.02em',
+                color: zone.color, background: `${zone.color}15`,
+                border: `1px solid ${zone.color}60`,
+                borderRadius: '2px',
+                fontFamily: 'var(--ff-mono)',
               }}
             >
-              {value}
-            </span>
-            {zone?.label && (
-              <span
-                className="text-[11px] tracking-[0.10em] px-2 py-1 font-semibold shrink-0 uppercase"
-                style={{
-                  color: zone.color, background: `${zone.color}15`,
-                  border: `1px solid ${zone.color}60`,
-                  borderRadius: '2px',
-                  fontFamily: 'var(--ff-mono)',
-                }}
-              >
-                {zone.label}
-              </span>
-            )}
-          </div>
-          {lastUpdated && (
-            <span style={{ fontSize: '9px', letterSpacing: '0.14em', fontFamily: 'var(--ff-mono)', color: 'rgba(245,241,234,0.58)', fontWeight: 600 }}>
-              last updated: {lastUpdated}
+              {zone.label}
             </span>
           )}
         </div>
@@ -344,27 +350,16 @@ export const ChartSkeleton = ({ height = 320 }: { height?: number }) => (
 );
 
 export const TF_OPTS = [
-  { label: '1W',  value: '7'      },
-  { label: '1M',  value: '30'     },
-  { label: '3M',  value: '90'     },
-  { label: '6M',  value: '180'    },
   { label: '1Y',  value: '365'    },
   { label: 'ALL', value: '999999' },
 ] as const;
 
 export const FRED_TF_OPTS = [
-  { label: '1Y',   value: '365'    },
-  { label: '5Y',   value: '1825'   },
-  { label: '10Y',  value: '3650'   },
-  { label: '20Y',  value: '7300'   },
-  { label: 'ALL',  value: '999999' },
+  { label: '1Y',  value: '365'    },
+  { label: 'ALL', value: '999999' },
 ] as const;
 
 export const NOVRIX_TF_OPTS = [
-  { label: '1W',  value: '7'      },
-  { label: '1M',  value: '30'     },
-  { label: '3M',  value: '90'     },
-  { label: '6M',  value: '180'    },
   { label: '1Y',  value: '365'    },
   { label: 'ALL', value: '999999' },
 ] as const;
@@ -428,7 +423,6 @@ export const LineToggle = ({ items }: {
           fontWeight: item.active ? 700 : 500, cursor: 'pointer', lineHeight: 1, textTransform: 'uppercase',
         }}
       >
-        <div style={{ width: '14px', height: '1.5px', background: item.active ? item.color : 'rgba(245,241,234,0.3)' }} />
         {item.label}
       </button>
     ))}
@@ -619,6 +613,22 @@ export const getXAxisTicks = (data: ChartDateItem[], tf: string): number[] => {
   return finalTicks.sort((a, b) => a - b);
 };
 
+export const SHORT_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] as const;
+
+export function fastFormatDate(timeStr: string | null | undefined): string {
+  if (!timeStr) return '';
+  const s = String(timeStr);
+  if (s.length >= 10 && s[4] === '-' && s[7] === '-') {
+    const y = s.slice(0, 4);
+    const m = (s.charCodeAt(5) - 48) * 10 + (s.charCodeAt(6) - 48) - 1;
+    const d = (s.charCodeAt(8) - 48) * 10 + (s.charCodeAt(9) - 48);
+    const mStr = SHORT_MONTHS[m];
+    if (mStr) return `${mStr} ${d}, ${y}`;
+  }
+  const d = new Date(timeStr);
+  return isNaN(d.getTime()) ? '' : `${SHORT_MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
+}
+
 export const formatXAxisTick = (data: ChartDateItem[], index: number, tf: string): string => {
   const d = resolveDate(data[index]);
   if (!d) return '';
@@ -631,12 +641,12 @@ export const formatXAxisTick = (data: ChartDateItem[], index: number, tf: string
 
   // Short ranges (1W, 1M, 3M): Day + Month (e.g. "25 Oct", "12 Sep")
   if (spanDays <= 120 || tf === '7' || tf === '30' || tf === '90') {
-    return `${d.getDate()} ${d.toLocaleDateString('en-US', { month: 'short' })}`;
+    return `${d.getDate()} ${SHORT_MONTHS[d.getMonth()] || ''}`;
   }
 
   // Medium ranges (6M, 1Y, up to ~3Y): Month + 2-digit Year with apostrophe (e.g. "Oct '26", "Jan '25")
   if (spanDays <= 1100 || tf === '180' || tf === '365') {
-    const mo = d.toLocaleDateString('en-US', { month: 'short' });
+    const mo = SHORT_MONTHS[d.getMonth()] || '';
     const yr = String(d.getFullYear()).slice(2);
     return `${mo} '${yr}`;
   }

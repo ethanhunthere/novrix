@@ -43,34 +43,30 @@ const SentimentSidebar = memo(function SentimentSidebar({
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: -16 }}
+      initial={{ opacity: 0, x: -12 }}
       animate={{ opacity: 1, x: 0 }}
-      className="overflow-hidden lg:sticky lg:top-4 lg:self-start lg:max-h-[calc(100vh-6rem)] lg:flex lg:flex-col"
+      className="overflow-hidden lg:sticky lg:top-3 lg:self-start lg:h-[calc(100vh-2.5rem)] lg:flex lg:flex-col"
       style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-default)' }}
     >
       {/* ── Sidebar header ── */}
       <div className="shrink-0">
-        <div className="px-5 pt-5 pb-4" style={{ background: 'var(--bg-base)', borderBottom: '1px solid var(--border-subtle)' }}>
-          {/* INTEL REGISTRY label with accent underline */}
-          <div className="flex items-center justify-between mb-1">
-            <div className="flex flex-col gap-1.5">
-              <span style={{
-                fontSize: '11px',
-                letterSpacing: '0.24em',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                fontFamily: 'var(--ff-mono)',
-                color: 'var(--text-tertiary)',
-              }}>
-                Intel Registry
-              </span>
-              <div style={{ width: '34px', height: '2px', background: 'var(--accent-novrix)', borderRadius: '1px' }} />
-            </div>
+        <div className="px-3.5 pt-3.5 pb-2.5" style={{ background: 'var(--bg-base)', borderBottom: '1px solid var(--border-subtle)' }}>
+          <div className="flex items-center justify-between">
+            <span style={{
+              fontSize: '10px',
+              letterSpacing: '0.18em',
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              fontFamily: 'var(--ff-mono)',
+              color: 'var(--text-tertiary)',
+            }}>
+              Intel Registry
+            </span>
             {selectedIndicator && (
               <button
                 type="button"
                 onClick={() => setSelectedIndicator(null)}
-                className="px-2 py-1 text-[10px] font-mono tracking-wider uppercase transition-colors"
+                className="px-1.5 py-0.5 text-[9px] font-mono tracking-wider uppercase transition-colors"
                 style={{
                   background: 'rgba(245,241,234,0.06)',
                   border: '1px solid var(--border-default)',
@@ -86,7 +82,7 @@ const SentimentSidebar = memo(function SentimentSidebar({
                   e.currentTarget.style.borderColor = 'var(--border-default)';
                 }}
               >
-                Reset Filter
+                Reset
               </button>
             )}
           </div>
@@ -95,18 +91,18 @@ const SentimentSidebar = memo(function SentimentSidebar({
 
       <div className="overflow-y-auto flex-1" style={{ scrollbarWidth: 'thin', scrollbarColor: 'var(--border-default) var(--bg-base)' }}>
         {/* ── Search ── */}
-        <div className="px-4 py-3" style={{ borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-raised)' }}>
+        <div className="px-3 py-2" style={{ borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-raised)' }}>
           <div className="relative">
             <svg
-              width="14"
-              height="14"
+              width="12"
+              height="12"
               viewBox="0 0 24 24"
               fill="none"
               stroke="var(--text-ghost)"
               strokeWidth="2.5"
               strokeLinecap="round"
               strokeLinejoin="round"
-              style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }}
+              style={{ position: 'absolute', left: '8px', top: '50%', transform: 'translateY(-50%)' }}
             >
               <circle cx="11" cy="11" r="8" />
               <path d="m21 21-4.3-4.3" />
@@ -115,30 +111,28 @@ const SentimentSidebar = memo(function SentimentSidebar({
               type="text"
               value={registrySearch}
               onChange={(e) => setRegistrySearch(e.target.value)}
-              placeholder="Find indicator..."
+              placeholder="Filter..."
               style={{
                 width: '100%',
-                height: '40px',
-                padding: '0 12px 0 36px',
-                background: 'var(--bg-raised)',
-                border: '1px solid var(--border-default)',
-                borderRadius: '6px',
+                height: '30px',
+                padding: '0 8px 0 26px',
+                background: 'var(--bg-base)',
+                border: '1px solid var(--border-subtle)',
+                borderRadius: '3px',
                 color: 'var(--text-primary)',
-                fontSize: '13px',
+                fontSize: '11px',
                 fontFamily: 'var(--ff-sans)',
                 letterSpacing: '0.01em',
                 outline: 'none',
                 caretColor: 'var(--accent-novrix)',
                 boxSizing: 'border-box',
-                transition: 'border-color 180ms ease, box-shadow 180ms ease',
+                transition: 'border-color 140ms ease',
               }}
               onFocus={(e) => {
                 e.currentTarget.style.borderColor = 'var(--border-accent)';
-                e.currentTarget.style.boxShadow = '0 0 0 3px var(--border-accent)';
               }}
               onBlur={(e) => {
-                e.currentTarget.style.borderColor = 'var(--border-default)';
-                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.style.borderColor = 'var(--border-subtle)';
               }}
             />
           </div>
@@ -160,37 +154,37 @@ const SentimentSidebar = memo(function SentimentSidebar({
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  padding: '13px 18px',
+                  padding: '9px 12px',
                   background: isOpen ? 'var(--bg-raised)' : 'var(--bg-surface)',
-                  borderLeft: `3px solid ${isOpen ? cat.accent : 'var(--border-subtle)'}`,
+                  borderLeft: `2px solid ${isOpen ? cat.accent : 'transparent'}`,
                   cursor: q ? 'default' : 'pointer',
                   userSelect: 'none',
-                  transition: 'background 160ms ease, border-left-color 160ms ease',
+                  transition: 'background 140ms ease, border-left-color 140ms ease',
                 }}
-                onMouseEnter={(e) => { if (!q && !isOpen) { e.currentTarget.style.background = 'var(--bg-surface)'; e.currentTarget.style.borderLeftColor = cat.accent + 'AA'; } }}
-                onMouseLeave={(e) => { if (!q && !isOpen) { e.currentTarget.style.background = 'var(--bg-surface)'; e.currentTarget.style.borderLeftColor = 'var(--border-subtle)'; } }}
+                onMouseEnter={(e) => { if (!q && !isOpen) { e.currentTarget.style.background = 'var(--bg-base)'; e.currentTarget.style.borderLeftColor = cat.accent + '88'; } }}
+                onMouseLeave={(e) => { if (!q && !isOpen) { e.currentTarget.style.background = 'var(--bg-surface)'; e.currentTarget.style.borderLeftColor = 'transparent'; } }}
               >
                 <span style={{
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  letterSpacing: '0.14em',
+                  fontSize: '10.5px',
+                  fontWeight: 650,
+                  letterSpacing: '0.12em',
                   textTransform: 'uppercase',
                   fontFamily: 'var(--ff-sans)',
                   color: isOpen ? 'var(--text-heading)' : 'var(--text-tertiary)',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
-                  transition: 'color 160ms ease',
+                  transition: 'color 140ms ease',
                 }}>
                   {cat.label}
                 </span>
                 {!q && (
                   <span style={{
-                    fontSize: '13px',
+                    fontSize: '11px',
                     color: isOpen ? cat.accent : 'var(--text-ghost)',
                     fontFamily: 'var(--ff-sans)',
                     lineHeight: 1,
-                    transition: 'color 160ms ease, transform 200ms ease',
+                    transition: 'color 140ms ease, transform 160ms ease',
                     transform: isOpen ? 'rotate(0deg)' : 'rotate(-90deg)',
                     display: 'inline-block',
                   }}>
@@ -206,14 +200,14 @@ const SentimentSidebar = memo(function SentimentSidebar({
                       const divItem = item as DividerEntry;
                       return (
                         <div key={`div-${divItem.dividerLabel}`} style={{
-                          padding: '16px 18px 8px 21px',
+                          padding: '10px 12px 4px 14px',
                           borderTop: idx === 0 ? 'none' : '1px solid var(--border-subtle)',
                         }}>
                           <span style={{
-                            fontSize: '10px',
-                            letterSpacing: '0.18em',
+                            fontSize: '9px',
+                            letterSpacing: '0.16em',
                             textTransform: 'uppercase',
-                            fontWeight: 700,
+                            fontWeight: 600,
                             color: 'var(--text-ghost)',
                             fontFamily: 'var(--ff-sans)',
                           }}>
@@ -235,34 +229,32 @@ const SentimentSidebar = memo(function SentimentSidebar({
                         role="button"
                         onClick={() => { setSelectedIndicator(indItem.id); window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior }); }}
                         style={{
-                          minHeight: '46px',
+                          minHeight: '32px',
                           display: 'flex',
                           alignItems: 'center',
-                          gap: '11px',
-                          padding: '0 18px 0 21px',
+                          gap: '6px',
+                          padding: '0 10px 0 12px',
                           cursor: 'pointer',
                           background: isSelected ? 'var(--bg-raised)' : 'transparent',
-                          borderLeft: isSelected ? `3px solid ${cat.accent}` : '3px solid transparent',
+                          borderLeft: isSelected ? `2px solid ${cat.accent}` : '2px solid transparent',
                           userSelect: 'none',
                           outline: 'none',
-                          transition: 'background 140ms ease',
+                          transition: 'background 120ms ease',
                         }}
                         onMouseEnter={(e) => { if (!isSelected) e.currentTarget.style.background = 'var(--bg-surface)'; }}
                         onMouseLeave={(e) => { if (!isSelected) e.currentTarget.style.background = 'transparent'; }}
                       >
-                        {/* Freq indicator spacer */}
-                        <div style={{ width: '6px', height: '6px', flexShrink: 0 }} />
                         <span style={{
                           flex: 1,
-                          fontSize: '14px',
+                          fontSize: '11.5px',
                           fontWeight: isSelected ? 600 : 400,
-                          lineHeight: '1.5',
+                          lineHeight: '1.4',
                           color: isSelected ? 'var(--text-heading)' : 'var(--text-secondary)',
                           fontFamily: 'var(--ff-sans)',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
                           whiteSpace: 'nowrap',
-                          transition: 'color 140ms ease',
+                          transition: 'color 120ms ease',
                         }}>
                           {hi ? (
                             <>
@@ -275,9 +267,9 @@ const SentimentSidebar = memo(function SentimentSidebar({
                         {/* Frequency badge */}
                         {indItem.freq && (
                           <span style={{
-                            fontSize: '10px',
+                            fontSize: '9px',
                             fontFamily: 'var(--ff-mono)',
-                            fontWeight: 600,
+                            fontWeight: 500,
                             color: 'var(--text-ghost)',
                             letterSpacing: '0.04em',
                             flexShrink: 0,

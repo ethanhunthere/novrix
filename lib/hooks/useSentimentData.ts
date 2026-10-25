@@ -4,7 +4,7 @@ import { fetchCached } from '@/lib/bootCache';
 import { fetchWithSSCache } from '@/lib/fetchWithSSCache';
 import { withSentimentDataVersion } from '@/lib/sentimentDataVersion';
 import type { IndicatorPoint, IndicatorApiResponse, BulkIndicatorsResponse, DominancePoint, SocialCoin, ChartDataPoint, TrendingCoin } from '@/lib/types/sentiment';
-import { downsample } from '@/components/sentiment/SentimentPanelUtils';
+import { downsample, fastFormatDate, SHORT_MONTHS } from '@/components/sentiment/SentimentPanelUtils';
 
 const BGEOMETRICS_MAX_LAG_DAYS = 1;
 
@@ -1085,8 +1085,18 @@ export function useSentimentData() {
         if (missing.length > 0) await Promise.all(missing);
         else addLog('All indicators loaded from data batch', 'SUCCESS');
 
-        // Enhance freshness: sync with live series to ensure indicators reach 24 October 2026
-        await syncLiveBGeometricsData();
+        // Defer live background sync so the user sees indicators immediately on landing with zero interaction delay
+        if (typeof window !== 'undefined') {
+          if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(() => {
+              void syncLiveBGeometricsData();
+            }, { timeout: 3000 });
+          } else {
+            setTimeout(() => {
+              void syncLiveBGeometricsData();
+            }, 1000);
+          }
+        }
       } catch (error) {
         // Total bulk failure — fire individual data endpoints in parallel
         addLog('Bulk fetch failed — loading individual data endpoints', 'ERROR');
@@ -1104,7 +1114,11 @@ export function useSentimentData() {
           fallback('/api/hashrate',        setHashrateData,       setIsHashrateLoading,       'Hashrate'),
           fallback('/api/btc-price',       setBtcPriceData,       setIsBtcPriceLoading,       'BTC Price'),
         ]);
-        await syncLiveBGeometricsData();
+        if (typeof window !== 'undefined') {
+          setTimeout(() => {
+            void syncLiveBGeometricsData();
+          }, 1500);
+        }
       }
     };
 
@@ -1157,7 +1171,8 @@ export function useSentimentData() {
       if (hashribbons.length > 0)    setHashribbonsData(ensureFreshToToday(hashribbons, 'sma_30'));
       setIsHashribbonsLoading(false);
     };
-    fetchKey2Indicators();
+    const timer = setTimeout(fetchKey2Indicators, 60);
+    return () => clearTimeout(timer);
   }, []);
 
   // Fetch all KEY 3 indicators in parallel — batch state after Promise.all → 1 render
@@ -1196,7 +1211,8 @@ export function useSentimentData() {
       if (cvdd.length > 0)        setCvddData(ensureFreshToToday(cvdd, 'value'));
       setIsCvddLoading(false);
     };
-    fetchKey3Indicators();
+    const timer = setTimeout(fetchKey3Indicators, 120);
+    return () => clearTimeout(timer);
   }, []);
 
   // Fetch all KEY 4 indicators in parallel — batch state after Promise.all → 1 render
@@ -1258,7 +1274,8 @@ export function useSentimentData() {
       if (utxoLoss.length > 0)          setUtxoLossData(ensureFreshToToday(utxoLoss, 'value'));
       setIsUtxoLossLoading(false);
     };
-    fetchKey4Indicators();
+    const timer = setTimeout(fetchKey4Indicators, 180);
+    return () => clearTimeout(timer);
   }, []);
 
   // Fetch all KEY 5 macro indicators in parallel — 50 fetches, batch state after Promise.all → 1 render
@@ -1364,7 +1381,8 @@ export function useSentimentData() {
       setIsBogmbaseLoading(false);
       if (totalsl.length > 0)          setTotalslData(ensureFreshToToday(totalsl, 'value'));    setIsTotalslLoading(false);
     };
-    fetchMacroIndicators();
+    const timer = setTimeout(fetchMacroIndicators, 240);
+    return () => clearTimeout(timer);
   }, []);
   useEffect(() => {
 
@@ -1416,7 +1434,8 @@ export function useSentimentData() {
       }
     };
 
-    fetchDominanceData();
+    const timer = setTimeout(fetchDominanceData, 90);
+    return () => clearTimeout(timer);
   }, []);
 
   // Fetch Social Sentiment data from CoinGecko
@@ -1483,7 +1502,8 @@ export function useSentimentData() {
         setIsSocialLoading(false);
       }
     };
-    fetchSocialData();
+    const timer = setTimeout(fetchSocialData, 450);
+    return () => clearTimeout(timer);
   }, []);
 
 
@@ -1515,7 +1535,7 @@ export function useSentimentData() {
         index,
         score: item.score,
         timestamp: item.timestamp ?? item.time,
-        date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        date: fastFormatDate(item.timestamp ?? item.time),
         dateObj: date
       };
     });
@@ -1584,12 +1604,12 @@ export function useSentimentData() {
       return date.getFullYear().toString();
     } else if (selectedTimeframe === '1460' || selectedTimeframe === '365' || selectedTimeframe === '180') {
       // 4Y / 1Y / 6M: MMM YY (e.g. "Mar 25")
-      const mo = date.toLocaleDateString('en-US', { month: 'short' });
+      const mo = SHORT_MONTHS[date.getMonth()] || '';
       const yr = String(date.getFullYear()).slice(2);
       return `${mo} ${yr}`;
     } else {
       // 1W / 1M / 3M: DD MMM (e.g. "21 Mar")
-      return `${date.getDate()} ${date.toLocaleDateString('en-US', { month: 'short' })}`;
+      return `${date.getDate()} ${SHORT_MONTHS[date.getMonth()] || ''}`;
     }
   }, [chartData, selectedTimeframe]);
 
@@ -1615,7 +1635,7 @@ export function useSentimentData() {
         index: idx,
         btcDom: item.dominance,
         ethDom: ethDominanceData[idx] ? ethDominanceData[idx].dominance : null,
-        dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        dateFormatted: fastFormatDate(item.time),
         year: dateObj.getFullYear(),
         dateObj: dateObj
       };
@@ -1636,7 +1656,7 @@ export function useSentimentData() {
       return {
         index: idx,
         nupl: item.net_unrealized_profit_loss,
-        dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        dateFormatted: fastFormatDate(item.time),
         dateObj,
       };
     });
@@ -1665,7 +1685,7 @@ export function useSentimentData() {
       return {
         index: idx,
         mvrv: item.mvrv,
-        dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        dateFormatted: fastFormatDate(item.time),
         dateObj,
       };
     });
@@ -1682,7 +1702,7 @@ export function useSentimentData() {
                  : raw;
     return sliced.map((item, idx) => {
       const dateObj = parseDate(item.time);
-      return { index: idx, lth_mvrv: item.lth_mvrv, dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }), dateObj };
+      return { index: idx, lth_mvrv: item.lth_mvrv, dateFormatted: fastFormatDate(item.time), dateObj };
     });
   }, [lthMvrvData, lthMvrvTimeframe]);
 
@@ -1697,7 +1717,7 @@ export function useSentimentData() {
                  : raw;
     return sliced.map((item, idx) => {
       const dateObj = parseDate(item.time);
-      return { index: idx, ssr: item.ssr, dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }), dateObj };
+      return { index: idx, ssr: item.ssr, dateFormatted: fastFormatDate(item.time), dateObj };
     });
   }, [ssrData, ssrTimeframe]);
 
@@ -1715,7 +1735,7 @@ export function useSentimentData() {
       return {
         index: idx,
         sopr: item.sopr,
-        dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        dateFormatted: fastFormatDate(item.time),
         dateObj,
       };
     });
@@ -1735,7 +1755,7 @@ export function useSentimentData() {
       return {
         index: idx,
         value: item.supply_in_loss,
-        dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        dateFormatted: fastFormatDate(item.time),
         dateObj,
       };
     });
@@ -1755,7 +1775,7 @@ export function useSentimentData() {
       return {
         index: idx,
         value: item.supply_in_profit,
-        dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        dateFormatted: fastFormatDate(item.time),
         dateObj,
       };
     });
@@ -1780,7 +1800,7 @@ export function useSentimentData() {
         index: idx,
         value: item.realized_profit,
         btcPrice: priceLookup[dateKey] || null,
-        dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        dateFormatted: fastFormatDate(item.time),
         dateObj,
       };
     });
@@ -1804,7 +1824,7 @@ export function useSentimentData() {
         index: idx,
         value: item.realized_loss,
         btcPrice: priceLookup[dateKey] || null,
-        dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        dateFormatted: fastFormatDate(item.time),
         dateObj,
       };
     });
@@ -1828,7 +1848,7 @@ export function useSentimentData() {
         index: idx,
         value: item.sth_mvrv,
         btcPrice: priceLookup[dateKey] || null,
-        dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        dateFormatted: fastFormatDate(item.time),
         dateObj,
       };
     });
@@ -1852,7 +1872,7 @@ export function useSentimentData() {
         index: idx,
         value: item.hashrate,
         btcPrice: priceLookup[dateKey] || null,
-        dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        dateFormatted: fastFormatDate(item.time),
         dateObj,
       };
     });
@@ -1869,7 +1889,7 @@ export function useSentimentData() {
                    : raw;
       return sliced.map((item, idx) => {
         const dateObj = parseDate(item.time);
-        return { index: idx, value: (item as unknown as Record<string, unknown>)[field] as number | undefined, dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }), dateObj };
+        return { index: idx, value: (item as unknown as Record<string, unknown>)[field] as number | undefined, dateFormatted: fastFormatDate(item.time), dateObj };
       });
     }, [data, tf]);
 
@@ -1880,7 +1900,7 @@ export function useSentimentData() {
     const days = parseInt(puellMultipleTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (puellMultipleTimeframe === '3000' || puellMultipleTimeframe === '999999') ? downsample(raw, 500) : (puellMultipleTimeframe === '1460') ? downsample(raw, 400) : raw;
-    return sliced.map((item, idx) => { const dateObj = parseDate(item.time); return { index: idx, value: item.value, dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }), dateObj }; });
+    return sliced.map((item, idx) => { const dateObj = parseDate(item.time); return { index: idx, value: item.value, dateFormatted: fastFormatDate(item.time), dateObj }; });
   }, [puellMultipleData, puellMultipleTimeframe]);
 
   const mayerMultipleChartData = useMemo(() => {
@@ -1889,7 +1909,7 @@ export function useSentimentData() {
     const days = parseInt(mayerMultipleTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (mayerMultipleTimeframe === '3000' || mayerMultipleTimeframe === '999999') ? downsample(raw, 500) : (mayerMultipleTimeframe === '1460') ? downsample(raw, 400) : raw;
-    return sliced.map((item, idx) => { const dateObj = parseDate(item.time); return { index: idx, value: item.value, dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }), dateObj }; });
+    return sliced.map((item, idx) => { const dateObj = parseDate(item.time); return { index: idx, value: item.value, dateFormatted: fastFormatDate(item.time), dateObj }; });
   }, [mayerMultipleData, mayerMultipleTimeframe]);
 
   const reserveRiskChartData = useMemo(() => {
@@ -1898,7 +1918,7 @@ export function useSentimentData() {
     const days = parseInt(reserveRiskTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (reserveRiskTimeframe === '3000' || reserveRiskTimeframe === '999999') ? downsample(raw, 500) : (reserveRiskTimeframe === '1460') ? downsample(raw, 400) : raw;
-    return sliced.map((item, idx) => { const dateObj = parseDate(item.time); return { index: idx, value: item.value, dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }), dateObj }; });
+    return sliced.map((item, idx) => { const dateObj = parseDate(item.time); return { index: idx, value: item.value, dateFormatted: fastFormatDate(item.time), dateObj }; });
   }, [reserveRiskData, reserveRiskTimeframe]);
 
   const avivChartData = useMemo(() => {
@@ -1907,7 +1927,7 @@ export function useSentimentData() {
     const days = parseInt(avivTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (avivTimeframe === '3000' || avivTimeframe === '999999') ? downsample(raw, 500) : (avivTimeframe === '1460') ? downsample(raw, 400) : raw;
-    return sliced.map((item, idx) => { const dateObj = parseDate(item.time); return { index: idx, value: item.value, dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }), dateObj }; });
+    return sliced.map((item, idx) => { const dateObj = parseDate(item.time); return { index: idx, value: item.value, dateFormatted: fastFormatDate(item.time), dateObj }; });
   }, [avivData, avivTimeframe]);
 
   const mvrvZscoreChartData = useMemo(() => {
@@ -1916,7 +1936,7 @@ export function useSentimentData() {
     const days = parseInt(mvrvZscoreTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (mvrvZscoreTimeframe === '3000' || mvrvZscoreTimeframe === '999999') ? downsample(raw, 500) : (mvrvZscoreTimeframe === '1460') ? downsample(raw, 400) : raw;
-    return sliced.map((item, idx) => { const dateObj = parseDate(item.time); return { index: idx, value: item.value, dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }), dateObj }; });
+    return sliced.map((item, idx) => { const dateObj = parseDate(item.time); return { index: idx, value: item.value, dateFormatted: fastFormatDate(item.time), dateObj }; });
   }, [mvrvZscoreData, mvrvZscoreTimeframe]);
 
   const vddChartData = useMemo(() => {
@@ -1925,7 +1945,7 @@ export function useSentimentData() {
     const days = parseInt(vddTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (vddTimeframe === '3000' || vddTimeframe === '999999') ? downsample(raw, 500) : (vddTimeframe === '1460') ? downsample(raw, 400) : raw;
-    return sliced.map((item, idx) => { const dateObj = parseDate(item.time); return { index: idx, value: item.value, dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }), dateObj }; });
+    return sliced.map((item, idx) => { const dateObj = parseDate(item.time); return { index: idx, value: item.value, dateFormatted: fastFormatDate(item.time), dateObj }; });
   }, [vddData, vddTimeframe]);
 
   const supplyShockChartData = useMemo(() => {
@@ -1934,7 +1954,7 @@ export function useSentimentData() {
     const days = parseInt(supplyShockTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (supplyShockTimeframe === '3000' || supplyShockTimeframe === '999999') ? downsample(raw, 500) : (supplyShockTimeframe === '1460') ? downsample(raw, 400) : raw;
-    return sliced.map((item, idx) => { const dateObj = parseDate(item.time); return { index: idx, value: item.value, dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }), dateObj }; });
+    return sliced.map((item, idx) => { const dateObj = parseDate(item.time); return { index: idx, value: item.value, dateFormatted: fastFormatDate(item.time), dateObj }; });
   }, [supplyShockData, supplyShockTimeframe]);
 
   const activeAddressesChartData = useMemo(() => {
@@ -1943,7 +1963,7 @@ export function useSentimentData() {
     const days = parseInt(activeAddressesTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (activeAddressesTimeframe === '3000' || activeAddressesTimeframe === '999999') ? downsample(raw, 500) : (activeAddressesTimeframe === '1460') ? downsample(raw, 400) : raw;
-    return sliced.map((item, idx) => { const dateObj = parseDate(item.time); return { index: idx, value: item.value, dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }), dateObj }; });
+    return sliced.map((item, idx) => { const dateObj = parseDate(item.time); return { index: idx, value: item.value, dateFormatted: fastFormatDate(item.time), dateObj }; });
   }, [activeAddressesData, activeAddressesTimeframe]);
 
   // Multi-field KEY 2 indicators
@@ -1953,7 +1973,7 @@ export function useSentimentData() {
     const days = parseInt(illiquidSupplyTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (illiquidSupplyTimeframe === '3000' || illiquidSupplyTimeframe === '999999') ? downsample(raw, 500) : (illiquidSupplyTimeframe === '1460') ? downsample(raw, 400) : raw;
-    return sliced.map((item, idx) => { const dateObj = parseDate(item.time); return { index: idx, illiquidSupply: item.illiquid_supply, liquidSupply: item.liquid_supply, dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }), dateObj }; });
+    return sliced.map((item, idx) => { const dateObj = parseDate(item.time); return { index: idx, illiquidSupply: item.illiquid_supply, liquidSupply: item.liquid_supply, dateFormatted: fastFormatDate(item.time), dateObj }; });
   }, [illiquidSupplyData, illiquidSupplyTimeframe]);
 
   const hotSupplyChartData = useMemo(() => {
@@ -1962,7 +1982,7 @@ export function useSentimentData() {
     const days = parseInt(hotSupplyTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (hotSupplyTimeframe === '3000' || hotSupplyTimeframe === '999999') ? downsample(raw, 500) : (hotSupplyTimeframe === '1460') ? downsample(raw, 400) : raw;
-    return sliced.map((item, idx) => { const dateObj = parseDate(item.time); return { index: idx, hotSupply: item.hot_supply, hotSupplyUsd: item.hot_supply_usd, dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }), dateObj }; });
+    return sliced.map((item, idx) => { const dateObj = parseDate(item.time); return { index: idx, hotSupply: item.hot_supply, hotSupplyUsd: item.hot_supply_usd, dateFormatted: fastFormatDate(item.time), dateObj }; });
   }, [hotSupplyData, hotSupplyTimeframe]);
 
   const hashribbonsChartData = useMemo(() => {
@@ -1971,7 +1991,7 @@ export function useSentimentData() {
     const days = parseInt(hashribbonsTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (hashribbonsTimeframe === '3000' || hashribbonsTimeframe === '999999') ? downsample(raw, 500) : (hashribbonsTimeframe === '1460') ? downsample(raw, 400) : raw;
-    return sliced.map((item, idx) => { const dateObj = parseDate(item.time); return { index: idx, sma30: item.sma_30, sma60: item.sma_60, signal: item.signal, dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }), dateObj }; });
+    return sliced.map((item, idx) => { const dateObj = parseDate(item.time); return { index: idx, sma30: item.sma_30, sma60: item.sma_60, signal: item.signal, dateFormatted: fastFormatDate(item.time), dateObj }; });
   }, [hashribbonsData, hashribbonsTimeframe]);
 
   // Pre-build BTC price lookup once — avoids rebuilding inside every WithPrice useMemo (204K → 4K iterations)
@@ -2029,7 +2049,7 @@ export function useSentimentData() {
       .map((d, i) => ({
         index: i,
         value: d.value,
-        dateFormatted: new Date(d.time).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        dateFormatted: fastFormatDate(d.time),
         dateObj: new Date(d.time),
       }));
   }, [nrplData, nrplTimeframe]);
@@ -2045,7 +2065,7 @@ export function useSentimentData() {
       .map((d, i) => ({
         index: i,
         value: d.value,
-        dateFormatted: new Date(d.time).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        dateFormatted: fastFormatDate(d.time),
         dateObj: new Date(d.time),
       }));
   }, [rhodlData, rhodlTimeframe]);
@@ -2061,7 +2081,7 @@ export function useSentimentData() {
       .map((d, i) => ({
         index: i,
         value: d.value,
-        dateFormatted: new Date(d.time).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        dateFormatted: fastFormatDate(d.time),
         dateObj: new Date(d.time),
       }));
   }, [openInterestData, openInterestTimeframe]);
@@ -2077,7 +2097,7 @@ export function useSentimentData() {
       .map((d, i) => ({
         index: i,
         value: d.value,
-        dateFormatted: new Date(d.time).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        dateFormatted: fastFormatDate(d.time),
         dateObj: new Date(d.time),
       }));
   }, [fundingRateData, fundingRateTimeframe]);
@@ -2094,7 +2114,7 @@ export function useSentimentData() {
     const days = parseInt(nvtsTimeframe, 10);
     const sliced = isNaN(days) ? sorted : sorted.slice(-days);
     const step = Math.max(1, Math.floor(sliced.length / 1800));
-    return sliced.filter((_, i) => i % step === 0 || i === sliced.length - 1).map((d, i) => ({ index: i, value: d.value, dateFormatted: new Date(d.time).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }), dateObj: new Date(d.time) }));
+    return sliced.filter((_, i) => i % step === 0 || i === sliced.length - 1).map((d, i) => ({ index: i, value: d.value, dateFormatted: fastFormatDate(d.time), dateObj: new Date(d.time) }));
   }, [nvtsData, nvtsTimeframe]);
   const nvtZscoreChartData = useMemo(() => {
     if (nvtZscoreData.length === 0) return [];
@@ -2102,7 +2122,7 @@ export function useSentimentData() {
     const days = parseInt(nvtZscoreTimeframe, 10);
     const sliced = isNaN(days) ? sorted : sorted.slice(-days);
     const step = Math.max(1, Math.floor(sliced.length / 1800));
-    return sliced.filter((_, i) => i % step === 0 || i === sliced.length - 1).map((d, i) => ({ index: i, value: d.value, dateFormatted: new Date(d.time).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }), dateObj: new Date(d.time) }));
+    return sliced.filter((_, i) => i % step === 0 || i === sliced.length - 1).map((d, i) => ({ index: i, value: d.value, dateFormatted: fastFormatDate(d.time), dateObj: new Date(d.time) }));
   }, [nvtZscoreData, nvtZscoreTimeframe]);
   const cvddChartData = useMemo(() => {
     if (cvddData.length === 0) return [];
@@ -2110,7 +2130,7 @@ export function useSentimentData() {
     const days = parseInt(cvddTimeframe, 10);
     const sliced = isNaN(days) ? sorted : sorted.slice(-days);
     const step = Math.max(1, Math.floor(sliced.length / 1800));
-    return sliced.filter((_, i) => i % step === 0 || i === sliced.length - 1).map((d, i) => ({ index: i, value: d.value, dateFormatted: new Date(d.time).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }), dateObj: new Date(d.time) }));
+    return sliced.filter((_, i) => i % step === 0 || i === sliced.length - 1).map((d, i) => ({ index: i, value: d.value, dateFormatted: fastFormatDate(d.time), dateObj: new Date(d.time) }));
   }, [cvddData, cvddTimeframe]);
   const nvtsChartDataWithPrice = useMemo(() => addBtcPriceToChartData(nvtsChartData), [nvtsChartData, addBtcPriceToChartData]);
   const nvtZscoreChartDataWithPrice = useMemo(() => addBtcPriceToChartData(nvtZscoreChartData), [nvtZscoreChartData, addBtcPriceToChartData]);
@@ -2137,7 +2157,7 @@ export function useSentimentData() {
         return {
           index: i,
           value: Number((d as unknown as Record<string, unknown>)[valueField] ?? d.value ?? 0),
-          dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          dateFormatted: fastFormatDate(d.time),
           dateObj,
           rawDate: d.time,
         };
@@ -2187,7 +2207,7 @@ export function useSentimentData() {
         return {
           index: i,
           value: d.value,
-          dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          dateFormatted: fastFormatDate(d.time),
           dateObj,
           rawDate: d.time,
         };
@@ -2218,7 +2238,7 @@ export function useSentimentData() {
         return {
           index: i,
           value: d.value,
-          dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          dateFormatted: fastFormatDate(d.time),
           dateObj,
           rawDate: d.time,
         };
@@ -2267,7 +2287,7 @@ export function useSentimentData() {
         return {
           index: i,
           value: d.value,
-          dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          dateFormatted: fastFormatDate(d.time),
           dateObj,
           rawDate: d.time,
         };

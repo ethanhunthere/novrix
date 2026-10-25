@@ -2,32 +2,32 @@ import { EditorialPage, DocSection, Prose, P, DataRow, InlineCode } from '@/comp
 import { defaultOgImages, defaultTwitterImages } from '@/lib/og-config';
 
 export const metadata = {
-  title: 'NOVRIX - Documentation & System Reference',
-  description: 'Complete documentation for the NOVRIX on-chain intelligence workspace, quantitative methodology, platform architecture, data policy, and operations.',
+  title: 'NOVRIX · Documentation & System Reference',
+  description: 'Complete documentation for the NOVRIX on-chain intelligence workspace, analytical methodology, platform architecture, data policy, and operations.',
   keywords: ['NOVRIX documentation', 'crypto analytics guide', 'how to use NOVRIX', 'sentiment methodology', 'on-chain indicators'],
   alternates: {
     canonical: 'https://novrix.io/documentation',
   },
   openGraph: {
-    title: 'NOVRIX - Documentation & System Reference',
-    description: 'Complete documentation for the NOVRIX on-chain intelligence workspace, quantitative methodology, platform architecture, data policy, and operations.',
+    title: 'NOVRIX · Documentation & System Reference',
+    description: 'Complete documentation for the NOVRIX on-chain intelligence workspace, analytical methodology, platform architecture, data policy, and operations.',
     url: 'https://novrix.io/documentation',
     images: defaultOgImages,
   },
   twitter: {
-    title: 'NOVRIX - Documentation & System Reference',
-    description: 'Complete documentation for the NOVRIX on-chain intelligence workspace, quantitative methodology, platform architecture, data policy, and operations.',
+    title: 'NOVRIX · Documentation & System Reference',
+    description: 'Complete documentation for the NOVRIX on-chain intelligence workspace, analytical methodology, platform architecture, data policy, and operations.',
     images: defaultTwitterImages,
   },
 };
 
 const CONTROLS = [
-  ['Timeframe', 'Every panel switches between 1W, 1M, 6M, 1Y, 4Y, and ALL. The default is 1Y.'],
+  ['Timeframe', 'Every panel switches between 1Y and ALL views. The default is 1Y.'],
   ['Price overlay', 'The PRICE toggle adds BTC price on a secondary log-scale axis so the indicator and price share one frame.'],
   ['Maximize', 'The expand control fills most of the viewport with one panel. Escape, or a click outside, returns to the grid.'],
   ['Export', 'The camera control captures that panel as a clean PNG screenshot for research.'],
-  ['Halving markers', 'On 4Y and ALL views, Bitcoin halvings appear as vertical dashed reference lines.'],
-  ['Zone bands', 'Shaded bands mark historical ranges. Green marks lower/bullish distribution; red marks upper/bearish distribution.'],
+  ['Halving markers', 'On ALL views, Bitcoin halvings appear as vertical dashed reference lines.'],
+  ['Zone bands', 'Shaded bands mark historical ranges. Green marks lower accumulation distribution; red marks upper elevated distribution.'],
   ['Registry', 'The sidebar lists every indicator with its current zone reading. Selecting a row focuses that panel.'],
 ];
 
@@ -103,7 +103,7 @@ export default function DocumentationPage() {
 
       <DocSection id="workspace" title="Sentiment workspace & controls">
         <Prose>
-          <P>The Sentiment page organizes quantitative metrics into panels. Each panel features a high-density interactive chart, latest numerical reading, and historical distribution zone.</P>
+          <P>The Sentiment page organizes market metrics into panels. Each panel features a high-density interactive chart, latest numerical reading, and historical distribution zone.</P>
         </Prose>
         <div style={{ marginTop: '18px' }}>
           {CONTROLS.map(([label, body]) => (
@@ -116,7 +116,7 @@ export default function DocumentationPage() {
         </Prose>
       </DocSection>
 
-      <DocSection id="methodology" title="Quantitative methodology">
+      <DocSection id="methodology" title="Analytical methodology">
         <Prose>
           <P>All data is queried server-side and cached at the edge. Your browser connects only to our edge proxy, never directly contacting upstream data providers.</P>
         </Prose>
