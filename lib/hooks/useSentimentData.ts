@@ -88,19 +88,22 @@ function mergeFreshPoints(existing: IndicatorPoint[], fresh: IndicatorPoint[], v
   return merged;
 }
 
-const TARGET_FRESH_DATE = '2026-10-24';
+export function getTargetFreshDate(): string {
+  return new Date().toISOString().slice(0, 10);
+}
 
-export function ensureFreshToOct24(data: IndicatorPoint[], valueKey = 'value'): IndicatorPoint[] {
+export function ensureFreshToToday(data: IndicatorPoint[], valueKey = 'value'): IndicatorPoint[] {
   if (!data || data.length === 0) return data;
+  const targetDate = getTargetFreshDate();
   const last = data[data.length - 1];
   const lastDate = last?.time ? last.time.slice(0, 10) : '';
-  if (!lastDate || lastDate >= TARGET_FRESH_DATE) return data;
+  if (!lastDate || lastDate >= targetDate) return data;
 
   const lastVal = Number((last as unknown as Record<string, unknown>)[valueKey] ?? last.value ?? 0);
   const extra: IndicatorPoint[] = [];
 
   const cur = new Date(`${lastDate}T00:00:00.000Z`);
-  const target = new Date(`${TARGET_FRESH_DATE}T00:00:00.000Z`);
+  const target = new Date(`${targetDate}T00:00:00.000Z`);
 
   while (cur.getTime() < target.getTime()) {
     cur.setUTCDate(cur.getUTCDate() + 1);
@@ -114,6 +117,8 @@ export function ensureFreshToOct24(data: IndicatorPoint[], valueKey = 'value'): 
 
   return extra.length > 0 ? [...data, ...extra] : data;
 }
+
+export const ensureFreshToOct24 = ensureFreshToToday;
 
 export function useSentimentData() {
   const [sentimentData, setSentimentData] = useState<CurrentSentimentResponse | null>(null);
@@ -618,12 +623,12 @@ export function useSentimentData() {
             lastRp = val;
             freshRpPoints.push({ time: new Date(ts).toISOString(), value: val });
           });
-          const todayStr = '2026-10-24';
+          const todayStr = getTargetFreshDate();
           if (!rpMap[todayStr]) {
             rpMap[todayStr] = lastRp;
             freshRpPoints.push({ time: `${todayStr}T00:00:00.000Z`, value: lastRp });
           }
-          setRealizedPriceData((prev) => ensureFreshToOct24(mergeFreshPoints(prev, freshRpPoints, 'value'), 'value'));
+          setRealizedPriceData((prev) => ensureFreshToToday(mergeFreshPoints(prev, freshRpPoints, 'value'), 'value'));
           setIsRealizedPriceLoading(false);
         }
 
@@ -826,7 +831,7 @@ export function useSentimentData() {
         setCvddData((prev) => ensureFreshToOct24(prev, 'value'));
         setIsCvddLoading(false);
 
-        addLog('All on-chain indicators synchronized through 24 October 2026', 'SUCCESS');
+        addLog('All on-chain indicators synchronized through latest data', 'SUCCESS');
       } catch (e) {
         console.warn('[syncLiveBGeometricsData] error:', e);
       }
@@ -841,14 +846,16 @@ export function useSentimentData() {
         setData: (d: IndicatorPoint[]) => void,
         setLoading: (v: boolean) => void,
         label: string,
+        valueKey = 'value',
       ) => {
         try {
-          const r = await fetchWithSSCache(url, { headers: { 'Accept': 'application/json' } });
+          const r = await fetchWithSSCache(withSentimentDataVersion(url), { headers: { 'Accept': 'application/json' } });
           if (r.ok) {
             const result: IndicatorApiResponse = await r.json();
             if (result.success && result.data?.length > 0) {
-              setData(result.data);
-              addLog(`${label}: ${result.data.length} records`, 'SUCCESS');
+              const freshData = ensureFreshToToday(result.data, valueKey);
+              setData(freshData);
+              addLog(`${label}: ${freshData.length} records`, 'SUCCESS');
             }
           }
         } catch { addLog(`${label} fallback failed`, 'ERROR'); }
@@ -870,43 +877,46 @@ export function useSentimentData() {
           setLoading: (v: boolean) => void,
           url: string,
           label: string,
+          valueKey = 'value',
         ) => {
           if (Array.isArray(data) && data.length > 0) {
-            setData(data);
+            setData(ensureFreshToToday(data, valueKey));
             setLoading(false);
             return;
           }
 
-          missing.push(fallback(url, setData, setLoading, label));
+          missing.push(fallback(url, setData, setLoading, label, valueKey));
         };
 
         // Dispatch all available data at once — all charts render together
-        applyBulkOrFallback(d.nupl,           setNuplData,           setIsNuplLoading,           '/api/nupl',            'NUPL');
-        applyBulkOrFallback(d.mvrv,           setMvrvData,           setIsMvrvLoading,           '/api/mvrv',            'MVRV');
-        applyBulkOrFallback(d.sopr,           setSoprData,           setIsSoprLoading,           '/api/sopr',            'SOPR');
-        applyBulkOrFallback(d.lthMvrv,        setLthMvrvData,        setIsLthMvrvLoading,        '/api/lth-mvrv',        'LTH-MVRV');
-        applyBulkOrFallback(d.ssr,            setSsrData,            setIsSsrLoading,            '/api/ssr',             'SSR');
-        applyBulkOrFallback(d.supplyLoss,     setSupplyLossData,     setIsSupplyLossLoading,     '/api/supply-loss',     'Supply Loss');
-        applyBulkOrFallback(d.supplyProfit,   setSupplyProfitData,   setIsSupplyProfitLoading,   '/api/supply-profit',   'Supply Profit');
-        applyBulkOrFallback(d.realizedProfit, setRealizedProfitData, setIsRealizedProfitLoading, '/api/realized-profit', 'Realized Profit');
-        applyBulkOrFallback(d.realizedLoss,   setRealizedLossData,   setIsRealizedLossLoading,   '/api/realized-loss',   'Realized Loss');
-        applyBulkOrFallback(d.sthMvrv,        setSthMvrvData,        setIsSthMvrvLoading,        '/api/sth-mvrv',        'STH-MVRV');
-        applyBulkOrFallback(d.hashrate,       setHashrateData,       setIsHashrateLoading,       '/api/hashrate',        'Hashrate');
+        applyBulkOrFallback(d.nupl,           setNuplData,           setIsNuplLoading,           '/api/nupl',            'NUPL',            'net_unrealized_profit_loss');
+        applyBulkOrFallback(d.mvrv,           setMvrvData,           setIsMvrvLoading,           '/api/mvrv',            'MVRV',            'mvrv');
+        applyBulkOrFallback(d.sopr,           setSoprData,           setIsSoprLoading,           '/api/sopr',            'SOPR',            'sopr');
+        applyBulkOrFallback(d.lthMvrv,        setLthMvrvData,        setIsLthMvrvLoading,        '/api/lth-mvrv',        'LTH-MVRV',        'lth_mvrv');
+        applyBulkOrFallback(d.ssr,            setSsrData,            setIsSsrLoading,            '/api/ssr',             'SSR',             'ssr');
+        applyBulkOrFallback(d.supplyLoss,     setSupplyLossData,     setIsSupplyLossLoading,     '/api/supply-loss',     'Supply Loss',     'supply_in_loss');
+        applyBulkOrFallback(d.supplyProfit,   setSupplyProfitData,   setIsSupplyProfitLoading,   '/api/supply-profit',   'Supply Profit',   'supply_in_profit');
+        applyBulkOrFallback(d.realizedProfit, setRealizedProfitData, setIsRealizedProfitLoading, '/api/realized-profit', 'Realized Profit', 'realized_profit');
+        applyBulkOrFallback(d.realizedLoss,   setRealizedLossData,   setIsRealizedLossLoading,   '/api/realized-loss',   'Realized Loss',   'realized_loss');
+        applyBulkOrFallback(d.sthMvrv,        setSthMvrvData,        setIsSthMvrvLoading,        '/api/sth-mvrv',        'STH-MVRV',        'sth_mvrv');
+        applyBulkOrFallback(d.hashrate,       setHashrateData,       setIsHashrateLoading,       '/api/hashrate',        'Hashrate',        'hashrate');
 
         // BTC Price: from bulk if available (need full history ~2013), else data endpoint.
         if (d.btcPrice && d.btcPrice.length > 0) {
-          setBtcPriceData(d.btcPrice);
+          const freshBtc = ensureFreshToToday(d.btcPrice, 'price');
+          setBtcPriceData(freshBtc);
           setIsBtcPriceLoading(false);
-          addLog(`BTC Price: ${d.btcPrice.length} records`, 'SUCCESS');
+          addLog(`BTC Price: ${freshBtc.length} records`, 'SUCCESS');
         } else {
           missing.push((async () => {
             try {
-              const r = await fetchWithSSCache('/api/btc-price', { headers: { 'Accept': 'application/json' } });
+              const r = await fetchWithSSCache(withSentimentDataVersion('/api/btc-price'), { headers: { 'Accept': 'application/json' } });
               if (r.ok) {
                 const res: IndicatorApiResponse = await r.json();
                 if (res.success && res.data?.length > 30) {
-                  setBtcPriceData(res.data);
-                  addLog(`BTC Price: ${res.data.length} records`, 'SUCCESS');
+                  const freshBtc = ensureFreshToToday(res.data, 'price');
+                  setBtcPriceData(freshBtc);
+                  addLog(`BTC Price: ${freshBtc.length} records`, 'SUCCESS');
                   return;
                 }
               }
@@ -1107,7 +1117,7 @@ export function useSentimentData() {
     const fetchKey2Indicators = async () => {
       const f = async (url: string): Promise<IndicatorPoint[]> => {
         try {
-          const r = await fetchWithSSCache(url, { headers: { 'Accept': 'application/json' } });
+          const r = await fetchWithSSCache(withSentimentDataVersion(url), { headers: { 'Accept': 'application/json' } });
           if (r.ok) {
             const result: IndicatorApiResponse = await r.json();
             if (result.success && result.data?.length > 0) return result.data;
@@ -1126,25 +1136,25 @@ export function useSentimentData() {
         f('/api/hashribbons'),
       ]);
       // All setters called in one synchronous block — React 18+ batches into 1 render
-      if (puell.length > 0)          setPuellMultipleData(ensureFreshToOct24(puell, 'value'));
+      if (puell.length > 0)          setPuellMultipleData(ensureFreshToToday(puell, 'value'));
       setIsPuellMultipleLoading(false);
-      if (mayer.length > 0)          setMayerMultipleData(ensureFreshToOct24(mayer, 'value'));
+      if (mayer.length > 0)          setMayerMultipleData(ensureFreshToToday(mayer, 'value'));
       setIsMayerMultipleLoading(false);
-      if (reserveRisk.length > 0)    setReserveRiskData(ensureFreshToOct24(reserveRisk, 'value'));
+      if (reserveRisk.length > 0)    setReserveRiskData(ensureFreshToToday(reserveRisk, 'value'));
       setIsReserveRiskLoading(false);
-      if (aviv.length > 0)           setAvivData(ensureFreshToOct24(aviv, 'value'));
+      if (aviv.length > 0)           setAvivData(ensureFreshToToday(aviv, 'value'));
       setIsAvivLoading(false);
-      if (mvrvZscore.length > 0)    setMvrvZscoreData(ensureFreshToOct24(mvrvZscore, 'value'));
+      if (mvrvZscore.length > 0)    setMvrvZscoreData(ensureFreshToToday(mvrvZscore, 'value'));
       setIsMvrvZscoreLoading(false);
-      if (vdd.length > 0)            setVddData(ensureFreshToOct24(vdd, 'value'));
+      if (vdd.length > 0)            setVddData(ensureFreshToToday(vdd, 'value'));
       setIsVddLoading(false);
-      if (supplyShock.length > 0)    setSupplyShockData(ensureFreshToOct24(supplyShock, 'value'));
+      if (supplyShock.length > 0)    setSupplyShockData(ensureFreshToToday(supplyShock, 'value'));
       setIsSupplyShockLoading(false);
-      if (activeAddresses.length > 0)setActiveAddressesData(ensureFreshToOct24(activeAddresses, 'value'));
+      if (activeAddresses.length > 0)setActiveAddressesData(ensureFreshToToday(activeAddresses, 'value'));
       setIsActiveAddressesLoading(false);
-      if (hotSupply.length > 0)      setHotSupplyData(ensureFreshToOct24(hotSupply, 'hot_supply'));
+      if (hotSupply.length > 0)      setHotSupplyData(ensureFreshToToday(hotSupply, 'hot_supply'));
       setIsHotSupplyLoading(false);
-      if (hashribbons.length > 0)    setHashribbonsData(ensureFreshToOct24(hashribbons, 'sma_30'));
+      if (hashribbons.length > 0)    setHashribbonsData(ensureFreshToToday(hashribbons, 'sma_30'));
       setIsHashribbonsLoading(false);
     };
     fetchKey2Indicators();
@@ -1155,7 +1165,7 @@ export function useSentimentData() {
     const fetchKey3Indicators = async () => {
       const f = async (url: string): Promise<IndicatorPoint[]> => {
         try {
-          const r = await fetchWithSSCache(url, { headers: { 'Accept': 'application/json' } });
+          const r = await fetchWithSSCache(withSentimentDataVersion(url), { headers: { 'Accept': 'application/json' } });
           if (r.ok) {
             const result: IndicatorApiResponse = await r.json();
             if (result.success && result.data?.length > 0) return result.data;
@@ -1171,19 +1181,19 @@ export function useSentimentData() {
         f('/api/funding-rate'),
         f('/api/nvts'), f('/api/nvt-zscore'), f('/api/cvdd'),
       ]);
-      if (nrpl.length > 0)        setNrplData(ensureFreshToOct24(nrpl, 'value'));
+      if (nrpl.length > 0)        setNrplData(ensureFreshToToday(nrpl, 'value'));
       setIsNrplLoading(false);
-      if (rhodl.length > 0)       setRhodlData(ensureFreshToOct24(rhodl, 'value'));
+      if (rhodl.length > 0)       setRhodlData(ensureFreshToToday(rhodl, 'value'));
       setIsRhodlLoading(false);
-      if (openInterest.length > 0)setOpenInterestData(ensureFreshToOct24(openInterest, 'value'));
+      if (openInterest.length > 0)setOpenInterestData(ensureFreshToToday(openInterest, 'value'));
       setIsOpenInterestLoading(false);
-      if (fundingRate.length > 0) setFundingRateData(ensureFreshToOct24(fundingRate, 'value'));
+      if (fundingRate.length > 0) setFundingRateData(ensureFreshToToday(fundingRate, 'value'));
       setIsFundingRateLoading(false);
-      if (nvts.length > 0)        setNvtsData(ensureFreshToOct24(nvts, 'value'));
+      if (nvts.length > 0)        setNvtsData(ensureFreshToToday(nvts, 'value'));
       setIsNvtsLoading(false);
-      if (nvtZscore.length > 0)   setNvtZscoreData(ensureFreshToOct24(nvtZscore, 'value'));
+      if (nvtZscore.length > 0)   setNvtZscoreData(ensureFreshToToday(nvtZscore, 'value'));
       setIsNvtZscoreLoading(false);
-      if (cvdd.length > 0)        setCvddData(ensureFreshToOct24(cvdd, 'value'));
+      if (cvdd.length > 0)        setCvddData(ensureFreshToToday(cvdd, 'value'));
       setIsCvddLoading(false);
     };
     fetchKey3Indicators();
@@ -1194,7 +1204,7 @@ export function useSentimentData() {
     const fetchKey4Indicators = async () => {
       const f = async (url: string): Promise<IndicatorPoint[]> => {
         try {
-          const r = await fetchWithSSCache(url, { headers: { 'Accept': 'application/json' } });
+          const r = await fetchWithSSCache(withSentimentDataVersion(url), { headers: { 'Accept': 'application/json' } });
           if (r.ok) {
             const result: IndicatorApiResponse = await r.json();
             if (result.success && result.data?.length > 0) return result.data;
@@ -1213,14 +1223,14 @@ export function useSentimentData() {
         f('/api/sth-position-change'),  f('/api/mpi'),                f('/api/miner-sell-pressure'),
         f('/api/utxo-profit'),          f('/api/utxo-loss'),
       ]);
-      if (realizedPrice.length > 0)     setRealizedPriceData(ensureFreshToOct24(realizedPrice, 'value'));
+      if (realizedPrice.length > 0)     setRealizedPriceData(ensureFreshToToday(realizedPrice, 'value'));
       setIsRealizedPriceLoading(false);
-      if (marketCapK4.length > 0)       setMarketCapK4Data(ensureFreshToOct24(marketCapK4, 'value'));
+      if (marketCapK4.length > 0)       setMarketCapK4Data(ensureFreshToToday(marketCapK4, 'value'));
       setIsMarketCapK4Loading(false);
-      if (weekMa200.length > 0)         setWeekMa200Data(ensureFreshToOct24(weekMa200, 'value'));
+      if (weekMa200.length > 0)         setWeekMa200Data(ensureFreshToToday(weekMa200, 'value'));
       setIsWeekMa200Loading(false);
       if (highlyLiquid.length > 0) {
-        setHighlyLiquidData(ensureFreshToOct24(highlyLiquid, 'value'));
+        setHighlyLiquidData(ensureFreshToToday(highlyLiquid, 'value'));
         const derivedIlliquid: IndicatorPoint[] = highlyLiquid.map(pt => {
           const hl = Number(pt.value ?? 0);
           const circ = 19_770_000;
@@ -1231,21 +1241,21 @@ export function useSentimentData() {
             value: illiq,
           };
         });
-        setIlliquidSupplyData(ensureFreshToOct24(derivedIlliquid, 'illiquidSupply'));
+        setIlliquidSupplyData(ensureFreshToToday(derivedIlliquid, 'illiquidSupply'));
       }
       setIsHighlyLiquidLoading(false);
       setIsIlliquidSupplyLoading(false);
-      if (lthPositionChange.length > 0) setLthPositionChangeData(ensureFreshToOct24(lthPositionChange, 'value'));
+      if (lthPositionChange.length > 0) setLthPositionChangeData(ensureFreshToToday(lthPositionChange, 'value'));
       setIsLthPositionChangeLoading(false);
-      if (sthPositionChange.length > 0) setSthPositionChangeData(ensureFreshToOct24(sthPositionChange, 'value'));
+      if (sthPositionChange.length > 0) setSthPositionChangeData(ensureFreshToToday(sthPositionChange, 'value'));
       setIsSthPositionChangeLoading(false);
-      if (mpi.length > 0)               setMpiData(ensureFreshToOct24(mpi, 'value'));
+      if (mpi.length > 0)               setMpiData(ensureFreshToToday(mpi, 'value'));
       setIsMpiLoading(false);
-      if (minerSellPressure.length > 0) setMinerSellPressureData(ensureFreshToOct24(minerSellPressure, 'value'));
+      if (minerSellPressure.length > 0) setMinerSellPressureData(ensureFreshToToday(minerSellPressure, 'value'));
       setIsMinerSellPressureLoading(false);
-      if (utxoProfit.length > 0)        setUtxoProfitData(ensureFreshToOct24(utxoProfit, 'value'));
+      if (utxoProfit.length > 0)        setUtxoProfitData(ensureFreshToToday(utxoProfit, 'value'));
       setIsUtxoProfitLoading(false);
-      if (utxoLoss.length > 0)          setUtxoLossData(ensureFreshToOct24(utxoLoss, 'value'));
+      if (utxoLoss.length > 0)          setUtxoLossData(ensureFreshToToday(utxoLoss, 'value'));
       setIsUtxoLossLoading(false);
     };
     fetchKey4Indicators();
@@ -1256,7 +1266,7 @@ export function useSentimentData() {
     const fetchMacroIndicators = async () => {
       const f = async (url: string): Promise<IndicatorPoint[]> => {
         try {
-          const r = await fetchWithSSCache(url, { headers: { 'Accept': 'application/json' } });
+          const r = await fetchWithSSCache(withSentimentDataVersion(url), { headers: { 'Accept': 'application/json' } });
           if (r.ok) {
             const result: IndicatorApiResponse = await r.json();
             if (result.success && result.data?.length > 0) return result.data;
@@ -1294,16 +1304,17 @@ export function useSentimentData() {
         f('/api/fred-mortgage30us'), f('/api/fred-bogmbase'),     f('/api/fred-totalsl'),
       ]);
       // All 100 setters called synchronously after Promise.all → React 18+ batches into 1 render
-      if (m2.length > 0)               setM2Data(m2);              setIsM2Loading(false);
-      if (dxy.length > 0)              setDxyData(dxy);            setIsDxyLoading(false);
-      if (vix.length > 0)              setVixData(vix);            setIsVixLoading(false);
-      if (fedfunds.length > 0)         setFedfundsData(fedfunds);  setIsFedfundsLoading(false);
-      if (etf.length > 0)              setEtfData(etf);            setIsEtfLoading(false);
-      if (sp500.length > 0)            setSp500Data(sp500);        setIsSp500Loading(false);
-      if (gold.length > 0)             setGoldData(gold);          setIsGoldLoading(false);
+      if (m2.length > 0)               setM2Data(ensureFreshToToday(m2, 'value'));              setIsM2Loading(false);
+      if (dxy.length > 0)              setDxyData(ensureFreshToToday(dxy, 'value'));            setIsDxyLoading(false);
+      if (vix.length > 0)              setVixData(ensureFreshToToday(vix, 'value'));            setIsVixLoading(false);
+      if (fedfunds.length > 0)         setFedfundsData(ensureFreshToToday(fedfunds, 'value'));  setIsFedfundsLoading(false);
+      if (etf.length > 0)              setEtfData(ensureFreshToToday(etf, 'value'));            setIsEtfLoading(false);
+      if (sp500.length > 0)            setSp500Data(ensureFreshToToday(sp500, 'value'));        setIsSp500Loading(false);
+      if (gold.length > 0)             setGoldData(ensureFreshToToday(gold, 'value'));          setIsGoldLoading(false);
       if (stablecoinSupply.length > 0) {
-        setStablecoinSupplyData(stablecoinSupply);
-        const derivedOsc: IndicatorPoint[] = stablecoinSupply.map((pt, i) => ({
+        const freshStbl = ensureFreshToToday(stablecoinSupply, 'value');
+        setStablecoinSupplyData(freshStbl);
+        const derivedOsc: IndicatorPoint[] = freshStbl.map((pt, i) => ({
           time: pt.time,
           value: Math.round(Math.sin(i * 0.1) * 45) / 100,
         }));
@@ -1311,47 +1322,47 @@ export function useSentimentData() {
       }
       setIsStablecoinSupplyLoading(false);
       setIsSsrOscillatorLoading(false);
-      if (cryptoMarketCap.length > 0)  setCryptoMarketCapData(cryptoMarketCap); setIsCryptoMarketCapLoading(false);
-      if (sofr.length > 0)             setSofrData(sofr);          setIsSofrLoading(false);
-      if (walcl.length > 0)            setWalclData(walcl);        setIsWalclLoading(false);
-      if (wresbal.length > 0)          setWresbalData(wresbal);
+      if (cryptoMarketCap.length > 0)  setCryptoMarketCapData(ensureFreshToToday(cryptoMarketCap, 'value')); setIsCryptoMarketCapLoading(false);
+      if (sofr.length > 0)             setSofrData(ensureFreshToToday(sofr, 'value'));          setIsSofrLoading(false);
+      if (walcl.length > 0)            setWalclData(ensureFreshToToday(walcl, 'value'));        setIsWalclLoading(false);
+      if (wresbal.length > 0)          setWresbalData(ensureFreshToToday(wresbal, 'value'));
       setIsWresbalLoading(false);
-      if (rrpontsyd.length > 0)        setRrpontsydData(rrpontsyd); setIsRrpontsydLoading(false);
-      if (cpiaucsl.length > 0)         setCpiaucslData(cpiaucsl);  setIsCpiaucslLoading(false);
-      if (cpilfesl.length > 0)         setCpilfeslData(cpilfesl);  setIsCpilfeslLoading(false);
-      if (pcepi.length > 0)            setPcepiData(pcepi);        setIsPcepiLoading(false);
-      if (pcepilfe.length > 0)         setPcepilfeData(pcepilfe);  setIsPcepilfeLoading(false);
-      if (mich.length > 0)             setMichData(mich);          setIsMichLoading(false);
-      if (t5yie.length > 0)            setT5yieData(t5yie);        setIsT5yieLoading(false);
-      if (t10yie.length > 0)           setT10yieData(t10yie);      setIsT10yieLoading(false);
-      if (dgs1mo.length > 0)           setDgs1moData(dgs1mo);      setIsDgs1moLoading(false);
-      if (dgs3mo.length > 0)           setDgs3moData(dgs3mo);      setIsDgs3moLoading(false);
-      if (dgs6mo.length > 0)           setDgs6moData(dgs6mo);      setIsDgs6moLoading(false);
-      if (dgs1.length > 0)             setDgs1Data(dgs1);          setIsDgs1Loading(false);
-      if (dgs5.length > 0)             setDgs5Data(dgs5);          setIsDgs5Loading(false);
-      if (dgs20.length > 0)            setDgs20Data(dgs20);        setIsDgs20Loading(false);
-      if (dgs30.length > 0)            setDgs30Data(dgs30);        setIsDgs30Loading(false);
-      if (t10y2y.length > 0)           setT10y2yData(t10y2y);      setIsT10y2yLoading(false);
-      if (t10y3m.length > 0)           setT10y3mData(t10y3m);      setIsT10y3mLoading(false);
-      if (m1sl.length > 0)             setM1slData(m1sl);
+      if (rrpontsyd.length > 0)        setRrpontsydData(ensureFreshToToday(rrpontsyd, 'value')); setIsRrpontsydLoading(false);
+      if (cpiaucsl.length > 0)         setCpiaucslData(ensureFreshToToday(cpiaucsl, 'value'));  setIsCpiaucslLoading(false);
+      if (cpilfesl.length > 0)         setCpilfeslData(ensureFreshToToday(cpilfesl, 'value'));  setIsCpilfeslLoading(false);
+      if (pcepi.length > 0)            setPcepiData(ensureFreshToToday(pcepi, 'value'));        setIsPcepiLoading(false);
+      if (pcepilfe.length > 0)         setPcepilfeData(ensureFreshToToday(pcepilfe, 'value'));  setIsPcepilfeLoading(false);
+      if (mich.length > 0)             setMichData(ensureFreshToToday(mich, 'value'));          setIsMichLoading(false);
+      if (t5yie.length > 0)            setT5yieData(ensureFreshToToday(t5yie, 'value'));        setIsT5yieLoading(false);
+      if (t10yie.length > 0)           setT10yieData(ensureFreshToToday(t10yie, 'value'));      setIsT10yieLoading(false);
+      if (dgs1mo.length > 0)           setDgs1moData(ensureFreshToToday(dgs1mo, 'value'));      setIsDgs1moLoading(false);
+      if (dgs3mo.length > 0)           setDgs3moData(ensureFreshToToday(dgs3mo, 'value'));      setIsDgs3moLoading(false);
+      if (dgs6mo.length > 0)           setDgs6moData(ensureFreshToToday(dgs6mo, 'value'));      setIsDgs6moLoading(false);
+      if (dgs1.length > 0)             setDgs1Data(ensureFreshToToday(dgs1, 'value'));          setIsDgs1Loading(false);
+      if (dgs5.length > 0)             setDgs5Data(ensureFreshToToday(dgs5, 'value'));          setIsDgs5Loading(false);
+      if (dgs20.length > 0)            setDgs20Data(ensureFreshToToday(dgs20, 'value'));        setIsDgs20Loading(false);
+      if (dgs30.length > 0)            setDgs30Data(ensureFreshToToday(dgs30, 'value'));        setIsDgs30Loading(false);
+      if (t10y2y.length > 0)           setT10y2yData(ensureFreshToToday(t10y2y, 'value'));      setIsT10y2yLoading(false);
+      if (t10y3m.length > 0)           setT10y3mData(ensureFreshToToday(t10y3m, 'value'));      setIsT10y3mLoading(false);
+      if (m1sl.length > 0)             setM1slData(ensureFreshToToday(m1sl, 'value'));
       setIsM1slLoading(false);
-      if (mabmm301.length > 0)         setMabmm301Data(mabmm301);  setIsMabmm301Loading(false);
-      if (unrate.length > 0)           setUnrateData(unrate);      setIsUnrateLoading(false);
-      if (payems.length > 0)           setPayemsData(payems);      setIsPayemsLoading(false);
-      if (icsa.length > 0)             setIcsaData(icsa);          setIsIcsaLoading(false);
-      if (jtsjol.length > 0)           setJtsjolData(jtsjol);      setIsJtsjolLoading(false);
-      if (emratio.length > 0)          setEmratioData(emratio);    setIsEmratioLoading(false);
-      if (gdpc1.length > 0)            setGdpc1Data(gdpc1);        setIsGdpc1Loading(false);
-      if (indpro.length > 0)           setIndproData(indpro);      setIsIndproLoading(false);
-      if (houst.length > 0)            setHoustData(houst);        setIsHoustLoading(false);
-      if (umcsent.length > 0)          setUmcsentData(umcsent);    setIsUmcsentLoading(false);
-      if (rsxfs.length > 0)            setRsxfsData(rsxfs);        setIsRsxfsLoading(false);
-      if (dcoilwtico.length > 0)       setDcoilwticoData(dcoilwtico); setIsDcoilwticoLoading(false);
-      if (bamlh0a0hym2.length > 0)     setBamlh0a0hym2Data(bamlh0a0hym2); setIsBamlh0a0hym2Loading(false);
-      if (mortgage30us.length > 0)     setMortgage30usData(mortgage30us); setIsMortgage30usLoading(false);
-      if (bogmbase.length > 0)         setBogmbaseData(bogmbase);
+      if (mabmm301.length > 0)         setMabmm301Data(ensureFreshToToday(mabmm301, 'value'));  setIsMabmm301Loading(false);
+      if (unrate.length > 0)           setUnrateData(ensureFreshToToday(unrate, 'value'));      setIsUnrateLoading(false);
+      if (payems.length > 0)           setPayemsData(ensureFreshToToday(payems, 'value'));      setIsPayemsLoading(false);
+      if (icsa.length > 0)             setIcsaData(ensureFreshToToday(icsa, 'value'));          setIsIcsaLoading(false);
+      if (jtsjol.length > 0)           setJtsjolData(ensureFreshToToday(jtsjol, 'value'));      setIsJtsjolLoading(false);
+      if (emratio.length > 0)          setEmratioData(ensureFreshToToday(emratio, 'value'));    setIsEmratioLoading(false);
+      if (gdpc1.length > 0)            setGdpc1Data(ensureFreshToToday(gdpc1, 'value'));        setIsGdpc1Loading(false);
+      if (indpro.length > 0)           setIndproData(ensureFreshToToday(indpro, 'value'));      setIsIndproLoading(false);
+      if (houst.length > 0)            setHoustData(ensureFreshToToday(houst, 'value'));        setIsHoustLoading(false);
+      if (umcsent.length > 0)          setUmcsentData(ensureFreshToToday(umcsent, 'value'));    setIsUmcsentLoading(false);
+      if (rsxfs.length > 0)            setRsxfsData(ensureFreshToToday(rsxfs, 'value'));        setIsRsxfsLoading(false);
+      if (dcoilwtico.length > 0)       setDcoilwticoData(ensureFreshToToday(dcoilwtico, 'value')); setIsDcoilwticoLoading(false);
+      if (bamlh0a0hym2.length > 0)     setBamlh0a0hym2Data(ensureFreshToToday(bamlh0a0hym2, 'value')); setIsBamlh0a0hym2Loading(false);
+      if (mortgage30us.length > 0)     setMortgage30usData(ensureFreshToToday(mortgage30us, 'value')); setIsMortgage30usLoading(false);
+      if (bogmbase.length > 0)         setBogmbaseData(ensureFreshToToday(bogmbase, 'value'));
       setIsBogmbaseLoading(false);
-      if (totalsl.length > 0)          setTotalslData(totalsl);    setIsTotalslLoading(false);
+      if (totalsl.length > 0)          setTotalslData(ensureFreshToToday(totalsl, 'value'));    setIsTotalslLoading(false);
     };
     fetchMacroIndicators();
   }, []);
@@ -1363,7 +1374,7 @@ export function useSentimentData() {
         setIsDominanceLoading(true);
         addLog(`Fetching 1 year of BTC & ETH Dominance from CoinMarketCap...`, 'INFO');
         
-        const response = await fetchWithSSCache('/api/dominance/historical', {
+        const response = await fetchWithSSCache(withSentimentDataVersion('/api/dominance/historical'), {
           headers: { 'Accept': 'application/json' }
         });
         
@@ -1388,8 +1399,8 @@ export function useSentimentData() {
               };
             });
             
-            setDominanceData(dominanceHistory);
-            setEthDominanceData(ethDominanceHistory);
+            setDominanceData(ensureFreshToToday(dominanceHistory, 'dominance'));
+            setEthDominanceData(ensureFreshToToday(ethDominanceHistory, 'dominance'));
             
             addLog(`Loaded ${dominanceHistory.length} days of real CoinMarketCap data`, 'SUCCESS');
             setIsDominanceLoading(false);

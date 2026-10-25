@@ -156,7 +156,25 @@ async function readD1Indicator(env: Env, config: D1IndicatorConfig): Promise<Res
     );
   }
 
-  const data = rows.map(config.mapRow);
+  const rawData = rows.map(config.mapRow);
+  const today = new Date().toISOString().slice(0, 10);
+  const last = rawData[rawData.length - 1];
+  const lastTime = typeof last?.time === 'string' ? last.time.slice(0, 10) : '';
+  const data = [...rawData];
+
+  if (lastTime && lastTime < today) {
+    const cur = new Date(`${lastTime}T00:00:00.000Z`);
+    const target = new Date(`${today}T00:00:00.000Z`);
+    while (cur.getTime() < target.getTime()) {
+      cur.setUTCDate(cur.getUTCDate() + 1);
+      const dStr = cur.toISOString().slice(0, 10);
+      data.push({
+        ...last,
+        time: `${dStr}T00:00:00Z`,
+      });
+    }
+  }
+
   return json(
     { success: true, data, payload: data.length, source: 'd1' },
     { headers: { 'Cache-Control': CACHE } }
@@ -183,9 +201,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   }
 
   const cache = typeof caches !== 'undefined' ? caches.default : null;
-  const canonicalUrl = new URL(context.request.url);
-  canonicalUrl.search = ''; // ignore query parameters for canonical D1 indicator caching
-  const cacheKey = new Request(canonicalUrl.toString(), { method: 'GET' });
+  const cacheKey = new Request(context.request.url, { method: 'GET' });
 
   if (cache) {
     try {

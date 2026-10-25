@@ -56,11 +56,28 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     ).all<DominanceRecord>();
 
     if (result.results && result.results.length > 30) {
-      const data = result.results.map((row: DominanceRecord) => ({
+      const rows = result.results;
+      const today = new Date().toISOString().slice(0, 10);
+      const last = rows[rows.length - 1];
+      const data = rows.map((row: DominanceRecord) => ({
         timestamp: `${row.date}T00:00:00Z`,
         btc_dominance: row.btc_dominance,
         eth_dominance: row.eth_dominance,
       }));
+
+      if (last?.date && last.date < today) {
+        const cur = new Date(`${last.date}T00:00:00.000Z`);
+        const target = new Date(`${today}T00:00:00.000Z`);
+        while (cur.getTime() < target.getTime()) {
+          cur.setUTCDate(cur.getUTCDate() + 1);
+          const dStr = cur.toISOString().slice(0, 10);
+          data.push({
+            timestamp: `${dStr}T00:00:00Z`,
+            btc_dominance: last.btc_dominance,
+            eth_dominance: last.eth_dominance,
+          });
+        }
+      }
 
       return new Response(
         JSON.stringify({

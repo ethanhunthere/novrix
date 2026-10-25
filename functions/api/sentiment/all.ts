@@ -112,21 +112,47 @@ const QUERIES: QueryDef[] = [
   },
 ];
 
+function forwardFillToToday<T extends Record<string, unknown>>(
+  rows: T[] | null | undefined,
+  valueKey: string,
+  targetDate: string
+): T[] | null {
+  if (!rows || rows.length === 0) return rows ?? null;
+  const last = rows[rows.length - 1];
+  const lastTime = typeof last?.time === 'string' ? last.time.slice(0, 10) : '';
+  if (!lastTime || lastTime >= targetDate) return rows;
+
+  const lastVal = last[valueKey];
+  const filled: T[] = [...rows];
+  const cur = new Date(`${lastTime}T00:00:00.000Z`);
+  const target = new Date(`${targetDate}T00:00:00.000Z`);
+
+  while (cur.getTime() < target.getTime()) {
+    cur.setUTCDate(cur.getUTCDate() + 1);
+    const dStr = cur.toISOString().slice(0, 10);
+    filled.push({
+      ...last,
+      time: `${dStr}T00:00:00Z`,
+      [valueKey]: lastVal,
+    });
+  }
+
+  return filled;
+}
+
 async function runBatch(db: D1Database): Promise<Record<string, unknown[] | null>> {
+  const out: Record<string, unknown[] | null> = {};
   // Fast path: run all queries in a single D1 batch.
   try {
     const stmts = QUERIES.map((q) => db.prepare(q.sql));
     const batch = await db.batch(stmts);
-    const out: Record<string, unknown[] | null> = {};
     for (let i = 0; i < QUERIES.length; i++) {
       const q = QUERIES[i];
       out[q.key] = mapRows(batch[i], q.minRows, q.mapper);
     }
-    return out;
   } catch {
     // Slow path: one bad table should not zero out the entire response.
     // Fall back to individual queries so partial data still reaches the UI.
-    const out: Record<string, unknown[] | null> = {};
     for (const q of QUERIES) {
       try {
         const res = await db.prepare(q.sql).all<BatchRow>();
@@ -135,8 +161,31 @@ async function runBatch(db: D1Database): Promise<Record<string, unknown[] | null
         out[q.key] = null;
       }
     }
-    return out;
   }
+
+  // Ensure all returned series are fresh through today
+  const today = new Date().toISOString().slice(0, 10);
+  const valueKeys: Record<string, string> = {
+    nupl: 'net_unrealized_profit_loss',
+    mvrv: 'mvrv',
+    sopr: 'sopr',
+    lthMvrv: 'lth_mvrv',
+    ssr: 'ssr',
+    supplyLoss: 'supply_in_loss',
+    supplyProfit: 'supply_in_profit',
+    realizedProfit: 'realized_profit',
+    realizedLoss: 'realized_loss',
+    sthMvrv: 'sth_mvrv',
+    hashrate: 'hashrate',
+    btcPrice: 'price',
+  };
+
+  for (const q of QUERIES) {
+    const vk = valueKeys[q.key] || 'value';
+    out[q.key] = forwardFillToToday(out[q.key] as Record<string, unknown>[], vk, today);
+  }
+
+  return out;
 }
 
 export const onRequest: PagesFunction<Env> = async (context) => {
@@ -151,9 +200,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   }
 
   const cache = typeof caches !== 'undefined' ? caches.default : null;
-  const canonicalUrl = new URL(request.url);
-  canonicalUrl.search = '';
-  const cacheKey = new Request(canonicalUrl.toString(), { method: 'GET' });
+  const cacheKey = new Request(request.url, { method: 'GET' });
 
   if (cache) {
     try {
