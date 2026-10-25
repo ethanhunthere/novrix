@@ -6,11 +6,11 @@ import FooterHome from '@/components/layout/FooterHome';
 export const metadata: Metadata = {
   title: 'Novrix Terminal',
   description:
-    'On-chain Bitcoin metrics, network health, and macro liquidity indicators tracking market cycle dynamics.',
+    'Bitcoin on-chain metrics, holder distribution data, and macro liquidity charts across historical market cycles.',
   openGraph: {
     title: 'Novrix Terminal',
     description:
-      'On-chain Bitcoin metrics, network health, and macro liquidity indicators tracking market cycle dynamics.',
+      'Bitcoin on-chain metrics, holder distribution data, and macro liquidity charts across historical market cycles.',
   },
 };
 
@@ -21,18 +21,18 @@ const HAIRLINE = 'rgba(250, 247, 242, 0.12)';
 
 const MODULES = [
   {
-    category: 'INTELLIGENCE WORKSPACE',
-    label: 'Open Workspace',
+    category: 'MARKET INDICATORS',
+    label: 'Open workspace',
     href: '/sentiment',
-    title: 'Sentiment intelligence',
-    lede: 'Daily visual metrics for market valuation, miner reserves, supply distribution, and futures leverage across historical market regimes.',
+    title: 'On-chain valuation and sentiment',
+    lede: 'Interactive charts for NUPL, MVRV, miner reserves, futures leverage, and global central bank liquidity.',
   },
   {
     category: 'EDITORIAL RESEARCH',
-    label: 'Read Publications',
+    label: 'Read publications',
     href: '/insights',
     title: 'Research and perspectives',
-    lede: 'Detailed commentary covering capital liquidity, exchange reserves, cryptographic privacy developments, and cyclical tendencies observed in historical records.',
+    lede: 'Long-form analysis covering capital rotation, exchange reserves, and structural tendencies observed across Bitcoin history.',
   },
 ];
 
@@ -67,7 +67,7 @@ export default function Home() {
                 maxWidth: '38ch',
               }}
             >
-              Bitcoin network fundamentals and macro liquidity intelligence.
+              Bitcoin network data and macro liquidity.
             </h1>
 
             <p
@@ -79,16 +79,16 @@ export default function Home() {
                 lineHeight: 1.72,
               }}
             >
-              Novrix aggregates on-chain metrics, holder distribution patterns, and central bank balance sheets into real-time visual records. Explore structural shifts, miner activity, and historical cycle dynamics across interactive workspaces.
+              Novrix tracks Bitcoin market cycles through on-chain data and central bank liquidity. Built for investors who study historical distribution, holder behavior, and macro trends directly from the source.
             </p>
 
             <div className="flex flex-wrap items-center gap-x-5 gap-y-3.5 mt-8">
               <Link href="/sentiment" className="home-btn home-btn-primary">
-                Open Sentiment Workspace
+                Open workspace
                 <Arrow />
               </Link>
               <Link href="/insights" className="home-quiet-link">
-                Read Publications
+                Read research
                 <Arrow />
               </Link>
             </div>
@@ -112,7 +112,7 @@ export default function Home() {
                 color: INK,
               }}
             >
-              Workspace overview
+              Workspaces
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-7 mt-8 md:mt-10">
