@@ -53,10 +53,12 @@ export default function Navbar() {
           height: BAR_HEIGHT,
           width: '100%',
           boxSizing: 'border-box',
-          background: 'rgba(5, 6, 13, 0.98)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.07)',
+          background: 'rgba(18, 15, 13, 0.95)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          borderBottom: '1px solid rgba(245, 241, 234, 0.08)',
           flexShrink: 0,
-          boxShadow: '0 1px 0 rgba(0,0,0,0.60)',
+          boxShadow: '0 1px 0 rgba(0, 0, 0, 0.50), 0 4px 20px rgba(10, 9, 8, 0.40)',
         }}
       >
         <div
@@ -145,14 +147,14 @@ export default function Navbar() {
       <div
         className="fixed inset-0 z-[100] flex flex-col md:hidden transition-opacity duration-200"
         style={{
-          background: 'rgba(5, 6, 13, 0.98)',
+          background: 'rgba(14, 12, 10, 0.98)',
           opacity: open ? 1 : 0,
           pointerEvents: open ? 'auto' : 'none',
         }}
         aria-hidden={!open}
       >
         <div
-          className="flex items-center justify-between px-4 border-b border-white/10"
+          className="flex items-center justify-between px-4 border-b border-[rgba(245,241,234,0.08)]"
           style={{ height: BAR_HEIGHT }}
         >
           <Link
