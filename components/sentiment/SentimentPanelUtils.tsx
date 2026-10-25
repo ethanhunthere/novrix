@@ -29,8 +29,6 @@ export const PanelHeader = ({
   panelId,
   info,
   onScreenshot,
-  onMaximize,
-  isMaximized,
 }: {
   code: string;
   title: string;
@@ -44,8 +42,6 @@ export const PanelHeader = ({
   panelId?: string;
   info?: IndicatorMetadata;
   onScreenshot?: () => void;
-  onMaximize?: () => void;
-  isMaximized?: boolean;
 }) => {
   const [showInfo, setShowInfo] = useState(false);
   const meta = info ?? (panelId ? getIndicatorMetadata(panelId) : undefined) ?? getIndicatorMetadata(code) ?? getIndicatorMetadata(title);
@@ -58,10 +54,10 @@ export const PanelHeader = ({
       background: 'linear-gradient(90deg, rgba(245,241,234,0.018) 0%, rgba(10,9,8,0.98) 20%, rgba(10,9,8,0.98) 100%)',
       borderBottomColor: 'rgba(245,241,234,0.09)',
       boxShadow: 'inset 0 1px 0 rgba(245,241,234,0.04), inset 0 -1px 0 rgba(0,0,0,0.4)',
-      minHeight: '64px',
+      minHeight: '52px',
     }}
   >
-    <div className="flex flex-col justify-center min-w-0 py-3">
+    <div className="flex flex-col justify-center min-w-0 py-2">
       <div className="flex flex-wrap items-center gap-2.5 min-w-0">
         <span
           className="min-w-0 text-[17px] font-semibold"
@@ -96,7 +92,7 @@ export const PanelHeader = ({
         </span>
       )}
     </div>
-    <div className="flex items-center gap-3 shrink-0 py-3">
+    <div className="flex items-center gap-3 shrink-0 py-2">
       {value != null && (
         <div className="flex items-center gap-2">
           <span
@@ -200,29 +196,6 @@ export const PanelHeader = ({
             <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
             <circle cx="12" cy="13" r="4"/>
           </svg>
-        </button>
-      )}
-      {onMaximize && <div className="w-px h-6 shrink-0" style={{ background: 'var(--border-default)' }} />}
-      {onMaximize && (
-        <button
-          onClick={onMaximize}
-          data-no-capture
-          className="w-8 h-8 flex items-center justify-center"
-          style={{ background: 'transparent', border: '1px solid var(--border-default)', color: 'var(--text-tertiary)' }}
-          onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-secondary)'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--border-strong)'; (e.currentTarget as HTMLButtonElement).style.background = 'var(--bg-raised)'; }}
-          onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-tertiary)'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--border-default)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}
-          title={isMaximized ? 'Minimize panel' : 'Maximize panel'}
-        >
-          {isMaximized ? (
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
-          ) : (
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/>
-              <line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>
-            </svg>
-          )}
         </button>
       )}
     </div>
@@ -809,9 +782,7 @@ export const PANEL_CODES: Record<string, string> = {
 };
 
 export interface PanelMaximizeWrapperProps {
-  panelId: string;
-  isMaximized: boolean;
-  onMinimize: () => void;
+  panelId?: string;
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
@@ -822,73 +793,10 @@ export interface PanelMaximizeWrapperProps {
 }
 
 export const PanelMaximizeWrapper = forwardRef<HTMLDivElement, PanelMaximizeWrapperProps>(
-  ({ panelId: _panelId, isMaximized, onMinimize, children, className, style, id, 'data-panel': dataPanelAttr, onMouseEnter, fullHeight: _fullHeight }, ref) => {
-    useEffect(() => {
-      if (!isMaximized) return;
-      const handleKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onMinimize(); };
-      const preventScroll = (e: Event) => e.preventDefault();
-      window.addEventListener('keydown', handleKey);
-      // Block all scroll/wheel/touchmove on the body while maximized
-      document.body.style.overflow = 'hidden';
-      document.body.style.overscrollBehavior = 'none';
-      window.addEventListener('wheel', preventScroll, { passive: false });
-      window.addEventListener('touchmove', preventScroll, { passive: false });
-      return () => {
-        window.removeEventListener('keydown', handleKey);
-        window.removeEventListener('wheel', preventScroll);
-        window.removeEventListener('touchmove', preventScroll);
-        document.body.style.overflow = '';
-        document.body.style.overscrollBehavior = '';
-      };
-    }, [isMaximized, onMinimize]);
-
-    const panelEl = (
-      <div ref={ref} className={className} style={style} id={id} data-panel={dataPanelAttr} onMouseEnter={onMouseEnter}>
-        {children}
-      </div>
-    );
-
-    if (!isMaximized) return panelEl;
-
-    return createPortal(
-      <>
-        <div
-          onClick={onMinimize}
-          onWheel={(e) => e.stopPropagation()}
-          style={{
-            position: 'fixed', inset: 0, zIndex: 9990,
-            background: 'rgba(10,9,8,0.86)',
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)',
-            overscrollBehavior: 'contain',
-          }}
-        />
-        <div
-          onWheel={(e) => e.stopPropagation()}
-          style={{
-            position: 'fixed', top: '50%', left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: 'min(78vw, 1280px)', height: 'min(76vh, 820px)', zIndex: 9991,
-            display: 'flex', flexDirection: 'column',
-            boxShadow: '0 0 0 1px rgba(245,241,234,0.10), 0 40px 140px rgba(0,0,0,0.8), 0 0 80px rgba(0,0,0,0.6)',
-            overflow: 'hidden',
-            overscrollBehavior: 'contain',
-          }}
-        >
-          <div
-            ref={ref}
-            className={className}
-            style={{ ...style, flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', overscrollBehavior: 'contain' }}
-            id={id}
-            data-panel={dataPanelAttr}
-            onMouseEnter={onMouseEnter}
-          >
-            {children}
-          </div>
-        </div>
-      </>,
-      document.body
-    );
-  }
+  ({ children, className, style, id, 'data-panel': dataPanelAttr, onMouseEnter }, ref) => (
+    <div ref={ref} className={className} style={style} id={id} data-panel={dataPanelAttr} onMouseEnter={onMouseEnter}>
+      {children}
+    </div>
+  )
 );
 PanelMaximizeWrapper.displayName = 'PanelMaximizeWrapper';

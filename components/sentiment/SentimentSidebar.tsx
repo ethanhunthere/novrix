@@ -1,7 +1,6 @@
 'use client';
 
 import React, { memo } from 'react';
-import { motion } from 'framer-motion';
 
 type IndicatorEntry = { isDivider?: undefined; name: string; id: string; live: boolean; freq: string };
 type DividerEntry   = { isDivider: true; dividerLabel: string };
@@ -25,10 +24,8 @@ interface SentimentSidebarProps {
 }
 
 /**
- * Intel Registry sidebar — memoized so it only re-renders when its own
- * props change (registry search, accordion state, selected indicator).
- * Chart data loading does not affect these props → zero wasted renders
- * while chart panels populate with data.
+ * Intel Registry sidebar — clean, high-contrast, minimalist terminal navigation.
+ * Monochromatic hierarchy without glowing dots, neon accents, or AI slop.
  */
 const SentimentSidebar = memo(function SentimentSidebar({
   registryCats,
@@ -41,249 +38,358 @@ const SentimentSidebar = memo(function SentimentSidebar({
 }: SentimentSidebarProps) {
   const q = registrySearch.toLowerCase().trim();
 
+  // Total count of concrete indicators
+  const totalIndicators = registryCats.reduce((acc, cat) => {
+    return acc + cat.items.filter((it) => !it.isDivider).length;
+  }, 0);
+
   return (
-    <motion.div
-      initial={{ opacity: 0, x: -10 }}
-      animate={{ opacity: 1, x: 0 }}
-      className="w-full flex flex-col overflow-hidden"
+    <div
+      className="w-full flex flex-col overflow-hidden select-none"
       style={{
-        height: 'calc(100vh - 68px)',
-        maxHeight: 'calc(100vh - 68px)',
-        background: 'var(--bg-surface)',
-        border: '1px solid var(--border-default)',
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.40)',
+        height: 'calc(100vh - 64px)',
+        maxHeight: 'calc(100vh - 64px)',
+        background: '#120F0D',
+        border: '1px solid rgba(245, 241, 234, 0.08)',
+        borderRadius: '2px',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.35)',
       }}
     >
-      {/* ── Sidebar header ── */}
-      <div className="shrink-0">
-        <div className="px-3.5 pt-3.5 pb-2.5" style={{ background: 'var(--bg-base)', borderBottom: '1px solid var(--border-subtle)' }}>
-          <div className="flex items-center justify-between">
-            <span style={{
-              fontSize: '10px',
-              letterSpacing: '0.18em',
+      {/* ── Header ── */}
+      <div className="shrink-0 p-3" style={{ borderBottom: '1px solid rgba(245, 241, 234, 0.08)', background: '#0F0C0A' }}>
+        <div className="flex items-center justify-between mb-2.5">
+          <span
+            style={{
+              fontSize: '11px',
+              letterSpacing: '0.12em',
               fontWeight: 700,
               textTransform: 'uppercase',
               fontFamily: 'var(--ff-mono)',
-              color: 'var(--text-tertiary)',
-            }}>
-              Intel Registry
-            </span>
-            {selectedIndicator && (
-              <button
-                type="button"
-                onClick={() => setSelectedIndicator(null)}
-                className="px-1.5 py-0.5 text-[9px] font-mono tracking-wider uppercase transition-colors"
-                style={{
-                  background: 'rgba(245,241,234,0.06)',
-                  border: '1px solid var(--border-default)',
-                  color: 'var(--text-secondary)',
-                  cursor: 'pointer',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = 'var(--text-heading)';
-                  e.currentTarget.style.borderColor = 'var(--accent-novrix)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'var(--text-secondary)';
-                  e.currentTarget.style.borderColor = 'var(--border-default)';
-                }}
-              >
-                Reset
-              </button>
-            )}
-          </div>
+              color: '#FAF7F2',
+            }}
+          >
+            Intel Registry
+          </span>
+          <span
+            style={{
+              fontSize: '9.5px',
+              fontFamily: 'var(--ff-mono)',
+              color: '#8C857C',
+              background: '#191512',
+              border: '1px solid rgba(245, 241, 234, 0.08)',
+              padding: '1px 6px',
+              borderRadius: '2px',
+              fontWeight: 600,
+            }}
+          >
+            {totalIndicators}
+          </span>
+        </div>
+
+        {/* ── Overview / Reset button ── */}
+        <button
+          type="button"
+          onClick={() => setSelectedIndicator(null)}
+          className="w-full flex items-center justify-between px-2.5 py-1.5 text-left transition-colors duration-140"
+          style={{
+            fontFamily: 'var(--ff-mono)',
+            fontSize: '10.5px',
+            letterSpacing: '0.06em',
+            background: selectedIndicator === null ? '#1E1915' : 'transparent',
+            border: selectedIndicator === null ? '1px solid rgba(245, 241, 234, 0.16)' : '1px solid rgba(245, 241, 234, 0.06)',
+            borderLeft: selectedIndicator === null ? '2px solid #FAF7F2' : '1px solid rgba(245, 241, 234, 0.06)',
+            color: selectedIndicator === null ? '#FAF7F2' : '#A8A196',
+            fontWeight: selectedIndicator === null ? 600 : 500,
+            cursor: 'pointer',
+          }}
+          onMouseEnter={(e) => {
+            if (selectedIndicator !== null) {
+              e.currentTarget.style.color = '#FAF7F2';
+              e.currentTarget.style.background = '#171411';
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (selectedIndicator !== null) {
+              e.currentTarget.style.color = '#A8A196';
+              e.currentTarget.style.background = 'transparent';
+            }
+          }}
+        >
+          <span>ALL PANELS</span>
+          <span style={{ fontSize: '9px', opacity: 0.6 }}>VIEW</span>
+        </button>
+      </div>
+
+      {/* ── Search Input ── */}
+      <div className="shrink-0 p-2.5" style={{ borderBottom: '1px solid rgba(245, 241, 234, 0.06)', background: '#120F0D' }}>
+        <div className="relative flex items-center">
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#8C857C"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            style={{ position: 'absolute', left: '8px', pointerEvents: 'none' }}
+          >
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.3-4.3" />
+          </svg>
+          <input
+            type="text"
+            value={registrySearch}
+            onChange={(e) => setRegistrySearch(e.target.value)}
+            placeholder="Search indicators..."
+            style={{
+              width: '100%',
+              height: '30px',
+              padding: '0 26px 0 26px',
+              background: '#0A0908',
+              border: '1px solid rgba(245, 241, 234, 0.10)',
+              borderRadius: '2px',
+              color: '#FAF7F2',
+              fontSize: '11px',
+              fontFamily: 'var(--ff-sans)',
+              letterSpacing: '0.01em',
+              outline: 'none',
+              caretColor: '#FAF7F2',
+              boxSizing: 'border-box',
+              transition: 'border-color 140ms ease',
+            }}
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor = 'rgba(245, 241, 234, 0.28)';
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor = 'rgba(245, 241, 234, 0.10)';
+            }}
+          />
+          {registrySearch && (
+            <button
+              type="button"
+              onClick={() => setRegistrySearch('')}
+              style={{
+                position: 'absolute',
+                right: '6px',
+                background: 'none',
+                border: 'none',
+                color: '#8C857C',
+                fontSize: '11px',
+                cursor: 'pointer',
+                padding: '2px 4px',
+                lineHeight: 1,
+              }}
+              title="Clear search"
+            >
+              ✕
+            </button>
+          )}
         </div>
       </div>
 
-      <div className="overflow-y-auto flex-1 min-h-0" style={{ scrollbarWidth: 'thin', scrollbarColor: 'var(--border-default) var(--bg-base)' }}>
-        {/* ── Search ── */}
-        <div className="px-3 py-2" style={{ borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-raised)' }}>
-          <div className="relative">
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="var(--text-ghost)"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              style={{ position: 'absolute', left: '8px', top: '50%', transform: 'translateY(-50%)' }}
-            >
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.3-4.3" />
-            </svg>
-            <input
-              type="text"
-              value={registrySearch}
-              onChange={(e) => setRegistrySearch(e.target.value)}
-              placeholder="Filter..."
-              style={{
-                width: '100%',
-                height: '30px',
-                padding: '0 8px 0 26px',
-                background: 'var(--bg-base)',
-                border: '1px solid var(--border-subtle)',
-                borderRadius: '3px',
-                color: 'var(--text-primary)',
-                fontSize: '11px',
-                fontFamily: 'var(--ff-sans)',
-                letterSpacing: '0.01em',
-                outline: 'none',
-                caretColor: 'var(--accent-novrix)',
-                boxSizing: 'border-box',
-                transition: 'border-color 140ms ease',
-              }}
-              onFocus={(e) => {
-                e.currentTarget.style.borderColor = 'var(--border-accent)';
-              }}
-              onBlur={(e) => {
-                e.currentTarget.style.borderColor = 'var(--border-subtle)';
-              }}
-            />
-          </div>
-        </div>
-
-        {/* ── Accordion ── */}
+      {/* ── Category Accordions ── */}
+      <div
+        className="overflow-y-auto flex-1 min-h-0"
+        style={{
+          scrollbarWidth: 'thin',
+          scrollbarColor: '#2B2521 #120F0D',
+        }}
+      >
         {registryCats.map((cat) => {
           const indicatorItems = cat.items.filter((item): item is IndicatorEntry => !item.isDivider);
-          const visibleIndicators = q ? indicatorItems.filter(item => item.name.toLowerCase().includes(q)) : indicatorItems;
+          const visibleIndicators = q
+            ? indicatorItems.filter((item) => item.name.toLowerCase().includes(q))
+            : indicatorItems;
+
           if (q && visibleIndicators.length === 0) return null;
           const isOpen = q ? true : openAccordion === cat.id;
+
           return (
-            <div key={cat.id} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-              {/* Category header */}
-              <div
-                role="button"
-                onClick={() => { if (!q) setOpenAccordion(prev => prev === cat.id ? null : cat.id); }}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '9px 12px',
-                  background: isOpen ? 'var(--bg-raised)' : 'var(--bg-surface)',
-                  borderLeft: `2px solid ${isOpen ? cat.accent : 'transparent'}`,
-                  cursor: q ? 'default' : 'pointer',
-                  userSelect: 'none',
-                  transition: 'background 140ms ease, border-left-color 140ms ease',
+            <div key={cat.id} style={{ borderBottom: '1px solid rgba(245, 241, 234, 0.05)' }}>
+              {/* Category Header */}
+              <button
+                type="button"
+                onClick={() => {
+                  if (!q) setOpenAccordion((prev) => (prev === cat.id ? null : cat.id));
                 }}
-                onMouseEnter={(e) => { if (!q && !isOpen) { e.currentTarget.style.background = 'var(--bg-base)'; e.currentTarget.style.borderLeftColor = cat.accent + '88'; } }}
-                onMouseLeave={(e) => { if (!q && !isOpen) { e.currentTarget.style.background = 'var(--bg-surface)'; e.currentTarget.style.borderLeftColor = 'transparent'; } }}
+                className="w-full flex items-center justify-between px-3 py-2 text-left transition-colors duration-140"
+                style={{
+                  background: isOpen ? '#151210' : '#120F0D',
+                  cursor: q ? 'default' : 'pointer',
+                  border: 'none',
+                }}
+                onMouseEnter={(e) => {
+                  if (!q && !isOpen) e.currentTarget.style.background = '#171411';
+                }}
+                onMouseLeave={(e) => {
+                  if (!q && !isOpen) e.currentTarget.style.background = '#120F0D';
+                }}
               >
-                <span style={{
-                  fontSize: '10.5px',
-                  fontWeight: 650,
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
-                  fontFamily: 'var(--ff-sans)',
-                  color: isOpen ? 'var(--text-heading)' : 'var(--text-tertiary)',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                  transition: 'color 140ms ease',
-                }}>
-                  {cat.label}
-                </span>
-                {!q && (
-                  <span style={{
-                    fontSize: '11px',
-                    color: isOpen ? cat.accent : 'var(--text-ghost)',
-                    fontFamily: 'var(--ff-sans)',
-                    lineHeight: 1,
-                    transition: 'color 140ms ease, transform 160ms ease',
-                    transform: isOpen ? 'rotate(0deg)' : 'rotate(-90deg)',
-                    display: 'inline-block',
-                  }}>
-                    ▾
+                <div className="flex items-center gap-2 min-w-0">
+                  <span
+                    style={{
+                      fontSize: '10px',
+                      fontWeight: 650,
+                      letterSpacing: '0.08em',
+                      textTransform: 'uppercase',
+                      fontFamily: 'var(--ff-mono)',
+                      color: isOpen ? '#FAF7F2' : '#A8A196',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {cat.label}
                   </span>
-                )}
-              </div>
-              {/* Items */}
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span
+                    style={{
+                      fontSize: '9px',
+                      fontFamily: 'var(--ff-mono)',
+                      color: '#736B63',
+                    }}
+                  >
+                    {visibleIndicators.length}
+                  </span>
+                  {!q && (
+                    <span
+                      style={{
+                        fontSize: '9px',
+                        color: '#736B63',
+                        fontFamily: 'var(--ff-mono)',
+                        lineHeight: 1,
+                        transform: isOpen ? 'rotate(90deg)' : 'rotate(0deg)',
+                        transition: 'transform 140ms ease',
+                        display: 'inline-block',
+                      }}
+                    >
+                      ›
+                    </span>
+                  )}
+                </div>
+              </button>
+
+              {/* Indicator Items */}
               {isOpen && (
-                <div>
+                <div style={{ background: '#0D0B0A', padding: '2px 0' }}>
                   {(q ? visibleIndicators : cat.items).map((item, idx) => {
                     if (item.isDivider) {
                       const divItem = item as DividerEntry;
                       return (
-                        <div key={`div-${divItem.dividerLabel}`} style={{
-                          padding: '10px 12px 4px 14px',
-                          borderTop: idx === 0 ? 'none' : '1px solid var(--border-subtle)',
-                        }}>
-                          <span style={{
-                            fontSize: '9px',
-                            letterSpacing: '0.16em',
-                            textTransform: 'uppercase',
-                            fontWeight: 600,
-                            color: 'var(--text-ghost)',
-                            fontFamily: 'var(--ff-sans)',
-                          }}>
+                        <div
+                          key={`div-${divItem.dividerLabel}`}
+                          style={{
+                            padding: '8px 12px 3px 12px',
+                            borderTop: idx === 0 ? 'none' : '1px solid rgba(245, 241, 234, 0.04)',
+                          }}
+                        >
+                          <span
+                            style={{
+                              fontSize: '8.5px',
+                              letterSpacing: '0.12em',
+                              textTransform: 'uppercase',
+                              fontWeight: 600,
+                              color: '#736B63',
+                              fontFamily: 'var(--ff-mono)',
+                            }}
+                          >
                             {divItem.dividerLabel}
                           </span>
                         </div>
                       );
                     }
+
                     const indItem = item as IndicatorEntry;
                     const isSelected = selectedIndicator === indItem.id;
-                    const hi = q ? (() => {
-                      const i = indItem.name.toLowerCase().indexOf(q);
-                      if (i === -1) return null;
-                      return { before: indItem.name.slice(0, i), match: indItem.name.slice(i, i + q.length), after: indItem.name.slice(i + q.length) };
-                    })() : null;
+                    const hi = q
+                      ? (() => {
+                          const i = indItem.name.toLowerCase().indexOf(q);
+                          if (i === -1) return null;
+                          return {
+                            before: indItem.name.slice(0, i),
+                            match: indItem.name.slice(i, i + q.length),
+                            after: indItem.name.slice(i + q.length),
+                          };
+                        })()
+                      : null;
+
                     return (
-                      <div
+                      <button
                         key={indItem.id}
-                        role="button"
-                        onClick={() => { setSelectedIndicator(indItem.id); window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior }); }}
-                        style={{
-                          minHeight: '32px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '6px',
-                          padding: '0 10px 0 12px',
-                          cursor: 'pointer',
-                          background: isSelected ? 'var(--bg-raised)' : 'transparent',
-                          borderLeft: isSelected ? `2px solid ${cat.accent}` : '2px solid transparent',
-                          userSelect: 'none',
-                          outline: 'none',
-                          transition: 'background 120ms ease',
+                        type="button"
+                        onClick={() => {
+                          setSelectedIndicator(indItem.id);
+                          window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
                         }}
-                        onMouseEnter={(e) => { if (!isSelected) e.currentTarget.style.background = 'var(--bg-surface)'; }}
-                        onMouseLeave={(e) => { if (!isSelected) e.currentTarget.style.background = 'transparent'; }}
+                        className="w-full flex items-center justify-between text-left transition-colors duration-120"
+                        style={{
+                          height: '28px',
+                          padding: '0 10px 0 14px',
+                          cursor: 'pointer',
+                          background: isSelected ? '#1E1915' : 'transparent',
+                          borderLeft: isSelected ? '2px solid #FAF7F2' : '2px solid transparent',
+                          borderTop: 'none',
+                          borderRight: 'none',
+                          borderBottom: 'none',
+                          outline: 'none',
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!isSelected) {
+                            e.currentTarget.style.background = '#15120F';
+                            const titleSpan = e.currentTarget.querySelector('span');
+                            if (titleSpan) titleSpan.style.color = '#FAF7F2';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isSelected) {
+                            e.currentTarget.style.background = 'transparent';
+                            const titleSpan = e.currentTarget.querySelector('span');
+                            if (titleSpan) titleSpan.style.color = '#C5BEB3';
+                          }
+                        }}
                       >
-                        <span style={{
-                          flex: 1,
-                          fontSize: '11.5px',
-                          fontWeight: isSelected ? 600 : 400,
-                          lineHeight: '1.4',
-                          color: isSelected ? 'var(--text-heading)' : 'var(--text-secondary)',
-                          fontFamily: 'var(--ff-sans)',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                          transition: 'color 120ms ease',
-                        }}>
+                        <span
+                          style={{
+                            fontSize: '11px',
+                            fontWeight: isSelected ? 600 : 400,
+                            lineHeight: '1.4',
+                            color: isSelected ? '#FAF7F2' : '#C5BEB3',
+                            fontFamily: 'var(--ff-sans)',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
                           {hi ? (
                             <>
                               {hi.before}
-                              <span style={{ color: 'var(--accent-bright)', fontWeight: 600 }}>{hi.match}</span>
+                              <span style={{ color: '#FAF7F2', fontWeight: 700, textDecoration: 'underline' }}>
+                                {hi.match}
+                              </span>
                               {hi.after}
                             </>
-                          ) : indItem.name}
+                          ) : (
+                            indItem.name
+                          )}
                         </span>
-                        {/* Frequency badge */}
                         {indItem.freq && (
-                          <span style={{
-                            fontSize: '9px',
-                            fontFamily: 'var(--ff-mono)',
-                            fontWeight: 500,
-                            color: 'var(--text-ghost)',
-                            letterSpacing: '0.04em',
-                            flexShrink: 0,
-                          }}>
+                          <span
+                            style={{
+                              fontSize: '8.5px',
+                              fontFamily: 'var(--ff-mono)',
+                              fontWeight: 500,
+                              color: '#736B63',
+                              letterSpacing: '0.04em',
+                              flexShrink: 0,
+                              marginLeft: '4px',
+                            }}
+                          >
                             {indItem.freq}
                           </span>
                         )}
-                      </div>
+                      </button>
                     );
                   })}
                 </div>
@@ -291,10 +397,8 @@ const SentimentSidebar = memo(function SentimentSidebar({
             </div>
           );
         })}
-
-
       </div>
-    </motion.div>
+    </div>
   );
 });
 

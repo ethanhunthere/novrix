@@ -3,7 +3,6 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { registerPromise, prefetch } from '@/lib/bootCache';
 import TerminalModulePageShell from '@/components/terminal/TerminalModulePageShell';
-import FooterTerminal from '@/components/terminal/FooterTerminal';
 import DesktopGate from '@/components/layout/DesktopGate';
 import BootSequence from '@/components/layout/BootSequence';
 import AuthGuard from '@/components/layout/AuthGuard';
@@ -453,7 +452,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
     sofr: true, walcl: true, wresbal: true, rrpontsyd: true, cpiaucsl: true, cpilfesl: true, pcepi: true, pcepilfe: true, mich: true, t5yie: true, t10yie: true, dgs1mo: true, dgs3mo: true, dgs6mo: true, dgs1: true, dgs5: true, dgs20: true, dgs30: true, t10y2y: true, t10y3m: true, m1sl: true, mabmm301: true, unrate: true, payems: true, icsa: true, jtsjol: true, emratio: true, gdpc1: true, indpro: true, houst: true, umcsent: true, rsxfs: true, dcoilwtico: true, bamlh0a0hym2: true, mortgage30us: true, bogmbase: true, totalsl: true, vtpx: true, shax: true, smfx: true, levr: true, rcfx: true,
     cprx: true, rpix: true, crrx: true, sgrx: true, domx: true,
   });
-  const [maximizedPanel, setMaximizedPanel] = useState<string | null>(null);
   // NOVRIX INTELLIGENCE timeframe states
   const [vtpxTimeframe, setVtpxTimeframe] = useState('365');
   const [shaxTimeframe, setShaxTimeframe] = useState('365');
@@ -544,23 +542,9 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
   }, []);
 
   useEffect(() => {
-    if (maximizedPanel) {
-      // Panel visibility is driven by the lazy-load observer; maximizing must
-      // force the panel into the observed set before it can scroll into view.
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setVisiblePanels((prev) => {
-        if (prev.has(maximizedPanel)) return prev;
-        const next = new Set(prev);
-        next.add(maximizedPanel);
-        return next;
-      });
-    }
-  }, [maximizedPanel]);
-
-  useEffect(() => {
     if (selectedIndicator) {
       const panelId = selectedIndicator.replace(/^indicator-/, '');
-      // Same as maximize: selecting a registry row must force that panel into
+      // Selecting a registry row must force that panel into
       // the observed set so its chart mounts immediately.
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setVisiblePanels((prev) => {
@@ -569,6 +553,21 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
         next.add(panelId);
         return next;
       });
+    }
+  }, [selectedIndicator]);
+
+  // Block page scroll when single indicator is selected so user has immediate, full screen visibility without losing focus
+  useEffect(() => {
+    if (selectedIndicator !== null) {
+      const prevBodyOverflow = document.body.style.overflow;
+      const prevHtmlOverflow = document.documentElement.style.overflow;
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+      window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+      return () => {
+        document.body.style.overflow = prevBodyOverflow;
+        document.documentElement.style.overflow = prevHtmlOverflow;
+      };
     }
   }, [selectedIndicator]);
 
@@ -584,9 +583,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
     }
   }, []);
 
-
-  // Dynamic chart height — taller in maximized mode
-  // Viewport height — read once on mount, updated on resize.
+  // Viewport height & width — read once on mount, updated on resize.
   // Avoids synchronous layout reads inside the render callback (`ch`).
   const [vpHeight, setVpHeight] = useState(() => typeof window !== 'undefined' ? window.innerHeight : 1080);
   const [vpWidth, setVpWidth] = useState(() => typeof window !== 'undefined' ? window.innerWidth : 1440);
@@ -599,14 +596,19 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
-  const ch = useCallback((panelId: string, normalH = 340) => {
-    if (maximizedPanel === panelId) return Math.min(800, Math.round(vpHeight * 0.72));
-    if (selectedIndicator !== null) return Math.max(normalH, Math.min(vpHeight - 320, 680));
+  const ch = useCallback((_panelId: string, normalH = 340) => {
+    if (selectedIndicator !== null) {
+      // In single panel mode, keep chart compact and strictly within viewport without scrolling
+      const maxAvailable = vpHeight - 210;
+      if (vpWidth >= 2560) return Math.min(maxAvailable, 480);
+      if (vpWidth >= 1920) return Math.min(maxAvailable, 440);
+      return Math.max(260, Math.min(maxAvailable, 390));
+    }
     if (vpWidth >= 2560) return 480;
     if (vpWidth >= 1920) return 420;
     if (vpWidth >= 1440) return 380;
     return normalH;
-  }, [maximizedPanel, selectedIndicator, vpHeight, vpWidth]);
+  }, [selectedIndicator, vpHeight, vpWidth]);
 
   // Preload modern-screenshot module on first hover
   const msRef = useRef<Promise<typeof import('modern-screenshot')> | null>(null);
@@ -2622,30 +2624,18 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
   ], []);
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden font-mono" style={{ background: '#030508' }}>
-      {/* Dot matrix overlay */}
-      <div className="fixed inset-0 pointer-events-none" style={{
-        backgroundImage: `radial-gradient(circle, rgba(100,140,200,0.03) 1px, transparent 1px)`,
-        backgroundSize: '32px 32px',
-      }} />
-      {/* Cold blue ambient glow — top right */}
-      <div className="fixed pointer-events-none" style={{
-        top: '-10vh', right: '-8vw', width: '60vw', height: '60vh',
-        background: 'radial-gradient(ellipse at center, rgba(30,80,180,0.04) 0%, transparent 70%)',
-        zIndex: 0,
-      }} />
-      {/* Subtle red ambient glow — bottom left */}
-      <div className="fixed pointer-events-none" style={{
-        bottom: '-15vh', left: '-10vw', width: '55vw', height: '55vh',
-        background: 'radial-gradient(ellipse at center, rgba(194,52,77,0.025) 0%, transparent 70%)',
-        zIndex: 0,
-      }} />
+    <div className={`min-h-screen flex flex-col relative overflow-hidden font-mono ${selectedIndicator !== null ? 'h-screen max-h-screen overflow-hidden' : ''}`} style={{ background: '#0A0908' }}>
+      <TerminalModulePageShell
+        className={
+          selectedIndicator !== null
+            ? "flex-1 w-full max-w-[2000px] 3xl:max-w-[2800px] 4xl:max-w-[3600px] mx-auto px-4 lg:px-6 xl:px-8 2xl:px-10 3xl:px-16 4xl:px-24 py-2 pb-2 h-[calc(100vh-40px)] max-h-[calc(100vh-40px)] overflow-hidden flex flex-col"
+            : undefined
+        }
+      >
 
-      <TerminalModulePageShell>
-
-        <div className="sentiment-comfort flex flex-row items-start gap-6 w-full">
+        <div className={`sentiment-comfort flex flex-row items-start gap-6 w-full ${selectedIndicator !== null ? 'h-full max-h-full overflow-hidden' : ''}`}>
           {/* ─── Indicators Registry Sidebar (Left side: short in width, bigger in height) ─── */}
-          <aside className="w-[190px] min-w-[190px] max-w-[190px] shrink-0 sticky top-[52px]">
+          <aside className="w-[204px] min-w-[204px] max-w-[204px] lg:w-[216px] lg:min-w-[216px] lg:max-w-[216px] shrink-0 sticky top-[52px]">
             <SentimentSidebar
               registryCats={registryCats}
               registrySearch={registrySearch}
@@ -2658,22 +2648,35 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
           </aside>
 
           {/* ─── Main Content Panels (Right side) ─── */}
-          <div className="flex-1 min-w-0 space-y-5">
+          <div className={`flex-1 min-w-0 ${selectedIndicator !== null ? 'flex flex-col gap-1.5' : 'space-y-5'}`}>
             {selectedIndicator !== null && (
               <button
+                type="button"
                 onClick={() => setSelectedIndicator(null)}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-all duration-150 hover:opacity-80"
+                className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[2px] transition-all duration-140 active:scale-[0.98] w-fit"
                 style={{
                   fontFamily: 'var(--ff-mono)',
-                  color: '#94A3B8',
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  letterSpacing: '0.05em',
+                  fontSize: '9.5px',
+                  fontWeight: 600,
+                  letterSpacing: '0.08em',
+                  color: '#C5BEB3',
+                  background: '#161311',
+                  border: '1px solid rgba(245, 241, 234, 0.12)',
                   cursor: 'pointer',
-                  width: 'fit-content',
+                  lineHeight: '18px',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#FAF7F2';
+                  e.currentTarget.style.borderColor = 'rgba(245, 241, 234, 0.28)';
+                  e.currentTarget.style.background = '#201A16';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = '#C5BEB3';
+                  e.currentTarget.style.borderColor = 'rgba(245, 241, 234, 0.12)';
+                  e.currentTarget.style.background = '#161311';
                 }}
               >
-                <span style={{ fontSize: '14px', lineHeight: 1 }}>←</span>
+                <span style={{ fontSize: '10px', lineHeight: 1 }}>←</span>
                 <span>OVERVIEW</span>
               </button>
             )}
@@ -2683,14 +2686,12 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             <PanelMaximizeWrapper
               fullHeight={selectedIndicator !== null}
               panelId="sentiment-oscillator"
-              isMaximized={maximizedPanel === 'sentiment-oscillator'}
-              onMinimize={() => setMaximizedPanel(null)}
               id="indicator-fear-greed"
               ref={setPanelRef('sentiment-oscillator')}
               data-panel="sentiment-oscillator"
               onMouseEnter={preloadCapture}
               className="bg-[var(--bg-surface)] border overflow-hidden scroll-mt-4"
-              style={{ position: 'relative', background: 'linear-gradient(135deg, var(--bg-surface) 0%, #14110F 60%, var(--bg-base) 100%)', border: '1px solid var(--border-default)', boxShadow: '0 8px 40px rgba(0,0,0,0.45)' }}
+              style={{ position: 'relative', background: '#120F0D', border: '1px solid var(--border-default)', boxShadow: '0 4px 20px rgba(0,0,0,0.35)' }}
             >
               <PanelHeader
                 code="FNG"
@@ -2703,8 +2704,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 accentColor={getSentimentColor(sentiment?.score)}
                 lastUpdated={sentiment?.timestamp ? new Date(sentiment.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : null}
                 onScreenshot={() => capturePanel('sentiment-oscillator')}
-                onMaximize={() => setMaximizedPanel(maximizedPanel === 'sentiment-oscillator' ? null : 'sentiment-oscillator')}
-                isMaximized={maximizedPanel === 'sentiment-oscillator'}
               />
               <div className="px-4 pt-3 pb-4" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
                 {(!visiblePanels.has('sentiment-oscillator') || isLoading) ? (
@@ -2721,7 +2720,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                             const isBtcOn = !!showBtcPrice['sentiment-oscillator'];
                             const isFngOn = showIndicator['sentiment-oscillator'] ?? true;
                             const fngDataToRender = isBtcOn ? fngChartDataWithPrice : chartData;
-                            const isMaximized = maximizedPanel === 'sentiment-oscillator';
 
                             return (
                               <>
@@ -2756,7 +2754,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                                       top: 6,
                                       right: isBtcOn ? 6 : 14,
                                       bottom: 0,
-                                      left: isMaximized ? 14 : 10,
+                                      left: 10,
                                     }}
                                     style={{ outline: 'none' }}
                                   >
@@ -2791,7 +2789,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                                           {...props}
                                           chartData={fngDataToRender}
                                           timeframe={selectedTimeframe}
-                                          fontSize={isMaximized ? 12 : 11}
+                                          fontSize={11}
                                         />
                                       )}
                                       interval={0}
@@ -2800,7 +2798,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                                     <YAxis
                                       domain={[0, 100]}
                                       stroke="none"
-                                      tick={{ fill: '#A9A29A', fontSize: isMaximized ? 12 : 11, fontFamily: 'var(--ff-mono)' }}
+                                      tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
                                       width={38}
                                       ticks={[0, 25, 50, 75, 100]}
                                     />
@@ -2813,7 +2811,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                                         stroke="none"
                                         tick={{ fill: '#8C857C', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
                                         tickFormatter={(v: number) => (v >= 1e3 ? `$${(v / 1e3).toFixed(0)}K` : `$${v}`)}
-                                        width={isMaximized ? 74 : 62}
+                                        width={62}
                                       />
                                     )}
                                     <Tooltip
@@ -2912,8 +2910,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 key={panel.panelId}
                 panel={panel}
                 selectedIndicator={selectedIndicator}
-                maximizedPanel={maximizedPanel}
-                setMaximizedPanel={setMaximizedPanel}
                 capturePanel={capturePanel}
                 preloadCapture={preloadCapture}
                 setPanelRef={setPanelRef}
@@ -2930,52 +2926,52 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
 
             {/* ── Panel 03: MVRV Ratio ── */}
             {bgeoPanels.filter(p => p.panelId === 'mvrv' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
-              <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} maximizedPanel={maximizedPanel} setMaximizedPanel={setMaximizedPanel} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
+              <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
             ))}
 
             {/* ── Panel 04: LTH-MVRV ── */}
             {bgeoPanels.filter(p => p.panelId === 'lth-mvrv' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
-              <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} maximizedPanel={maximizedPanel} setMaximizedPanel={setMaximizedPanel} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
+              <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
             ))}
 
             {/* ── Panel 05: SOPR ── */}
             {bgeoPanels.filter(p => p.panelId === 'sopr' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
-              <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} maximizedPanel={maximizedPanel} setMaximizedPanel={setMaximizedPanel} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
+              <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
             ))}
 
             {/* ── Panel 06: SSR ── */}
             {bgeoPanels.filter(p => p.panelId === 'ssr' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
-              <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} maximizedPanel={maximizedPanel} setMaximizedPanel={setMaximizedPanel} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
+              <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
             ))}
 
             {/* ── Panel 07: Supply in Loss ── */}
             {bgeoPanels.filter(p => p.panelId === 'supply-loss' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
-              <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} maximizedPanel={maximizedPanel} setMaximizedPanel={setMaximizedPanel} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
+              <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
             ))}
 
             {/* ── Panel 08: Supply in Profit ── */}
             {bgeoPanels.filter(p => p.panelId === 'supply-profit' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
-              <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} maximizedPanel={maximizedPanel} setMaximizedPanel={setMaximizedPanel} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
+              <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
             ))}
 
             {/* ── Panel 09: Realized Profit ── */}
             {bgeoPanels.filter(p => p.panelId === 'realized-profit' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
-              <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} maximizedPanel={maximizedPanel} setMaximizedPanel={setMaximizedPanel} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
+              <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
             ))}
 
             {/* ── Panel 10: Realized Loss ── */}
             {bgeoPanels.filter(p => p.panelId === 'realized-loss' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
-              <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} maximizedPanel={maximizedPanel} setMaximizedPanel={setMaximizedPanel} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
+              <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
             ))}
 
             {/* ── Panel 10: STH MVRV ── */}
             {bgeoPanels.filter(p => p.panelId === 'sth-mvrv' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
-              <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} maximizedPanel={maximizedPanel} setMaximizedPanel={setMaximizedPanel} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
+              <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
             ))}
 
             {/* ── Panel 11: Hashrate ── */}
             {bgeoPanels.filter(p => p.panelId === 'hashrate' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
-              <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} maximizedPanel={maximizedPanel} setMaximizedPanel={setMaximizedPanel} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
+              <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
             ))}
 
             {/* BTC & ETH Dominance Kernel - Panel 03 */}
@@ -2983,8 +2979,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             <PanelMaximizeWrapper
               fullHeight={selectedIndicator !== null}
               panelId="dominance"
-              isMaximized={maximizedPanel === 'dominance'}
-              onMinimize={() => setMaximizedPanel(null)}
               id="indicator-dominance"
               ref={setPanelRef('dominance')}
               data-panel="dominance"
@@ -3003,16 +2997,10 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 accentColor="#F7931A"
                 lastUpdated={dominanceData.length > 0 ? new Date(dominanceData[dominanceData.length - 1].time).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : null}
                 onScreenshot={() => capturePanel('dominance')}
-                onMaximize={() => setMaximizedPanel(maximizedPanel === 'dominance' ? null : 'dominance')}
-                isMaximized={maximizedPanel === 'dominance'}
               />
               <div className="px-4 pt-3 pb-4" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
-                {(!visiblePanels.has('dominance') || isDominanceLoading) ? (
+                {(!visiblePanels.has('dominance') || isDominanceLoading || slicedDominanceChartDataWithPrice.length === 0) ? (
                   <ChartSkeleton height={ch('dominance')} />
-                ) : slicedDominanceChartDataWithPrice.length === 0 ? (
-                  <div style={{ height: `${ch('dominance')}px`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', color: '#52525B', letterSpacing: '0.18em' }}>AWAITING DATA SYNC</span>
-                  </div>
                 ) : (
                   <div>
                     <div className="flex flex-row items-center justify-between gap-3 mb-4 flex-wrap">
@@ -3098,8 +3086,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 key={panel.panelId}
                 panel={panel}
                 selectedIndicator={selectedIndicator}
-                maximizedPanel={maximizedPanel}
-                setMaximizedPanel={setMaximizedPanel}
                 capturePanel={capturePanel}
                 preloadCapture={preloadCapture}
                 setPanelRef={setPanelRef}
@@ -3120,8 +3106,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 key={panel.panelId}
                 panel={panel}
                 selectedIndicator={selectedIndicator}
-                maximizedPanel={maximizedPanel}
-                setMaximizedPanel={setMaximizedPanel}
                 capturePanel={capturePanel}
                 preloadCapture={preloadCapture}
                 setPanelRef={setPanelRef}
@@ -3142,8 +3126,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 key={panel.panelId}
                 panel={panel}
                 selectedIndicator={selectedIndicator}
-                maximizedPanel={maximizedPanel}
-                setMaximizedPanel={setMaximizedPanel}
                 capturePanel={capturePanel}
                 preloadCapture={preloadCapture}
                 setPanelRef={setPanelRef}
@@ -3164,8 +3146,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 key={panel.panelId}
                 panel={panel}
                 selectedIndicator={selectedIndicator}
-                maximizedPanel={maximizedPanel}
-                setMaximizedPanel={setMaximizedPanel}
                 capturePanel={capturePanel}
                 preloadCapture={preloadCapture}
                 setPanelRef={setPanelRef}
@@ -3186,8 +3166,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 key={panel.panelId}
                 panel={panel}
                 selectedIndicator={selectedIndicator}
-                maximizedPanel={maximizedPanel}
-                setMaximizedPanel={setMaximizedPanel}
                 capturePanel={capturePanel}
                 preloadCapture={preloadCapture}
                 setPanelRef={setPanelRef}
@@ -3208,8 +3186,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 key={panel.panelId}
                 panel={panel}
                 selectedIndicator={selectedIndicator}
-                maximizedPanel={maximizedPanel}
-                setMaximizedPanel={setMaximizedPanel}
                 capturePanel={capturePanel}
                 preloadCapture={preloadCapture}
                 setPanelRef={setPanelRef}
@@ -3230,8 +3206,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 key={panel.panelId}
                 panel={panel}
                 selectedIndicator={selectedIndicator}
-                maximizedPanel={maximizedPanel}
-                setMaximizedPanel={setMaximizedPanel}
                 capturePanel={capturePanel}
                 preloadCapture={preloadCapture}
                 setPanelRef={setPanelRef}
@@ -3252,8 +3226,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 key={panel.panelId}
                 panel={panel}
                 selectedIndicator={selectedIndicator}
-                maximizedPanel={maximizedPanel}
-                setMaximizedPanel={setMaximizedPanel}
                 capturePanel={capturePanel}
                 preloadCapture={preloadCapture}
                 setPanelRef={setPanelRef}
@@ -3274,8 +3246,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 key={panel.panelId}
                 panel={panel}
                 selectedIndicator={selectedIndicator}
-                maximizedPanel={maximizedPanel}
-                setMaximizedPanel={setMaximizedPanel}
                 capturePanel={capturePanel}
                 preloadCapture={preloadCapture}
                 setPanelRef={setPanelRef}
@@ -3296,8 +3266,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 key={panel.panelId}
                 panel={panel}
                 selectedIndicator={selectedIndicator}
-                maximizedPanel={maximizedPanel}
-                setMaximizedPanel={setMaximizedPanel}
                 capturePanel={capturePanel}
                 preloadCapture={preloadCapture}
                 setPanelRef={setPanelRef}
@@ -3317,8 +3285,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             <PanelMaximizeWrapper
               fullHeight={selectedIndicator !== null}
               panelId="hashribbons"
-              isMaximized={maximizedPanel === 'hashribbons'}
-              onMinimize={() => setMaximizedPanel(null)}
               id="indicator-hashribbons"
               ref={setPanelRef('hashribbons')}
               data-panel="hashribbons"
@@ -3345,8 +3311,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                     accentColor={zoneColor}
                     lastUpdated={lastDate}
                     onScreenshot={() => capturePanel('hashribbons')}
-                    onMaximize={() => setMaximizedPanel(maximizedPanel === 'hashribbons' ? null : 'hashribbons')}
-                    isMaximized={maximizedPanel === 'hashribbons'}
                   />
               <div className="px-4 pt-3 pb-4" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
                 {(!visiblePanels.has('hashribbons') || isHashribbonsLoading) ? <ChartSkeleton height={ch('hashribbons')} /> : (
@@ -3440,8 +3404,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 key={panel.panelId}
                 panel={panel}
                 selectedIndicator={selectedIndicator}
-                maximizedPanel={maximizedPanel}
-                setMaximizedPanel={setMaximizedPanel}
                 capturePanel={capturePanel}
                 preloadCapture={preloadCapture}
                 setPanelRef={setPanelRef}
@@ -3462,8 +3424,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 key={panel.panelId}
                 panel={panel}
                 selectedIndicator={selectedIndicator}
-                maximizedPanel={maximizedPanel}
-                setMaximizedPanel={setMaximizedPanel}
                 capturePanel={capturePanel}
                 preloadCapture={preloadCapture}
                 setPanelRef={setPanelRef}
@@ -3484,8 +3444,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 key={panel.panelId}
                 panel={panel}
                 selectedIndicator={selectedIndicator}
-                maximizedPanel={maximizedPanel}
-                setMaximizedPanel={setMaximizedPanel}
                 capturePanel={capturePanel}
                 preloadCapture={preloadCapture}
                 setPanelRef={setPanelRef}
@@ -3506,8 +3464,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 key={panel.panelId}
                 panel={panel}
                 selectedIndicator={selectedIndicator}
-                maximizedPanel={maximizedPanel}
-                setMaximizedPanel={setMaximizedPanel}
                 capturePanel={capturePanel}
                 preloadCapture={preloadCapture}
                 setPanelRef={setPanelRef}
@@ -3528,8 +3484,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 key={panel.panelId}
                 panel={panel}
                 selectedIndicator={selectedIndicator}
-                maximizedPanel={maximizedPanel}
-                setMaximizedPanel={setMaximizedPanel}
                 capturePanel={capturePanel}
                 preloadCapture={preloadCapture}
                 setPanelRef={setPanelRef}
@@ -3550,8 +3504,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 key={panel.panelId}
                 panel={panel}
                 selectedIndicator={selectedIndicator}
-                maximizedPanel={maximizedPanel}
-                setMaximizedPanel={setMaximizedPanel}
                 capturePanel={capturePanel}
                 preloadCapture={preloadCapture}
                 setPanelRef={setPanelRef}
@@ -3572,8 +3524,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 key={panel.panelId}
                 panel={panel}
                 selectedIndicator={selectedIndicator}
-                maximizedPanel={maximizedPanel}
-                setMaximizedPanel={setMaximizedPanel}
                 capturePanel={capturePanel}
                 preloadCapture={preloadCapture}
                 setPanelRef={setPanelRef}
@@ -3594,8 +3544,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 key={panel.panelId}
                 panel={panel}
                 selectedIndicator={selectedIndicator}
-                maximizedPanel={maximizedPanel}
-                setMaximizedPanel={setMaximizedPanel}
                 capturePanel={capturePanel}
                 preloadCapture={preloadCapture}
                 setPanelRef={setPanelRef}
@@ -3616,8 +3564,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 key={panel.panelId}
                 panel={panel}
                 selectedIndicator={selectedIndicator}
-                maximizedPanel={maximizedPanel}
-                setMaximizedPanel={setMaximizedPanel}
                 capturePanel={capturePanel}
                 preloadCapture={preloadCapture}
                 setPanelRef={setPanelRef}
@@ -3638,8 +3584,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 key={panel.panelId}
                 panel={panel}
                 selectedIndicator={selectedIndicator}
-                maximizedPanel={maximizedPanel}
-                setMaximizedPanel={setMaximizedPanel}
                 capturePanel={capturePanel}
                 preloadCapture={preloadCapture}
                 setPanelRef={setPanelRef}
@@ -3659,8 +3603,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             <PanelMaximizeWrapper
               fullHeight={selectedIndicator !== null}
               panelId="200-week-ma"
-              isMaximized={maximizedPanel === '200-week-ma'}
-              onMinimize={() => setMaximizedPanel(null)}
               id="indicator-200-week-ma"
               ref={setPanelRef('200-week-ma')}
               data-panel="200-week-ma"
@@ -3682,14 +3624,10 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                     zone={zone} tag="" lastUpdated={lastDate}
                     panelId="200-week-ma"
                     onScreenshot={() => capturePanel('200-week-ma')}
-                    onMaximize={() => setMaximizedPanel(maximizedPanel === '200-week-ma' ? null : '200-week-ma')}
-                    isMaximized={maximizedPanel === '200-week-ma'}
                   />
               <div className="px-4 pt-3 pb-4" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
-                {(!visiblePanels.has('200-week-ma') || isWeekMa200Loading) ? <ChartSkeleton height={ch('200-week-ma')} /> : weekMa200ChartData.length === 0 ? (
-                  <div style={{ height: `${ch('200-week-ma')}px`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', color: '#52525B', letterSpacing: '0.18em' }}>AWAITING DATA SYNC</span>
-                  </div>
+                {(!visiblePanels.has('200-week-ma') || isWeekMa200Loading || weekMa200ChartData.length === 0) ? (
+                  <ChartSkeleton height={ch('200-week-ma')} />
                 ) : (
                   <div>
                     <div className="flex flex-row items-center justify-between gap-3 mb-4 flex-wrap">
@@ -3768,8 +3706,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 key={panel.panelId}
                 panel={panel}
                 selectedIndicator={selectedIndicator}
-                maximizedPanel={maximizedPanel}
-                setMaximizedPanel={setMaximizedPanel}
                 capturePanel={capturePanel}
                 preloadCapture={preloadCapture}
                 setPanelRef={setPanelRef}
@@ -3789,8 +3725,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 key={panel.panelId}
                 panel={panel}
                 selectedIndicator={selectedIndicator}
-                maximizedPanel={maximizedPanel}
-                setMaximizedPanel={setMaximizedPanel}
                 capturePanel={capturePanel}
                 preloadCapture={preloadCapture}
                 setPanelRef={setPanelRef}
@@ -3810,8 +3744,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 key={panel.panelId}
                 panel={panel}
                 selectedIndicator={selectedIndicator}
-                maximizedPanel={maximizedPanel}
-                setMaximizedPanel={setMaximizedPanel}
                 capturePanel={capturePanel}
                 preloadCapture={preloadCapture}
                 setPanelRef={setPanelRef}
@@ -3831,8 +3763,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 key={panel.panelId}
                 panel={panel}
                 selectedIndicator={selectedIndicator}
-                maximizedPanel={maximizedPanel}
-                setMaximizedPanel={setMaximizedPanel}
                 capturePanel={capturePanel}
                 preloadCapture={preloadCapture}
                 setPanelRef={setPanelRef}
@@ -3853,8 +3783,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 key={panel.panelId}
                 panel={panel}
                 selectedIndicator={selectedIndicator}
-                maximizedPanel={maximizedPanel}
-                setMaximizedPanel={setMaximizedPanel}
                 capturePanel={capturePanel}
                 preloadCapture={preloadCapture}
                 setPanelRef={setPanelRef}
@@ -3874,8 +3802,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             <PanelMaximizeWrapper
               fullHeight={selectedIndicator !== null}
               panelId="social-sentiment"
-              isMaximized={maximizedPanel === 'social-sentiment'}
-              onMinimize={() => setMaximizedPanel(null)}
               id="indicator-social-sentiment"
               ref={setPanelRef('social-sentiment')}
               data-panel="social-sentiment"
@@ -3893,8 +3819,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 panelId="social-sentiment"
                 accentColor="#A855F7"
                 onScreenshot={() => capturePanel('social-sentiment')}
-                onMaximize={() => setMaximizedPanel(maximizedPanel === 'social-sentiment' ? null : 'social-sentiment')}
-                isMaximized={maximizedPanel === 'social-sentiment'}
               />
               <div className="px-4 pt-3 pb-4" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
                 {(!visiblePanels.has('social-sentiment') || isSocialLoading) ? (
@@ -4008,8 +3932,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             <PanelMaximizeWrapper
               fullHeight={selectedIndicator !== null}
               panelId="trending"
-              isMaximized={maximizedPanel === 'trending'}
-              onMinimize={() => setMaximizedPanel(null)}
               id="indicator-trending"
               ref={setPanelRef('trending')}
               data-panel="trending-coins"
@@ -4025,8 +3947,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 panelId="trending"
                 accentColor="#F59E0B"
                 onScreenshot={() => capturePanel('trending')}
-                onMaximize={() => setMaximizedPanel(maximizedPanel === 'trending' ? null : 'trending')}
-                isMaximized={maximizedPanel === 'trending'}
               />
               <div className="px-4 pt-3 pb-4" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
                 {(!visiblePanels.has('trending-coins') || isSocialLoading) ? (
@@ -4214,8 +4134,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
           .sentiment-comfort .recharts-text { font-size: 14px !important; }
         }
       `}</style>
-
-      <FooterTerminal />
 
       {/* Capture confirmation toast */}
       {capturedPanel && (

@@ -219,8 +219,6 @@ function buildZoneGradientStops(
 export interface SentimentChartPanelProps {
   panel: SentimentPanelConfig;
   selectedIndicator: string | null;
-  maximizedPanel: string | null;
-  setMaximizedPanel: React.Dispatch<React.SetStateAction<string | null>>;
   capturePanel: (key: string) => void;
   preloadCapture: () => void;
   setPanelRef: (key: string) => (el: HTMLDivElement | null) => void;
@@ -237,8 +235,6 @@ export interface SentimentChartPanelProps {
 const SentimentChartPanel = memo(function SentimentChartPanel({
   panel,
   selectedIndicator,
-  maximizedPanel,
-  setMaximizedPanel,
   capturePanel,
   preloadCapture,
   setPanelRef,
@@ -270,7 +266,6 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
     [isVisible, panel.data, valueKey, panel.referenceBands]
   );
 
-  const isMaximized = maximizedPanel === panel.panelId;
   const chartHeight = ch(panel.panelId);
   const zoneLineGradient = useMemo(
     () => isVisible ? buildZoneGradientStops(panel.data, valueKey, chartHeight, panel.panelId) : null,
@@ -281,8 +276,6 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
     <PanelMaximizeWrapper
       fullHeight={selectedIndicator !== null}
       panelId={panel.panelId}
-      isMaximized={maximizedPanel === panel.panelId}
-      onMinimize={() => setMaximizedPanel(null)}
       id={panel.id}
       ref={setPanelRef(panel.panelId)}
       data-panel={panel.panelId}
@@ -290,9 +283,9 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
       className="bg-[var(--bg-surface)] border overflow-hidden scroll-mt-4"
       style={{
         position: 'relative',
-        background: 'linear-gradient(135deg, var(--bg-surface) 0%, #14110F 60%, var(--bg-base) 100%)',
+        background: '#120F0D',
         border: '1px solid var(--border-default)',
-        boxShadow: '0 8px 40px rgba(0,0,0,0.45)',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.35)',
       }}
     >
       {(() => {
@@ -313,20 +306,14 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
             updateFreq={panel.updateFreq}
             panelId={panel.panelId}
             onScreenshot={() => capturePanel(panel.panelId)}
-            onMaximize={() => setMaximizedPanel(maximizedPanel === panel.panelId ? null : panel.panelId)}
-            isMaximized={maximizedPanel === panel.panelId}
           />
         );
       })()}
 
       <div className="px-5 pt-4 pb-5" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
 
-        {(!visiblePanels.has(panel.panelId) || panel.isLoading || !rechartsReady) ? (
+        {(!visiblePanels.has(panel.panelId) || panel.isLoading || !rechartsReady || panel.data.length === 0) ? (
           <ChartSkeleton height={ch(panel.panelId)} />
-        ) : panel.data.length === 0 ? (
-          <div style={{ height: `${ch(panel.panelId)}px`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '10px', color: 'var(--text-secondary)', letterSpacing: '0.16em' }}>AWAITING DATA SYNC</span>
-          </div>
         ) : (() => {
           const isFred = panel.panelId.startsWith('fred-') || !!panel.useFredTfOpts;
           const showBtc = !isFred && !panel.hideBtcPrice;
@@ -349,7 +336,7 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
                     top: 6,
                     right: showBtc && showBtcPrice[panel.indicatorKey] && !panel.btcSameAxis ? 6 : 14,
                     bottom: 0,
-                    left: isMaximized ? 14 : 10,
+                    left: 10,
                   }}
                 >
                   <defs>
@@ -382,7 +369,7 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
                         {...props}
                         chartData={chartData}
                         timeframe={panel.timeframe}
-                        fontSize={isMaximized ? 12 : 11}
+                        fontSize={11}
                       />
                     )}
                     interval={0}
@@ -393,12 +380,12 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
                     stroke="none"
                     tick={{ fill: '#A9A29A', fontSize: 12, fontFamily: 'var(--ff-mono)' }}
                     tickFormatter={panel.yAxisTick}
-                    width={isMaximized ? 84 : 70}
+                    width={70}
                   />
                   {showBtc && showBtcPrice[panel.indicatorKey] && !panel.btcSameAxis && (
                     <YAxis yAxisId="btcPrice" orientation="right" scale="log" domain={['auto', 'auto']} stroke="none"
                       tick={{ fill: '#8C857C', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
-                      tickFormatter={(v: number) => v >= 1e3 ? `$${(v/1e3).toFixed(0)}K` : `$${v}`} width={isMaximized ? 74 : 62} />
+                      tickFormatter={(v: number) => v >= 1e3 ? `$${(v/1e3).toFixed(0)}K` : `$${v}`} width={62} />
                   )}
                   <Tooltip cursor={{ stroke: 'rgba(245,241,234,0.65)', strokeWidth: 2 }} animationDuration={0} isAnimationActive={false}
                     content={(props: Record<string, unknown>) => (
@@ -444,11 +431,6 @@ function arePanelPropsEqual(prev: SentimentChartPanelProps, next: SentimentChart
 
   // Selected indicator state
   if (prev.selectedIndicator !== next.selectedIndicator) return false;
-
-  // Maximized state for this specific panel
-  const pMax = prev.maximizedPanel === p.panelId;
-  const nMax = next.maximizedPanel === n.panelId;
-  if (pMax !== nMax) return false;
 
   // Visibility state for this specific panel
   const pVis = prev.visiblePanels.has(p.panelId);
