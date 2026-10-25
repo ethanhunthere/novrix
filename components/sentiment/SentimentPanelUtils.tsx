@@ -231,10 +231,10 @@ export const PanelHeader = ({
   );
 };
 
-export const FngTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ value?: number | string; payload?: { date?: string } }> }) => {
+export const FngTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ value?: number | string; payload?: { date?: string; dateFormatted?: string } }> }) => {
   if (!active || !payload?.length) return null;
   const val = Number(payload[0]?.value ?? 0);
-  const date = payload[0]?.payload?.date || '';
+  const date = payload[0]?.payload?.date || payload[0]?.payload?.dateFormatted || '';
   const color = val >= 75 ? '#EF4444' : val >= 55 ? '#F7931A' : val >= 45 ? '#88B4D0' : '#10B981';
   const label = val >= 80 ? 'EXTREME GREED' : val >= 60 ? 'GREED' : val >= 45 ? 'NEUTRAL' : val >= 25 ? 'FEAR' : 'EXTREME FEAR';
   return (
@@ -278,7 +278,7 @@ export const PrecisionTooltip = ({
 }) => {
   if (!active || !payload?.length) return null;
   const pt = payload[0]?.payload || {};
-  const date = (pt.dateFormatted as string) || '';
+  const date = (pt.dateFormatted as string) || (pt.date as string) || '';
   const rows = getRows(pt, payload);
   if (!rows.length) return null;
   return (
@@ -449,52 +449,180 @@ export const LineToggle = ({ items }: {
  *  guarantees labels never overlap and Recharts never auto-hides them. */
 const MAX_X_TICKS = 10;
 
-export const getXAxisTicks = (data: Array<{ index: number; dateObj?: Date }>, tf: string): number[] => {
-  const ticks: number[] = [];
-  for (let i = 0; i < data.length; i++) {
-    const cur = data[i]?.dateObj as Date | undefined;
-    if (!cur) continue;
-    const prev = i > 0 ? (data[i - 1]?.dateObj as Date | undefined) : undefined;
-    if (tf === '7') {
-      ticks.push(i);
-    } else if (tf === '30') {
-      // ~weekly ticks by DATE — index modulo breaks on downsampled series
-      const prevTick = ticks.length > 0 ? (data[ticks[ticks.length - 1]]?.dateObj as Date | undefined) : undefined;
-      if (!prevTick || cur.getTime() - prevTick.getTime() >= 6 * 86_400_000) ticks.push(i);
-    } else if (tf === '90') {
-      // ~bi-weekly ticks for 3M
-      const prevTick = ticks.length > 0 ? (data[ticks[ticks.length - 1]]?.dateObj as Date | undefined) : undefined;
-      if (!prevTick || cur.getTime() - prevTick.getTime() >= 14 * 86_400_000) ticks.push(i);
-    } else if (tf === '180' || tf === '365') {
-      if (!prev || cur.getMonth() !== prev.getMonth()) ticks.push(i);
-    } else if (tf === '1460') {
-      if (!prev || cur.getMonth() !== prev.getMonth()) {
-        if (cur.getMonth() === 0 || cur.getMonth() === 6) ticks.push(i);
-      }
-    } else {
-      if (!prev || cur.getFullYear() !== prev.getFullYear()) ticks.push(i);
-    }
-  }
-  // Bound the tick count so labels never overlap and Recharts never auto-hides
-  // them. Without this, long timeframes (ALL/20Y) produce 20-30+ year ticks and
-  // Recharts' default interval collapses them to nothing, leaving only sparse
-  // timeframes (e.g. 10Y) with visible dates. Thinning to a fixed max keeps an
-  // even, readable date scale on every timeframe.
-  if (ticks.length <= MAX_X_TICKS) return ticks;
-  const thinned: number[] = [];
-  const step = (ticks.length - 1) / (MAX_X_TICKS - 1);
-  for (let k = 0; k < MAX_X_TICKS; k++) thinned.push(ticks[Math.round(k * step)]);
-  return thinned;
+export type ChartDateItem = {
+  index?: number;
+  dateObj?: Date;
+  rawDate?: string;
+  time?: string;
+  date?: string;
+  [key: string]: unknown;
 };
 
-export const formatXAxisTick = (data: Array<{ index: number; dateObj?: Date }>, index: number, tf: string): string => {
-  const d = data[index]?.dateObj as Date | undefined;
+export const resolveDate = (item: ChartDateItem | undefined): Date | undefined => {
+  if (!item) return undefined;
+  if (item.dateObj instanceof Date && !isNaN(item.dateObj.getTime())) return item.dateObj;
+  if (typeof item.rawDate === 'string') {
+    const p = new Date(item.rawDate);
+    if (!isNaN(p.getTime())) return p;
+  }
+  if (typeof item.time === 'string') {
+    const p = new Date(item.time);
+    if (!isNaN(p.getTime())) return p;
+  }
+  if (typeof item.date === 'string') {
+    const p = new Date(item.date);
+    if (!isNaN(p.getTime())) return p;
+  }
+  return undefined;
+};
+
+export const getXAxisTicks = (data: ChartDateItem[], tf: string): number[] => {
+  if (!data || data.length === 0) return [];
+  if (data.length <= 8) return data.map((_, i) => i);
+
+  const first = resolveDate(data[0]);
+  const last = resolveDate(data[data.length - 1]);
+  if (!first || !last) {
+    const count = Math.min(6, data.length);
+    return Array.from({ length: count }, (_, k) => Math.round((k * (data.length - 1)) / (count - 1)));
+  }
+
+  const spanDays = Math.abs(last.getTime() - first.getTime()) / 86_400_000;
+
+  const findClosestIndex = (targetTime: number): number => {
+    let low = 0;
+    let high = data.length - 1;
+    while (low <= high) {
+      const mid = (low + high) >> 1;
+      const d = resolveDate(data[mid]);
+      const t = d ? d.getTime() : 0;
+      if (t === targetTime) return mid;
+      if (t < targetTime) low = mid + 1;
+      else high = mid - 1;
+    }
+    if (low >= data.length) return data.length - 1;
+    if (high < 0) return 0;
+    const dLow = resolveDate(data[low]);
+    const dHigh = resolveDate(data[high]);
+    const diffLow = dLow ? Math.abs(dLow.getTime() - targetTime) : Infinity;
+    const diffHigh = dHigh ? Math.abs(dHigh.getTime() - targetTime) : Infinity;
+    return diffLow < diffHigh ? low : high;
+  };
+
+  const targetTimes: number[] = [];
+
+  if (spanDays <= 8 || tf === '7') {
+    // 1W: daily ticks across all points
+    return data.map((_, i) => i);
+  } else if (spanDays <= 45 || tf === '30') {
+    // 1M: weekly ticks (every 7 days)
+    const stepMs = 7 * 86_400_000;
+    for (let t = first.getTime(); t <= last.getTime(); t += stepMs) {
+      targetTimes.push(t);
+    }
+    if (last.getTime() - targetTimes[targetTimes.length - 1] > 3 * 86_400_000) {
+      targetTimes.push(last.getTime());
+    }
+  } else if (spanDays <= 120 || tf === '90') {
+    // 3M: ~every 15 days
+    const stepMs = 15 * 86_400_000;
+    for (let t = first.getTime(); t <= last.getTime(); t += stepMs) {
+      targetTimes.push(t);
+    }
+    if (last.getTime() - targetTimes[targetTimes.length - 1] > 6 * 86_400_000) {
+      targetTimes.push(last.getTime());
+    }
+  } else if (spanDays <= 220 || tf === '180') {
+    // 6M: 1st of every month
+    const cur = new Date(first.getFullYear(), first.getMonth() + 1, 1);
+    while (cur.getTime() <= last.getTime()) {
+      targetTimes.push(cur.getTime());
+      cur.setMonth(cur.getMonth() + 1);
+    }
+  } else if (spanDays <= 500 || tf === '365') {
+    // 1Y: 1st of every 2nd month (Nov, Jan, Mar, May, Jul, Sep)
+    const cur = new Date(first.getFullYear(), first.getMonth() + 1, 1);
+    while (cur.getTime() <= last.getTime()) {
+      targetTimes.push(cur.getTime());
+      cur.setMonth(cur.getMonth() + 2);
+    }
+  } else if (spanDays <= 1500 || tf === '1460') {
+    // 2-4Y: Jan 1 of every year
+    for (let y = first.getFullYear() + 1; y <= last.getFullYear(); y++) {
+      targetTimes.push(new Date(y, 0, 1).getTime());
+    }
+  } else if (spanDays <= 5500 || tf === '1825' || tf === '3650') {
+    // 5-15Y (e.g. Bitcoin all-time): Jan 1 of every 2nd year (2014, 2016, 2018, 2020, 2022, 2024, 2026)
+    const startYr = Math.ceil((first.getFullYear() + 1) / 2) * 2;
+    for (let y = startYr; y <= last.getFullYear(); y += 2) {
+      targetTimes.push(new Date(y, 0, 1).getTime());
+    }
+  } else {
+    // >15Y (e.g. FRED macro 20-50Y): Jan 1 of every 5th or 10th year
+    const step = spanDays > 14_000 ? 10 : 5;
+    const startYr = Math.ceil((first.getFullYear() + 1) / step) * step;
+    for (let y = startYr; y <= last.getFullYear(); y += step) {
+      targetTimes.push(new Date(y, 0, 1).getTime());
+    }
+  }
+
+  // Ensure between 4 and 8 ticks
+  if (targetTimes.length < 3) {
+    const count = Math.min(6, data.length);
+    const fallback: number[] = [];
+    for (let k = 0; k < count; k++) {
+      fallback.push(Math.round((k * (data.length - 1)) / (count - 1)));
+    }
+    return Array.from(new Set(fallback)).sort((a, b) => a - b);
+  }
+
+  const result: number[] = [];
+  const seen = new Set<number>();
+  for (const t of targetTimes) {
+    const idx = findClosestIndex(t);
+    if (!seen.has(idx)) {
+      seen.add(idx);
+      result.push(idx);
+    }
+  }
+
+  // Bound to max 8 ticks so labels never crowd
+  if (result.length > 8) {
+    const thinned: number[] = [];
+    const step = (result.length - 1) / 7;
+    for (let k = 0; k < 8; k++) {
+      thinned.push(result[Math.round(k * step)]);
+    }
+    return Array.from(new Set(thinned)).sort((a, b) => a - b);
+  }
+
+  return result.sort((a, b) => a - b);
+};
+
+export const formatXAxisTick = (data: ChartDateItem[], index: number, tf: string): string => {
+  const d = resolveDate(data[index]);
   if (!d) return '';
-  if (tf === '7' || tf === '30' || tf === '90') return `${d.getDate()} ${d.toLocaleDateString('en-US', { month: 'short' })}`;
-  if (tf === '3000' || tf === '3650' || tf === '7300' || tf === '999999') return String(d.getFullYear());
-  const mo = d.toLocaleDateString('en-US', { month: 'short' });
-  const yr = String(d.getFullYear()).slice(2);
-  return `${mo} ${yr}`;
+
+  const first = resolveDate(data[0]);
+  const last = resolveDate(data[data.length - 1]);
+  const spanDays = (first && last)
+    ? Math.abs(last.getTime() - first.getTime()) / 86_400_000
+    : parseInt(tf, 10) || 365;
+
+  // Short ranges (1W, 1M, 3M): Day + Month (e.g. "25 Oct", "12 Sep")
+  if (spanDays <= 120 || tf === '7' || tf === '30' || tf === '90') {
+    return `${d.getDate()} ${d.toLocaleDateString('en-US', { month: 'short' })}`;
+  }
+
+  // Medium ranges (6M, 1Y, up to ~3Y): Month + 2-digit Year with apostrophe (e.g. "Oct '26", "Jan '25")
+  if (spanDays <= 1100 || tf === '180' || tf === '365') {
+    const mo = d.toLocaleDateString('en-US', { month: 'short' });
+    const yr = String(d.getFullYear()).slice(2);
+    return `${mo} '${yr}`;
+  }
+
+  // Multi-year ranges (4Y, 5Y, 10Y, 20Y, ALL): Full 4-digit Year (e.g. "2024", "2025", "2026")
+  return String(d.getFullYear());
 };
 
 export const getHalvingIndices = (data: Array<{ dateObj?: Date; rawDate?: string }>) => {

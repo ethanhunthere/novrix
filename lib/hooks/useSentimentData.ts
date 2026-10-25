@@ -1615,7 +1615,7 @@ export function useSentimentData() {
         index: idx,
         btcDom: item.dominance,
         ethDom: ethDominanceData[idx] ? ethDominanceData[idx].dominance : null,
-        dateFormatted: `${String(dateObj.getDate()).padStart(2, '0')}/${String(dateObj.getMonth() + 1).padStart(2, '0')}/${dateObj.getFullYear()}`,
+        dateFormatted: dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
         year: dateObj.getFullYear(),
         dateObj: dateObj
       };

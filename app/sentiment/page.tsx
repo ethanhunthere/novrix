@@ -687,6 +687,16 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
     return v.toFixed(2);
   };
 
+  const formatCompactCurrency = (v: number, decimals = 1) => {
+    const abs = Math.abs(v);
+    const sign = v < 0 ? '-' : '';
+    if (abs >= 1e12) return `${sign}$${(abs / 1e12).toFixed(decimals)}T`;
+    if (abs >= 1e9)  return `${sign}$${(abs / 1e9).toFixed(decimals)}B`;
+    if (abs >= 1e6)  return `${sign}$${(abs / 1e6).toFixed(decimals)}M`;
+    if (abs >= 1e3)  return `${sign}$${(abs / 1e3).toFixed(0)}K`;
+    return `${sign}$${abs.toFixed(decimals > 0 && abs < 10 ? decimals : 0)}`;
+  };
+
   // KEY 4 zone helpers
   const getRealizedPriceZone = (price: number, realized: number) => {
     if (realized <= 0) return { label: 'N/A', color: '#64748B' };
@@ -2151,18 +2161,18 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       id: 'indicator-realized-profit', accentColor: '#00CC6E', gradientId: 'realizedProfitGradient', tag: '', updateFreq: 'd',
       data: realizedProfitChartData, dataWithPrice: realizedProfitChartDataWithPrice, isLoading: isRealizedProfitLoading,
       timeframe: realizedProfitTimeframe, setTimeframe: setRealizedProfitTimeframe, zoneFn: noZone,
-      headerValue: (v: number) => v >= 1e9 ? `$${(v/1e9).toFixed(2)}B` : v >= 1e6 ? `$${(v/1e6).toFixed(2)}M` : `$${v.toLocaleString(undefined, { maximumFractionDigits: 0 })}`,
-      tooltipValue: (v: number) => v >= 1e9 ? `$${(v/1e9).toFixed(2)}B` : v >= 1e6 ? `$${(v/1e6).toFixed(2)}M` : `$${v.toLocaleString(undefined, { maximumFractionDigits: 0 })}`,
-      yAxisTick: (v: number) => v >= 1e9 ? `${(v/1e9).toFixed(1)}B` : v >= 1e6 ? `${(v/1e6).toFixed(0)}M` : v >= 1e3 ? `${(v/1e3).toFixed(0)}K` : v.toFixed(0),
+      headerValue: (v: number) => formatCompactCurrency(v, 2),
+      tooltipValue: (v: number) => formatCompactCurrency(v, 2),
+      yAxisTick: (v: number) => formatCompactCurrency(v, 0),
     },
     {
       panelId: 'realized-loss', indicatorKey: 'realizedLoss', code: 'R-LOSS', title: 'Realized Loss', desc: 'Aggregate realized loss of all on-chain UTXOs moved', metricLabel: 'REALIZED LOSS',
       id: 'indicator-realized-loss', accentColor: '#FF4444', gradientId: 'realizedLossGradient', tag: '', updateFreq: 'd',
       data: realizedLossChartData, dataWithPrice: realizedLossChartDataWithPrice, isLoading: isRealizedLossLoading,
       timeframe: realizedLossTimeframe, setTimeframe: setRealizedLossTimeframe, zoneFn: noZone,
-      headerValue: (v: number) => v >= 1e9 ? `$${(v/1e9).toFixed(2)}B` : v >= 1e6 ? `$${(v/1e6).toFixed(2)}M` : `$${v.toLocaleString(undefined, { maximumFractionDigits: 0 })}`,
-      tooltipValue: (v: number) => v >= 1e9 ? `$${(v/1e9).toFixed(2)}B` : v >= 1e6 ? `$${(v/1e6).toFixed(2)}M` : `$${v.toLocaleString(undefined, { maximumFractionDigits: 0 })}`,
-      yAxisTick: (v: number) => v >= 1e9 ? `${(v/1e9).toFixed(1)}B` : v >= 1e6 ? `${(v/1e6).toFixed(0)}M` : v >= 1e3 ? `${(v/1e3).toFixed(0)}K` : v.toFixed(0),
+      headerValue: (v: number) => formatCompactCurrency(v, 2),
+      tooltipValue: (v: number) => formatCompactCurrency(v, 2),
+      yAxisTick: (v: number) => formatCompactCurrency(v, 0),
     },
     {
       panelId: 'sth-mvrv', indicatorKey: 'sthMvrv', code: 'STH-MV', title: 'STH MVRV', desc: 'Short-Term Holder MVRV — unrealized P/L of recent buyers', metricLabel: 'STH-MVRV',
@@ -2293,8 +2303,9 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       id: 'indicator-nrpl', accentColor: '#10B981', gradientId: 'nrplFill', tag: '', updateFreq: 'd',
       data: nrplChartData, dataWithPrice: nrplChartDataWithPrice, isLoading: isNrplLoading,
       timeframe: nrplTimeframe, setTimeframe: setNrplTimeframe, zoneFn: getNrplZone,
-      headerValue: (v: number) => v.toFixed(4), tooltipValue: (v: number) => v.toFixed(4),
-      yAxisTick: (v: number) => v >= 1e6 ? `${(v/1e6).toFixed(1)}M` : v >= 1000 ? `${(v/1000).toFixed(0)}K` : v <= -1000 ? `${(v/1000).toFixed(0)}K` : v.toFixed(2),
+      headerValue: (v: number) => formatCompactCurrency(v, 2),
+      tooltipValue: (v: number) => formatCompactCurrency(v, 2),
+      yAxisTick: (v: number) => formatCompactCurrency(v, 0),
     },
     {
       panelId: 'rhodl-ratio', indicatorKey: 'rhodl', code: 'RHODL', title: 'RHODL Ratio', desc: 'Realized HODL Ratio — cycle position via coin age weighting', metricLabel: 'RHODL',
@@ -2632,15 +2643,17 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                               <XAxis
                                 dataKey="index" stroke="none"
                                 tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
-                                ticks={calculateTicks()}
-                                tickFormatter={formatXAxis}
+                                ticks={getXAxisTicks(chartData, selectedTimeframe)}
+                                tickFormatter={(i: number) => formatXAxisTick(chartData, i, selectedTimeframe)}
+                                interval={0}
                                 height={22}
                               />
                               <YAxis
                                 domain={[0, 100]}
                                 stroke="none"
                                 tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
-                                width={24}
+                                width={28}
+                                ticks={[0, 25, 50, 75, 100]}
                               />
                               <Tooltip
                                 cursor={{ stroke: 'rgba(245,241,234,0.65)', strokeWidth: 2 }}
@@ -2793,6 +2806,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                           tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
                           ticks={getXAxisTicks(slicedDominanceChartDataWithPrice, dominanceTimeframe)}
                           tickFormatter={(i: number) => formatXAxisTick(slicedDominanceChartDataWithPrice, i, dominanceTimeframe)}
+                          interval={0}
                           height={22} />
                         <YAxis domain={['auto', 'auto']} stroke="none"
                           tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
@@ -3107,8 +3121,10 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                         </defs>
                         <CartesianGrid strokeDasharray="3 6" stroke="rgba(245,241,234,0.05)" vertical={false} />
                         <XAxis dataKey="index" stroke="none" tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
-                          ticks={getXAxisTicks(hashribbonsChartData, hashribbonsTimeframe)}
-                          tickFormatter={(i: number) => formatXAxisTick(hashribbonsChartData, i, hashribbonsTimeframe)} height={22} />
+                          ticks={getXAxisTicks(hashribbonsChartDataWithPrice, hashribbonsTimeframe)}
+                          tickFormatter={(i: number) => formatXAxisTick(hashribbonsChartDataWithPrice, i, hashribbonsTimeframe)}
+                          interval={0}
+                          height={22} />
                         <YAxis stroke="none" tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
                           tickFormatter={(v) => v >= 1e6 ? `${(v/1e6).toFixed(0)}E` : v >= 1e3 ? `${(v/1e3).toFixed(0)}P` : `${v.toFixed(0)}T`} width={52} />
                         {showBtcPrice['hashribbons'] && (
@@ -3422,8 +3438,10 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                         </defs>
                         <CartesianGrid strokeDasharray="3 6" stroke="rgba(245,241,234,0.05)" vertical={false} />
                         <XAxis dataKey="index" stroke="none" tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
-                          ticks={getXAxisTicks(weekMa200ChartData, weekMa200Timeframe)}
-                          tickFormatter={(i: number) => formatXAxisTick(weekMa200ChartData, i, weekMa200Timeframe)} height={22} />
+                          ticks={getXAxisTicks(weekMa200ChartDataWithPrice, weekMa200Timeframe)}
+                          tickFormatter={(i: number) => formatXAxisTick(weekMa200ChartDataWithPrice, i, weekMa200Timeframe)}
+                          interval={0}
+                          height={22} />
                         <YAxis domain={['auto', 'auto']} stroke="none" tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
                           tickFormatter={(v) => `$${v >= 1000 ? `${(v/1000).toFixed(0)}K` : v.toFixed(0)}`} width={52} />
                         <Tooltip cursor={{ stroke: 'rgba(245,241,234,0.65)', strokeWidth: 2 }} animationDuration={0} isAnimationActive={false}
