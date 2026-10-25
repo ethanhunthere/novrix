@@ -2640,7 +2640,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
   ], []);
 
   return (
-    <div className={`min-h-screen flex flex-col relative overflow-hidden font-mono ${selectedIndicator !== null ? 'h-screen max-h-screen overflow-hidden' : ''}`} style={{ background: '#0A0908' }}>
+    <div className={`min-h-screen flex flex-col relative overflow-hidden font-mono ${selectedIndicator !== null ? 'h-screen max-h-screen overflow-hidden' : ''}`} style={{ background: '#120F0D' }}>
       <TerminalModulePageShell
         className={
           selectedIndicator !== null
@@ -2651,7 +2651,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
 
         <div className={`sentiment-comfort flex flex-row items-start gap-6 w-full ${selectedIndicator !== null ? 'h-full max-h-full overflow-hidden' : ''}`}>
           {/* ─── Indicators Registry Sidebar (Left side: short in width, bigger in height) ─── */}
-          <aside className="w-[204px] min-w-[204px] max-w-[204px] lg:w-[216px] lg:min-w-[216px] lg:max-w-[216px] shrink-0 sticky top-[52px]">
+          <aside className="w-[204px] min-w-[204px] max-w-[204px] lg:w-[216px] lg:min-w-[216px] lg:max-w-[216px] shrink-0 sticky top-3">
             <SentimentSidebar
               registryCats={registryCats}
               registrySearch={registrySearch}

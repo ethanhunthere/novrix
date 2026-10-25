@@ -34,7 +34,7 @@ interface AuthorLink {
 const INTER = 'var(--ff-sans)';
 const DISPLAY = 'var(--ff-display)';
 const MONO  = 'var(--ff-mono)';
-const BG    = 'var(--bg-base)';
+const BG    = '#120F0D';
 const RULE  = 'var(--border-subtle)';
 
 const CATEGORY_META: Record<string, { label: string; color: string }> = {

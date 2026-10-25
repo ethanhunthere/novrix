@@ -15,7 +15,13 @@ const NAV_LINKS = [
 
 export default function FooterHome() {
   return (
-    <footer style={{ borderTop: `1px solid ${HAIRLINE}` }}>
+    <footer
+      style={{
+        background: '#120F0D',
+        borderTop: `1px solid ${HAIRLINE}`,
+        paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+      }}
+    >
       <style>{`
         .footer-link { transition: color 160ms ease; }
         .footer-link:hover { color: ${INK}; }

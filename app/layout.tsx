@@ -65,13 +65,18 @@ export const metadata: Metadata = {
     images: [ogImage],
   },
   manifest: siteManifest,
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'NOVRIX',
+  },
 };
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
-  themeColor: '#0A0908',
+  themeColor: '#120F0D',
 };
 
 export default function RootLayout({
@@ -83,9 +88,16 @@ export default function RootLayout({
     <html
       lang="en"
       className={`dark ${geistSans.variable} ${geistMono.variable} ${newsreader.variable}`}
-      style={{ background: '#0A0908' }}
+      style={{ background: '#120F0D' }}
     >
       <head>
+        {/* Safari & Mobile System Bar Colors */}
+        <meta name="theme-color" content="#120F0D" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#120F0D" />
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#120F0D" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
         {/* Explicit favicon links for crawler compatibility */}
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
@@ -147,7 +159,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className="font-sans antialiased min-h-screen flex flex-col text-white overflow-y-auto bg-[#0A0908]"
+        className="font-sans antialiased min-h-screen flex flex-col text-white overflow-y-auto bg-[#120F0D]"
         style={{
           WebkitFontSmoothing: 'antialiased',
           MozOsxFontSmoothing: 'grayscale',

@@ -510,7 +510,7 @@ export default function InsightsPage() {
   const active = SECTIONS.find(s => s.key === activeKey) ?? SECTIONS[0];
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0A0908', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100vh', background: '#120F0D', display: 'flex', flexDirection: 'column' }}>
       <style>{`
         .insight-feature { grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr); }
         @media (max-width: 899px) { .insight-feature { grid-template-columns: minmax(0, 1fr); } }

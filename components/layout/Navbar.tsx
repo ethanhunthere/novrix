@@ -47,15 +47,12 @@ export default function Navbar() {
         role="navigation"
         aria-label="Main Navigation"
         style={{
-          position: 'sticky',
-          top: 0,
+          position: 'relative',
           zIndex: 50,
           height: BAR_HEIGHT,
           width: '100%',
           boxSizing: 'border-box',
-          background: 'rgba(18, 15, 13, 0.95)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
+          background: '#120F0D',
           borderBottom: '1px solid rgba(245, 241, 234, 0.08)',
           flexShrink: 0,
           boxShadow: '0 1px 0 rgba(0, 0, 0, 0.50), 0 4px 20px rgba(10, 9, 8, 0.40)',

@@ -14,7 +14,7 @@
   
 
   /* Backgrounds — warm near-black spectrum */
-  --bg-base:     #0A0908;
+  --bg-base:     #120F0D;
   --bg-surface:  #11100E;
   --bg-raised:   #181512;
   --bg-elevated: #211D19;
@@ -109,7 +109,7 @@
 }
 
 html {
-  background: #0A0908;
+  background: #120F0D;
   color-scheme: dark;
   -webkit-text-size-adjust: 100%;
   -moz-text-size-adjust: 100%;
@@ -136,7 +136,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: var(--ff-sans);
-  background: var(--bg-base);
+  background: #120F0D;
   color: var(--text-primary);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -363,7 +363,7 @@ tbody tr:hover {
    feedback is CSS transitions only.
    ═══════════════════════════════════════════════════════════ */
 .home-shell {
-  background: #0A0908;
+  background: #120F0D;
 }
 
 .home-btn {

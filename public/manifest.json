@@ -4,8 +4,8 @@
   "description": "NOVRIX reads crypto market sentiment through on-chain and macro indicators. Open source.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0A0A0F",
-  "theme_color": "#0A0A0F",
+  "background_color": "#120F0D",
+  "theme_color": "#120F0D",
   "categories": [
     "finance",
     "productivity",

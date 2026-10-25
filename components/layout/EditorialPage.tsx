@@ -19,7 +19,7 @@ type EditorialPageProps = {
 
 export function EditorialPage({ title, standfirst, children, width = '760px' }: EditorialPageProps) {
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-base)' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#120F0D' }}>
       <Navbar />
       <main style={{ flex: 1, width: '100%' }}>
         <div
