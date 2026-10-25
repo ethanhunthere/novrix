@@ -14,18 +14,21 @@ export const metadata: Metadata = {
   },
 };
 
-const INK = '#F5F1EA';
-const MUTED = 'rgba(245, 241, 234, 0.68)';
-const HAIRLINE = 'rgba(245, 241, 234, 0.08)';
+const INK = '#FAF7F2';
+const BODY = '#D8D2C7';
+const MUTED = '#A8A196';
+const HAIRLINE = 'rgba(250, 247, 242, 0.12)';
 
 const MODULES = [
   {
+    category: 'INTELLIGENCE WORKSPACE',
     label: 'Open Workspace',
     href: '/sentiment',
     title: 'Sentiment intelligence',
     lede: 'Daily visual metrics for market valuation, miner reserves, supply distribution, and futures leverage across historical market regimes.',
   },
   {
+    category: 'EDITORIAL RESEARCH',
     label: 'Read Publications',
     href: '/insights',
     title: 'Research and perspectives',
@@ -49,19 +52,37 @@ export default function Home() {
       <main className="flex-1">
         <section
           style={{
-            padding: 'clamp(44px, 7vh, 76px) var(--container-pad) clamp(36px, 5vh, 56px)',
+            padding: 'clamp(52px, 8vh, 84px) var(--container-pad) clamp(44px, 6vh, 64px)',
           }}
         >
           <div className="mx-auto w-full" style={{ maxWidth: '1180px' }}>
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                marginBottom: '20px',
+                padding: '4px 10px',
+                borderRadius: '2px',
+                background: 'rgba(250, 247, 242, 0.04)',
+                border: '1px solid rgba(250, 247, 242, 0.09)',
+              }}
+            >
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981', display: 'inline-block' }} />
+              <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '10px', letterSpacing: '0.14em', color: '#D8D2C7', textTransform: 'uppercase' }}>
+                Live Network Telemetry
+              </span>
+            </div>
+
             <h1
               style={{
                 fontFamily: 'var(--ff-display)',
-                fontSize: 'clamp(1.30rem, 1.85vw, 1.80rem)',
-                lineHeight: 1.3,
-                letterSpacing: '-0.012em',
+                fontSize: 'clamp(1.5rem, 2.2vw, 2.1rem)',
+                lineHeight: 1.25,
+                letterSpacing: '-0.015em',
                 fontWeight: 500,
                 color: INK,
-                maxWidth: '36ch',
+                maxWidth: '38ch',
               }}
             >
               Bitcoin network fundamentals and macro liquidity intelligence.
@@ -69,23 +90,24 @@ export default function Home() {
 
             <p
               style={{
-                marginTop: '16px',
-                maxWidth: '600px',
-                color: MUTED,
-                fontSize: 'clamp(0.92rem, 0.88rem + 0.2vw, 0.98rem)',
-                lineHeight: 1.7,
+                marginTop: '18px',
+                maxWidth: '620px',
+                color: BODY,
+                fontSize: 'clamp(0.96rem, 0.92rem + 0.2vw, 1.02rem)',
+                lineHeight: 1.72,
               }}
             >
               Novrix aggregates on-chain metrics, holder distribution patterns, and central bank balance sheets into real-time visual records. Explore structural shifts, miner activity, and historical cycle dynamics across interactive workspaces.
             </p>
 
-            <div className="flex flex-wrap items-center gap-x-7 gap-y-4 mt-7">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-3.5 mt-8">
               <Link href="/sentiment" className="home-btn home-btn-primary">
                 Open Sentiment Workspace
                 <Arrow />
               </Link>
               <Link href="/insights" className="home-quiet-link">
                 Read Publications
+                <Arrow />
               </Link>
             </div>
           </div>
@@ -94,7 +116,7 @@ export default function Home() {
         <section
           style={{
             borderTop: `1px solid ${HAIRLINE}`,
-            padding: 'clamp(44px, 6vh, 72px) var(--container-pad) clamp(56px, 8vh, 96px)',
+            padding: 'clamp(48px, 6vh, 76px) var(--container-pad) clamp(64px, 8vh, 96px)',
           }}
         >
           <div className="mx-auto w-full" style={{ maxWidth: '1180px' }}>
@@ -111,13 +133,19 @@ export default function Home() {
               Workspace overview
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10 mt-10 md:mt-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-7 mt-8 md:mt-10">
               {MODULES.map((item) => (
                 <Link key={item.href} href={item.href} className="home-entry">
+                  <div className="flex items-center justify-between gap-3 mb-4">
+                    <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '10px', letterSpacing: '0.14em', color: MUTED, textTransform: 'uppercase' }}>
+                      {item.category}
+                    </span>
+                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: item.href === '/sentiment' ? '#10B981' : '#D49B55', display: 'inline-block' }} />
+                  </div>
                   <h3
                     style={{
                       fontFamily: 'var(--ff-display)',
-                      fontSize: 'clamp(1.2rem, 0.95rem + 0.6vw, 1.45rem)',
+                      fontSize: 'clamp(1.25rem, 1.4vw, 1.55rem)',
                       lineHeight: 1.25,
                       letterSpacing: '-0.015em',
                       fontWeight: 500,
@@ -126,7 +154,7 @@ export default function Home() {
                   >
                     {item.title}
                   </h3>
-                  <p style={{ marginTop: '12px', color: MUTED, fontSize: '0.92rem', lineHeight: 1.7 }}>
+                  <p style={{ marginTop: '12px', color: BODY, fontSize: '0.94rem', lineHeight: 1.72 }}>
                     {item.lede}
                   </p>
                   <span className="home-entry-link">

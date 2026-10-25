@@ -356,17 +356,17 @@ tbody tr:hover {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  min-height: 46px;
+  min-height: 44px;
   padding: 0 22px;
   border-radius: 2px;
   font-family: var(--ff-mono);
   font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.16em;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   text-decoration: none;
   white-space: nowrap;
-  transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease;
+  transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease, box-shadow 200ms ease, transform 150ms ease;
 }
 
 .home-btn .arrow {
@@ -379,28 +379,49 @@ tbody tr:hover {
 
 .home-btn-primary {
   color: #0A0908;
-  background: #F5F1EA;
-  border: 1px solid #F5F1EA;
+  background: #FAF7F2;
+  border: 1px solid #FAF7F2;
 }
 
 .home-btn-primary:hover {
-  background: #FFFCF6;
-  border-color: #FFFCF6;
+  background: #FFFFFF;
+  border-color: #FFFFFF;
+  box-shadow: 0 4px 18px rgba(250, 247, 242, 0.15);
+}
+
+.home-btn-primary:active {
+  transform: translateY(1px);
 }
 
 .home-quiet-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-family: var(--ff-sans);
   font-size: 13.5px;
   font-weight: 500;
   letter-spacing: 0.01em;
-  color: rgba(245, 241, 234, 0.56);
+  color: #D8D2C7;
   text-decoration: none;
-  padding: 6px 0;
-  transition: color 180ms ease;
+  padding: 8px 12px;
+  border-radius: 2px;
+  border: 1px solid rgba(250, 247, 242, 0.10);
+  background: rgba(250, 247, 242, 0.03);
+  transition: color 180ms ease, border-color 180ms ease, background-color 180ms ease;
 }
 
 .home-quiet-link:hover {
-  color: #F5F1EA;
+  color: #FAF7F2;
+  border-color: rgba(250, 247, 242, 0.22);
+  background: rgba(250, 247, 242, 0.06);
+}
+
+.home-quiet-link .arrow {
+  transition: transform 180ms ease;
+}
+
+.home-quiet-link:hover .arrow {
+  transform: translateX(3px);
 }
 
 .home-quiet-link:focus-visible,
@@ -413,14 +434,22 @@ tbody tr:hover {
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding-top: 22px;
-  border-top: 1px solid rgba(245, 241, 234, 0.08);
+  padding: clamp(26px, 3.2vw, 36px);
+  background: #120F0D;
+  border: 1px solid #231E1A;
+  border-top: 1px solid rgba(250, 247, 242, 0.14);
+  border-radius: 4px;
   text-decoration: none;
-  transition: border-color 200ms ease;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.40);
+  transition: background-color 220ms ease, border-color 220ms ease, transform 220ms ease, box-shadow 220ms ease;
 }
 
 .home-entry:hover {
-  border-top-color: rgba(245, 241, 234, 0.18);
+  background: #171310;
+  border-color: #38302A;
+  border-top-color: rgba(250, 247, 242, 0.26);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.55);
 }
 
 .home-entry-link {
@@ -429,12 +458,13 @@ tbody tr:hover {
   align-self: flex-start;
   gap: 8px;
   margin-top: auto;
-  padding-top: 22px;
-  font-family: var(--ff-sans);
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-  color: rgba(245, 241, 234, 0.52);
+  padding-top: 24px;
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #D8D2C7;
   transition: color 180ms ease;
 }
 
@@ -443,7 +473,7 @@ tbody tr:hover {
 }
 
 .home-entry:hover .home-entry-link {
-  color: #F5F1EA;
+  color: #FAF7F2;
 }
 
 .home-entry:hover .home-entry-link .arrow {

@@ -2,9 +2,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 const SANS = 'var(--ff-sans)';
-const INK = '#F5F1EA';
-const MUTED = 'rgba(245, 241, 234, 0.58)';
-const HAIRLINE = 'rgba(245, 241, 234, 0.08)';
+const INK = '#FAF7F2';
+const MUTED = '#C5BEB3';
+const HAIRLINE = 'rgba(250, 247, 242, 0.12)';
 
 const NAV_LINKS = [
   { label: 'Home', href: '/' },

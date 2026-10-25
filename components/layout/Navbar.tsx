@@ -102,7 +102,7 @@ export default function Navbar() {
                       fontWeight: active ? 600 : 500,
                       letterSpacing: '0.08em',
                       textTransform: 'uppercase',
-                      color: active ? '#F5F1EA' : 'rgba(245, 241, 234, 0.55)',
+                      color: active ? '#FAF7F2' : '#C5BEB3',
                     }}
                     aria-current={active ? 'page' : undefined}
                   >
@@ -199,7 +199,7 @@ export default function Navbar() {
                 className="text-lg font-medium tracking-wide transition-colors"
                 style={{
                   fontFamily: MONO,
-                  color: active ? '#F5F1EA' : 'rgba(245, 241, 234, 0.60)',
+                  color: active ? '#FAF7F2' : '#C5BEB3',
                 }}
                 aria-current={active ? 'page' : undefined}
                 onClick={() => setOpen(false)}
