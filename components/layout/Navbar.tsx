@@ -7,8 +7,8 @@ import { usePathname } from 'next/navigation';
 
 const ITEMS = [
   { href: '/', label: 'Home' },
-  { href: '/insights', label: 'Insights' },
   { href: '/sentiment', label: 'Sentiment' },
+  { href: '/insights', label: 'Insights' },
   { href: '/documentation', label: 'Docs' },
 ];
 
@@ -18,7 +18,6 @@ const BAR_HEIGHT = '40px';
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const [utcTime, setUtcTime] = useState<string>('');
   const pathname = usePathname();
 
   const norm = (pathname || '/').replace(/\/+$/, '') || '/';
@@ -27,16 +26,6 @@ export default function Navbar() {
     if (href === '/') return norm === '/';
     return norm === href || norm.startsWith(href + '/');
   };
-
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      setUtcTime(now.toISOString().slice(11, 16));
-    };
-    updateTime();
-    const id = setInterval(updateTime, 1000);
-    return () => clearInterval(id);
-  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -74,16 +63,16 @@ export default function Navbar() {
           className="mx-auto w-full max-w-[2000px] h-full flex items-center justify-between"
           style={{ padding: '0 clamp(12px, 1.6vw, 24px)' }}
         >
-          {/* Left: Novrix Brand Mark (no BTC price) */}
-          <div className="flex items-center gap-6">
+          {/* Left: Brand Logo only (no text) */}
+          <div className="flex items-center">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 text-decoration-none group shrink-0"
+              className="inline-flex items-center text-decoration-none group shrink-0"
               aria-label="Novrix Home"
             >
               <Image
                 src="/logo.png"
-                alt=""
+                alt="Novrix"
                 width={20}
                 height={20}
                 priority
@@ -91,21 +80,11 @@ export default function Navbar() {
                 className="w-[18px] h-[18px] block opacity-90 group-hover:opacity-100 transition-opacity"
                 style={{ pointerEvents: 'none' }}
               />
-              <span
-                style={{
-                  fontFamily: SANS,
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  letterSpacing: '0.14em',
-                  color: '#F5F1EA',
-                  textTransform: 'uppercase',
-                  lineHeight: 1,
-                }}
-              >
-                NOVRIX
-              </span>
             </Link>
+          </div>
 
+          {/* Right: Navigation Links & Mobile Menu (no UTC time) */}
+          <div className="flex items-center gap-1 sm:gap-2">
             {/* Desktop Navigation Links */}
             <div className="hidden md:flex items-center gap-1">
               {ITEMS.map((item) => {
@@ -139,24 +118,6 @@ export default function Navbar() {
                 );
               })}
             </div>
-          </div>
-
-          {/* Right: Clean UTC Clock & Mobile Menu (no 'Live' text) */}
-          <div className="flex items-center gap-3">
-            {utcTime && (
-              <span
-                className="hidden sm:inline-block"
-                style={{
-                  fontFamily: MONO,
-                  fontSize: '10px',
-                  color: 'rgba(255, 255, 255, 0.45)',
-                  letterSpacing: '0.12em',
-                  fontVariantNumeric: 'tabular-nums',
-                }}
-              >
-                {utcTime} UTC
-              </span>
-            )}
 
             {/* Mobile Menu Button */}
             <button
@@ -196,28 +157,18 @@ export default function Navbar() {
         >
           <Link
             href="/"
-            className="inline-flex items-center gap-2"
+            className="inline-flex items-center"
             onClick={() => setOpen(false)}
+            aria-label="Novrix Home"
           >
             <Image
               src="/logo.png"
-              alt=""
+              alt="Novrix"
               width={18}
               height={18}
               className="w-[18px] h-[18px] block"
               style={{ pointerEvents: 'none' }}
             />
-            <span
-              style={{
-                fontFamily: SANS,
-                fontSize: '12px',
-                fontWeight: 700,
-                letterSpacing: '0.14em',
-                color: '#F5F1EA',
-              }}
-            >
-              NOVRIX
-            </span>
           </Link>
           <button
             type="button"
