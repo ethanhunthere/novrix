@@ -63,6 +63,7 @@
   --breakpoint-2xl: 1920px;
   --breakpoint-3xl: 2560px;
   --breakpoint-4xl: 3840px;
+  --breakpoint-5xl: 4800px;
 }
 
 :root {
@@ -88,10 +89,10 @@
   --text-micro: clamp(0.55rem, 0.45rem + 0.2vw, 0.85rem);
 
   /* Fluid container sizing */
-  --container-pad: clamp(1rem, 0.4rem + 2.5vw, 3rem);
-  --container-pad-lg: clamp(1.5rem, 0.5rem + 4vw, 4.5rem);
-  --container-max: min(90vw, 1440px);
-  --container-max-lg: min(92vw, 2000px);
+  --container-pad: clamp(0.75rem, 0.4rem + 2.5vw, 3.5rem);
+  --container-pad-lg: clamp(1rem, 0.5rem + 4vw, 5rem);
+  --container-max: min(90vw, 1600px);
+  --container-max-lg: min(94vw, 4800px);
 
   /* Fluid decorative elements */
   --shadow-sm: 0 clamp(8px, 4px + 1vw, 24px) clamp(16px, 8px + 2vw, 48px) rgba(0,0,0,0.3);
@@ -108,6 +109,10 @@
   box-sizing: border-box;
 }
 
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 html {
   background: #120F0D;
   color-scheme: dark;
@@ -115,6 +120,8 @@ html {
   -moz-text-size-adjust: 100%;
   text-size-adjust: 100%;
   scrollbar-gutter: stable;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 /* Single panel mode: remove scrollbar gutter and hide window scrollbar completely */

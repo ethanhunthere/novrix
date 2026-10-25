@@ -528,9 +528,9 @@ export default function InsightsPage() {
       <Navbar />
 
       <main style={{ flex: 1 }}>
-        <section style={{ padding: 'clamp(56px, 10vh, 112px) var(--container-pad) clamp(28px, 4vh, 44px)' }}>
-          <div style={{ maxWidth: '1180px', margin: '0 auto' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: 'clamp(20px, 3vh, 30px)' }}>
+        <section style={{ padding: 'clamp(44px, 8vh, 112px) var(--container-pad) clamp(24px, 4vh, 44px)' }}>
+          <div className="mx-auto w-full max-w-[1180px] 2xl:max-w-[1400px] 3xl:max-w-[1800px] 4xl:max-w-[2400px] 5xl:max-w-[3200px] min-w-0">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: 'clamp(16px, 2.5vh, 30px)' }}>
               <span style={{ fontFamily: MONO, fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase', color: ACCENT }}>
                 Insights
               </span>
@@ -540,13 +540,15 @@ export default function InsightsPage() {
             <h1
               style={{
                 fontFamily: DISPLAY,
-                fontSize: 'clamp(2.6rem, 1.6rem + 4.6vw, 5.4rem)',
-                lineHeight: 0.97,
+                fontSize: 'clamp(1.75rem, 1.2rem + 4vw, 5.4rem)',
+                lineHeight: 1.02,
                 letterSpacing: '-0.03em',
                 fontWeight: 500,
                 color: INK,
                 margin: 0,
-                maxWidth: '15ch',
+                maxWidth: 'min(100%, 18ch)',
+                overflowWrap: 'break-word',
+                wordBreak: 'break-word',
               }}
             >
               What we think, and why.
@@ -555,11 +557,12 @@ export default function InsightsPage() {
             <p
               style={{
                 fontFamily: SANS,
-                fontSize: 'clamp(1rem, 0.94rem + 0.25vw, 1.1rem)',
+                fontSize: 'clamp(0.95rem, 0.88rem + 0.25vw, 1.2rem)',
                 lineHeight: 1.7,
                 color: MUTED,
-                margin: 'clamp(18px, 2.6vh, 26px) 0 0',
-                maxWidth: '52ch',
+                margin: 'clamp(16px, 2.4vh, 26px) 0 0',
+                maxWidth: 'min(100%, 56ch)',
+                overflowWrap: 'break-word',
               }}
             >
               Editorial analysis from the NOVRIX desk, plus the longer reads behind the calls.
@@ -568,7 +571,14 @@ export default function InsightsPage() {
         </section>
 
         <div style={{ borderTop: `1px solid ${HAIRLINE}`, borderBottom: `1px solid ${HAIRLINE}` }}>
-          <div style={{ maxWidth: '1180px', margin: '0 auto', padding: '0 var(--container-pad)', display: 'flex', gap: 'clamp(24px, 4vw, 48px)' }}>
+          <div
+            className="mx-auto w-full max-w-[1180px] 2xl:max-w-[1400px] 3xl:max-w-[1800px] 4xl:max-w-[2400px] 5xl:max-w-[3200px] min-w-0 flex items-center gap-5 sm:gap-8 overflow-x-auto"
+            style={{
+              padding: '0 var(--container-pad)',
+              scrollbarWidth: 'none',
+              WebkitOverflowScrolling: 'touch',
+            }}
+          >
             {SECTIONS.map(section => {
               const isActive = section.key === activeKey;
               return (
@@ -576,7 +586,7 @@ export default function InsightsPage() {
                   key={section.key}
                   type="button"
                   onClick={() => setActiveKey(section.key)}
-                  className="insight-tab"
+                  className="insight-tab shrink-0"
                   style={{
                     appearance: 'none',
                     background: 'none',
@@ -589,6 +599,7 @@ export default function InsightsPage() {
                     marginBottom: '-1px',
                     color: isActive ? INK : 'rgba(245,241,234,0.60)',
                     transition: 'color 180ms ease, border-color 180ms ease',
+                    whiteSpace: 'nowrap',
                   }}
                   aria-pressed={isActive}
                 >
@@ -602,7 +613,7 @@ export default function InsightsPage() {
         </div>
 
         <section style={{ padding: '0 var(--container-pad) clamp(72px, 12vh, 132px)' }}>
-          <div style={{ maxWidth: '1180px', margin: '0 auto', paddingTop: 'clamp(32px, 5vh, 52px)' }}>
+          <div className="mx-auto w-full max-w-[1180px] 2xl:max-w-[1400px] 3xl:max-w-[1800px] 4xl:max-w-[2400px] 5xl:max-w-[3200px] min-w-0" style={{ paddingTop: 'clamp(32px, 5vh, 52px)' }}>
             <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '24px', flexWrap: 'wrap', marginBottom: 'clamp(8px, 1.4vh, 12px)' }}>
               <h2
                 style={{

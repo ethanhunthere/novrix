@@ -359,12 +359,13 @@ function PostContent() {
     <div style={{ minHeight: '100vh', background: BG, display: 'flex', flexDirection: 'column' }}>
       <Navbar />
 
-      <main style={{ flex: 1 }}>
-        <div style={{
-          maxWidth: '740px',
-          margin: '0 auto',
-          padding: 'clamp(44px, 6vw, 72px) var(--container-pad) 100px',
-        }}>
+      <main style={{ flex: 1, minWidth: 0 }}>
+        <div
+          className="mx-auto w-full max-w-[740px] 2xl:max-w-[840px] 3xl:max-w-[1000px] 4xl:max-w-[1300px] 5xl:max-w-[1600px] min-w-0"
+          style={{
+            padding: 'clamp(36px, 6vw, 72px) var(--container-pad) 100px',
+          }}
+        >
 
           {/* Back link */}
           <div style={{ marginBottom: '44px' }}>
@@ -455,12 +456,14 @@ function PostContent() {
               {/* Title */}
               <h1 style={{
                 fontFamily: 'var(--ff-display)',
-                fontSize: 'clamp(34px, 5.4vw, 48px)',
+                fontSize: 'clamp(24px, 4.8vw, 56px)',
                 fontWeight: 500,
                 color: 'var(--text-heading)',
                 letterSpacing: '-0.02em',
-                lineHeight: 1.06,
+                lineHeight: 1.08,
                 margin: '0 0 14px',
+                overflowWrap: 'break-word',
+                wordBreak: 'break-word',
               }}>
                 {post.title}
               </h1>

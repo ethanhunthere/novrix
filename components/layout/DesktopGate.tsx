@@ -26,20 +26,16 @@ export default function DesktopGate({
   const gateTarget = getGateTarget(pathname);
 
   useEffect(() => {
-    const screenW = window.screen?.width ?? 0;
-    const nextIsMobile = screenW > 0 ? screenW < 1080 : window.innerWidth < 1080;
-    setIsMobile(nextIsMobile);
-    onViewportCheck?.(nextIsMobile);
+    const check = () => {
+      const isNarrow = typeof window !== 'undefined' ? window.innerWidth < 1080 : false;
+      setIsMobile(isNarrow);
+      onViewportCheck?.(isNarrow);
+    };
+    check();
     setChecked(true);
 
-    const check = () => {
-      const sW = window.screen?.width ?? 0;
-      const m = sW > 0 ? sW < 1080 : window.innerWidth < 1080;
-      setIsMobile(m);
-      onViewportCheck?.(m);
-    };
     let timer: ReturnType<typeof setTimeout>;
-    const debounced = () => { clearTimeout(timer); timer = setTimeout(check, 150); };
+    const debounced = () => { clearTimeout(timer); timer = setTimeout(check, 100); };
     window.addEventListener('resize', debounced);
     return () => { window.removeEventListener('resize', debounced); clearTimeout(timer); };
   }, [onViewportCheck]);

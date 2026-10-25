@@ -23,23 +23,23 @@ export function EditorialPage({ title, standfirst, children, width = '760px' }: 
       <Navbar />
       <main style={{ flex: 1, width: '100%' }}>
         <div
+          className="mx-auto w-full max-w-[760px] 3xl:max-w-[1000px] 4xl:max-w-[1300px] 5xl:max-w-[1600px] min-w-0"
           style={{
-            width: '100%',
-            maxWidth: width,
-            margin: '0 auto',
-            padding: 'clamp(56px, 8vw, 104px) var(--container-pad) clamp(72px, 10vw, 128px)',
+            padding: 'clamp(44px, 6vw, 104px) var(--container-pad) clamp(64px, 8vw, 128px)',
           }}
         >
           <header>
             <h1
               style={{
                 fontFamily: DISPLAY,
-                fontSize: 'clamp(36px, 5.4vw, 58px)',
+                fontSize: 'clamp(24px, 4.8vw, 64px)',
                 fontWeight: 500,
-                lineHeight: 1.02,
+                lineHeight: 1.05,
                 letterSpacing: '-0.025em',
                 color: INK,
                 margin: 0,
+                overflowWrap: 'break-word',
+                wordBreak: 'break-word',
                 textWrap: 'balance',
               }}
             >
@@ -49,11 +49,12 @@ export function EditorialPage({ title, standfirst, children, width = '760px' }: 
               <p
                 style={{
                   fontFamily: SANS,
-                  fontSize: 'clamp(16px, 1.5vw, 18px)',
+                  fontSize: 'clamp(14px, 1.3vw, 19px)',
                   lineHeight: 1.65,
                   color: BODY,
-                  maxWidth: '60ch',
+                  maxWidth: 'min(100%, 64ch)',
                   margin: '20px 0 0',
+                  overflowWrap: 'break-word',
                 }}
               >
                 {standfirst}
@@ -71,17 +72,18 @@ export function EditorialPage({ title, standfirst, children, width = '760px' }: 
 
 export function DocSection({ id, title, children }: { id?: string; title: string; children: React.ReactNode }) {
   return (
-    <section id={id} style={{ scrollMarginTop: '84px', marginTop: 'clamp(40px, 5vw, 60px)' }}>
+    <section id={id} style={{ scrollMarginTop: '84px', marginTop: 'clamp(40px, 5vw, 60px)', minWidth: 0 }}>
       <div style={{ height: '1px', background: RULE, marginBottom: '22px' }} />
       <h2
         style={{
           fontFamily: DISPLAY,
-          fontSize: 'clamp(22px, 2.4vw, 27px)',
+          fontSize: 'clamp(20px, 2.2vw, 32px)',
           fontWeight: 500,
           lineHeight: 1.2,
           letterSpacing: '-0.012em',
           color: INK,
           margin: '0 0 18px',
+          overflowWrap: 'break-word',
           textWrap: 'balance',
         }}
       >
@@ -100,10 +102,11 @@ export function Prose({ children, style }: { children: React.ReactNode; style?: 
         flexDirection: 'column',
         gap: '16px',
         fontFamily: SANS,
-        fontSize: '16px',
+        fontSize: 'clamp(14px, 1.05vw, 17px)',
         lineHeight: 1.8,
         color: BODY,
-        maxWidth: '68ch',
+        maxWidth: 'min(100%, 72ch)',
+        overflowWrap: 'break-word',
         ...style,
       }}
     >
@@ -113,14 +116,14 @@ export function Prose({ children, style }: { children: React.ReactNode; style?: 
 }
 
 export function P({ children }: { children: React.ReactNode }) {
-  return <p style={{ margin: 0 }}>{children}</p>;
+  return <p style={{ margin: 0, overflowWrap: 'break-word' }}>{children}</p>;
 }
 
 export function DataRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div
-      className="grid grid-cols-1 sm:grid-cols-[168px_1fr] gap-1 sm:gap-6"
-      style={{ padding: '12px 0', borderBottom: `1px solid ${RULE}`, alignItems: 'start' }}
+      className="grid grid-cols-1 sm:grid-cols-[168px_1fr] 3xl:grid-cols-[220px_1fr] 4xl:grid-cols-[280px_1fr] gap-1 sm:gap-6 min-w-0"
+      style={{ padding: '12px 0', borderBottom: `1px solid ${RULE}`, alignItems: 'start', overflowWrap: 'break-word' }}
     >
       <span
         style={{
@@ -132,11 +135,12 @@ export function DataRow({ label, children }: { label: string; children: React.Re
           color: 'var(--text-secondary)',
           lineHeight: 1.7,
           paddingTop: '2px',
+          overflowWrap: 'break-word',
         }}
       >
         {label}
       </span>
-      <div style={{ fontFamily: SANS, fontSize: '15px', lineHeight: 1.7, color: BODY, minWidth: 0 }}>{children}</div>
+      <div style={{ fontFamily: SANS, fontSize: 'clamp(13.5px, 1vw, 16px)', lineHeight: 1.7, color: BODY, minWidth: 0, overflowWrap: 'break-word' }}>{children}</div>
     </div>
   );
 }

@@ -59,8 +59,8 @@ export default function Navbar() {
         }}
       >
         <div
-          className="mx-auto w-full max-w-[2000px] h-full flex items-center justify-between"
-          style={{ padding: '0 clamp(12px, 1.6vw, 24px)' }}
+          className="mx-auto w-full max-w-[2000px] 3xl:max-w-[2800px] 4xl:max-w-[3800px] 5xl:max-w-[4800px] h-full flex items-center justify-between min-w-0"
+          style={{ padding: '0 clamp(8px, 1.8vw, 32px)' }}
         >
           {/* Left: Brand Logo only (no text) */}
           <div className="flex items-center">

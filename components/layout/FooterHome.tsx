@@ -29,8 +29,7 @@ export default function FooterHome() {
 
       <div style={{ padding: 'clamp(40px, 5vw, 60px) var(--container-pad)' }}>
         <div
-          className="mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8"
-          style={{ maxWidth: '1180px' }}
+          className="mx-auto w-full max-w-[1180px] 2xl:max-w-[1400px] 3xl:max-w-[1800px] 4xl:max-w-[2400px] 5xl:max-w-[3200px] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 sm:gap-8 min-w-0"
         >
           <div className="flex items-center gap-3.5">
             <Image

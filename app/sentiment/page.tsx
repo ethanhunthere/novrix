@@ -620,6 +620,8 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       const targetHeight = vpHeight - 224;
       return Math.max(340, Math.round(targetHeight));
     }
+    if (vpWidth >= 4800) return 640;
+    if (vpWidth >= 3840) return 560;
     if (vpWidth >= 2560) return 480;
     if (vpWidth >= 1920) return 420;
     if (vpWidth >= 1440) return 380;
@@ -2644,14 +2646,14 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       <TerminalModulePageShell
         className={
           selectedIndicator !== null
-            ? "flex-1 w-full max-w-[2000px] 3xl:max-w-[2800px] 4xl:max-w-[3600px] mx-auto px-4 lg:px-6 xl:px-8 2xl:px-10 3xl:px-16 4xl:px-24 pt-2 pb-6 sm:pb-8 h-[calc(100vh-40px)] max-h-[calc(100vh-40px)] overflow-hidden flex flex-col"
+            ? "flex-1 w-full max-w-[2000px] 3xl:max-w-[2800px] 4xl:max-w-[3800px] 5xl:max-w-[4800px] mx-auto px-4 lg:px-6 xl:px-8 2xl:px-10 3xl:px-16 4xl:px-20 5xl:px-28 pt-2 pb-6 sm:pb-8 h-[calc(100vh-40px)] max-h-[calc(100vh-40px)] overflow-hidden flex flex-col"
             : undefined
         }
       >
 
         <div className={`sentiment-comfort flex flex-row items-start gap-6 w-full ${selectedIndicator !== null ? 'h-full max-h-full overflow-hidden' : ''}`}>
           {/* ─── Indicators Registry Sidebar (Left side: short in width, bigger in height) ─── */}
-          <aside className="w-[204px] min-w-[204px] max-w-[204px] lg:w-[216px] lg:min-w-[216px] lg:max-w-[216px] shrink-0 sticky top-3">
+          <aside className="w-[204px] min-w-[204px] max-w-[204px] lg:w-[216px] lg:min-w-[216px] lg:max-w-[216px] 3xl:w-[260px] 3xl:min-w-[260px] 3xl:max-w-[260px] 4xl:w-[300px] 4xl:min-w-[300px] 4xl:max-w-[300px] 5xl:w-[340px] 5xl:min-w-[340px] 5xl:max-w-[340px] shrink-0 sticky top-3">
             <SentimentSidebar
               registryCats={registryCats}
               registrySearch={registrySearch}
@@ -4177,6 +4179,22 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
           .sentiment-comfort .recharts-cartesian-axis-tick-value,
           .sentiment-comfort .recharts-label,
           .sentiment-comfort .recharts-text { font-size: 14px !important; }
+        }
+
+        @media (min-width: 4800px) {
+          .sentiment-comfort .text-\\[52px\\] { font-size: 104px !important; }
+          .sentiment-comfort .text-\\[6px\\],
+          .sentiment-comfort [style*="font-size: 6px"] { font-size: 13px !important; }
+          .sentiment-comfort [style*="font-size: 7px"] { font-size: 14px !important; }
+          .sentiment-comfort [style*="font-size: 8px"] { font-size: 15px !important; }
+          .sentiment-comfort [style*="font-size: 9px"] { font-size: 16px !important; }
+          .sentiment-comfort [style*="font-size: 10px"] { font-size: 17px !important; }
+          .sentiment-comfort [style*="font-size: 11px"] { font-size: 18px !important; }
+          .sentiment-comfort [style*="font-size: 12px"] { font-size: 19px !important; }
+          .sentiment-comfort [style*="font-size: 14px"] { font-size: 21px !important; }
+          .sentiment-comfort .recharts-cartesian-axis-tick-value,
+          .sentiment-comfort .recharts-label,
+          .sentiment-comfort .recharts-text { font-size: 16px !important; }
         }
       `}</style>
 
