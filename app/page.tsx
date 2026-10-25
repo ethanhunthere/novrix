@@ -4,33 +4,32 @@ import Navbar from '@/components/layout/Navbar';
 import FooterHome from '@/components/layout/FooterHome';
 
 export const metadata: Metadata = {
-  title: 'Sentiment Intelligence',
+  title: 'Novrix Terminal',
   description:
-    'Crypto market sentiment, read as one calm surface. On-chain and macro indicators without the noise.',
+    'Quantitative on-chain metrics and macro liquidity indicators tracking Bitcoin cycle dynamics.',
   openGraph: {
-    title: 'Sentiment Intelligence',
+    title: 'Novrix Terminal',
     description:
-      'Crypto market sentiment, read as one calm surface. On-chain and macro indicators without the noise.',
+      'Quantitative on-chain metrics and macro liquidity indicators tracking Bitcoin cycle dynamics.',
   },
 };
 
 const INK = '#F5F1EA';
-const MUTED = 'rgba(245, 241, 234, 0.60)';
+const MUTED = 'rgba(245, 241, 234, 0.68)';
 const HAIRLINE = 'rgba(245, 241, 234, 0.08)';
-const ACCENT = '#C2344D';
 
 const MODULES = [
   {
-    label: 'Open Sentiment',
+    label: 'Open Workspace',
     href: '/sentiment',
-    title: 'Market mood, minus the noise.',
-    lede: 'On-chain and macro indicators, from fear and greed to realised profit, read as one picture of where the market is and why.',
+    title: 'Sentiment intelligence',
+    lede: 'Daily visual metrics for market valuation, miner reserves, supply distribution, and futures leverage across historical market regimes.',
   },
   {
-    label: 'Read insights',
+    label: 'Read Publications',
     href: '/insights',
-    title: 'Context, when you need it.',
-    lede: 'Research notes on sentiment shifts, macro conditions, and what the data is actually saying.',
+    title: 'Research and perspectives',
+    lede: 'Detailed commentary covering capital liquidity, exchange reserves, cryptographic privacy developments, and cyclical tendencies observed in historical records.',
   },
 ];
 
@@ -50,44 +49,43 @@ export default function Home() {
       <main className="flex-1">
         <section
           style={{
-            padding: 'clamp(72px, 12vh, 148px) var(--container-pad) clamp(64px, 9vh, 116px)',
+            padding: 'clamp(48px, 8vh, 84px) var(--container-pad) clamp(40px, 6vh, 64px)',
           }}
         >
           <div className="mx-auto w-full" style={{ maxWidth: '1180px' }}>
             <h1
               style={{
                 fontFamily: 'var(--ff-display)',
-                fontSize: 'clamp(3rem, 7.6vw, 7.25rem)',
-                lineHeight: 0.94,
-                letterSpacing: '-0.028em',
+                fontSize: 'clamp(1.75rem, 2.6vw, 2.5rem)',
+                lineHeight: 1.2,
+                letterSpacing: '-0.02em',
                 fontWeight: 500,
                 color: INK,
-                maxWidth: '14ch',
+                maxWidth: '28ch',
               }}
             >
-              Sentiment, without the noise.
+              Quantitative on-chain metrics and macro liquidity indicators.
             </h1>
 
             <p
               style={{
-                marginTop: 'clamp(26px, 3.4vh, 42px)',
-                maxWidth: '540px',
+                marginTop: 'clamp(18px, 2.2vh, 26px)',
+                maxWidth: '620px',
                 color: MUTED,
-                fontSize: 'clamp(1rem, 0.92rem + 0.3vw, 1.12rem)',
-                lineHeight: 1.7,
+                fontSize: 'clamp(0.95rem, 0.9rem + 0.25vw, 1.05rem)',
+                lineHeight: 1.75,
               }}
             >
-              On-chain and macro indicators, read as one calm surface. See where
-              the market is, and why.
+              The platform compiles daily blockchain activity, holder profitability, and liquidity flows alongside central bank records. These analytical tools help analysts track structural shifts across Bitcoin market cycles.
             </p>
 
-            <div className="flex flex-wrap items-center gap-x-7 gap-y-4 mt-10">
+            <div className="flex flex-wrap items-center gap-x-7 gap-y-4 mt-8">
               <Link href="/sentiment" className="home-btn home-btn-primary">
-                Open Sentiment
+                Open Sentiment Workspace
                 <Arrow />
               </Link>
               <Link href="/insights" className="home-quiet-link">
-                Read insights
+                Read Publications
               </Link>
             </div>
           </div>
@@ -96,31 +94,31 @@ export default function Home() {
         <section
           style={{
             borderTop: `1px solid ${HAIRLINE}`,
-            padding: 'clamp(56px, 8vh, 104px) var(--container-pad) clamp(64px, 9vh, 120px)',
+            padding: 'clamp(44px, 6vh, 72px) var(--container-pad) clamp(56px, 8vh, 96px)',
           }}
         >
           <div className="mx-auto w-full" style={{ maxWidth: '1180px' }}>
             <h2
               style={{
                 fontFamily: 'var(--ff-display)',
-                fontSize: 'clamp(1.7rem, 2.6vw, 2.6rem)',
-                lineHeight: 1.05,
-                letterSpacing: '-0.022em',
+                fontSize: 'clamp(1.35rem, 1.8vw, 1.85rem)',
+                lineHeight: 1.15,
+                letterSpacing: '-0.018em',
                 fontWeight: 500,
                 color: INK,
               }}
             >
-              Start here.
+              Workspace overview
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-12 mt-12 md:mt-16">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10 mt-10 md:mt-12">
               {MODULES.map((item) => (
                 <Link key={item.href} href={item.href} className="home-entry">
                   <h3
                     style={{
                       fontFamily: 'var(--ff-display)',
-                      fontSize: 'clamp(1.35rem, 1rem + 0.85vw, 1.75rem)',
-                      lineHeight: 1.15,
+                      fontSize: 'clamp(1.2rem, 0.95rem + 0.6vw, 1.45rem)',
+                      lineHeight: 1.25,
                       letterSpacing: '-0.015em',
                       fontWeight: 500,
                       color: INK,
@@ -128,7 +126,7 @@ export default function Home() {
                   >
                     {item.title}
                   </h3>
-                  <p style={{ marginTop: '14px', color: MUTED, fontSize: '0.94rem', lineHeight: 1.65 }}>
+                  <p style={{ marginTop: '12px', color: MUTED, fontSize: '0.92rem', lineHeight: 1.7 }}>
                     {item.lede}
                   </p>
                   <span className="home-entry-link">

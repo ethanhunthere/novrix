@@ -8,8 +8,8 @@ const HAIRLINE = 'rgba(245, 241, 234, 0.08)';
 
 const NAV_LINKS = [
   { label: 'Home', href: '/' },
-  { label: 'Insights', href: '/insights' },
   { label: 'Sentiment', href: '/sentiment' },
+  { label: 'Insights', href: '/insights' },
   { label: 'Documentation', href: '/documentation' },
 ];
 
