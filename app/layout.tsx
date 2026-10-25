@@ -29,8 +29,8 @@ const maskIcon = '/safari-pinned-tab.svg';
 const ogImage = '/og-image.png';
 const siteManifest = '/site.webmanifest';
 const siteUrl = "https://novrix.io";
-const siteTitle = "NOVRIX - Sentiment Intelligence";
-const siteDescription = "NOVRIX reads crypto market sentiment as one calm surface: on-chain and macro indicators, without the noise. Open source.";
+const siteTitle = "NOVRIX - Sentiment Intelligence & On-Chain Terminal";
+const siteDescription = "Independent Bitcoin on-chain intelligence workspace. Real-time valuation models, holder behavior metrics, miner health, and macroeconomic overlays across historical market cycles.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -107,52 +107,66 @@ export default function RootLayout({
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#C2344D" />
         <link rel="manifest" href="/site.webmanifest" />
 
-        {/* JSON-LD Structured Data for AI Crawlers */}
+        {/* JSON-LD Structured Data for AI Crawlers & Search Engines */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "Organization",
-              name: "NOVRIX",
-              url: siteUrl,
-              logo: `${siteUrl}/android-chrome-512x512.png`,
-              description: siteDescription,
-            }),
-          }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebSite",
-              name: "NOVRIX",
-              url: siteUrl,
-            }),
-          }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebApplication",
-              name: "NOVRIX",
-              url: siteUrl,
-              description: siteDescription,
-              operatingSystem: "Any",
-              applicationCategory: "FinanceApplication",
-              offers: {
-                "@type": "Offer",
-                price: "0",
-                priceCurrency: "USD",
-              },
-              featureList: [
-                "Sentiment Intelligence: market psychology indicators with macro overlays",
-                "On-chain and macro data aggregation from multiple sources",
-                "Interactive charts with multiple timeframes",
-                "Dark-mode interface",
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  "@id": `${siteUrl}/#organization`,
+                  name: "NOVRIX",
+                  url: siteUrl,
+                  logo: `${siteUrl}/android-chrome-512x512.png`,
+                  description: siteDescription,
+                  publishingPrinciples: `${siteUrl}/documentation#policy`,
+                },
+                {
+                  "@type": "WebSite",
+                  "@id": `${siteUrl}/#website`,
+                  name: "NOVRIX",
+                  url: siteUrl,
+                  description: siteDescription,
+                  publisher: { "@id": `${siteUrl}/#organization` },
+                  inLanguage: "en-US",
+                },
+                {
+                  "@type": "WebApplication",
+                  "@id": `${siteUrl}/#app`,
+                  name: "NOVRIX Terminal",
+                  url: siteUrl,
+                  description: siteDescription,
+                  applicationCategory: "FinanceApplication",
+                  operatingSystem: "Any",
+                  browserRequirements: "Requires modern web browser with JavaScript enabled",
+                  offers: {
+                    "@type": "Offer",
+                    price: "0",
+                    priceCurrency: "USD",
+                  },
+                  featureList: [
+                    "94 live Bitcoin on-chain and macroeconomic indicators",
+                    "Dual 1Y and ALL cycle timeframes with logarithmic price scales",
+                    "Historical Bitcoin halving reference epochs",
+                    "Distribution zone bands for accumulation and top detection",
+                    "PNG chart capture for financial research and reports",
+                    "Zero account sign-up and zero tracking cookies",
+                  ],
+                },
+                {
+                  "@type": "BreadcrumbList",
+                  "@id": `${siteUrl}/#breadcrumbs`,
+                  itemListElement: [
+                    {
+                      "@type": "ListItem",
+                      position: 1,
+                      name: "Home",
+                      item: siteUrl,
+                    },
+                  ],
+                },
               ],
             }),
           }}

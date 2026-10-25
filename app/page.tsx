@@ -2,15 +2,36 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import FooterHome from '@/components/layout/FooterHome';
+import { defaultOgImages, defaultTwitterImages } from '@/lib/og-config';
 
 export const metadata: Metadata = {
-  title: 'Novrix Terminal',
+  title: 'NOVRIX - Bitcoin On-Chain Intelligence & Macro Liquidity Terminal',
   description:
-    'Bitcoin on-chain metrics, holder distribution data, and macro liquidity charts across historical market cycles.',
+    'Bitcoin network fundamentals, valuation models, holder distribution metrics, and Federal Reserve macro liquidity across historical market cycles.',
+  keywords: [
+    'Bitcoin terminal',
+    'on-chain intelligence',
+    'Bitcoin cycle models',
+    'macro liquidity crypto',
+    'realized price Bitcoin',
+    'NUPL',
+    'MVRV Z-Score',
+  ],
+  alternates: {
+    canonical: 'https://novrix.io/',
+  },
   openGraph: {
-    title: 'Novrix Terminal',
+    title: 'NOVRIX - Bitcoin On-Chain Intelligence & Macro Liquidity Terminal',
     description:
-      'Bitcoin on-chain metrics, holder distribution data, and macro liquidity charts across historical market cycles.',
+      'Bitcoin network fundamentals, valuation models, holder distribution metrics, and Federal Reserve macro liquidity across historical market cycles.',
+    url: 'https://novrix.io/',
+    images: defaultOgImages,
+  },
+  twitter: {
+    title: 'NOVRIX - Bitcoin On-Chain Intelligence & Macro Liquidity Terminal',
+    description:
+      'Bitcoin network fundamentals, valuation models, holder distribution metrics, and Federal Reserve macro liquidity across historical market cycles.',
+    images: defaultTwitterImages,
   },
 };
 

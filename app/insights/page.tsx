@@ -197,7 +197,7 @@ function CoverArt({ post, section, tall = false }: { post: NovrixPost; section: 
       >
         <img
           src={post.cover_image!}
-          alt=""
+          alt={post.title || "Research cover image"}
           loading="eager"
           decoding="async"
           onError={() => setFailed(true)}

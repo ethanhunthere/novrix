@@ -1,0 +1,15 @@
+# Cloudflare Pages 301 Redirects for Legacy / Deleted Routes
+# Preserves SEO domain equity and maps previous standalone pages to documentation sections
+
+/about            /documentation            301
+/about/           /documentation            301
+/methodology      /documentation#methodology 301
+/methodology/     /documentation#methodology 301
+/changelog        /documentation#changelog  301
+/changelog/       /documentation#changelog  301
+/donations        /documentation#operations 301
+/donations/       /documentation#operations 301
+/privacy          /documentation#policy     301
+/privacy/         /documentation#policy     301
+/terms            /documentation#policy     301
+/terms/           /documentation#policy     301

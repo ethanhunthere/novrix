@@ -1,75 +1,85 @@
+# =============================================================================
+# NOVRIX — Robots Exclusion Protocol
+# https://novrix.io/robots.txt
+# Canonical Sitemap: https://novrix.io/sitemap.xml
+# LLM Information: https://novrix.io/llms.txt
+# Full LLM Reference: https://novrix.io/llms-full.txt
+# =============================================================================
+
+# AI Search & Retrieval Crawlers (SearchGPT, ChatGPT)
 User-agent: GPTBot
-Allow: /
-Disallow: /admin
-Disallow: /api/auth/
-
 User-agent: ChatGPT-User
-Allow: /
-Disallow: /admin
-Disallow: /api/auth/
-
-User-agent: Claude-Web
-Allow: /
-Disallow: /admin
-Disallow: /api/auth/
-
-User-agent: PerplexityBot
-Allow: /
-Disallow: /admin
-Disallow: /api/auth/
-
-User-agent: anthropic-ai
-Allow: /
-Disallow: /admin
-Disallow: /api/auth/
-
-User-agent: Google-Extended
-Allow: /
-Disallow: /admin
-Disallow: /api/auth/
-
-User-agent: Applebot-Extended
-Allow: /
-Disallow: /admin
-Disallow: /api/auth/
-
 User-agent: OAI-SearchBot
 Allow: /
 Disallow: /admin
+Disallow: /admin/
 Disallow: /api/auth/
 
+# Anthropic (Claude, Claude Search)
+User-agent: ClaudeBot
+User-agent: Claude-Web
+User-agent: anthropic-ai
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /api/auth/
+
+# Perplexity AI Search
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /api/auth/
+
+# Google AI & General Crawlers
+User-agent: Googlebot
+User-agent: Google-Extended
+User-agent: GoogleOther
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /api/auth/
+
+# Apple Intelligence
+User-agent: Applebot
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /api/auth/
+
+# Microsoft Bing & Copilot
+User-agent: Bingbot
 User-agent: BingPreview
 Allow: /
 Disallow: /admin
+Disallow: /admin/
 Disallow: /api/auth/
 
-User-agent: Googlebot
+# Meta AI
+User-agent: Meta-ExternalAgent
+User-agent: FacebookBot
 Allow: /
 Disallow: /admin
+Disallow: /admin/
+Disallow: /api/auth/
 
-User-agent: Bingbot
-Allow: /
-Disallow: /admin
-
-User-agent: Slurp
-Allow: /
-Disallow: /admin
-
+# General Web Crawlers
 User-agent: DuckDuckBot
-Allow: /
-Disallow: /admin
-
 User-agent: Baiduspider
-Allow: /
-Disallow: /admin
-
 User-agent: YandexBot
+User-agent: Slurp
+User-agent: CCBot
 Allow: /
 Disallow: /admin
+Disallow: /admin/
+Disallow: /api/auth/
 
+# Universal Default
 User-agent: *
 Allow: /
 Disallow: /admin
+Disallow: /admin/
 Disallow: /api/auth/
 
 Sitemap: https://novrix.io/sitemap.xml

@@ -2,47 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://novrix.io/</loc>
-    <lastmod>2026-05-11</lastmod>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.00</priority>
   </url>
   <url>
     <loc>https://novrix.io/sentiment</loc>
-    <lastmod>2026-05-11</lastmod>
-    <priority>0.90</priority>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.95</priority>
   </url>
   <url>
     <loc>https://novrix.io/insights</loc>
-    <lastmod>2026-05-11</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://novrix.io/methodology</loc>
-    <lastmod>2026-05-11</lastmod>
-    <priority>0.70</priority>
-  </url>
-  <url>
-    <loc>https://novrix.io/about</loc>
-    <lastmod>2026-05-11</lastmod>
-    <priority>0.60</priority>
-  </url>
-  <url>
-    <loc>https://novrix.io/changelog</loc>
-    <lastmod>2026-05-11</lastmod>
-    <priority>0.50</priority>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://novrix.io/documentation</loc>
-    <lastmod>2026-05-11</lastmod>
-    <priority>0.60</priority>
-  </url>
-  <url>
-    <loc>https://novrix.io/privacy</loc>
-    <lastmod>2026-05-11</lastmod>
-    <priority>0.30</priority>
-  </url>
-  <url>
-    <loc>https://novrix.io/terms</loc>
-    <lastmod>2026-05-11</lastmod>
-    <priority>0.30</priority>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
   </url>
 </urlset>

@@ -33,7 +33,7 @@ export default function FooterHome() {
         >
           <div className="flex items-center gap-3.5">
             <Image
-              src="/logo.png" alt=""
+              src="/logo.png" alt="Novrix"
               width={26} height={26}
               className="w-[26px] h-[26px] block"
               style={{ pointerEvents: 'none' }}

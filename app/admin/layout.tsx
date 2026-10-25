@@ -4,6 +4,17 @@ import { defaultOgImages, defaultTwitterImages } from '@/lib/og-config';
 export const metadata: Metadata = {
   title: 'NOVRIX - Admin',
   description: 'NOVRIX editorial administration. Manage articles, insights, and platform content.',
+  robots: {
+    index: false,
+    follow: false,
+    noarchive: true,
+    nocache: true,
+    googleBot: {
+      index: false,
+      follow: false,
+      noimageindex: true,
+    },
+  },
   openGraph: {
     title: 'NOVRIX - Admin',
     description: 'NOVRIX editorial administration. Manage articles, insights, and platform content.',

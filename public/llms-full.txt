@@ -1,0 +1,170 @@
+# NOVRIX — Comprehensive System & Indicator Knowledge Base
+
+> Canonical URL: https://novrix.io
+> Compact Overview: https://novrix.io/llms.txt
+> Machine-Readable Sitemap: https://novrix.io/sitemap.xml
+> License: Open Source (MIT)
+
+---
+
+## 1. Executive Summary & Purpose
+
+NOVRIX is an autonomous on-chain and macroeconomic intelligence terminal. It reads blockchain ledger mechanics, valuation models, and central bank liquidity into a single calm interface.
+
+Unlike retail trading dashboards focused on high-frequency noise and algorithmic indicators (e.g. RSI, MACD), NOVRIX focuses on structural cycle dynamics:
+- What price did existing Bitcoin holders pay for their coins?
+- Are long-term holders actively distributing into strength or accumulating in exhaustion?
+- Are Bitcoin miners operating above or below their cost of production?
+- How is global fiat liquidity (M2, Federal Reserve balance sheet, interest rates) interacting with Bitcoin's programmatic supply schedule?
+
+NOVRIX operates with zero accounts, zero subscriptions, zero paywalls, zero Google Analytics, and zero behavioral telemetry. All data is fetched server-side, cached at the edge on Cloudflare Pages and Workers, and served as static pre-computed payloads.
+
+---
+
+## 2. Platform Architecture & Data Pipeline
+
+```
+[Primary Data Sources]
+  ├── BGeometrics (Bitcoin On-Chain, UTXO & Miner Data)
+  ├── FRED / St. Louis Fed (US Treasury Yields, Inflation, Monetary Policy)
+  ├── Alternative.me (Fear & Greed Index)
+  └── CoinMarketCap & CoinGecko (Dominance, Spot Prices, Market Cap)
+         │
+         ▼ (Server-Side Cron Ingestion: 04:00 UTC Daily)
+[Cloudflare Workers & D1 SQL Database]
+  └── Ingestion normalizer, outlier filtering, tiered edge cache (s-maxage=300)
+         │
+         ▼
+[Novrix Edge Presentation Surface]
+  ├── / (Homepage router & module summaries)
+  ├── /sentiment (Interactive 94-indicator workspace with 1Y and ALL cycle views)
+  ├── /insights (Long-form market research & structural analysis)
+  └── /documentation (Unified technical reference, methodology & operations)
+```
+
+---
+
+## 3. Indicator Dictionary & Mathematical Formulations
+
+### 3.1 On-Chain Valuation Models
+
+#### Net Unrealized Profit/Loss (NUPL)
+- **Concept**: Measures the total amount of profit or loss in the Bitcoin network relative to its market capitalization.
+- **Formula**:
+  $$\text{NUPL} = \frac{\text{Market Capitalization} - \text{Realized Capitalization}}{\text{Market Capitalization}}$$
+- **Interpretation**:
+  - Values $> 0.75$: Euphoria / Greed. Historically marks cyclical macro tops where holders sit on extreme unrealized gains.
+  - Values between $0.50$ and $0.75$: Belief / Optimism.
+  - Values between $0.25$ and $0.50$: Optimism / Hope.
+  - Values between $0.00$ and $0.25$: Hope / Fear.
+  - Values $< 0.00$: Capitulation. Occurs when total market cap falls below aggregate cost basis; historically marks generational bear market bottoms.
+
+#### MVRV Ratio & MVRV Z-Score
+- **Concept**: Compares current market valuation against the aggregate price paid for all coins in circulation (Realized Cap).
+- **MVRV Ratio Formula**:
+  $$\text{MVRV} = \frac{\text{Market Cap}}{\text{Realized Cap}}$$
+- **MVRV Z-Score Formula**:
+  $$\text{MVRV Z-Score} = \frac{\text{Market Cap} - \text{Realized Cap}}{\sigma(\text{Market Cap})}$$
+  where $\sigma(\text{Market Cap})$ represents the historical standard deviation of market cap.
+- **Interpretation**:
+  - Z-Score $> 6.0$: Market cap is significantly overextended above realized cost basis, indicating extreme market overvaluation.
+  - Z-Score $< 0.1$: Market cap is compressed below aggregate network cost, indicating deep market undervaluation.
+
+#### Realized Price
+- **Concept**: The average on-chain acquisition price of all Bitcoin in circulation.
+- **Formula**:
+  $$\text{Realized Price} = \frac{\text{Realized Capitalization}}{\text{Total Circulating Supply}}$$
+- **Interpretation**: Realized Price acts as a fundamental macro support floor during secular bull markets and a firm resistance ceiling during bear market drawdowns.
+
+---
+
+### 3.2 Holder Behavior & Cohort Analytics
+
+#### Short-Term Holders (STH) vs. Long-Term Holders (LTH)
+- **Threshold**: 155 days. Statistical studies demonstrate that UTXOs held longer than 155 days have an exponentially lower probability of being spent on any given day.
+- **STH-MVRV**: The ratio between spot price and the average acquisition price of coins moved within the last 155 days. Serves as a dynamic sentiment gauge for marginal buyers. Readings near 1.0 indicate break-even for recent participants.
+- **LTH-MVRV**: The ratio between spot price and the acquisition price of coins untouched for over 155 days. Captures the unrealized profit multiple of high-conviction entities.
+
+#### Spent Output Profit Ratio (SOPR)
+- **Concept**: Measures the degree of profit realized by all spent outputs on a given day.
+- **Formula**:
+  $$\text{SOPR} = \frac{\text{Value at Output Spent (USD)}}{\text{Value at Output Creation (USD)}}$$
+- **Interpretation**:
+  - $\text{SOPR} > 1.0$: Spent outputs are moving in profit on average.
+  - $\text{SOPR} < 1.0$: Spent outputs are moving in loss on average (seller capitulation).
+  - In bull markets, $\text{SOPR} = 1.0$ serves as psychological support ("buying the dip at cost").
+
+#### RHODL Ratio
+- **Concept**: Compares the 1-week Realized Value HODL band against the 1-to-2-year Realized Value HODL band.
+- **Interpretation**: Spikes occur when short-term speculative momentum overwhelms mature coin holdings, indicating cycle distribution peaks.
+
+---
+
+### 3.3 Miner Economics & Network Security
+
+#### Hash Ribbons
+- **Concept**: Compares the 30-day Simple Moving Average (SMA) and 60-day SMA of Bitcoin network hashrate.
+- **Interpretation**:
+  - **Miner Capitulation**: 30d SMA crosses below 60d SMA. Occurs when mining costs exceed mining revenues, forcing inefficient operators to shut down hardware.
+  - **Recovery Signal**: 30d SMA crosses back above 60d SMA alongside price recovery above the 10-day SMA. Historically flags macro accumulation windows.
+
+#### Puell Multiple
+- **Concept**: Evaluates miner profitability and revenue health relative to historical baselines.
+- **Formula**:
+  $$\text{Puell Multiple} = \frac{\text{Daily Miner Issuance Value (USD)}}{\text{365-Day Moving Average of Daily Issuance Value (USD)}}$$
+- **Interpretation**:
+  - Values $> 2.0$: High miner revenues relative to historical averages (cycle top conditions).
+  - Values $< 0.5$: Severe miner stress, where operational expenditures often exceed daily revenue rewards (cycle bottom accumulation).
+
+---
+
+### 3.4 Macroeconomic Overlays & Liquidity Transmission
+
+Bitcoin functions as a high-beta sovereign liquidity sponge. NOVRIX correlates on-chain dynamics with 40 macroeconomic series from the Federal Reserve Bank of St. Louis (FRED):
+
+1. **Central Bank Balance Sheets (WALCL)**: Total assets held by the Federal Reserve. Direct measure of balance sheet expansion (QE) vs contraction (QT).
+2. **Reverse Repo (RRPONTSYD)**: Overnight Reverse Repurchase Agreements. Cash parked at the central bank that can rotate back into liquid treasury/risk assets.
+3. **M2 Money Supply**: Aggregate broad money supply including cash, checking deposits, savings deposits, and money market funds.
+4. **US Treasury Yield Curve (10Y-2Y Spread, 10Y-3M Spread)**: Curve inversions signal economic contraction; un-inversions typically precede liquidity easing cycles.
+5. **Real Rates & Inflation Breakevens (5Y and 10Y Breakeven)**: Market-implied inflation expectations deducted from nominal yields to calculate real cost of capital.
+
+---
+
+## 4. Bitcoin Halving Schedule & Supply Epochs
+
+Bitcoin's programmatic monetary policy reduces block subsidies every 210,000 blocks (~4 years):
+
+| Halving Epoch | Date | Block Height | Block Subsidy | Daily Issuance | Annual Inflation Rate |
+|---|---|---|---|---|---|
+| Genesis | Jan 03, 2009 | 0 | 50.000 BTC | 7,200 BTC | — |
+| Halving 1 | Nov 28, 2012 | 210,000 | 25.000 BTC | 3,600 BTC | ~12.5% |
+| Halving 2 | Jul 09, 2016 | 420,000 | 12.500 BTC | 1,800 BTC | ~4.2% |
+| Halving 3 | May 11, 2020 | 630,000 | 6.250 BTC | 900 BTC | ~1.8% |
+| Halving 4 | Apr 20, 2024 | 840,000 | 3.125 BTC | 450 BTC | ~0.8% |
+| Halving 5 (Est.) | ~April 2028 | 1,050,000 | 1.5625 BTC | 225 BTC | ~0.4% |
+
+NOVRIX charts display vertical dashed reference markers indicating each halving milestone across historical datasets.
+
+---
+
+## 5. Structural Limitations of On-Chain Analytics
+
+When interpreting on-chain indicators, researchers must account for intrinsic ledger realities:
+
+1. **Lost & Permanently Dormant Coins**: An estimated 3.0 to 4.0 million early coins (including Satoshi's estimated 1.1M BTC) are permanently inaccessible. Because they remain unspent at historic cost bases, they skew Realized Cap downward relative to truly active coins.
+2. **Internal Exchange Rebalancing**: Large cryptocurrency custodians frequently consolidate cold-storage wallets or migrate UTXOs for administrative reasons. These large on-chain transactions can produce transient volume or coin-days-destroyed spikes that do not reflect organic market selling.
+3. **Off-Chain Volume Dominance**: Centralized spot exchanges, derivatives platforms, and spot ETFs settle billions of dollars of trading volume off-chain inside internal order books. On-chain metrics reflect net settlement rather than gross intraday liquidity.
+4. **Hashrate Measurement Mechanics**: Network hashrate is a mathematical inference derived from block difficulty and timestamps over 14-day retarget windows, not directly metered electrical wattage.
+
+---
+
+## 6. Official Navigation & Canonical URLs
+
+- System Homepage: `https://novrix.io/`
+- Sentiment Intelligence Workspace: `https://novrix.io/sentiment`
+- Editorial & Market Research: `https://novrix.io/insights`
+- Technical Documentation & Reference: `https://novrix.io/documentation`
+- Analytical Methodology Section: `https://novrix.io/documentation#methodology`
+- Platform Operations & Node Support: `https://novrix.io/documentation#operations`
+- Privacy & Data Governance Disclosures: `https://novrix.io/documentation#policy`
+- Release Changelog: `https://novrix.io/documentation#changelog`

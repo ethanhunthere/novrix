@@ -1169,6 +1169,17 @@ export function useSentimentData() {
             if (result.success && result.data?.length > 0) return result.data;
           }
         } catch { /* silent */ }
+        // Instant static fallback if API function returns 503 or is not populated in D1
+        if (url.startsWith('/api/fred-')) {
+          const staticUrl = url.replace('/api/fred-', '/data/fred/') + '.json';
+          try {
+            const r2 = await fetchWithSSCache(withSentimentDataVersion(staticUrl), { headers: { 'Accept': 'application/json' } });
+            if (r2.ok) {
+              const result2: IndicatorApiResponse = await r2.json();
+              if (result2.success && result2.data?.length > 0) return result2.data;
+            }
+          } catch { /* silent */ }
+        }
         return [];
       };
       const [
@@ -1218,6 +1229,17 @@ export function useSentimentData() {
             if (result.success && result.data?.length > 0) return result.data;
           }
         } catch { /* silent */ }
+        // Instant static fallback if API function returns 503 or is not populated in D1
+        if (url.startsWith('/api/fred-')) {
+          const staticUrl = url.replace('/api/fred-', '/data/fred/') + '.json';
+          try {
+            const r2 = await fetchWithSSCache(withSentimentDataVersion(staticUrl), { headers: { 'Accept': 'application/json' } });
+            if (r2.ok) {
+              const result2: IndicatorApiResponse = await r2.json();
+              if (result2.success && result2.data?.length > 0) return result2.data;
+            }
+          } catch { /* silent */ }
+        }
         return [];
       };
       const [
@@ -1258,6 +1280,17 @@ export function useSentimentData() {
             if (result.success && result.data?.length > 0) return result.data;
           }
         } catch { /* silent */ }
+        // Instant static fallback if API function returns 503 or is not populated in D1
+        if (url.startsWith('/api/fred-')) {
+          const staticUrl = url.replace('/api/fred-', '/data/fred/') + '.json';
+          try {
+            const r2 = await fetchWithSSCache(withSentimentDataVersion(staticUrl), { headers: { 'Accept': 'application/json' } });
+            if (r2.ok) {
+              const result2: IndicatorApiResponse = await r2.json();
+              if (result2.success && result2.data?.length > 0) return result2.data;
+            }
+          } catch { /* silent */ }
+        }
         return [];
       };
       const [
@@ -1321,6 +1354,17 @@ export function useSentimentData() {
             if (result.success && result.data?.length > 0) return result.data;
           }
         } catch { /* silent */ }
+        // Instant static fallback if API function returns 503 or is not populated in D1
+        if (url.startsWith('/api/fred-')) {
+          const staticUrl = url.replace('/api/fred-', '/data/fred/') + '.json';
+          try {
+            const r2 = await fetchWithSSCache(withSentimentDataVersion(staticUrl), { headers: { 'Accept': 'application/json' } });
+            if (r2.ok) {
+              const result2: IndicatorApiResponse = await r2.json();
+              if (result2.success && result2.data?.length > 0) return result2.data;
+            }
+          } catch { /* silent */ }
+        }
         return [];
       };
       const [
@@ -1413,7 +1457,7 @@ export function useSentimentData() {
       setIsBogmbaseLoading(false);
       if (totalsl.length > 0)          setTotalslData(ensureFreshToToday(totalsl, 'value'));    setIsTotalslLoading(false);
     };
-    const timer = setTimeout(fetchMacroIndicators, 4200);
+    const timer = setTimeout(fetchMacroIndicators, 100);
     return () => clearTimeout(timer);
   }, []);
   useEffect(() => {

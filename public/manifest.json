@@ -1,7 +1,7 @@
 {
-  "name": "NOVRIX \u2014 Sentiment Intelligence",
+  "name": "NOVRIX — Sentiment Intelligence",
   "short_name": "NOVRIX",
-  "description": "NOVRIX reads crypto market sentiment through on-chain and macro indicators. Open source.",
+  "description": "Bitcoin on-chain metrics, valuation models, and macroeconomic liquidity overlays across market cycles.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#120F0D",
@@ -44,8 +44,9 @@
       "url": "/",
       "icons": [
         {
-          "src": "/icon.png",
-          "sizes": "96x96"
+          "src": "/android-chrome-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
         }
       ]
     },
@@ -55,8 +56,9 @@
       "url": "/sentiment",
       "icons": [
         {
-          "src": "/icon.png",
-          "sizes": "96x96"
+          "src": "/android-chrome-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
         }
       ]
     },
@@ -66,8 +68,21 @@
       "url": "/insights",
       "icons": [
         {
-          "src": "/icon.png",
-          "sizes": "96x96"
+          "src": "/android-chrome-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Documentation",
+      "short_name": "Docs",
+      "url": "/documentation",
+      "icons": [
+        {
+          "src": "/android-chrome-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
         }
       ]
     }

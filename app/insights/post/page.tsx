@@ -416,7 +416,7 @@ function PostContent() {
                 }}>
                   <img
                     src={post.cover_image}
-                    alt=""
+                    alt={post.title || "Article cover image"}
                     onError={e => { (e.currentTarget as HTMLElement).style.display = 'none'; }}
                     style={{
                       width: '100%',
@@ -495,7 +495,7 @@ function PostContent() {
                     <img
                       key={i}
                       src={url}
-                      alt=""
+                      alt={`${post.title} - chart figure ${i + 1}`}
                       style={{
                         width: '100%',
                         display: 'block',

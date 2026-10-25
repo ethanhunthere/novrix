@@ -1,7 +1,7 @@
 {
   "name": "NOVRIX",
   "short_name": "NOVRIX",
-  "description": "Sentiment intelligence \u2014 on-chain and macro market reading, without the noise",
+  "description": "Bitcoin on-chain metrics, valuation models, and macroeconomic liquidity overlays across market cycles.",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",

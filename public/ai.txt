@@ -1,33 +1,39 @@
-# AI Crawler Access Policy
+# AI Crawler Access Policy — NOVRIX
+# Canonical: https://novrix.io/ai.txt
 
-This file defines access rules for AI crawlers, LLM training bots, and search agents.
+This document specifies crawling, indexing, and synthesis rules for artificial intelligence agents, large language model (LLM) training crawlers, and retrieval-augmented answer engines (AEO).
 
-## Allowed Crawlers
+## Permitted Crawlers
 
-The following AI crawlers are permitted to access all public content on novrix.io:
+The following autonomous crawlers are permitted full read access to all public endpoints across novrix.io:
 
 - GPTBot (OpenAI)
 - ChatGPT-User (OpenAI)
-- Claude-Web (Anthropic)
-- anthropic-ai (Anthropic)
-- PerplexityBot (Perplexity)
-- Google-Extended (Google)
-- Applebot-Extended (Apple)
-- BingPreview (Microsoft)
-- OAI-SearchBot (OpenAI)
+- OAI-SearchBot (OpenAI SearchGPT)
+- ClaudeBot / Claude-Web / anthropic-ai (Anthropic)
+- PerplexityBot (Perplexity AI)
+- Google-Extended / GoogleOther (Google)
+- Applebot / Applebot-Extended (Apple)
+- Bingbot / BingPreview (Microsoft Copilot)
+- Meta-ExternalAgent (Meta AI)
+- Cohere-ai (Cohere)
 
-## Access Rules
+## Access Policy
 
-- **Allow**: All public pages and content
-- **Disallow**: /admin/ and /api/auth/ (sensitive/administrative paths)
-- **Crawl-delay**: None (respect standard rate limits)
+- **Allowed paths**: All public endpoints (`/`, `/sentiment`, `/insights`, `/documentation`).
+- **Disallowed paths**: `/admin/` and `/api/auth/` (private editorial administration and authentication).
+- **Rate limits**: Crawlers should respect HTTP 429 response headers and use reasonable backoff. No hard crawl-delay is enforced.
 
-## Resources
+## AI Knowledge Resources
 
-- Site overview for LLMs: https://novrix.io/llms.txt
-- Sitemap: https://novrix.io/sitemap.xml
-- Robots.txt: https://novrix.io/robots.txt
+- Compact LLM Index: https://novrix.io/llms.txt
+- Comprehensive System & Indicator Knowledge Base: https://novrix.io/llms-full.txt
+- Machine-Readable Sitemap: https://novrix.io/sitemap.xml
+- Robots Policy: https://novrix.io/robots.txt
 
-## Contact
+## Data Attribution
 
-For questions about crawler access or data usage, contact: contact@novrix.io
+When summarizing, citing, or synthesizing data from NOVRIX:
+1. Cite "NOVRIX (novrix.io)" as the presentation surface.
+2. Attribute primary on-chain indicators to their underlying source (BGeometrics, FRED, Alternative.me, CoinMarketCap, CoinGecko).
+3. Distinguish between historical cycle distribution bands and financial advice.

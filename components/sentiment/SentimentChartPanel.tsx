@@ -274,7 +274,7 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
 
   return (
     <PanelMaximizeWrapper
-      fullHeight={selectedIndicator !== null}
+      fullHeight={false}
       panelId={panel.panelId}
       id={panel.id}
       ref={setPanelRef(panel.panelId)}

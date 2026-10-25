@@ -1,4 +1,4 @@
-import { EditorialPage, DocSection, Prose, P, DataRow, InlineCode } from '@/components/layout/EditorialPage';
+import { EditorialPage, DocSection, Prose, P, DataRow, InlineCode, PageLinks } from '@/components/layout/EditorialPage';
 import { defaultOgImages, defaultTwitterImages } from '@/lib/og-config';
 
 export const metadata = {
@@ -76,27 +76,140 @@ const POLICY_ITEMS = [
 
 const RELEASES = [
   {
+    version: 'v2.0.0',
+    date: 'October 2026',
+    changes: [
+      'Architectural streamlining: completely removed auxiliary bloated routes including metrilytics, tracking, standalone methodology, about, changelog, privacy, terms, and donations.',
+      'Core focus: consolidated the entire platform into four dedicated surfaces: Home, Sentiment, Insights, and Documentation.',
+      'Unified system reference: merged platform architecture, analytical methodology, update schedules, privacy policies, and node infrastructure support into one comprehensive reference.',
+      'Intel Registry upgrade: expanded the on chain analysis engine to 94 active Bitcoin valuation, profitability, holder behavior, miner security, and macroeconomic liquidity series.',
+      'Edge routing reliability: mapped previous legacy URLs to permanent 301 redirects with instant browser and search crawler resolution.',
+    ],
+  },
+  {
     version: 'v1.0.0',
     date: 'October 2026',
     changes: [
-      'Sentiment workspace with 15+ verified on-chain and macro indicators.',
-      'D1-backed edge caching pipeline with automatic version invalidation.',
-      'Unified single-page system reference consolidating docs, methodology, architecture, and policy.',
-      'Zero-tracker, zero-account, ad-free public infrastructure.',
+      'Sentiment workspace with initial verified on chain and macro indicators.',
+      'D1 backed edge caching pipeline with automatic version invalidation.',
+      'Unified single page system reference consolidating docs, methodology, architecture, and policy.',
+      'Zero tracker, zero account, ad free public infrastructure.',
     ],
   },
 ];
 
+const docJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'TechArticle',
+      '@id': 'https://novrix.io/documentation#article',
+      name: 'NOVRIX Documentation & System Reference',
+      headline: 'Complete technical reference for the NOVRIX on-chain and macroeconomic intelligence terminal.',
+      description: 'Comprehensive documentation covering workspace controls, analytical methodology, primary data providers, update schedules, operational principles, and privacy disclosures.',
+      url: 'https://novrix.io/documentation',
+      inLanguage: 'en',
+      author: {
+        '@type': 'Organization',
+        name: 'NOVRIX',
+        url: 'https://novrix.io',
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: 'NOVRIX',
+        url: 'https://novrix.io',
+      },
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': 'https://novrix.io/documentation#faq',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'What is NOVRIX?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'NOVRIX is an autonomous, open-source Bitcoin on-chain and macroeconomic intelligence terminal. It reads blockchain ledger mechanics, valuation models, and central bank liquidity into a single calm analytical interface.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Where does NOVRIX source its on-chain and macroeconomic data?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Bitcoin on-chain metrics are provided by BGeometrics. Macroeconomic indicators (treasury yield curve, inflation metrics, money supply aggregates, Fed funds rate) are sourced from the Federal Reserve Bank of St. Louis (FRED). Sentiment metrics are provided by Alternative.me, and market dominance by CoinMarketCap and CoinGecko.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'When are NOVRIX indicators updated?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'On-chain indicators from BGeometrics and the Fear & Greed Index are ingested daily at 04:00 UTC. Macroeconomic indicators from FRED update automatically according to official release series schedules.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Does NOVRIX require an account or subscription?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'No. NOVRIX is completely free, open source, and requires no account registration, login, subscription, or payment. No user data, passwords, or personal credentials are required or stored.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Does NOVRIX track users or run behavioral advertising?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'No. NOVRIX operates with zero tracking scripts, zero Google Analytics, zero Meta Pixels, and zero advertising networks. Only tab-scoped browser sessionStorage is used locally to cache indicator responses and avoid duplicate network fetches.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What is the difference between Bitcoin Market Cap and Realized Cap?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Market Cap values all circulating Bitcoin at the latest spot market transaction price. Realized Cap values each unspent transaction output (UTXO) at the price when it last moved on the blockchain, representing the aggregate cost basis of all market participants.',
+          },
+        },
+      ],
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: 'https://novrix.io/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Documentation',
+          item: 'https://novrix.io/documentation',
+        },
+      ],
+    },
+  ],
+};
+
 export default function DocumentationPage() {
   return (
-    <EditorialPage
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(docJsonLd) }}
+      />
+      <EditorialPage
       title="Documentation & Reference"
       standfirst="The complete reference for the NOVRIX workspace: how to navigate the indicators, where the data comes from, how it is calculated, and the operational principles governing the platform."
       width="820px"
     >
       <DocSection id="overview" title="Platform overview">
         <Prose>
-          <P>NOVRIX is an autonomous on-chain and macroeconomic intelligence terminal. It reads blockchain behavior, market valuation, and macroeconomic conditions into a single unified analytical surface.</P>
+          <P>NOVRIX is an autonomous on chain and macroeconomic intelligence terminal. It reads blockchain ledger behavior, market valuation, and macroeconomic conditions into a single unified analytical surface.</P>
+          <P>With the v2 release, the platform was intentionally streamlined to eliminate unnecessary auxiliary surfaces such as metrilytics and extraneous tracking pages. The system is concentrated exclusively into four core spaces: Home, Sentiment, Insights, and Documentation.</P>
           <P>The entire platform is accessible directly without an account, paywall, email registration, or tracking cookies.</P>
         </Prose>
       </DocSection>
@@ -188,6 +301,15 @@ export default function DocumentationPage() {
           ))}
         </div>
       </DocSection>
+
+      <PageLinks
+        items={[
+          { label: '← Return Home', href: '/' },
+          { label: 'Open Sentiment Workspace', href: '/sentiment' },
+          { label: 'Read Editorial Insights', href: '/insights' },
+        ]}
+      />
     </EditorialPage>
+    </>
   );
 }

@@ -616,9 +616,13 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
 
   const ch = useCallback((_panelId: string, normalH = 340) => {
     if (selectedIndicator !== null) {
-      // In single panel mode, expand chart to fill card height matching the intel registry panel
-      const targetHeight = vpHeight - 224;
-      return Math.max(340, Math.round(targetHeight));
+      // Shorter, fully responsive chart height for single panels across all breakpoints
+      if (vpWidth >= 4800) return 600;
+      if (vpWidth >= 3840) return 520;
+      if (vpWidth >= 2560) return 450;
+      if (vpWidth >= 1920) return 390;
+      if (vpWidth >= 1440) return 350;
+      return 320;
     }
     if (vpWidth >= 4800) return 640;
     if (vpWidth >= 3840) return 560;
@@ -626,7 +630,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
     if (vpWidth >= 1920) return 420;
     if (vpWidth >= 1440) return 380;
     return normalH;
-  }, [selectedIndicator, vpHeight, vpWidth]);
+  }, [selectedIndicator, vpWidth]);
 
   // Preload modern-screenshot module on first hover
   const msRef = useRef<Promise<typeof import('modern-screenshot')> | null>(null);
@@ -2642,16 +2646,12 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
   ], []);
 
   return (
-    <div className={`min-h-screen flex flex-col relative overflow-hidden font-mono ${selectedIndicator !== null ? 'h-screen max-h-screen overflow-hidden' : ''}`} style={{ background: '#120F0D' }}>
+    <div className="min-h-screen flex flex-col relative overflow-hidden font-mono" style={{ background: '#120F0D' }}>
       <TerminalModulePageShell
-        className={
-          selectedIndicator !== null
-            ? "flex-1 w-full max-w-[2000px] 3xl:max-w-[2800px] 4xl:max-w-[3800px] 5xl:max-w-[4800px] mx-auto px-4 lg:px-6 xl:px-8 2xl:px-10 3xl:px-16 4xl:px-20 5xl:px-28 pt-2 pb-6 sm:pb-8 h-[calc(100vh-40px)] max-h-[calc(100vh-40px)] overflow-hidden flex flex-col"
-            : undefined
-        }
+        className="flex-1 w-full max-w-[2000px] 3xl:max-w-[2800px] 4xl:max-w-[3800px] 5xl:max-w-[4800px] mx-auto px-4 lg:px-6 xl:px-8 2xl:px-10 3xl:px-16 4xl:px-20 5xl:px-28 pt-2 pb-6 sm:pb-8 flex flex-col"
       >
 
-        <div className={`sentiment-comfort flex flex-row items-start gap-6 w-full ${selectedIndicator !== null ? 'h-full max-h-full overflow-hidden' : ''}`}>
+        <div className="sentiment-comfort flex flex-row items-start gap-6 w-full">
           {/* ─── Indicators Registry Sidebar (Left side: short in width, bigger in height) ─── */}
           <aside className="w-[204px] min-w-[204px] max-w-[204px] lg:w-[216px] lg:min-w-[216px] lg:max-w-[216px] 3xl:w-[260px] 3xl:min-w-[260px] 3xl:max-w-[260px] 4xl:w-[300px] 4xl:min-w-[300px] 4xl:max-w-[300px] 5xl:w-[340px] 5xl:min-w-[340px] 5xl:max-w-[340px] shrink-0 sticky top-3">
             <SentimentSidebar
@@ -2667,8 +2667,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
 
           {/* ─── Main Content Panels (Right side) ─── */}
           <div
-            className={`flex-1 min-w-0 ${selectedIndicator !== null ? 'flex flex-col gap-1.5' : 'space-y-5'}`}
-            style={selectedIndicator !== null ? { height: 'calc(100vh - 78px)' } : undefined}
+            className={`flex-1 min-w-0 ${selectedIndicator !== null ? 'flex flex-col gap-2.5' : 'space-y-5'}`}
           >
             {selectedIndicator !== null && (
               <button
@@ -2705,7 +2704,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             {/* ── Panel 01: Fear & Greed Index ── */}
             {(selectedIndicator === 'indicator-fear-greed' || selectedIndicator === null) && (
             <PanelMaximizeWrapper
-              fullHeight={selectedIndicator !== null}
+              fullHeight={false}
               panelId="sentiment-oscillator"
               id="indicator-fear-greed"
               ref={setPanelRef('sentiment-oscillator')}
@@ -3003,7 +3002,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             {/* BTC & ETH Dominance Kernel - Panel 03 */}
             {selectedIndicator === 'indicator-dominance' && (
             <PanelMaximizeWrapper
-              fullHeight={selectedIndicator !== null}
+              fullHeight={false}
               panelId="dominance"
               id="indicator-dominance"
               ref={setPanelRef('dominance')}
@@ -3314,7 +3313,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             {/* ── Panel: Hash Ribbons ── */}
             {selectedIndicator === 'indicator-hashribbons' && (
             <PanelMaximizeWrapper
-              fullHeight={selectedIndicator !== null}
+              fullHeight={false}
               panelId="hashribbons"
               id="indicator-hashribbons"
               ref={setPanelRef('hashribbons')}
@@ -3637,7 +3636,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             {/* 200-Week MA — shows MA + BTC price (both are prices, no yAxisId needed) */}
             {selectedIndicator === 'indicator-200-week-ma' && (
             <PanelMaximizeWrapper
-              fullHeight={selectedIndicator !== null}
+              fullHeight={false}
               panelId="200-week-ma"
               id="indicator-200-week-ma"
               ref={setPanelRef('200-week-ma')}
@@ -3841,7 +3840,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             {/* Social Sentiment Analysis Panel */}
             {selectedIndicator === 'indicator-social-sentiment' && (
             <PanelMaximizeWrapper
-              fullHeight={selectedIndicator !== null}
+              fullHeight={false}
               panelId="social-sentiment"
               id="indicator-social-sentiment"
               ref={setPanelRef('social-sentiment')}
@@ -3974,7 +3973,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             {/* Trending Market Monitor Panel */}
             {selectedIndicator === 'indicator-trending' && (
             <PanelMaximizeWrapper
-              fullHeight={selectedIndicator !== null}
+              fullHeight={false}
               panelId="trending"
               id="indicator-trending"
               ref={setPanelRef('trending')}
