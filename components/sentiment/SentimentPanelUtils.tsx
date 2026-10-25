@@ -144,7 +144,6 @@ export const PanelHeader = ({
                 color: showInfo ? accentColor : 'var(--text-tertiary)',
                 boxShadow: showInfo ? `0 0 14px ${accentColor}40` : 'none',
               }}
-              title="Indicator intelligence & methodology"
             >
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="10" />
