@@ -56,24 +56,6 @@ export default function Home() {
           }}
         >
           <div className="mx-auto w-full" style={{ maxWidth: '1180px' }}>
-            <div
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                marginBottom: '20px',
-                padding: '4px 10px',
-                borderRadius: '2px',
-                background: 'rgba(250, 247, 242, 0.04)',
-                border: '1px solid rgba(250, 247, 242, 0.09)',
-              }}
-            >
-              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981', display: 'inline-block' }} />
-              <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '10px', letterSpacing: '0.14em', color: '#D8D2C7', textTransform: 'uppercase' }}>
-                Live Network Telemetry
-              </span>
-            </div>
-
             <h1
               style={{
                 fontFamily: 'var(--ff-display)',
@@ -136,11 +118,10 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-7 mt-8 md:mt-10">
               {MODULES.map((item) => (
                 <Link key={item.href} href={item.href} className="home-entry">
-                  <div className="flex items-center justify-between gap-3 mb-4">
+                  <div className="mb-4">
                     <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '10px', letterSpacing: '0.14em', color: MUTED, textTransform: 'uppercase' }}>
                       {item.category}
                     </span>
-                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: item.href === '/sentiment' ? '#10B981' : '#D49B55', display: 'inline-block' }} />
                   </div>
                   <h3
                     style={{
