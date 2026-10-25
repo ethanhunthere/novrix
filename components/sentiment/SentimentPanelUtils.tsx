@@ -793,8 +793,25 @@ export interface PanelMaximizeWrapperProps {
 }
 
 export const PanelMaximizeWrapper = forwardRef<HTMLDivElement, PanelMaximizeWrapperProps>(
-  ({ children, className, style, id, 'data-panel': dataPanelAttr, onMouseEnter }, ref) => (
-    <div ref={ref} className={className} style={style} id={id} data-panel={dataPanelAttr} onMouseEnter={onMouseEnter}>
+  ({ children, className, style, id, 'data-panel': dataPanelAttr, onMouseEnter, fullHeight }, ref) => (
+    <div
+      ref={ref}
+      className={`${className ?? ''} ${fullHeight ? 'flex-1 min-h-0 flex flex-col' : ''}`}
+      style={{
+        ...style,
+        ...(fullHeight
+          ? {
+              flex: '1 1 0%',
+              minHeight: 0,
+              display: 'flex',
+              flexDirection: 'column',
+            }
+          : {}),
+      }}
+      id={id}
+      data-panel={dataPanelAttr}
+      onMouseEnter={onMouseEnter}
+    >
       {children}
     </div>
   )

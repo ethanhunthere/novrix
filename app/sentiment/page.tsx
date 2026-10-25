@@ -616,11 +616,9 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
 
   const ch = useCallback((_panelId: string, normalH = 340) => {
     if (selectedIndicator !== null) {
-      // In single panel mode, keep chart compact and strictly within viewport with clean bottom breathing room
-      const maxAvailable = vpHeight - 270;
-      if (vpWidth >= 2560) return Math.min(maxAvailable, 440);
-      if (vpWidth >= 1920) return Math.min(maxAvailable, 400);
-      return Math.max(220, Math.min(maxAvailable, 350));
+      // In single panel mode, expand chart to fill card height matching the intel registry panel
+      const targetHeight = vpHeight - 224;
+      return Math.max(340, Math.round(targetHeight));
     }
     if (vpWidth >= 2560) return 480;
     if (vpWidth >= 1920) return 420;
@@ -2666,12 +2664,15 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
           </aside>
 
           {/* ─── Main Content Panels (Right side) ─── */}
-          <div className={`flex-1 min-w-0 ${selectedIndicator !== null ? 'flex flex-col gap-1.5' : 'space-y-5'}`}>
+          <div
+            className={`flex-1 min-w-0 ${selectedIndicator !== null ? 'flex flex-col gap-1.5' : 'space-y-5'}`}
+            style={selectedIndicator !== null ? { height: 'calc(100vh - 78px)' } : undefined}
+          >
             {selectedIndicator !== null && (
               <button
                 type="button"
                 onClick={() => setSelectedIndicator(null)}
-                className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[2px] transition-all duration-140 active:scale-[0.98] w-fit"
+                className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[2px] transition-all duration-140 active:scale-[0.98] w-fit shrink-0"
                 style={{
                   fontFamily: 'var(--ff-mono)',
                   fontSize: '9.5px',
@@ -2723,11 +2724,14 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 lastUpdated={sentiment?.timestamp ? new Date(sentiment.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : null}
                 onScreenshot={() => capturePanel('sentiment-oscillator')}
               />
-              <div className="px-4 pt-3 pb-3" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
+              <div
+                className={`px-4 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
+                style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
+              >
                 {(!visiblePanels.has('sentiment-oscillator') || isLoading) ? (
                   <ChartSkeleton height={ch('sentiment-oscillator')} />
                 ) : (
-                  <div className="min-w-0">
+                  <div className={`min-w-0 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}>
                       {isHistoricalLoading ? (
                         <div className="flex items-center justify-center h-64">
                           <span className="text-[9px] text-[#71717A] tracking-[0.2em]" style={{ fontFamily: 'var(--ff-mono)' }}>LOADING</span>
@@ -2740,8 +2744,8 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                             const fngDataToRender = isBtcOn ? fngChartDataWithPrice : chartData;
 
                             return (
-                              <>
-                                <div className="flex flex-row items-center justify-between gap-3 mb-2.5 flex-wrap">
+                              <div className={selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : undefined}>
+                                <div className="flex flex-row items-center justify-between gap-3 mb-2.5 flex-wrap shrink-0">
                                   <LineToggle items={[
                                     {
                                       key: 'fng',
@@ -2760,6 +2764,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                                   ]} />
                                   <TfSelector value={selectedTimeframe} onChange={setSelectedTimeframe} opts={TF_OPTS} />
                                 </div>
+                                <div className={selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : undefined} style={{ outline: 'none' }}>
                                 <ResponsiveContainer
                                   key={`chart-${selectedTimeframe}-${isBtcOn ? 'btc' : 'nobtc'}`}
                                   width="100%"
@@ -2911,7 +2916,8 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                                       ))}
                                   </AreaChart>
                                 </ResponsiveContainer>
-                              </>
+                              </div>
+                            </div>
                             );
                           })()}
                         </>
@@ -3016,12 +3022,15 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 lastUpdated={dominanceData.length > 0 ? new Date(dominanceData[dominanceData.length - 1].time).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : null}
                 onScreenshot={() => capturePanel('dominance')}
               />
-              <div className="px-4 pt-3 pb-3" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
+              <div
+                className={`px-4 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
+                style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
+              >
                 {(!visiblePanels.has('dominance') || isDominanceLoading || slicedDominanceChartDataWithPrice.length === 0) ? (
                   <ChartSkeleton height={ch('dominance')} />
                 ) : (
-                  <div>
-                    <div className="flex flex-row items-center justify-between gap-3 mb-2.5 flex-wrap">
+                  <div className={selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : undefined}>
+                    <div className="flex flex-row items-center justify-between gap-3 mb-2.5 flex-wrap shrink-0">
                       <LineToggle items={[
                         { key: 'btcDom', label: 'BTC DOM', color: '#F7931A', active: showIndicator['btcDom'], onClick: () => setShowIndicator(p => ({ ...p, btcDom: !p.btcDom })) },
                         { key: 'ethDom', label: 'ETH DOM', color: '#627EEA', active: showIndicator['ethDom'], onClick: () => setShowIndicator(p => ({ ...p, ethDom: !p.ethDom })) },
@@ -3029,7 +3038,8 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                       ]} />
                       <TfSelector value={dominanceTimeframe} onChange={setDominanceTimeframe} opts={TF_OPTS} />
                     </div>
-                    <ResponsiveContainer key={`dominance-chart-${dominanceTimeframe}`} width="100%" height={ch('dominance')} style={{ outline: 'none' }}>
+                    <div className={selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : undefined} style={{ outline: 'none' }}>
+                      <ResponsiveContainer key={`dominance-chart-${dominanceTimeframe}`} width="100%" height={ch('dominance')} style={{ outline: 'none' }}>
                       <AreaChart
                         data={slicedDominanceChartDataWithPrice}
                         style={{ outline: 'none' }}
@@ -3092,6 +3102,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                         {showBtcPrice['dominance'] && <Area type="monotone" dataKey="btcPrice" yAxisId="btcPrice" stroke="#FFFFFF" strokeWidth={1.5} fill="none" animationDuration={0} isAnimationActive={false} dot={false} />}
                       </AreaChart>
                     </ResponsiveContainer>
+                    </div>
                   </div>
                 )}
               </div>
@@ -3330,10 +3341,13 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                     lastUpdated={lastDate}
                     onScreenshot={() => capturePanel('hashribbons')}
                   />
-              <div className="px-4 pt-3 pb-3" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
+              <div
+                className={`px-4 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
+                style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
+              >
                 {(!visiblePanels.has('hashribbons') || isHashribbonsLoading) ? <ChartSkeleton height={ch('hashribbons')} /> : (
-                  <div>
-                    <div className="flex flex-row items-center justify-between gap-3 mb-2.5 flex-wrap">
+                  <div className={selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : undefined}>
+                    <div className="flex flex-row items-center justify-between gap-3 mb-2.5 flex-wrap shrink-0">
                       <LineToggle items={[
                         { key: 'hashribbonsSma30', label: 'SMA-30', color: '#F7931A', active: showIndicator['hashribbonsSma30'], onClick: () => setShowIndicator(p => ({ ...p, hashribbonsSma30: !p.hashribbonsSma30 })) },
                         { key: 'hashribbonsSma60', label: 'SMA-60', color: '#60A5FA', active: showIndicator['hashribbonsSma60'], onClick: () => setShowIndicator(p => ({ ...p, hashribbonsSma60: !p.hashribbonsSma60 })) },
@@ -3341,7 +3355,8 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                       ]} />
                       <TfSelector value={hashribbonsTimeframe} onChange={setHashribbonsTimeframe} />
                     </div>
-                    <ResponsiveContainer key={`hashribbons-chart-${hashribbonsTimeframe}`} width="100%" height={ch('hashribbons')} style={{ outline: 'none' }}>
+                    <div className={selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : undefined} style={{ outline: 'none' }}>
+                      <ResponsiveContainer key={`hashribbons-chart-${hashribbonsTimeframe}`} width="100%" height={ch('hashribbons')} style={{ outline: 'none' }}>
                       <AreaChart
                         data={hashribbonsChartDataWithPrice}
                         style={{ outline: 'none' }}
@@ -3408,6 +3423,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                         ))}
                       </AreaChart>
                     </ResponsiveContainer>
+                    </div>
                   </div>
                 )}
               </div>
@@ -3643,19 +3659,23 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                     panelId="200-week-ma"
                     onScreenshot={() => capturePanel('200-week-ma')}
                   />
-              <div className="px-4 pt-3 pb-3" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
+              <div
+                className={`px-4 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
+                style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
+              >
                 {(!visiblePanels.has('200-week-ma') || isWeekMa200Loading || weekMa200ChartData.length === 0) ? (
                   <ChartSkeleton height={ch('200-week-ma')} />
                 ) : (
-                  <div>
-                    <div className="flex flex-row items-center justify-between gap-3 mb-2.5 flex-wrap">
+                  <div className={selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : undefined}>
+                    <div className="flex flex-row items-center justify-between gap-3 mb-2.5 flex-wrap shrink-0">
                       <LineToggle items={[
                         { key: 'weekMa200', label: '200W MA', color: '#00E5FF', active: showIndicator['weekMa200'], onClick: () => setShowIndicator((p) => ({ ...p, weekMa200: !p.weekMa200 })) },
                         { key: 'price-weekMa200', label: 'PRICE', color: '#FFFFFF', active: showBtcPrice['weekMa200'], onClick: () => setShowBtcPrice((p) => ({ ...p, weekMa200: !p.weekMa200 })) },
                       ]} />
                       <TfSelector value={weekMa200Timeframe} onChange={setWeekMa200Timeframe} />
                     </div>
-                    <ResponsiveContainer key={`200-week-ma-${weekMa200Timeframe}`} width="100%" height={ch('200-week-ma')} style={{ outline: 'none' }}>
+                    <div className={selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : undefined} style={{ outline: 'none' }}>
+                      <ResponsiveContainer key={`200-week-ma-${weekMa200Timeframe}`} width="100%" height={ch('200-week-ma')} style={{ outline: 'none' }}>
                       <AreaChart
                         data={weekMa200ChartDataWithPrice}
                         style={{ outline: 'none' }}
@@ -3708,6 +3728,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                         ))}
                       </AreaChart>
                     </ResponsiveContainer>
+                    </div>
                   </div>
                 )}
               </div>
@@ -3838,7 +3859,10 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 accentColor="#A855F7"
                 onScreenshot={() => capturePanel('social-sentiment')}
               />
-              <div className="px-4 pt-3 pb-3" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
+              <div
+                className={`px-4 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col overflow-y-auto' : ''}`}
+                style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
+              >
                 {(!visiblePanels.has('social-sentiment') || isSocialLoading) ? (
                   <ChartSkeleton height={200} />
                 ) : socialSentiment ? (
@@ -3966,7 +3990,10 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 accentColor="#F59E0B"
                 onScreenshot={() => capturePanel('trending')}
               />
-              <div className="px-4 pt-3 pb-3" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
+              <div
+                className={`px-4 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col overflow-y-auto' : ''}`}
+                style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
+              >
                 {(!visiblePanels.has('trending-coins') || isSocialLoading) ? (
                   <ChartSkeleton height={200} />
                 ) : trendingCoins.length > 0 ? (

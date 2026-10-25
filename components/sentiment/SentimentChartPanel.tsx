@@ -310,7 +310,10 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
         );
       })()}
 
-      <div className="px-4 sm:px-5 pt-3 pb-3" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
+      <div
+        className={`px-4 sm:px-5 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
+        style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
+      >
 
         {(!visiblePanels.has(panel.panelId) || panel.isLoading || !rechartsReady || panel.data.length === 0) ? (
           <ChartSkeleton height={ch(panel.panelId)} />
@@ -319,15 +322,15 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
           const showBtc = !isFred && !panel.hideBtcPrice;
           const chartData = showBtc ? (panel.dataWithPrice ?? panel.data) : panel.data;
           return (
-            <div>
-              <div className="flex flex-row items-center justify-between gap-3 mb-2.5 flex-wrap">
+            <div className={selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : undefined}>
+              <div className="flex flex-row items-center justify-between gap-3 mb-2.5 flex-wrap shrink-0">
                 <LineToggle items={[
                   { key: panel.indicatorKey, label: panel.metricLabel, color: metricColor, active: showIndicator[panel.indicatorKey], onClick: () => setShowIndicator((p) => ({ ...p, [panel.indicatorKey]: !p[panel.indicatorKey] })) },
                   ...(showBtc ? [{ key: `price-${panel.indicatorKey}`, label: 'PRICE', color: BTC_PRICE_LEGEND, active: showBtcPrice[panel.indicatorKey], onClick: () => setShowBtcPrice((p) => ({ ...p, [panel.indicatorKey]: !p[panel.indicatorKey] })) }] : []),
                 ]} />
                 <TfSelector value={panel.timeframe} onChange={panel.setTimeframe} opts={panel.tfOpts ?? (isFred ? FRED_TF_OPTS : undefined)} />
               </div>
-              <div style={{ outline: 'none' }}>
+              <div className={selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : undefined} style={{ outline: 'none' }}>
                 <ResponsiveContainer key={`${panel.panelId}-${panel.timeframe}`} width="100%" height={ch(panel.panelId)} style={{ outline: 'none' }}>
                   <AreaChart
                     data={chartData}
