@@ -556,17 +556,35 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
     }
   }, [selectedIndicator]);
 
-  // Block page scroll when single indicator is selected so user has immediate, full screen visibility without losing focus
+  // Block page scroll and eliminate empty scrollbar gutter when single indicator is selected
   useEffect(() => {
     if (selectedIndicator !== null) {
       const prevBodyOverflow = document.body.style.overflow;
+      const prevBodyOverflowY = document.body.style.overflowY;
       const prevHtmlOverflow = document.documentElement.style.overflow;
+      const prevHtmlOverflowY = document.documentElement.style.overflowY;
+      const prevHtmlScrollbarGutter = document.documentElement.style.scrollbarGutter;
+
       document.body.style.overflow = 'hidden';
+      document.body.style.overflowY = 'hidden';
       document.documentElement.style.overflow = 'hidden';
+      document.documentElement.style.overflowY = 'hidden';
+      document.documentElement.style.scrollbarGutter = 'auto';
+
+      document.documentElement.classList.add('sentiment-single-active');
+      document.body.classList.add('sentiment-single-active');
+
       window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+
       return () => {
         document.body.style.overflow = prevBodyOverflow;
+        document.body.style.overflowY = prevBodyOverflowY;
         document.documentElement.style.overflow = prevHtmlOverflow;
+        document.documentElement.style.overflowY = prevHtmlOverflowY;
+        document.documentElement.style.scrollbarGutter = prevHtmlScrollbarGutter;
+
+        document.documentElement.classList.remove('sentiment-single-active');
+        document.body.classList.remove('sentiment-single-active');
       };
     }
   }, [selectedIndicator]);
@@ -598,11 +616,11 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
 
   const ch = useCallback((_panelId: string, normalH = 340) => {
     if (selectedIndicator !== null) {
-      // In single panel mode, keep chart compact and strictly within viewport without scrolling
-      const maxAvailable = vpHeight - 210;
-      if (vpWidth >= 2560) return Math.min(maxAvailable, 480);
-      if (vpWidth >= 1920) return Math.min(maxAvailable, 440);
-      return Math.max(260, Math.min(maxAvailable, 390));
+      // In single panel mode, keep chart compact and strictly within viewport with clean bottom breathing room
+      const maxAvailable = vpHeight - 270;
+      if (vpWidth >= 2560) return Math.min(maxAvailable, 440);
+      if (vpWidth >= 1920) return Math.min(maxAvailable, 400);
+      return Math.max(220, Math.min(maxAvailable, 350));
     }
     if (vpWidth >= 2560) return 480;
     if (vpWidth >= 1920) return 420;
@@ -2628,7 +2646,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       <TerminalModulePageShell
         className={
           selectedIndicator !== null
-            ? "flex-1 w-full max-w-[2000px] 3xl:max-w-[2800px] 4xl:max-w-[3600px] mx-auto px-4 lg:px-6 xl:px-8 2xl:px-10 3xl:px-16 4xl:px-24 py-2 pb-2 h-[calc(100vh-40px)] max-h-[calc(100vh-40px)] overflow-hidden flex flex-col"
+            ? "flex-1 w-full max-w-[2000px] 3xl:max-w-[2800px] 4xl:max-w-[3600px] mx-auto px-4 lg:px-6 xl:px-8 2xl:px-10 3xl:px-16 4xl:px-24 pt-2 pb-6 sm:pb-8 h-[calc(100vh-40px)] max-h-[calc(100vh-40px)] overflow-hidden flex flex-col"
             : undefined
         }
       >
@@ -2705,7 +2723,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 lastUpdated={sentiment?.timestamp ? new Date(sentiment.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : null}
                 onScreenshot={() => capturePanel('sentiment-oscillator')}
               />
-              <div className="px-4 pt-3 pb-4" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
+              <div className="px-4 pt-3 pb-3" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
                 {(!visiblePanels.has('sentiment-oscillator') || isLoading) ? (
                   <ChartSkeleton height={ch('sentiment-oscillator')} />
                 ) : (
@@ -2723,7 +2741,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
 
                             return (
                               <>
-                                <div className="flex flex-row items-center justify-between gap-3 mb-4 flex-wrap">
+                                <div className="flex flex-row items-center justify-between gap-3 mb-2.5 flex-wrap">
                                   <LineToggle items={[
                                     {
                                       key: 'fng',
@@ -2998,12 +3016,12 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 lastUpdated={dominanceData.length > 0 ? new Date(dominanceData[dominanceData.length - 1].time).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : null}
                 onScreenshot={() => capturePanel('dominance')}
               />
-              <div className="px-4 pt-3 pb-4" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
+              <div className="px-4 pt-3 pb-3" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
                 {(!visiblePanels.has('dominance') || isDominanceLoading || slicedDominanceChartDataWithPrice.length === 0) ? (
                   <ChartSkeleton height={ch('dominance')} />
                 ) : (
                   <div>
-                    <div className="flex flex-row items-center justify-between gap-3 mb-4 flex-wrap">
+                    <div className="flex flex-row items-center justify-between gap-3 mb-2.5 flex-wrap">
                       <LineToggle items={[
                         { key: 'btcDom', label: 'BTC DOM', color: '#F7931A', active: showIndicator['btcDom'], onClick: () => setShowIndicator(p => ({ ...p, btcDom: !p.btcDom })) },
                         { key: 'ethDom', label: 'ETH DOM', color: '#627EEA', active: showIndicator['ethDom'], onClick: () => setShowIndicator(p => ({ ...p, ethDom: !p.ethDom })) },
@@ -3312,10 +3330,10 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                     lastUpdated={lastDate}
                     onScreenshot={() => capturePanel('hashribbons')}
                   />
-              <div className="px-4 pt-3 pb-4" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
+              <div className="px-4 pt-3 pb-3" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
                 {(!visiblePanels.has('hashribbons') || isHashribbonsLoading) ? <ChartSkeleton height={ch('hashribbons')} /> : (
                   <div>
-                    <div className="flex flex-row items-center justify-between gap-3 mb-4 flex-wrap">
+                    <div className="flex flex-row items-center justify-between gap-3 mb-2.5 flex-wrap">
                       <LineToggle items={[
                         { key: 'hashribbonsSma30', label: 'SMA-30', color: '#F7931A', active: showIndicator['hashribbonsSma30'], onClick: () => setShowIndicator(p => ({ ...p, hashribbonsSma30: !p.hashribbonsSma30 })) },
                         { key: 'hashribbonsSma60', label: 'SMA-60', color: '#60A5FA', active: showIndicator['hashribbonsSma60'], onClick: () => setShowIndicator(p => ({ ...p, hashribbonsSma60: !p.hashribbonsSma60 })) },
@@ -3625,12 +3643,12 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                     panelId="200-week-ma"
                     onScreenshot={() => capturePanel('200-week-ma')}
                   />
-              <div className="px-4 pt-3 pb-4" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
+              <div className="px-4 pt-3 pb-3" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
                 {(!visiblePanels.has('200-week-ma') || isWeekMa200Loading || weekMa200ChartData.length === 0) ? (
                   <ChartSkeleton height={ch('200-week-ma')} />
                 ) : (
                   <div>
-                    <div className="flex flex-row items-center justify-between gap-3 mb-4 flex-wrap">
+                    <div className="flex flex-row items-center justify-between gap-3 mb-2.5 flex-wrap">
                       <LineToggle items={[
                         { key: 'weekMa200', label: '200W MA', color: '#00E5FF', active: showIndicator['weekMa200'], onClick: () => setShowIndicator((p) => ({ ...p, weekMa200: !p.weekMa200 })) },
                         { key: 'price-weekMa200', label: 'PRICE', color: '#FFFFFF', active: showBtcPrice['weekMa200'], onClick: () => setShowBtcPrice((p) => ({ ...p, weekMa200: !p.weekMa200 })) },
@@ -3820,7 +3838,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 accentColor="#A855F7"
                 onScreenshot={() => capturePanel('social-sentiment')}
               />
-              <div className="px-4 pt-3 pb-4" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
+              <div className="px-4 pt-3 pb-3" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
                 {(!visiblePanels.has('social-sentiment') || isSocialLoading) ? (
                   <ChartSkeleton height={200} />
                 ) : socialSentiment ? (
@@ -3948,7 +3966,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 accentColor="#F59E0B"
                 onScreenshot={() => capturePanel('trending')}
               />
-              <div className="px-4 pt-3 pb-4" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
+              <div className="px-4 pt-3 pb-3" style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}>
                 {(!visiblePanels.has('trending-coins') || isSocialLoading) ? (
                   <ChartSkeleton height={200} />
                 ) : trendingCoins.length > 0 ? (

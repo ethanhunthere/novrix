@@ -47,8 +47,8 @@ const SentimentSidebar = memo(function SentimentSidebar({
     <div
       className="w-full flex flex-col overflow-hidden select-none"
       style={{
-        height: 'calc(100vh - 64px)',
-        maxHeight: 'calc(100vh - 64px)',
+        height: selectedIndicator !== null ? 'calc(100vh - 78px)' : 'calc(100vh - 64px)',
+        maxHeight: selectedIndicator !== null ? 'calc(100vh - 78px)' : 'calc(100vh - 64px)',
         background: '#120F0D',
         border: '1px solid rgba(245, 241, 234, 0.08)',
         borderRadius: '2px',

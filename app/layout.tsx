@@ -147,7 +147,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className="font-sans antialiased min-h-screen flex flex-col text-white overflow-y-scroll bg-[#0A0908]"
+        className="font-sans antialiased min-h-screen flex flex-col text-white overflow-y-auto bg-[#0A0908]"
         style={{
           WebkitFontSmoothing: 'antialiased',
           MozOsxFontSmoothing: 'grayscale',
