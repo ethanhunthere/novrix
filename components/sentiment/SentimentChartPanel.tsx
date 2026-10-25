@@ -140,13 +140,17 @@ function getValueExtent(
   data: SentimentChartPoint[],
   valueKey: string
 ): { min: number; max: number } | null {
-  const values = data.map(d => Number(d[valueKey])).filter(Number.isFinite);
-  if (values.length === 0) return null;
-
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  if (max === min) return null;
-
+  if (!data || data.length === 0) return null;
+  let min = Infinity;
+  let max = -Infinity;
+  for (let i = 0; i < data.length; i++) {
+    const val = Number(data[i][valueKey]);
+    if (Number.isFinite(val)) {
+      if (val < min) min = val;
+      if (val > max) max = val;
+    }
+  }
+  if (!Number.isFinite(min) || !Number.isFinite(max) || min === max) return null;
   return { min, max };
 }
 
@@ -259,16 +263,18 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
   const metricColor = normalizeMetricColor(panel.accentColor);
   const lineColor = getHighIntensityLineColor(panel.accentColor);
 
+  const isVisible = visiblePanels.has(panel.panelId);
+
   const zoneBands = useMemo(
-    () => getReferenceBands(panel.data, valueKey, panel.referenceBands),
-    [panel.data, valueKey, panel.referenceBands]
+    () => isVisible ? getReferenceBands(panel.data, valueKey, panel.referenceBands) : [],
+    [isVisible, panel.data, valueKey, panel.referenceBands]
   );
 
   const isMaximized = maximizedPanel === panel.panelId;
   const chartHeight = ch(panel.panelId);
   const zoneLineGradient = useMemo(
-    () => buildZoneGradientStops(panel.data, valueKey, chartHeight, panel.panelId),
-    [panel.data, valueKey, chartHeight, panel.panelId]
+    () => isVisible ? buildZoneGradientStops(panel.data, valueKey, chartHeight, panel.panelId) : null,
+    [isVisible, panel.data, valueKey, chartHeight, panel.panelId]
   );
 
   return (
@@ -424,6 +430,44 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
       </div>
     </PanelMaximizeWrapper>
   );
-});
+}, arePanelPropsEqual);
+
+function arePanelPropsEqual(prev: SentimentChartPanelProps, next: SentimentChartPanelProps): boolean {
+  const p = prev.panel;
+  const n = next.panel;
+  if (p.panelId !== n.panelId) return false;
+  if (p.data !== n.data) return false;
+  if (p.dataWithPrice !== n.dataWithPrice) return false;
+  if (p.isLoading !== n.isLoading) return false;
+  if (p.timeframe !== n.timeframe) return false;
+  if (p.accentColor !== n.accentColor) return false;
+
+  // Selected indicator state
+  if (prev.selectedIndicator !== next.selectedIndicator) return false;
+
+  // Maximized state for this specific panel
+  const pMax = prev.maximizedPanel === p.panelId;
+  const nMax = next.maximizedPanel === n.panelId;
+  if (pMax !== nMax) return false;
+
+  // Visibility state for this specific panel
+  const pVis = prev.visiblePanels.has(p.panelId);
+  const nVis = next.visiblePanels.has(n.panelId);
+  if (pVis !== nVis) return false;
+
+  // Toggle states for this specific panel
+  const pBtc = prev.showBtcPrice[p.indicatorKey];
+  const nBtc = next.showBtcPrice[n.indicatorKey];
+  if (pBtc !== nBtc) return false;
+
+  const pInd = prev.showIndicator[p.indicatorKey];
+  const nInd = next.showIndicator[n.indicatorKey];
+  if (pInd !== nInd) return false;
+
+  // Recharts readiness
+  if (prev.rechartsReady !== next.rechartsReady) return false;
+
+  return true;
+}
 
 export default SentimentChartPanel;

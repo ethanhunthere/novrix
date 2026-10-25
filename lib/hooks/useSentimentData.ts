@@ -56,6 +56,25 @@ function compareTimestamp(a: IndicatorPoint, b: IndicatorPoint): number {
   return at < bt ? -1 : at > bt ? 1 : 0;
 }
 
+function fastSortAscending<T extends IndicatorPoint>(data: T[]): T[] {
+  if (!data || data.length <= 1) return data;
+  let isSorted = true;
+  for (let i = 1; i < data.length; i++) {
+    const prev = data[i - 1].time ?? (data[i - 1] as unknown as { timestamp?: string }).timestamp ?? '';
+    const curr = data[i].time ?? (data[i] as unknown as { timestamp?: string }).timestamp ?? '';
+    if (prev > curr) {
+      isSorted = false;
+      break;
+    }
+  }
+  if (isSorted) return data;
+  return [...data].sort((a, b) => {
+    const at = a.time ?? (a as unknown as { timestamp?: string }).timestamp ?? '';
+    const bt = b.time ?? (b as unknown as { timestamp?: string }).timestamp ?? '';
+    return at < bt ? -1 : at > bt ? 1 : 0;
+  });
+}
+
 async function fetchBgChartSeries(file: string): Promise<Array<[number, number]>> {
   try {
     const res = await fetch(`https://charts.bgeometrics.com/files/${file}.json`);
@@ -789,7 +808,7 @@ export function useSentimentData() {
         }
 
         if (freshBtcPoints.length >= 200) {
-          const sortedPrices = [...freshBtcPoints].sort((a, b) => (a.time || '').localeCompare(b.time || ''));
+          const sortedPrices = fastSortAscending(freshBtcPoints);
           const derivedMayer: IndicatorPoint[] = [];
           let sum200 = 0;
           for (let i = 0; i < sortedPrices.length; i++) {
@@ -976,7 +995,7 @@ export function useSentimentData() {
 
         // Mayer Multiple: derive directly from BTC Price (Mayer Multiple = BTC Price / 200-day SMA of BTC Price)
         if (d.btcPrice && d.btcPrice.length >= 200) {
-          const sortedPrices = [...d.btcPrice].filter(p => typeof p.price === 'number' && (p.price as number) > 0 && p.time).sort((a, b) => (a.time || '').localeCompare(b.time || ''));
+          const sortedPrices = fastSortAscending(d.btcPrice.filter(p => typeof p.price === 'number' && (p.price as number) > 0 && p.time));
           const derivedMayer: IndicatorPoint[] = [];
           let sum200 = 0;
           for (let i = 0; i < sortedPrices.length; i++) {
@@ -1004,7 +1023,7 @@ export function useSentimentData() {
 
         // 200-Week Moving Average: derive directly from BTC Price (200 weeks = 1400 days SMA)
         if (d.btcPrice && d.btcPrice.length >= 1400) {
-          const sortedPrices = [...d.btcPrice].filter(p => typeof p.price === 'number' && (p.price as number) > 0 && p.time).sort((a, b) => (a.time || '').localeCompare(b.time || ''));
+          const sortedPrices = fastSortAscending(d.btcPrice.filter(p => typeof p.price === 'number' && (p.price as number) > 0 && p.time));
           const derivedWma: IndicatorPoint[] = [];
           let sum1400 = 0;
           for (let i = 0; i < sortedPrices.length; i++) {
@@ -1514,7 +1533,7 @@ export function useSentimentData() {
   const { chartData, calculateTicks } = useMemo(() => {
     // Sort ascending by date first, then slice the last N days
     const fngSource = allFngData.length > 0 ? allFngData : historicalData;
-    const sorted = [...fngSource].sort(compareTimestamp);
+    const sorted = fastSortAscending(fngSource);
     const days = parseInt(selectedTimeframe, 10);
     const sliced = days >= 3000 ? sorted : sorted.slice(-days);
 
@@ -1614,10 +1633,15 @@ export function useSentimentData() {
   }, [chartData, selectedTimeframe]);
 
   // Helper: parse date string as local date to avoid timezone shifts
-  // API returns "2025-10-06T00:00:00Z" — using new Date() with Z treats as UTC midnight,
-  // which shows as Oct 5 in US timezones. This parses just the date part as local.
-  const parseDate = (timeStr: string | null | undefined) => {
+  // Fast substring parse avoids split('T') and split('-') array allocations
+  const parseDate = (timeStr: string | null | undefined): Date => {
     if (!timeStr) return new Date(NaN);
+    if (timeStr.length >= 10 && timeStr.charCodeAt(4) === 45 && timeStr.charCodeAt(7) === 45) {
+      const y = +timeStr.slice(0, 4);
+      const m = +timeStr.slice(5, 7);
+      const d = +timeStr.slice(8, 10);
+      return new Date(y, m - 1, d);
+    }
     const dateStr = timeStr.split('T')[0];
     const [y, m, d] = dateStr.split('-').map(Number);
     return new Date(y, m - 1, d);
@@ -1645,7 +1669,7 @@ export function useSentimentData() {
   // Memoized NUPL chart data - filters from full dataset based on timeframe
   const nuplChartData = useMemo(() => {
     if (nuplData.length === 0) return [];
-    const sorted = [...nuplData].sort(compareTime);
+    const sorted = fastSortAscending(nuplData);
     const days = parseInt(nuplTimeframe, 10);
     const sliced = days >= 3000 ? sorted : sorted.slice(-days);
     const sampled = (nuplTimeframe === '3000' || nuplTimeframe === '999999') ? downsample(sliced, 500)
@@ -1674,7 +1698,7 @@ export function useSentimentData() {
   // Memoized MVRV chart data
   const mvrvChartData = useMemo(() => {
     if (mvrvData.length === 0) return [];
-    const sorted = [...mvrvData].sort(compareTime);
+    const sorted = fastSortAscending(mvrvData);
     const days = parseInt(mvrvTimeframe, 10);
     const sliced = days >= 3000 ? sorted : sorted.slice(-days);
     const sampled = (mvrvTimeframe === '3000' || mvrvTimeframe === '999999') ? downsample(sliced, 500)
@@ -1694,7 +1718,7 @@ export function useSentimentData() {
   // Memoized LTH-MVRV chart data
   const lthMvrvChartData = useMemo(() => {
     if (lthMvrvData.length === 0) return [];
-    const sorted = [...lthMvrvData].sort(compareTime);
+    const sorted = fastSortAscending(lthMvrvData);
     const days = parseInt(lthMvrvTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (lthMvrvTimeframe === '3000' || lthMvrvTimeframe === '999999') ? downsample(raw, 500)
@@ -1709,7 +1733,7 @@ export function useSentimentData() {
   // Memoized SSR chart data
   const ssrChartData = useMemo(() => {
     if (ssrData.length === 0) return [];
-    const sorted = [...ssrData].sort(compareTime);
+    const sorted = fastSortAscending(ssrData);
     const days = parseInt(ssrTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (ssrTimeframe === '3000' || ssrTimeframe === '999999') ? downsample(raw, 500)
@@ -1724,7 +1748,7 @@ export function useSentimentData() {
   // Memoized SOPR chart data
   const soprChartData = useMemo(() => {
     if (soprData.length === 0) return [];
-    const sorted = [...soprData].sort(compareTime);
+    const sorted = fastSortAscending(soprData);
     const days = parseInt(soprTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (soprTimeframe === '3000' || soprTimeframe === '999999') ? downsample(raw, 500)
@@ -1744,7 +1768,7 @@ export function useSentimentData() {
   // Memoized Supply in Loss chart data
   const supplyLossChartData = useMemo(() => {
     if (supplyLossData.length === 0) return [];
-    const sorted = [...supplyLossData].sort(compareTime);
+    const sorted = fastSortAscending(supplyLossData);
     const days = parseInt(supplyLossTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (supplyLossTimeframe === '3000' || supplyLossTimeframe === '999999') ? downsample(raw, 500)
@@ -1764,7 +1788,7 @@ export function useSentimentData() {
   // Memoized Supply in Profit chart data
   const supplyProfitChartData = useMemo(() => {
     if (supplyProfitData.length === 0) return [];
-    const sorted = [...supplyProfitData].sort(compareTime);
+    const sorted = fastSortAscending(supplyProfitData);
     const days = parseInt(supplyProfitTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (supplyProfitTimeframe === '3000' || supplyProfitTimeframe === '999999') ? downsample(raw, 500)
@@ -1781,107 +1805,109 @@ export function useSentimentData() {
     });
   }, [supplyProfitData, supplyProfitTimeframe]);
 
+  // Pre-build BTC price lookup once — avoids rebuilding inside every WithPrice useMemo (204K → 4K iterations)
+  const btcPriceLookup = useMemo((): Record<string, number> => {
+    if (btcPriceData.length === 0) return {};
+    const lookup: Record<string, number> = {};
+    for (let i = 0; i < btcPriceData.length; i++) {
+      const p = btcPriceData[i];
+      if (p.time) lookup[p.time.slice(0, 10)] = p.price ?? 0;
+    }
+    return lookup;
+  }, [btcPriceData]);
+
   // Memoized Realized Profit chart data
   const realizedProfitChartData = useMemo(() => {
     if (realizedProfitData.length === 0) return [];
-    const sorted = [...realizedProfitData].sort(compareTime);
+    const sorted = fastSortAscending(realizedProfitData);
     const days = parseInt(realizedProfitTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (realizedProfitTimeframe === '3000' || realizedProfitTimeframe === '999999') ? downsample(raw, 500)
                  : (realizedProfitTimeframe === '1460') ? downsample(raw, 400)
                  : raw;
-    // Build a price lookup by date
-    const priceLookup: Record<string, number> = {};
-    btcPriceData.forEach((p) => { if (p.time) priceLookup[p.time.split('T')[0]] = p.price ?? 0; });
     return sliced.map((item, idx) => {
       const dateObj = parseDate(item.time);
-      const dateKey = item.time?.split('T')[0] ?? '';
+      const dateKey = item.time ? item.time.slice(0, 10) : '';
       return {
         index: idx,
         value: item.realized_profit,
-        btcPrice: priceLookup[dateKey] || null,
+        btcPrice: btcPriceLookup[dateKey] || null,
         dateFormatted: fastFormatDate(item.time),
         dateObj,
       };
     });
-  }, [realizedProfitData, realizedProfitTimeframe, btcPriceData]);
+  }, [realizedProfitData, realizedProfitTimeframe, btcPriceLookup]);
 
   // Memoized Realized Loss chart data
   const realizedLossChartData = useMemo(() => {
     if (realizedLossData.length === 0) return [];
-    const sorted = [...realizedLossData].sort(compareTime);
+    const sorted = fastSortAscending(realizedLossData);
     const days = parseInt(realizedLossTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (realizedLossTimeframe === '3000' || realizedLossTimeframe === '999999') ? downsample(raw, 500)
                  : (realizedLossTimeframe === '1460') ? downsample(raw, 400)
                  : raw;
-    const priceLookup: Record<string, number> = {};
-    btcPriceData.forEach((p) => { if (p.time) priceLookup[p.time.split('T')[0]] = p.price ?? 0; });
     return sliced.map((item, idx) => {
       const dateObj = parseDate(item.time);
-      const dateKey = item.time?.split('T')[0] ?? '';
+      const dateKey = item.time ? item.time.slice(0, 10) : '';
       return {
         index: idx,
         value: item.realized_loss,
-        btcPrice: priceLookup[dateKey] || null,
+        btcPrice: btcPriceLookup[dateKey] || null,
         dateFormatted: fastFormatDate(item.time),
         dateObj,
       };
     });
-  }, [realizedLossData, realizedLossTimeframe, btcPriceData]);
+  }, [realizedLossData, realizedLossTimeframe, btcPriceLookup]);
 
   // Memoized STH MVRV chart data
   const sthMvrvChartData = useMemo(() => {
     if (sthMvrvData.length === 0) return [];
-    const sorted = [...sthMvrvData].sort(compareTime);
+    const sorted = fastSortAscending(sthMvrvData);
     const days = parseInt(sthMvrvTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (sthMvrvTimeframe === '3000' || sthMvrvTimeframe === '999999') ? downsample(raw, 500)
                  : (sthMvrvTimeframe === '1460') ? downsample(raw, 400)
                  : raw;
-    const priceLookup: Record<string, number> = {};
-    btcPriceData.forEach((p) => { if (p.time) priceLookup[p.time.split('T')[0]] = p.price ?? 0; });
     return sliced.map((item, idx) => {
       const dateObj = parseDate(item.time);
-      const dateKey = item.time?.split('T')[0] ?? '';
+      const dateKey = item.time ? item.time.slice(0, 10) : '';
       return {
         index: idx,
         value: item.sth_mvrv,
-        btcPrice: priceLookup[dateKey] || null,
+        btcPrice: btcPriceLookup[dateKey] || null,
         dateFormatted: fastFormatDate(item.time),
         dateObj,
       };
     });
-  }, [sthMvrvData, sthMvrvTimeframe, btcPriceData]);
+  }, [sthMvrvData, sthMvrvTimeframe, btcPriceLookup]);
 
   // Memoized Hashrate chart data
   const hashrateChartData = useMemo(() => {
     if (hashrateData.length === 0) return [];
-    const sorted = [...hashrateData].sort(compareTime);
+    const sorted = fastSortAscending(hashrateData);
     const days = parseInt(hashrateTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (hashrateTimeframe === '3000' || hashrateTimeframe === '999999') ? downsample(raw, 500)
                  : (hashrateTimeframe === '1460') ? downsample(raw, 400)
                  : raw;
-    const priceLookup: Record<string, number> = {};
-    btcPriceData.forEach((p) => { if (p.time) priceLookup[p.time.split('T')[0]] = p.price ?? 0; });
     return sliced.map((item, idx) => {
       const dateObj = parseDate(item.time);
-      const dateKey = item.time?.split('T')[0] ?? '';
+      const dateKey = item.time ? item.time.slice(0, 10) : '';
       return {
         index: idx,
         value: item.hashrate,
-        btcPrice: priceLookup[dateKey] || null,
+        btcPrice: btcPriceLookup[dateKey] || null,
         dateFormatted: fastFormatDate(item.time),
         dateObj,
       };
     });
-  }, [hashrateData, hashrateTimeframe, btcPriceData]);
+  }, [hashrateData, hashrateTimeframe, btcPriceLookup]);
 
   const useChartData = (data: IndicatorPoint[], tf: string, field: string) =>
     useMemo(() => {
       if (data.length === 0) return [];
-      const sorted = [...data].sort(compareTime);
+      const sorted = fastSortAscending(data);
       const days = parseInt(tf, 10);
       const raw = days >= 3000 ? sorted : sorted.slice(-days);
       const sliced = (tf === '3000' || tf === '999999') ? downsample(raw, 500)
@@ -1896,7 +1922,7 @@ export function useSentimentData() {
   // Single-value KEY 2 indicators
   const puellMultipleChartData = useMemo(() => {
     if (puellMultipleData.length === 0) return [];
-    const sorted = [...puellMultipleData].sort(compareTime);
+    const sorted = fastSortAscending(puellMultipleData);
     const days = parseInt(puellMultipleTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (puellMultipleTimeframe === '3000' || puellMultipleTimeframe === '999999') ? downsample(raw, 500) : (puellMultipleTimeframe === '1460') ? downsample(raw, 400) : raw;
@@ -1905,7 +1931,7 @@ export function useSentimentData() {
 
   const mayerMultipleChartData = useMemo(() => {
     if (mayerMultipleData.length === 0) return [];
-    const sorted = [...mayerMultipleData].sort(compareTime);
+    const sorted = fastSortAscending(mayerMultipleData);
     const days = parseInt(mayerMultipleTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (mayerMultipleTimeframe === '3000' || mayerMultipleTimeframe === '999999') ? downsample(raw, 500) : (mayerMultipleTimeframe === '1460') ? downsample(raw, 400) : raw;
@@ -1914,7 +1940,7 @@ export function useSentimentData() {
 
   const reserveRiskChartData = useMemo(() => {
     if (reserveRiskData.length === 0) return [];
-    const sorted = [...reserveRiskData].sort(compareTime);
+    const sorted = fastSortAscending(reserveRiskData);
     const days = parseInt(reserveRiskTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (reserveRiskTimeframe === '3000' || reserveRiskTimeframe === '999999') ? downsample(raw, 500) : (reserveRiskTimeframe === '1460') ? downsample(raw, 400) : raw;
@@ -1923,7 +1949,7 @@ export function useSentimentData() {
 
   const avivChartData = useMemo(() => {
     if (avivData.length === 0) return [];
-    const sorted = [...avivData].sort(compareTime);
+    const sorted = fastSortAscending(avivData);
     const days = parseInt(avivTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (avivTimeframe === '3000' || avivTimeframe === '999999') ? downsample(raw, 500) : (avivTimeframe === '1460') ? downsample(raw, 400) : raw;
@@ -1932,7 +1958,7 @@ export function useSentimentData() {
 
   const mvrvZscoreChartData = useMemo(() => {
     if (mvrvZscoreData.length === 0) return [];
-    const sorted = [...mvrvZscoreData].sort(compareTime);
+    const sorted = fastSortAscending(mvrvZscoreData);
     const days = parseInt(mvrvZscoreTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (mvrvZscoreTimeframe === '3000' || mvrvZscoreTimeframe === '999999') ? downsample(raw, 500) : (mvrvZscoreTimeframe === '1460') ? downsample(raw, 400) : raw;
@@ -1941,7 +1967,7 @@ export function useSentimentData() {
 
   const vddChartData = useMemo(() => {
     if (vddData.length === 0) return [];
-    const sorted = [...vddData].sort(compareTime);
+    const sorted = fastSortAscending(vddData);
     const days = parseInt(vddTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (vddTimeframe === '3000' || vddTimeframe === '999999') ? downsample(raw, 500) : (vddTimeframe === '1460') ? downsample(raw, 400) : raw;
@@ -1950,7 +1976,7 @@ export function useSentimentData() {
 
   const supplyShockChartData = useMemo(() => {
     if (supplyShockData.length === 0) return [];
-    const sorted = [...supplyShockData].sort(compareTime);
+    const sorted = fastSortAscending(supplyShockData);
     const days = parseInt(supplyShockTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (supplyShockTimeframe === '3000' || supplyShockTimeframe === '999999') ? downsample(raw, 500) : (supplyShockTimeframe === '1460') ? downsample(raw, 400) : raw;
@@ -1959,7 +1985,7 @@ export function useSentimentData() {
 
   const activeAddressesChartData = useMemo(() => {
     if (activeAddressesData.length === 0) return [];
-    const sorted = [...activeAddressesData].sort(compareTime);
+    const sorted = fastSortAscending(activeAddressesData);
     const days = parseInt(activeAddressesTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (activeAddressesTimeframe === '3000' || activeAddressesTimeframe === '999999') ? downsample(raw, 500) : (activeAddressesTimeframe === '1460') ? downsample(raw, 400) : raw;
@@ -1969,7 +1995,7 @@ export function useSentimentData() {
   // Multi-field KEY 2 indicators
   const illiquidSupplyChartData = useMemo(() => {
     if (illiquidSupplyData.length === 0) return [];
-    const sorted = [...illiquidSupplyData].sort(compareTime);
+    const sorted = fastSortAscending(illiquidSupplyData);
     const days = parseInt(illiquidSupplyTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (illiquidSupplyTimeframe === '3000' || illiquidSupplyTimeframe === '999999') ? downsample(raw, 500) : (illiquidSupplyTimeframe === '1460') ? downsample(raw, 400) : raw;
@@ -1978,7 +2004,7 @@ export function useSentimentData() {
 
   const hotSupplyChartData = useMemo(() => {
     if (hotSupplyData.length === 0) return [];
-    const sorted = [...hotSupplyData].sort(compareTime);
+    const sorted = fastSortAscending(hotSupplyData);
     const days = parseInt(hotSupplyTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (hotSupplyTimeframe === '3000' || hotSupplyTimeframe === '999999') ? downsample(raw, 500) : (hotSupplyTimeframe === '1460') ? downsample(raw, 400) : raw;
@@ -1987,23 +2013,12 @@ export function useSentimentData() {
 
   const hashribbonsChartData = useMemo(() => {
     if (hashribbonsData.length === 0) return [];
-    const sorted = [...hashribbonsData].sort(compareTime);
+    const sorted = fastSortAscending(hashribbonsData);
     const days = parseInt(hashribbonsTimeframe, 10);
     const raw = days >= 3000 ? sorted : sorted.slice(-days);
     const sliced = (hashribbonsTimeframe === '3000' || hashribbonsTimeframe === '999999') ? downsample(raw, 500) : (hashribbonsTimeframe === '1460') ? downsample(raw, 400) : raw;
     return sliced.map((item, idx) => { const dateObj = parseDate(item.time); return { index: idx, sma30: item.sma_30, sma60: item.sma_60, signal: item.signal, dateFormatted: fastFormatDate(item.time), dateObj }; });
   }, [hashribbonsData, hashribbonsTimeframe]);
-
-  // Pre-build BTC price lookup once — avoids rebuilding inside every WithPrice useMemo (204K → 4K iterations)
-  const btcPriceLookup = useMemo((): Record<string, number> => {
-    if (btcPriceData.length === 0) return {};
-    const lookup: Record<string, number> = {};
-    for (let i = 0; i < btcPriceData.length; i++) {
-      const p = btcPriceData[i];
-      if (p.time) lookup[p.time.slice(0, 10)] = p.price ?? 0;
-    }
-    return lookup;
-  }, [btcPriceData]);
 
   const addBtcPriceToChartData = useCallback((chartData: ChartDataPoint[]) => {
     if (!chartData || chartData.length === 0 || btcPriceData.length === 0) return chartData;
@@ -2050,7 +2065,7 @@ export function useSentimentData() {
   // KEY3 chart data memos
   const nrplChartData = useMemo(() => {
     if (nrplData.length === 0) return [];
-    const sorted = [...nrplData].sort(compareTime);
+    const sorted = fastSortAscending(nrplData);
     const days = parseInt(nrplTimeframe, 10);
     const sliced = isNaN(days) ? sorted : sorted.slice(-days);
     const step = Math.max(1, Math.floor(sliced.length / 1800));
@@ -2060,13 +2075,13 @@ export function useSentimentData() {
         index: i,
         value: d.value,
         dateFormatted: fastFormatDate(d.time),
-        dateObj: new Date(d.time),
+        dateObj: parseDate(d.time),
       }));
   }, [nrplData, nrplTimeframe]);
 
   const rhodlChartData = useMemo(() => {
     if (rhodlData.length === 0) return [];
-    const sorted = [...rhodlData].sort(compareTime);
+    const sorted = fastSortAscending(rhodlData);
     const days = parseInt(rhodlTimeframe, 10);
     const sliced = isNaN(days) ? sorted : sorted.slice(-days);
     const step = Math.max(1, Math.floor(sliced.length / 1800));
@@ -2076,13 +2091,13 @@ export function useSentimentData() {
         index: i,
         value: d.value,
         dateFormatted: fastFormatDate(d.time),
-        dateObj: new Date(d.time),
+        dateObj: parseDate(d.time),
       }));
   }, [rhodlData, rhodlTimeframe]);
 
   const openInterestChartData = useMemo(() => {
     if (openInterestData.length === 0) return [];
-    const sorted = [...openInterestData].sort(compareTime);
+    const sorted = fastSortAscending(openInterestData);
     const days = parseInt(openInterestTimeframe, 10);
     const sliced = isNaN(days) ? sorted : sorted.slice(-days);
     const step = Math.max(1, Math.floor(sliced.length / 1800));
@@ -2092,13 +2107,13 @@ export function useSentimentData() {
         index: i,
         value: d.value,
         dateFormatted: fastFormatDate(d.time),
-        dateObj: new Date(d.time),
+        dateObj: parseDate(d.time),
       }));
   }, [openInterestData, openInterestTimeframe]);
 
   const fundingRateChartData = useMemo(() => {
     if (fundingRateData.length === 0) return [];
-    const sorted = [...fundingRateData].sort(compareTime);
+    const sorted = fastSortAscending(fundingRateData);
     const days = parseInt(fundingRateTimeframe, 10);
     const sliced = isNaN(days) ? sorted : sorted.slice(-days);
     const step = Math.max(1, Math.floor(sliced.length / 1800));
@@ -2108,7 +2123,7 @@ export function useSentimentData() {
         index: i,
         value: d.value,
         dateFormatted: fastFormatDate(d.time),
-        dateObj: new Date(d.time),
+        dateObj: parseDate(d.time),
       }));
   }, [fundingRateData, fundingRateTimeframe]);
 
@@ -2120,27 +2135,27 @@ export function useSentimentData() {
   // KEY 3 NEW: NVTS, NVT Z-Score, CVDD
   const nvtsChartData = useMemo(() => {
     if (nvtsData.length === 0) return [];
-    const sorted = [...nvtsData].sort(compareTime);
+    const sorted = fastSortAscending(nvtsData);
     const days = parseInt(nvtsTimeframe, 10);
     const sliced = isNaN(days) ? sorted : sorted.slice(-days);
     const step = Math.max(1, Math.floor(sliced.length / 1800));
-    return sliced.filter((_, i) => i % step === 0 || i === sliced.length - 1).map((d, i) => ({ index: i, value: d.value, dateFormatted: fastFormatDate(d.time), dateObj: new Date(d.time) }));
+    return sliced.filter((_, i) => i % step === 0 || i === sliced.length - 1).map((d, i) => ({ index: i, value: d.value, dateFormatted: fastFormatDate(d.time), dateObj: parseDate(d.time) }));
   }, [nvtsData, nvtsTimeframe]);
   const nvtZscoreChartData = useMemo(() => {
     if (nvtZscoreData.length === 0) return [];
-    const sorted = [...nvtZscoreData].sort(compareTime);
+    const sorted = fastSortAscending(nvtZscoreData);
     const days = parseInt(nvtZscoreTimeframe, 10);
     const sliced = isNaN(days) ? sorted : sorted.slice(-days);
     const step = Math.max(1, Math.floor(sliced.length / 1800));
-    return sliced.filter((_, i) => i % step === 0 || i === sliced.length - 1).map((d, i) => ({ index: i, value: d.value, dateFormatted: fastFormatDate(d.time), dateObj: new Date(d.time) }));
+    return sliced.filter((_, i) => i % step === 0 || i === sliced.length - 1).map((d, i) => ({ index: i, value: d.value, dateFormatted: fastFormatDate(d.time), dateObj: parseDate(d.time) }));
   }, [nvtZscoreData, nvtZscoreTimeframe]);
   const cvddChartData = useMemo(() => {
     if (cvddData.length === 0) return [];
-    const sorted = [...cvddData].sort(compareTime);
+    const sorted = fastSortAscending(cvddData);
     const days = parseInt(cvddTimeframe, 10);
     const sliced = isNaN(days) ? sorted : sorted.slice(-days);
     const step = Math.max(1, Math.floor(sliced.length / 1800));
-    return sliced.filter((_, i) => i % step === 0 || i === sliced.length - 1).map((d, i) => ({ index: i, value: d.value, dateFormatted: fastFormatDate(d.time), dateObj: new Date(d.time) }));
+    return sliced.filter((_, i) => i % step === 0 || i === sliced.length - 1).map((d, i) => ({ index: i, value: d.value, dateFormatted: fastFormatDate(d.time), dateObj: parseDate(d.time) }));
   }, [cvddData, cvddTimeframe]);
   const nvtsChartDataWithPrice = useMemo(() => addBtcPriceToChartData(nvtsChartData), [nvtsChartData, addBtcPriceToChartData]);
   const nvtZscoreChartDataWithPrice = useMemo(() => addBtcPriceToChartData(nvtZscoreChartData), [nvtZscoreChartData, addBtcPriceToChartData]);
@@ -2149,13 +2164,14 @@ export function useSentimentData() {
   // KEY 4 chart data memos
   const mkK4ChartData = (data: IndicatorPoint[], tf: string, valueField = 'value') => {
     if (data.length === 0) return [];
-    const sorted = [...data].sort(compareTime);
+    const sorted = fastSortAscending(data);
     const days = parseInt(tf, 10);
     let sliced = sorted;
     if (!isNaN(days) && days < 999999) {
       const cutoff = new Date();
       cutoff.setDate(cutoff.getDate() - days);
-      const dateBased = sorted.filter(d => parseDate(d.time) >= cutoff);
+      const cutoffStr = cutoff.toISOString().slice(0, 10);
+      const dateBased = sorted.filter(d => (d.time ? d.time.slice(0, 10) >= cutoffStr : false));
       // Fall back to last N entries when date-based filter is too sparse (stale or low-freq data)
       sliced = dateBased.length >= 2 ? dateBased : sorted.slice(-Math.max(days, 3));
     }
@@ -2199,13 +2215,14 @@ export function useSentimentData() {
   // KEY 5 macro chart data memos
   const buildMacroChartData = (data: IndicatorPoint[], tf: string) => {
     if (data.length === 0) return [];
-    const sorted = [...data].sort(compareTime);
+    const sorted = fastSortAscending(data);
     const days = parseInt(tf, 10);
     let sliced = sorted;
     if (!isNaN(days) && days < 999999) {
       const cutoff = new Date();
       cutoff.setDate(cutoff.getDate() - days);
-      const dateBased = sorted.filter(d => parseDate(d.time) >= cutoff);
+      const cutoffStr = cutoff.toISOString().slice(0, 10);
+      const dateBased = sorted.filter(d => (d.time ? d.time.slice(0, 10) >= cutoffStr : false));
       // Fall back to last N entries when date-based filter is too sparse (stale or low-freq data)
       sliced = dateBased.length >= 2 ? dateBased : sorted.slice(-Math.max(days, 3));
     }
@@ -2229,13 +2246,14 @@ export function useSentimentData() {
   // but WTI is daily since 1986 (~10,000 pts) so non-1Y timeframes need an explicit 7-day step.
   const buildWtiChartData = (data: IndicatorPoint[], tf: string) => {
     if (data.length === 0) return [];
-    const sorted = [...data].sort(compareTime);
+    const sorted = fastSortAscending(data);
     const days = parseInt(tf, 10);
     let sliced = sorted;
     if (!isNaN(days) && days < 999999) {
       const cutoff = new Date();
       cutoff.setDate(cutoff.getDate() - days);
-      const dateBased = sorted.filter(d => parseDate(d.time) >= cutoff);
+      const cutoffStr = cutoff.toISOString().slice(0, 10);
+      const dateBased = sorted.filter(d => (d.time ? d.time.slice(0, 10) >= cutoffStr : false));
       sliced = dateBased.length >= 2 ? dateBased : sorted.slice(-Math.max(days, 3));
     }
     // Short timeframes (1W/1M): step=1 to show all daily points
@@ -2259,7 +2277,7 @@ export function useSentimentData() {
   // FRED stores CPIAUCSL as a price index (~316); this converts to "2.5%" style YoY.
   const buildInflationPctChartData = (data: IndicatorPoint[], tf: string) => {
     if (data.length === 0) return [];
-    const sorted = [...data].sort(compareTime);
+    const sorted = fastSortAscending(data);
 
     // Build a fast YYYY-MM → value lookup so we can look up exactly 12 months prior
     // regardless of array gaps (e.g. missing months in the data cache).
@@ -2286,7 +2304,8 @@ export function useSentimentData() {
     if (!isNaN(days) && days < 999999) {
       const cutoff = new Date();
       cutoff.setDate(cutoff.getDate() - days);
-      const dateBased = withPct.filter(d => parseDate(d.time) >= cutoff);
+      const cutoffStr = cutoff.toISOString().slice(0, 10);
+      const dateBased = withPct.filter(d => (d.time ? d.time.slice(0, 10) >= cutoffStr : false));
       sliced = dateBased.length >= 2 ? dateBased : withPct.slice(-Math.max(days, 3));
     }
     const step = Math.max(1, Math.floor(sliced.length / 1800));
