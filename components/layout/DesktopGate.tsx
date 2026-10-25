@@ -32,7 +32,7 @@ export default function DesktopGate({
       // desktop users into the mobile gate when zooming in (Chrome).
       // window.screen.width is unaffected by page zoom.
       const screenW = window.screen?.width ?? 0;
-      const nextIsMobile = screenW > 0 ? screenW < 1024 : window.innerWidth < 1024;
+      const nextIsMobile = screenW > 0 ? screenW < 1080 : window.innerWidth < 1080;
       setIsMobile(nextIsMobile);
       onViewportCheck?.(nextIsMobile);
     };
@@ -115,7 +115,7 @@ export default function DesktopGate({
             <div style={{ fontFamily: MONO, fontSize: '9px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--text-ghost)', marginBottom: '5px' }}>
               Needed
             </div>
-            <div style={{ fontFamily: MONO, fontSize: '13px', color: 'var(--text-primary)' }}>1024px+</div>
+            <div style={{ fontFamily: MONO, fontSize: '13px', color: 'var(--text-primary)' }}>1080px+</div>
           </div>
         </div>
 

@@ -326,7 +326,7 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
           const chartData = showBtc ? (panel.dataWithPrice ?? panel.data) : panel.data;
           return (
             <div>
-              <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-3 mb-4">
+              <div className="flex flex-row items-center justify-between gap-3 mb-4 flex-wrap">
                 <LineToggle items={[
                   { key: panel.indicatorKey, label: panel.metricLabel, color: metricColor, active: showIndicator[panel.indicatorKey], onClick: () => setShowIndicator((p) => ({ ...p, [panel.indicatorKey]: !p[panel.indicatorKey] })) },
                   ...(showBtc ? [{ key: `price-${panel.indicatorKey}`, label: 'PRICE', color: BTC_PRICE_LEGEND, active: showBtcPrice[panel.indicatorKey], onClick: () => setShowBtcPrice((p) => ({ ...p, [panel.indicatorKey]: !p[panel.indicatorKey] })) }] : []),

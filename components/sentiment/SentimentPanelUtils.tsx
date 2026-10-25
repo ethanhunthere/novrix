@@ -53,7 +53,7 @@ export const PanelHeader = ({
 
   return (
   <div
-    className="flex flex-col xl:flex-row xl:items-center xl:justify-between px-4 sm:px-5 border-b"
+    className="flex flex-row items-center justify-between px-4 sm:px-5 border-b gap-3"
     style={{
       background: 'linear-gradient(90deg, rgba(245,241,234,0.018) 0%, rgba(10,9,8,0.98) 20%, rgba(10,9,8,0.98) 100%)',
       borderBottomColor: 'rgba(245,241,234,0.09)',
@@ -87,7 +87,7 @@ export const PanelHeader = ({
         )}
       </div>
     </div>
-    <div className="flex flex-wrap items-center gap-3 shrink-0 ml-0 xl:ml-4 py-3">
+    <div className="flex items-center gap-3 shrink-0 py-3">
       {value != null && (
           <div className="flex flex-col items-end gap-0.5">
           <div className="flex items-center gap-2">
