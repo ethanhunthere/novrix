@@ -124,21 +124,6 @@ html {
   overflow-x: hidden;
 }
 
-/* Single panel mode: remove scrollbar gutter and hide window scrollbar completely */
-html.sentiment-single-active,
-body.sentiment-single-active {
-  scrollbar-gutter: auto !important;
-  overflow: hidden !important;
-  overflow-y: hidden !important;
-}
-
-html.sentiment-single-active::-webkit-scrollbar,
-body.sentiment-single-active::-webkit-scrollbar {
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
-}
-
 body {
   margin: 0;
   padding: 0;

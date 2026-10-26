@@ -39,10 +39,9 @@ const SentimentSidebar = memo(function SentimentSidebar({
   height,
 }: SentimentSidebarProps) {
   const q = registrySearch.toLowerCase().trim();
-  const isSinglePanel = selectedIndicator !== null;
   const heightVal = height
     ? (typeof height === 'number' ? `${height}px` : height)
-    : (isSinglePanel ? 'calc(100% - 10px)' : 'calc(100vh - 74px)');
+    : undefined;
 
   // Total count of concrete indicators
   const totalIndicators = registryCats.reduce((acc, cat) => {
@@ -53,8 +52,8 @@ const SentimentSidebar = memo(function SentimentSidebar({
     <div
       className="w-full flex flex-col overflow-hidden select-none"
       style={{
-        height: heightVal,
-        maxHeight: isSinglePanel ? 'calc(100% - 10px)' : 'calc(100vh - 74px)',
+        height: heightVal ?? 'auto',
+        maxHeight: 'calc(100vh - 36px)',
         background: '#120F0D',
         border: '1px solid rgba(245, 241, 234, 0.08)',
         borderRadius: '2px',
@@ -196,7 +195,7 @@ const SentimentSidebar = memo(function SentimentSidebar({
 
       {/* ── Category Accordions ── */}
       <div
-        className="overflow-y-auto flex-1 min-h-0"
+        className="overflow-y-auto flex-1 min-h-0 overscroll-contain"
         style={{
           scrollbarWidth: 'thin',
           scrollbarColor: '#2B2521 #120F0D',
@@ -216,8 +215,17 @@ const SentimentSidebar = memo(function SentimentSidebar({
               {/* Category Header */}
               <button
                 type="button"
-                onClick={() => {
-                  if (!q) setOpenAccordion((prev) => (prev === cat.id ? null : cat.id));
+                onClick={(e) => {
+                  if (!q) {
+                    const willOpen = openAccordion !== cat.id;
+                    setOpenAccordion((prev) => (prev === cat.id ? null : cat.id));
+                    if (willOpen) {
+                      const btn = e.currentTarget;
+                      setTimeout(() => {
+                        btn.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                      }, 40);
+                    }
+                  }
                 }}
                 className="w-full flex items-center justify-between px-3 py-2 text-left transition-colors duration-140"
                 style={{

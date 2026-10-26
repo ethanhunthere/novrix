@@ -560,39 +560,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
         next.add(panelId);
         return next;
       });
-    }
-  }, [selectedIndicator]);
-
-  // Block page scroll and eliminate empty scrollbar gutter when single indicator is selected
-  useEffect(() => {
-    if (selectedIndicator !== null) {
-      const prevBodyOverflow = document.body.style.overflow;
-      const prevBodyOverflowY = document.body.style.overflowY;
-      const prevHtmlOverflow = document.documentElement.style.overflow;
-      const prevHtmlOverflowY = document.documentElement.style.overflowY;
-      const prevHtmlScrollbarGutter = document.documentElement.style.scrollbarGutter;
-
-      document.body.style.overflow = 'hidden';
-      document.body.style.overflowY = 'hidden';
-      document.documentElement.style.overflow = 'hidden';
-      document.documentElement.style.overflowY = 'hidden';
-      document.documentElement.style.scrollbarGutter = 'auto';
-
-      document.documentElement.classList.add('sentiment-single-active');
-      document.body.classList.add('sentiment-single-active');
-
       window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
-
-      return () => {
-        document.body.style.overflow = prevBodyOverflow;
-        document.body.style.overflowY = prevBodyOverflowY;
-        document.documentElement.style.overflow = prevHtmlOverflow;
-        document.documentElement.style.overflowY = prevHtmlOverflowY;
-        document.documentElement.style.scrollbarGutter = prevHtmlScrollbarGutter;
-
-        document.documentElement.classList.remove('sentiment-single-active');
-        document.body.classList.remove('sentiment-single-active');
-      };
     }
   }, [selectedIndicator]);
 
@@ -2654,22 +2622,14 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
   ], []);
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden font-mono" style={{ background: '#120F0D' }}>
+    <div className="min-h-screen flex flex-col relative overflow-x-clip font-mono" style={{ background: '#120F0D' }}>
       <TerminalModulePageShell
         className="flex-1 w-full max-w-[2000px] 3xl:max-w-[2800px] 4xl:max-w-[3800px] 5xl:max-w-[4800px] mx-auto px-4 lg:px-6 xl:px-8 2xl:px-10 3xl:px-16 4xl:px-20 5xl:px-28 pt-2 pb-6 sm:pb-8 flex flex-col"
       >
 
-        <div
-          className={`sentiment-comfort flex flex-row ${
-            selectedIndicator !== null ? 'items-stretch' : 'items-start'
-          } gap-6 w-full`}
-        >
+        <div className="sentiment-comfort flex flex-row items-start gap-6 w-full">
           {/* ─── Indicators Registry Sidebar ─── */}
-          <aside
-            className={`w-[204px] min-w-[204px] max-w-[204px] lg:w-[216px] lg:min-w-[216px] lg:max-w-[216px] 3xl:w-[260px] 3xl:min-w-[260px] 3xl:max-w-[260px] 4xl:w-[300px] 4xl:min-w-[300px] 4xl:max-w-[300px] 5xl:w-[340px] 5xl:min-w-[340px] 5xl:max-w-[340px] shrink-0 ${
-              selectedIndicator !== null ? 'self-stretch flex flex-col' : 'sticky top-3'
-            }`}
-          >
+          <aside className="w-[204px] min-w-[204px] max-w-[204px] lg:w-[216px] lg:min-w-[216px] lg:max-w-[216px] 3xl:w-[260px] 3xl:min-w-[260px] 3xl:max-w-[260px] 4xl:w-[300px] 4xl:min-w-[300px] 4xl:max-w-[300px] 5xl:w-[340px] 5xl:min-w-[340px] 5xl:max-w-[340px] shrink-0 sticky top-3">
             <SentimentSidebar
               registryCats={registryCats}
               registrySearch={registrySearch}
