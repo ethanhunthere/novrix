@@ -1343,10 +1343,94 @@ export function useSentimentData() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Fetch all KEY 5 macro indicators in parallel — 50 fetches, batch state after Promise.all → 1 render
+  // Fetch all KEY 5 macro indicators in parallel — instant static asset loading for FRED series
   useEffect(() => {
     const fetchMacroIndicators = async () => {
-      const f = async (url: string): Promise<IndicatorPoint[]> => {
+      // 1. Fast static loader for FRED series — resolves from local static CDN in < 15ms
+      const fetchFred = async (key: string): Promise<IndicatorPoint[]> => {
+        const filename = (key === 'mabmm301' ? 'mabmm301usm189s' : key).toLowerCase();
+        const staticUrl = `/data/fred/${filename}.json`;
+        try {
+          const r = await fetchWithSSCache(staticUrl, { headers: { 'Accept': 'application/json' } });
+          if (r.ok) {
+            const res = await r.json() as IndicatorApiResponse;
+            if (res.success && Array.isArray(res.data) && res.data.length > 0) {
+              return res.data;
+            }
+          }
+        } catch { /* silent fallback */ }
+        try {
+          const apiUrl = `/api/fred-${filename}`;
+          const r2 = await fetchWithSSCache(withSentimentDataVersion(apiUrl), { headers: { 'Accept': 'application/json' } });
+          if (r2.ok) {
+            const res2 = await r2.json() as IndicatorApiResponse;
+            if (res2.success && Array.isArray(res2.data) && res2.data.length > 0) return res2.data;
+          }
+        } catch { /* silent */ }
+        return [];
+      };
+
+      const fredConfigs: Array<{
+        key: string;
+        setter: (d: IndicatorPoint[]) => void;
+        setLoading: (l: boolean) => void;
+        valKey?: string;
+      }> = [
+        { key: 'sofr', setter: setSofrData, setLoading: setIsSofrLoading },
+        { key: 'walcl', setter: setWalclData, setLoading: setIsWalclLoading },
+        { key: 'wresbal', setter: setWresbalData, setLoading: setIsWresbalLoading },
+        { key: 'rrpontsyd', setter: setRrpontsydData, setLoading: setIsRrpontsydLoading },
+        { key: 'cpiaucsl', setter: setCpiaucslData, setLoading: setIsCpiaucslLoading },
+        { key: 'cpilfesl', setter: setCpilfeslData, setLoading: setIsCpilfeslLoading },
+        { key: 'pcepi', setter: setPcepiData, setLoading: setIsPcepiLoading },
+        { key: 'pcepilfe', setter: setPcepilfeData, setLoading: setIsPcepilfeLoading },
+        { key: 'mich', setter: setMichData, setLoading: setIsMichLoading },
+        { key: 't5yie', setter: setT5yieData, setLoading: setIsT5yieLoading },
+        { key: 't10yie', setter: setT10yieData, setLoading: setIsT10yieLoading },
+        { key: 'dgs1mo', setter: setDgs1moData, setLoading: setIsDgs1moLoading },
+        { key: 'dgs3mo', setter: setDgs3moData, setLoading: setIsDgs3moLoading },
+        { key: 'dgs6mo', setter: setDgs6moData, setLoading: setIsDgs6moLoading },
+        { key: 'dgs1', setter: setDgs1Data, setLoading: setIsDgs1Loading },
+        { key: 'dgs5', setter: setDgs5Data, setLoading: setIsDgs5Loading },
+        { key: 'dgs20', setter: setDgs20Data, setLoading: setIsDgs20Loading },
+        { key: 'dgs30', setter: setDgs30Data, setLoading: setIsDgs30Loading },
+        { key: 't10y2y', setter: setT10y2yData, setLoading: setIsT10y2yLoading },
+        { key: 't10y3m', setter: setT10y3mData, setLoading: setIsT10y3mLoading },
+        { key: 'm1sl', setter: setM1slData, setLoading: setIsM1slLoading },
+        { key: 'mabmm301', setter: setMabmm301Data, setLoading: setIsMabmm301Loading },
+        { key: 'unrate', setter: setUnrateData, setLoading: setIsUnrateLoading },
+        { key: 'payems', setter: setPayemsData, setLoading: setIsPayemsLoading },
+        { key: 'icsa', setter: setIcsaData, setLoading: setIsIcsaLoading },
+        { key: 'jtsjol', setter: setJtsjolData, setLoading: setIsJtsjolLoading },
+        { key: 'emratio', setter: setEmratioData, setLoading: setIsEmratioLoading },
+        { key: 'gdpc1', setter: setGdpc1Data, setLoading: setIsGdpc1Loading },
+        { key: 'indpro', setter: setIndproData, setLoading: setIsIndproLoading },
+        { key: 'houst', setter: setHoustData, setLoading: setIsHoustLoading },
+        { key: 'umcsent', setter: setUmcsentData, setLoading: setIsUmcsentLoading },
+        { key: 'rsxfs', setter: setRsxfsData, setLoading: setIsRsxfsLoading },
+        { key: 'dcoilwtico', setter: setDcoilwticoData, setLoading: setIsDcoilwticoLoading },
+        { key: 'bamlh0a0hym2', setter: setBamlh0a0hym2Data, setLoading: setIsBamlh0a0hym2Loading },
+        { key: 'mortgage30us', setter: setMortgage30usData, setLoading: setIsMortgage30usLoading },
+        { key: 'bogmbase', setter: setBogmbaseData, setLoading: setIsBogmbaseLoading },
+        { key: 'totalsl', setter: setTotalslData, setLoading: setIsTotalslLoading },
+      ];
+
+      // Fire all FRED series in parallel immediately — each updates independently with zero blocking
+      const fredPromise = Promise.allSettled(
+        fredConfigs.map(async (cfg) => {
+          try {
+            const data = await fetchFred(cfg.key);
+            if (data && data.length > 0) {
+              cfg.setter(ensureFreshToToday(data, cfg.valKey ?? 'value'));
+            }
+          } catch { /* silent */ } finally {
+            cfg.setLoading(false);
+          }
+        })
+      );
+
+      // 2. Fetch standard market macro endpoints
+      const fMacro = async (url: string): Promise<IndicatorPoint[]> => {
         try {
           const r = await fetchWithSSCache(withSentimentDataVersion(url), { headers: { 'Accept': 'application/json' } });
           if (r.ok) {
@@ -1354,49 +1438,20 @@ export function useSentimentData() {
             if (result.success && result.data?.length > 0) return result.data;
           }
         } catch { /* silent */ }
-        // Instant static fallback if API function returns 503 or is not populated in D1
-        if (url.startsWith('/api/fred-')) {
-          const staticUrl = url.replace('/api/fred-', '/data/fred/') + '.json';
-          try {
-            const r2 = await fetchWithSSCache(withSentimentDataVersion(staticUrl), { headers: { 'Accept': 'application/json' } });
-            if (r2.ok) {
-              const result2: IndicatorApiResponse = await r2.json();
-              if (result2.success && result2.data?.length > 0) return result2.data;
-            }
-          } catch { /* silent */ }
-        }
         return [];
       };
+
       const [
         m2, dxy, vix, fedfunds, etf, sp500, gold,
         stablecoinSupply, cryptoMarketCap,
-        sofr, walcl, wresbal, rrpontsyd,
-        cpiaucsl, cpilfesl, pcepi, pcepilfe, mich, t5yie, t10yie,
-        dgs1mo, dgs3mo, dgs6mo, dgs1, dgs5, dgs20, dgs30,
-        t10y2y, t10y3m, m1sl, mabmm301, unrate, payems, icsa, jtsjol, emratio,
-        gdpc1, indpro, houst, umcsent, rsxfs, dcoilwtico, bamlh0a0hym2, mortgage30us, bogmbase, totalsl,
       ] = await Promise.all([
-        f('/api/m2'),                f('/api/dxy'),               f('/api/vix'),
-        f('/api/fedfunds'),
-        f('/api/etf'),               f('/api/sp500'),
-        f('/api/gold'),              f('/api/stablecoin-supply'),
-        f('/api/crypto-market-cap'),
-        f('/api/fred-sofr'),         f('/api/fred-walcl'),        f('/api/fred-wresbal'),
-        f('/api/fred-rrpontsyd'),    f('/api/fred-cpiaucsl'),     f('/api/fred-cpilfesl'),
-        f('/api/fred-pcepi'),        f('/api/fred-pcepilfe'),     f('/api/fred-mich'),
-        f('/api/fred-t5yie'),        f('/api/fred-t10yie'),
-        f('/api/fred-dgs1mo'),       f('/api/fred-dgs3mo'),       f('/api/fred-dgs6mo'),
-        f('/api/fred-dgs1'),         f('/api/fred-dgs5'),         f('/api/fred-dgs20'),
-        f('/api/fred-dgs30'),        f('/api/fred-t10y2y'),       f('/api/fred-t10y3m'),
-        f('/api/fred-m1sl'),
-        f('/api/fred-mabmm301usm189s'),
-        f('/api/fred-unrate'),       f('/api/fred-payems'),       f('/api/fred-icsa'),
-        f('/api/fred-jtsjol'),       f('/api/fred-emratio'),      f('/api/fred-gdpc1'),
-        f('/api/fred-indpro'),       f('/api/fred-houst'),        f('/api/fred-umcsent'),
-        f('/api/fred-rsxfs'),        f('/api/fred-dcoilwtico'),   f('/api/fred-bamlh0a0hym2'),
-        f('/api/fred-mortgage30us'), f('/api/fred-bogmbase'),     f('/api/fred-totalsl'),
+        fMacro('/api/m2'),                fMacro('/api/dxy'),               fMacro('/api/vix'),
+        fMacro('/api/fedfunds'),
+        fMacro('/api/etf'),               fMacro('/api/sp500'),
+        fMacro('/api/gold'),              fMacro('/api/stablecoin-supply'),
+        fMacro('/api/crypto-market-cap'),
       ]);
-      // All 100 setters called synchronously after Promise.all → React 18+ batches into 1 render
+
       if (m2.length > 0)               setM2Data(ensureFreshToToday(m2, 'value'));              setIsM2Loading(false);
       if (dxy.length > 0)              setDxyData(ensureFreshToToday(dxy, 'value'));            setIsDxyLoading(false);
       if (vix.length > 0)              setVixData(ensureFreshToToday(vix, 'value'));            setIsVixLoading(false);
@@ -1416,48 +1471,10 @@ export function useSentimentData() {
       setIsStablecoinSupplyLoading(false);
       setIsSsrOscillatorLoading(false);
       if (cryptoMarketCap.length > 0)  setCryptoMarketCapData(ensureFreshToToday(cryptoMarketCap, 'value')); setIsCryptoMarketCapLoading(false);
-      if (sofr.length > 0)             setSofrData(ensureFreshToToday(sofr, 'value'));          setIsSofrLoading(false);
-      if (walcl.length > 0)            setWalclData(ensureFreshToToday(walcl, 'value'));        setIsWalclLoading(false);
-      if (wresbal.length > 0)          setWresbalData(ensureFreshToToday(wresbal, 'value'));
-      setIsWresbalLoading(false);
-      if (rrpontsyd.length > 0)        setRrpontsydData(ensureFreshToToday(rrpontsyd, 'value')); setIsRrpontsydLoading(false);
-      if (cpiaucsl.length > 0)         setCpiaucslData(ensureFreshToToday(cpiaucsl, 'value'));  setIsCpiaucslLoading(false);
-      if (cpilfesl.length > 0)         setCpilfeslData(ensureFreshToToday(cpilfesl, 'value'));  setIsCpilfeslLoading(false);
-      if (pcepi.length > 0)            setPcepiData(ensureFreshToToday(pcepi, 'value'));        setIsPcepiLoading(false);
-      if (pcepilfe.length > 0)         setPcepilfeData(ensureFreshToToday(pcepilfe, 'value'));  setIsPcepilfeLoading(false);
-      if (mich.length > 0)             setMichData(ensureFreshToToday(mich, 'value'));          setIsMichLoading(false);
-      if (t5yie.length > 0)            setT5yieData(ensureFreshToToday(t5yie, 'value'));        setIsT5yieLoading(false);
-      if (t10yie.length > 0)           setT10yieData(ensureFreshToToday(t10yie, 'value'));      setIsT10yieLoading(false);
-      if (dgs1mo.length > 0)           setDgs1moData(ensureFreshToToday(dgs1mo, 'value'));      setIsDgs1moLoading(false);
-      if (dgs3mo.length > 0)           setDgs3moData(ensureFreshToToday(dgs3mo, 'value'));      setIsDgs3moLoading(false);
-      if (dgs6mo.length > 0)           setDgs6moData(ensureFreshToToday(dgs6mo, 'value'));      setIsDgs6moLoading(false);
-      if (dgs1.length > 0)             setDgs1Data(ensureFreshToToday(dgs1, 'value'));          setIsDgs1Loading(false);
-      if (dgs5.length > 0)             setDgs5Data(ensureFreshToToday(dgs5, 'value'));          setIsDgs5Loading(false);
-      if (dgs20.length > 0)            setDgs20Data(ensureFreshToToday(dgs20, 'value'));        setIsDgs20Loading(false);
-      if (dgs30.length > 0)            setDgs30Data(ensureFreshToToday(dgs30, 'value'));        setIsDgs30Loading(false);
-      if (t10y2y.length > 0)           setT10y2yData(ensureFreshToToday(t10y2y, 'value'));      setIsT10y2yLoading(false);
-      if (t10y3m.length > 0)           setT10y3mData(ensureFreshToToday(t10y3m, 'value'));      setIsT10y3mLoading(false);
-      if (m1sl.length > 0)             setM1slData(ensureFreshToToday(m1sl, 'value'));
-      setIsM1slLoading(false);
-      if (mabmm301.length > 0)         setMabmm301Data(ensureFreshToToday(mabmm301, 'value'));  setIsMabmm301Loading(false);
-      if (unrate.length > 0)           setUnrateData(ensureFreshToToday(unrate, 'value'));      setIsUnrateLoading(false);
-      if (payems.length > 0)           setPayemsData(ensureFreshToToday(payems, 'value'));      setIsPayemsLoading(false);
-      if (icsa.length > 0)             setIcsaData(ensureFreshToToday(icsa, 'value'));          setIsIcsaLoading(false);
-      if (jtsjol.length > 0)           setJtsjolData(ensureFreshToToday(jtsjol, 'value'));      setIsJtsjolLoading(false);
-      if (emratio.length > 0)          setEmratioData(ensureFreshToToday(emratio, 'value'));    setIsEmratioLoading(false);
-      if (gdpc1.length > 0)            setGdpc1Data(ensureFreshToToday(gdpc1, 'value'));        setIsGdpc1Loading(false);
-      if (indpro.length > 0)           setIndproData(ensureFreshToToday(indpro, 'value'));      setIsIndproLoading(false);
-      if (houst.length > 0)            setHoustData(ensureFreshToToday(houst, 'value'));        setIsHoustLoading(false);
-      if (umcsent.length > 0)          setUmcsentData(ensureFreshToToday(umcsent, 'value'));    setIsUmcsentLoading(false);
-      if (rsxfs.length > 0)            setRsxfsData(ensureFreshToToday(rsxfs, 'value'));        setIsRsxfsLoading(false);
-      if (dcoilwtico.length > 0)       setDcoilwticoData(ensureFreshToToday(dcoilwtico, 'value')); setIsDcoilwticoLoading(false);
-      if (bamlh0a0hym2.length > 0)     setBamlh0a0hym2Data(ensureFreshToToday(bamlh0a0hym2, 'value')); setIsBamlh0a0hym2Loading(false);
-      if (mortgage30us.length > 0)     setMortgage30usData(ensureFreshToToday(mortgage30us, 'value')); setIsMortgage30usLoading(false);
-      if (bogmbase.length > 0)         setBogmbaseData(ensureFreshToToday(bogmbase, 'value'));
-      setIsBogmbaseLoading(false);
-      if (totalsl.length > 0)          setTotalslData(ensureFreshToToday(totalsl, 'value'));    setIsTotalslLoading(false);
+
+      await fredPromise;
     };
-    const timer = setTimeout(fetchMacroIndicators, 100);
+    const timer = setTimeout(fetchMacroIndicators, 0);
     return () => clearTimeout(timer);
   }, []);
   useEffect(() => {

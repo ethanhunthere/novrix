@@ -486,7 +486,14 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
     'indicator-fedfunds',
     'indicator-vix',
     'indicator-gold',
-    'indicator-sp500'
+    'indicator-sp500',
+    'indicator-fred-cpiaucsl',
+    'indicator-fred-cpilfesl',
+    'indicator-fred-walcl',
+    'indicator-fred-unrate',
+    'indicator-fred-rrpontsyd',
+    'indicator-fred-sofr',
+    'indicator-fred-t10y2y',
   ]), []);
 
   const [openAccordion, setOpenAccordion] = useState<string | null>('sentiment');
@@ -498,7 +505,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
 
   // Top panels render immediately on frame 1; offscreen panels mount when scrolled near viewport (600px margin)
   const [visiblePanels, setVisiblePanels] = useState<Set<string>>(() => new Set([
-    'sentiment-oscillator', 'nupl', 'mvrv'
+    'sentiment-oscillator', 'nupl', 'mvrv', 'fred-cpiaucsl', 'fred-walcl', 'fred-unrate', 'fred-rrpontsyd', 'fred-sofr'
   ]));
 
   const observerRef = useRef<IntersectionObserver | null>(null);
@@ -616,13 +623,14 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
 
   const ch = useCallback((_panelId: string, normalH = 340) => {
     if (selectedIndicator !== null) {
-      // Shorter, fully responsive chart height for single panels across all breakpoints
-      if (vpWidth >= 4800) return 600;
-      if (vpWidth >= 3840) return 520;
-      if (vpWidth >= 2560) return 450;
-      if (vpWidth >= 1920) return 390;
-      if (vpWidth >= 1440) return 350;
-      return 320;
+      // Shorter, sleek, fully responsive chart height for single panels across 1080px to 5000px
+      if (vpWidth >= 4800) return 460;
+      if (vpWidth >= 3840) return 400;
+      if (vpWidth >= 2560) return 340;
+      if (vpWidth >= 1920) return 290;
+      if (vpWidth >= 1440) return 260;
+      if (vpWidth >= 1080) return 230;
+      return 210;
     }
     if (vpWidth >= 4800) return 640;
     if (vpWidth >= 3840) return 560;

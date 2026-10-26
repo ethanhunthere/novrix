@@ -46,6 +46,20 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   } catch (e) {
     console.error('[fred-sofr] D1 error:', e);
   }
+  // Instant static asset fallback if D1 is not populated
+  try {
+    const staticUrl = new URL("/data/fred/sofr.json", request.url);
+    const assetRes = (env as unknown as { ASSETS?: { fetch: typeof fetch } })?.ASSETS
+      ? await (env as unknown as { ASSETS: { fetch: typeof fetch } }).ASSETS.fetch(staticUrl)
+      : await fetch(staticUrl);
+    if (assetRes.ok) {
+      const json = await assetRes.json();
+      return new Response(JSON.stringify(json), {
+        headers: { ...CORS, "Cache-Control": CACHE, "Content-Type": "application/json" },
+      });
+    }
+  } catch { /* proceed */ }
+
 
   try {
     let data: Array<{ time: string; value: number }> = [];
