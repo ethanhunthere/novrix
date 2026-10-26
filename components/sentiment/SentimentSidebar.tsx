@@ -21,6 +21,7 @@ interface SentimentSidebarProps {
   setOpenAccordion: React.Dispatch<React.SetStateAction<string | null>>;
   selectedIndicator: string | null;
   setSelectedIndicator: (v: string | null) => void;
+  height?: number | string;
 }
 
 /**
@@ -35,8 +36,10 @@ const SentimentSidebar = memo(function SentimentSidebar({
   setOpenAccordion,
   selectedIndicator,
   setSelectedIndicator,
+  height = '375px',
 }: SentimentSidebarProps) {
   const q = registrySearch.toLowerCase().trim();
+  const heightVal = typeof height === 'number' ? `${height}px` : height;
 
   // Total count of concrete indicators
   const totalIndicators = registryCats.reduce((acc, cat) => {
@@ -47,8 +50,8 @@ const SentimentSidebar = memo(function SentimentSidebar({
     <div
       className="w-full flex flex-col overflow-hidden select-none"
       style={{
-        height: 'calc(100vh - 64px)',
-        maxHeight: 'calc(100vh - 64px)',
+        height: heightVal,
+        maxHeight: heightVal,
         background: '#120F0D',
         border: '1px solid rgba(245, 241, 234, 0.08)',
         borderRadius: '2px',
