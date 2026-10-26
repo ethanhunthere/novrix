@@ -623,14 +623,11 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
 
   const ch = useCallback((_panelId: string, normalH = 340) => {
     if (selectedIndicator !== null) {
-      // Shorter, sleek, fully responsive chart height for single panels across 1080px to 5000px
-      if (vpWidth >= 4800) return 460;
-      if (vpWidth >= 3840) return 400;
-      if (vpWidth >= 2560) return 340;
-      if (vpWidth >= 1920) return 290;
-      if (vpWidth >= 1440) return 260;
-      if (vpWidth >= 1080) return 230;
-      return 210;
+      // 375px base height for single panels, scaling smoothly on 4K/5K ultra-wide displays
+      if (vpWidth >= 4800) return 540;
+      if (vpWidth >= 3840) return 480;
+      if (vpWidth >= 2560) return 420;
+      return 375;
     }
     if (vpWidth >= 4800) return 640;
     if (vpWidth >= 3840) return 560;
