@@ -328,7 +328,7 @@ export const TF_OPTS = [
 ] as const;
 
 export const FRED_TF_OPTS = [
-  { label: '1Y',  value: '365'    },
+  { label: '10Y', value: '3650'   },
   { label: 'ALL', value: '999999' },
 ] as const;
 
@@ -600,6 +600,35 @@ export function fastFormatDate(timeStr: string | null | undefined): string {
   }
   const d = new Date(timeStr);
   return isNaN(d.getTime()) ? '' : `${SHORT_MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
+}
+
+export function fastFormatFreqDate(timeStr: string | null | undefined, freq: string = 'd'): string {
+  if (!timeStr) return '';
+  const s = String(timeStr);
+  if (s.length >= 7 && s[4] === '-') {
+    const y = s.slice(0, 4);
+    const m = (s.charCodeAt(5) - 48) * 10 + (s.charCodeAt(6) - 48) - 1;
+    const mStr = SHORT_MONTHS[m] || '';
+    if (freq === 'm') {
+      return `${mStr} ${y}`;
+    }
+    if (freq === 'q') {
+      const q = Math.floor(m / 3) + 1;
+      return `Q${q} ${y}`;
+    }
+    if (s.length >= 10 && s[7] === '-') {
+      const d = (s.charCodeAt(8) - 48) * 10 + (s.charCodeAt(9) - 48);
+      return `${mStr} ${d}, ${y}`;
+    }
+    return `${mStr} ${y}`;
+  }
+  const d = new Date(timeStr);
+  if (isNaN(d.getTime())) return '';
+  const y = d.getUTCFullYear();
+  const m = d.getUTCMonth();
+  if (freq === 'm') return `${SHORT_MONTHS[m]} ${y}`;
+  if (freq === 'q') return `Q${Math.floor(m / 3) + 1} ${y}`;
+  return `${SHORT_MONTHS[m]} ${d.getUTCDate()}, ${y}`;
 }
 
 export const formatXAxisTick = (data: ChartDateItem[], index: number, tf: string): string => {

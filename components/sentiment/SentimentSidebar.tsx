@@ -42,7 +42,7 @@ const SentimentSidebar = memo(function SentimentSidebar({
   const isSinglePanel = selectedIndicator !== null;
   const heightVal = height
     ? (typeof height === 'number' ? `${height}px` : height)
-    : (isSinglePanel ? '100%' : 'calc(100vh - 64px)');
+    : (isSinglePanel ? 'calc(100% - 10px)' : 'calc(100vh - 74px)');
 
   // Total count of concrete indicators
   const totalIndicators = registryCats.reduce((acc, cat) => {
@@ -54,7 +54,7 @@ const SentimentSidebar = memo(function SentimentSidebar({
       className="w-full flex flex-col overflow-hidden select-none"
       style={{
         height: heightVal,
-        maxHeight: isSinglePanel ? 'none' : 'calc(100vh - 64px)',
+        maxHeight: isSinglePanel ? 'calc(100% - 10px)' : 'calc(100vh - 74px)',
         background: '#120F0D',
         border: '1px solid rgba(245, 241, 234, 0.08)',
         borderRadius: '2px',

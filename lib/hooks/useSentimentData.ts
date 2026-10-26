@@ -4,7 +4,7 @@ import { fetchCached } from '@/lib/bootCache';
 import { fetchWithSSCache } from '@/lib/fetchWithSSCache';
 import { withSentimentDataVersion } from '@/lib/sentimentDataVersion';
 import type { IndicatorPoint, IndicatorApiResponse, BulkIndicatorsResponse, DominancePoint, SocialCoin, ChartDataPoint, TrendingCoin } from '@/lib/types/sentiment';
-import { downsample, fastFormatDate, SHORT_MONTHS } from '@/components/sentiment/SentimentPanelUtils';
+import { downsample, fastFormatDate, fastFormatFreqDate, SHORT_MONTHS } from '@/components/sentiment/SentimentPanelUtils';
 
 const BGEOMETRICS_MAX_LAG_DAYS = 1;
 
@@ -1375,27 +1375,28 @@ export function useSentimentData() {
         setter: (d: IndicatorPoint[]) => void;
         setLoading: (l: boolean) => void;
         valKey?: string;
+        isDaily?: boolean;
       }> = [
-        { key: 'sofr', setter: setSofrData, setLoading: setIsSofrLoading },
+        { key: 'sofr', setter: setSofrData, setLoading: setIsSofrLoading, isDaily: true },
         { key: 'walcl', setter: setWalclData, setLoading: setIsWalclLoading },
         { key: 'wresbal', setter: setWresbalData, setLoading: setIsWresbalLoading },
-        { key: 'rrpontsyd', setter: setRrpontsydData, setLoading: setIsRrpontsydLoading },
+        { key: 'rrpontsyd', setter: setRrpontsydData, setLoading: setIsRrpontsydLoading, isDaily: true },
         { key: 'cpiaucsl', setter: setCpiaucslData, setLoading: setIsCpiaucslLoading },
         { key: 'cpilfesl', setter: setCpilfeslData, setLoading: setIsCpilfeslLoading },
         { key: 'pcepi', setter: setPcepiData, setLoading: setIsPcepiLoading },
         { key: 'pcepilfe', setter: setPcepilfeData, setLoading: setIsPcepilfeLoading },
         { key: 'mich', setter: setMichData, setLoading: setIsMichLoading },
-        { key: 't5yie', setter: setT5yieData, setLoading: setIsT5yieLoading },
-        { key: 't10yie', setter: setT10yieData, setLoading: setIsT10yieLoading },
-        { key: 'dgs1mo', setter: setDgs1moData, setLoading: setIsDgs1moLoading },
-        { key: 'dgs3mo', setter: setDgs3moData, setLoading: setIsDgs3moLoading },
-        { key: 'dgs6mo', setter: setDgs6moData, setLoading: setIsDgs6moLoading },
-        { key: 'dgs1', setter: setDgs1Data, setLoading: setIsDgs1Loading },
-        { key: 'dgs5', setter: setDgs5Data, setLoading: setIsDgs5Loading },
-        { key: 'dgs20', setter: setDgs20Data, setLoading: setIsDgs20Loading },
-        { key: 'dgs30', setter: setDgs30Data, setLoading: setIsDgs30Loading },
-        { key: 't10y2y', setter: setT10y2yData, setLoading: setIsT10y2yLoading },
-        { key: 't10y3m', setter: setT10y3mData, setLoading: setIsT10y3mLoading },
+        { key: 't5yie', setter: setT5yieData, setLoading: setIsT5yieLoading, isDaily: true },
+        { key: 't10yie', setter: setT10yieData, setLoading: setIsT10yieLoading, isDaily: true },
+        { key: 'dgs1mo', setter: setDgs1moData, setLoading: setIsDgs1moLoading, isDaily: true },
+        { key: 'dgs3mo', setter: setDgs3moData, setLoading: setIsDgs3moLoading, isDaily: true },
+        { key: 'dgs6mo', setter: setDgs6moData, setLoading: setIsDgs6moLoading, isDaily: true },
+        { key: 'dgs1', setter: setDgs1Data, setLoading: setIsDgs1Loading, isDaily: true },
+        { key: 'dgs5', setter: setDgs5Data, setLoading: setIsDgs5Loading, isDaily: true },
+        { key: 'dgs20', setter: setDgs20Data, setLoading: setIsDgs20Loading, isDaily: true },
+        { key: 'dgs30', setter: setDgs30Data, setLoading: setIsDgs30Loading, isDaily: true },
+        { key: 't10y2y', setter: setT10y2yData, setLoading: setIsT10y2yLoading, isDaily: true },
+        { key: 't10y3m', setter: setT10y3mData, setLoading: setIsT10y3mLoading, isDaily: true },
         { key: 'm1sl', setter: setM1slData, setLoading: setIsM1slLoading },
         { key: 'mabmm301', setter: setMabmm301Data, setLoading: setIsMabmm301Loading },
         { key: 'unrate', setter: setUnrateData, setLoading: setIsUnrateLoading },
@@ -1408,8 +1409,8 @@ export function useSentimentData() {
         { key: 'houst', setter: setHoustData, setLoading: setIsHoustLoading },
         { key: 'umcsent', setter: setUmcsentData, setLoading: setIsUmcsentLoading },
         { key: 'rsxfs', setter: setRsxfsData, setLoading: setIsRsxfsLoading },
-        { key: 'dcoilwtico', setter: setDcoilwticoData, setLoading: setIsDcoilwticoLoading },
-        { key: 'bamlh0a0hym2', setter: setBamlh0a0hym2Data, setLoading: setIsBamlh0a0hym2Loading },
+        { key: 'dcoilwtico', setter: setDcoilwticoData, setLoading: setIsDcoilwticoLoading, isDaily: true },
+        { key: 'bamlh0a0hym2', setter: setBamlh0a0hym2Data, setLoading: setIsBamlh0a0hym2Loading, isDaily: true },
         { key: 'mortgage30us', setter: setMortgage30usData, setLoading: setIsMortgage30usLoading },
         { key: 'bogmbase', setter: setBogmbaseData, setLoading: setIsBogmbaseLoading },
         { key: 'totalsl', setter: setTotalslData, setLoading: setIsTotalslLoading },
@@ -1421,7 +1422,7 @@ export function useSentimentData() {
           try {
             const data = await fetchFred(cfg.key);
             if (data && data.length > 0) {
-              cfg.setter(ensureFreshToToday(data, cfg.valKey ?? 'value'));
+              cfg.setter(cfg.isDaily ? ensureFreshToToday(data, cfg.valKey ?? 'value') : data);
             }
           } catch { /* silent */ } finally {
             cfg.setLoading(false);
@@ -2306,7 +2307,11 @@ export function useSentimentData() {
   const utxoLossChartDataWithPrice = useMemo(() => addBtcPriceToChartData(utxoLossChartData), [utxoLossChartData, addBtcPriceToChartData]);
 
   // KEY 5 macro chart data memos
-  const buildMacroChartData = (data: IndicatorPoint[], tf: string) => {
+  const buildMacroChartData = (
+    data: IndicatorPoint[],
+    tf: string,
+    freq: 'm' | 'q' | 'w' | 'd' = 'd'
+  ) => {
     if (data.length === 0) return [];
     const sorted = fastSortAscending(data);
     const days = parseInt(tf, 10);
@@ -2316,10 +2321,17 @@ export function useSentimentData() {
       cutoff.setDate(cutoff.getDate() - days);
       const cutoffStr = cutoff.toISOString().slice(0, 10);
       const dateBased = sorted.filter(d => (d.time ? d.time.slice(0, 10) >= cutoffStr : false));
-      // Fall back to last N entries when date-based filter is too sparse (stale or low-freq data)
-      sliced = dateBased.length >= 2 ? dateBased : sorted.slice(-Math.max(days, 3));
+      if (dateBased.length >= 2) {
+        sliced = dateBased;
+      } else {
+        const fallbackCount = freq === 'm' ? 120 : freq === 'q' ? 40 : freq === 'w' ? 520 : Math.min(days, 2600);
+        sliced = sorted.slice(-Math.min(sorted.length, fallbackCount));
+      }
     }
-    const step = Math.max(1, Math.floor(sliced.length / 1800));
+    const step = (freq === 'm' || freq === 'q')
+      ? 1
+      : Math.max(1, Math.floor(sliced.length / 1500));
+
     return sliced
       .filter((_, i) => i % step === 0 || i === sliced.length - 1)
       .map((d, i) => {
@@ -2327,16 +2339,15 @@ export function useSentimentData() {
         return {
           index: i,
           value: d.value,
-          dateFormatted: fastFormatDate(d.time),
+          dateFormatted: fastFormatFreqDate(d.time, freq),
           dateObj,
           rawDate: d.time,
+          time: d.time,
         };
       });
   };
 
-  // WTI-specific builder: daily resolution for 1Y timeframe, weekly (~every 7th point) for all others.
-  // The generic buildMacroChartData uses a count-based step that varies with dataset size,
-  // but WTI is daily since 1986 (~10,000 pts) so non-1Y timeframes need an explicit 7-day step.
+  // WTI-specific builder: daily resolution for short timeframes, weekly for multi-year
   const buildWtiChartData = (data: IndicatorPoint[], tf: string) => {
     if (data.length === 0) return [];
     const sorted = fastSortAscending(data);
@@ -2349,8 +2360,6 @@ export function useSentimentData() {
       const dateBased = sorted.filter(d => (d.time ? d.time.slice(0, 10) >= cutoffStr : false));
       sliced = dateBased.length >= 2 ? dateBased : sorted.slice(-Math.max(days, 3));
     }
-    // Short timeframes (1W/1M): step=1 to show all daily points
-    // 1Y: step=1 for full daily resolution; longer: weekly (step=7)
     const step = days <= 30 ? 1 : tf === '365' ? 1 : 7;
     return sliced
       .filter((_, i) => i % step === 0 || i === sliced.length - 1)
@@ -2359,33 +2368,31 @@ export function useSentimentData() {
         return {
           index: i,
           value: d.value,
-          dateFormatted: fastFormatDate(d.time),
+          dateFormatted: fastFormatFreqDate(d.time, 'd'),
           dateObj,
           rawDate: d.time,
+          time: d.time,
         };
       });
   };
 
   // Computes YoY % change from raw CPI/PCE index levels stored in the data cache
-  // FRED stores CPIAUCSL as a price index (~316); this converts to "2.5%" style YoY.
   const buildInflationPctChartData = (data: IndicatorPoint[], tf: string) => {
     if (data.length === 0) return [];
     const sorted = fastSortAscending(data);
 
     // Build a fast YYYY-MM → value lookup so we can look up exactly 12 months prior
-    // regardless of array gaps (e.g. missing months in the data cache).
     const byYearMonth = new Map<string, number>();
     for (const d of sorted) {
       if (!d.time) continue;
-      // time is "2025-02-01T00:00:00Z" or "2025-02-01" — first 7 chars = "2025-02"
       byYearMonth.set(d.time.substring(0, 7), Number(d.value));
     }
 
     const withPct = sorted.map((d) => {
       if (!d.time) return null;
-      const ym = d.time.substring(0, 7); // "2026-02"
+      const ym = d.time.substring(0, 7);
       const [y, mo] = ym.split('-').map(Number);
-      const priorYm = `${y - 1}-${String(mo).padStart(2, '0')}`; // "2025-02"
+      const priorYm = `${y - 1}-${String(mo).padStart(2, '0')}`;
       const priorVal = byYearMonth.get(priorYm);
       const currentVal = Number(d.value);
       if (priorVal == null || priorVal === 0) return null;
@@ -2399,24 +2406,23 @@ export function useSentimentData() {
       cutoff.setDate(cutoff.getDate() - days);
       const cutoffStr = cutoff.toISOString().slice(0, 10);
       const dateBased = withPct.filter(d => (d.time ? d.time.slice(0, 10) >= cutoffStr : false));
-      sliced = dateBased.length >= 2 ? dateBased : withPct.slice(-Math.max(days, 3));
+      sliced = dateBased.length >= 2 ? dateBased : withPct.slice(-Math.min(withPct.length, 120));
     }
-    const step = Math.max(1, Math.floor(sliced.length / 1800));
-    return sliced
-      .filter((_, i) => i % step === 0 || i === sliced.length - 1)
-      .map((d, i) => {
-        const dateObj = parseDate(d.time);
-        return {
-          index: i,
-          value: d.value,
-          dateFormatted: fastFormatDate(d.time),
-          dateObj,
-          rawDate: d.time,
-        };
-      });
+    // Monthly inflation prints: step = 1, never drop any month
+    return sliced.map((d, i) => {
+      const dateObj = parseDate(d.time);
+      return {
+        index: i,
+        value: d.value,
+        dateFormatted: fastFormatFreqDate(d.time, 'm'),
+        dateObj,
+        rawDate: d.time,
+        time: d.time,
+      };
+    });
   };
 
-  const m2ChartData = useMemo(() => buildMacroChartData(m2Data, m2Timeframe), [m2Data, m2Timeframe]);
+  const m2ChartData = useMemo(() => buildMacroChartData(m2Data, m2Timeframe, 'm'), [m2Data, m2Timeframe]);
   const dxyChartData = useMemo(() => buildMacroChartData(dxyData, dxyTimeframe), [dxyData, dxyTimeframe]);
   const vixChartData = useMemo(() => buildMacroChartData(vixData, vixTimeframe), [vixData, vixTimeframe]);
   const fedfundsChartData = useMemo(() => buildMacroChartData(fedfundsData, fedfundsTimeframe), [fedfundsData, fedfundsTimeframe]);
@@ -2440,12 +2446,12 @@ export function useSentimentData() {
   const cryptoMarketCapChartDataWithPrice = useMemo(() => addBtcPriceToChartData(cryptoMarketCapChartData), [cryptoMarketCapChartData, addBtcPriceToChartData]);
 
   // FRED extended macro memos
-  const sofrChartData = useMemo(() => buildMacroChartData(sofrData, sofrTimeframe), [sofrData, sofrTimeframe]);
-  const walclChartData = useMemo(() => buildMacroChartData(walclData, walclTimeframe), [walclData, walclTimeframe]);
+  const sofrChartData = useMemo(() => buildMacroChartData(sofrData, sofrTimeframe, 'd'), [sofrData, sofrTimeframe]);
+  const walclChartData = useMemo(() => buildMacroChartData(walclData, walclTimeframe, 'w'), [walclData, walclTimeframe]);
   const walclChartDataWithPrice = useMemo(() => addBtcPriceToChartData(walclChartData), [walclChartData, addBtcPriceToChartData]);
-  const wresbalChartData = useMemo(() => buildMacroChartData(wresbalData, wresbalTimeframe), [wresbalData, wresbalTimeframe]);
+  const wresbalChartData = useMemo(() => buildMacroChartData(wresbalData, wresbalTimeframe, 'w'), [wresbalData, wresbalTimeframe]);
   const wresbalChartDataWithPrice = useMemo(() => addBtcPriceToChartData(wresbalChartData), [wresbalChartData, addBtcPriceToChartData]);
-  const rrpontsydChartData = useMemo(() => buildMacroChartData(rrpontsydData, rrpontsydTimeframe), [rrpontsydData, rrpontsydTimeframe]);
+  const rrpontsydChartData = useMemo(() => buildMacroChartData(rrpontsydData, rrpontsydTimeframe, 'd'), [rrpontsydData, rrpontsydTimeframe]);
   const rrpontsydChartDataWithPrice = useMemo(() => addBtcPriceToChartData(rrpontsydChartData), [rrpontsydChartData, addBtcPriceToChartData]);
   const cpiaucslChartData = useMemo(() => buildInflationPctChartData(cpiaucslData, cpiaucslTimeframe), [cpiaucslData, cpiaucslTimeframe]);
   const cpiaucslChartDataWithPrice = useMemo(() => addBtcPriceToChartData(cpiaucslChartData), [cpiaucslChartData, addBtcPriceToChartData]);
@@ -2455,63 +2461,63 @@ export function useSentimentData() {
   const pcepiChartDataWithPrice = useMemo(() => addBtcPriceToChartData(pcepiChartData), [pcepiChartData, addBtcPriceToChartData]);
   const pcepilfeChartData = useMemo(() => buildInflationPctChartData(pcepilfeData, pcepilfeTimeframe), [pcepilfeData, pcepilfeTimeframe]);
   const pcepilfeChartDataWithPrice = useMemo(() => addBtcPriceToChartData(pcepilfeChartData), [pcepilfeChartData, addBtcPriceToChartData]);
-  const michChartData = useMemo(() => buildMacroChartData(michData, michTimeframe), [michData, michTimeframe]);
+  const michChartData = useMemo(() => buildMacroChartData(michData, michTimeframe, 'm'), [michData, michTimeframe]);
   const michChartDataWithPrice = useMemo(() => addBtcPriceToChartData(michChartData), [michChartData, addBtcPriceToChartData]);
-  const t5yieChartData = useMemo(() => buildMacroChartData(t5yieData, t5yieTimeframe), [t5yieData, t5yieTimeframe]);
+  const t5yieChartData = useMemo(() => buildMacroChartData(t5yieData, t5yieTimeframe, 'd'), [t5yieData, t5yieTimeframe]);
   const t5yieChartDataWithPrice = useMemo(() => addBtcPriceToChartData(t5yieChartData), [t5yieChartData, addBtcPriceToChartData]);
-  const t10yieChartData = useMemo(() => buildMacroChartData(t10yieData, t10yieTimeframe), [t10yieData, t10yieTimeframe]);
+  const t10yieChartData = useMemo(() => buildMacroChartData(t10yieData, t10yieTimeframe, 'd'), [t10yieData, t10yieTimeframe]);
   const t10yieChartDataWithPrice = useMemo(() => addBtcPriceToChartData(t10yieChartData), [t10yieChartData, addBtcPriceToChartData]);
-  const dgs1moChartData = useMemo(() => buildMacroChartData(dgs1moData, dgs1moTimeframe), [dgs1moData, dgs1moTimeframe]);
+  const dgs1moChartData = useMemo(() => buildMacroChartData(dgs1moData, dgs1moTimeframe, 'd'), [dgs1moData, dgs1moTimeframe]);
   const dgs1moChartDataWithPrice = useMemo(() => addBtcPriceToChartData(dgs1moChartData), [dgs1moChartData, addBtcPriceToChartData]);
-  const dgs3moChartData = useMemo(() => buildMacroChartData(dgs3moData, dgs3moTimeframe), [dgs3moData, dgs3moTimeframe]);
+  const dgs3moChartData = useMemo(() => buildMacroChartData(dgs3moData, dgs3moTimeframe, 'd'), [dgs3moData, dgs3moTimeframe]);
   const dgs3moChartDataWithPrice = useMemo(() => addBtcPriceToChartData(dgs3moChartData), [dgs3moChartData, addBtcPriceToChartData]);
-  const dgs6moChartData = useMemo(() => buildMacroChartData(dgs6moData, dgs6moTimeframe), [dgs6moData, dgs6moTimeframe]);
+  const dgs6moChartData = useMemo(() => buildMacroChartData(dgs6moData, dgs6moTimeframe, 'd'), [dgs6moData, dgs6moTimeframe]);
   const dgs6moChartDataWithPrice = useMemo(() => addBtcPriceToChartData(dgs6moChartData), [dgs6moChartData, addBtcPriceToChartData]);
-  const dgs1ChartData = useMemo(() => buildMacroChartData(dgs1Data, dgs1Timeframe), [dgs1Data, dgs1Timeframe]);
+  const dgs1ChartData = useMemo(() => buildMacroChartData(dgs1Data, dgs1Timeframe, 'd'), [dgs1Data, dgs1Timeframe]);
   const dgs1ChartDataWithPrice = useMemo(() => addBtcPriceToChartData(dgs1ChartData), [dgs1ChartData, addBtcPriceToChartData]);
-  const dgs5ChartData = useMemo(() => buildMacroChartData(dgs5Data, dgs5Timeframe), [dgs5Data, dgs5Timeframe]);
+  const dgs5ChartData = useMemo(() => buildMacroChartData(dgs5Data, dgs5Timeframe, 'd'), [dgs5Data, dgs5Timeframe]);
   const dgs5ChartDataWithPrice = useMemo(() => addBtcPriceToChartData(dgs5ChartData), [dgs5ChartData, addBtcPriceToChartData]);
-  const dgs20ChartData = useMemo(() => buildMacroChartData(dgs20Data, dgs20Timeframe), [dgs20Data, dgs20Timeframe]);
+  const dgs20ChartData = useMemo(() => buildMacroChartData(dgs20Data, dgs20Timeframe, 'd'), [dgs20Data, dgs20Timeframe]);
   const dgs20ChartDataWithPrice = useMemo(() => addBtcPriceToChartData(dgs20ChartData), [dgs20ChartData, addBtcPriceToChartData]);
-  const dgs30ChartData = useMemo(() => buildMacroChartData(dgs30Data, dgs30Timeframe), [dgs30Data, dgs30Timeframe]);
+  const dgs30ChartData = useMemo(() => buildMacroChartData(dgs30Data, dgs30Timeframe, 'd'), [dgs30Data, dgs30Timeframe]);
   const dgs30ChartDataWithPrice = useMemo(() => addBtcPriceToChartData(dgs30ChartData), [dgs30ChartData, addBtcPriceToChartData]);
-  const t10y2yChartData = useMemo(() => buildMacroChartData(t10y2yData, t10y2yTimeframe), [t10y2yData, t10y2yTimeframe]);
+  const t10y2yChartData = useMemo(() => buildMacroChartData(t10y2yData, t10y2yTimeframe, 'd'), [t10y2yData, t10y2yTimeframe]);
   const t10y2yChartDataWithPrice = useMemo(() => addBtcPriceToChartData(t10y2yChartData), [t10y2yChartData, addBtcPriceToChartData]);
-  const t10y3mChartData = useMemo(() => buildMacroChartData(t10y3mData, t10y3mTimeframe), [t10y3mData, t10y3mTimeframe]);
+  const t10y3mChartData = useMemo(() => buildMacroChartData(t10y3mData, t10y3mTimeframe, 'd'), [t10y3mData, t10y3mTimeframe]);
   const t10y3mChartDataWithPrice = useMemo(() => addBtcPriceToChartData(t10y3mChartData), [t10y3mChartData, addBtcPriceToChartData]);
-  const m1slChartData = useMemo(() => buildMacroChartData(m1slData, m1slTimeframe), [m1slData, m1slTimeframe]);
+  const m1slChartData = useMemo(() => buildMacroChartData(m1slData, m1slTimeframe, 'm'), [m1slData, m1slTimeframe]);
   const m1slChartDataWithPrice = useMemo(() => addBtcPriceToChartData(m1slChartData), [m1slChartData, addBtcPriceToChartData]);
-  const mabmm301ChartData = useMemo(() => buildMacroChartData(mabmm301Data, mabmm301Timeframe), [mabmm301Data, mabmm301Timeframe]);
+  const mabmm301ChartData = useMemo(() => buildMacroChartData(mabmm301Data, mabmm301Timeframe, 'm'), [mabmm301Data, mabmm301Timeframe]);
   const mabmm301ChartDataWithPrice = useMemo(() => addBtcPriceToChartData(mabmm301ChartData), [mabmm301ChartData, addBtcPriceToChartData]);
-  const unrateChartData = useMemo(() => buildMacroChartData(unrateData, unrateTimeframe), [unrateData, unrateTimeframe]);
+  const unrateChartData = useMemo(() => buildMacroChartData(unrateData, unrateTimeframe, 'm'), [unrateData, unrateTimeframe]);
   const unrateChartDataWithPrice = useMemo(() => addBtcPriceToChartData(unrateChartData), [unrateChartData, addBtcPriceToChartData]);
-  const payemsChartData = useMemo(() => buildMacroChartData(payemsData, payemsTimeframe), [payemsData, payemsTimeframe]);
+  const payemsChartData = useMemo(() => buildMacroChartData(payemsData, payemsTimeframe, 'm'), [payemsData, payemsTimeframe]);
   const payemsChartDataWithPrice = useMemo(() => addBtcPriceToChartData(payemsChartData), [payemsChartData, addBtcPriceToChartData]);
-  const icsaChartData = useMemo(() => buildMacroChartData(icsaData, icsaTimeframe), [icsaData, icsaTimeframe]);
+  const icsaChartData = useMemo(() => buildMacroChartData(icsaData, icsaTimeframe, 'w'), [icsaData, icsaTimeframe]);
   const icsaChartDataWithPrice = useMemo(() => addBtcPriceToChartData(icsaChartData), [icsaChartData, addBtcPriceToChartData]);
-  const jtsjolChartData = useMemo(() => buildMacroChartData(jtsjolData, jtsjolTimeframe), [jtsjolData, jtsjolTimeframe]);
+  const jtsjolChartData = useMemo(() => buildMacroChartData(jtsjolData, jtsjolTimeframe, 'm'), [jtsjolData, jtsjolTimeframe]);
   const jtsjolChartDataWithPrice = useMemo(() => addBtcPriceToChartData(jtsjolChartData), [jtsjolChartData, addBtcPriceToChartData]);
-  const emratioChartData = useMemo(() => buildMacroChartData(emratioData, emratioTimeframe), [emratioData, emratioTimeframe]);
+  const emratioChartData = useMemo(() => buildMacroChartData(emratioData, emratioTimeframe, 'm'), [emratioData, emratioTimeframe]);
   const emratioChartDataWithPrice = useMemo(() => addBtcPriceToChartData(emratioChartData), [emratioChartData, addBtcPriceToChartData]);
-  const gdpc1ChartData = useMemo(() => buildMacroChartData(gdpc1Data, gdpc1Timeframe), [gdpc1Data, gdpc1Timeframe]);
+  const gdpc1ChartData = useMemo(() => buildMacroChartData(gdpc1Data, gdpc1Timeframe, 'q'), [gdpc1Data, gdpc1Timeframe]);
   const gdpc1ChartDataWithPrice = useMemo(() => addBtcPriceToChartData(gdpc1ChartData), [gdpc1ChartData, addBtcPriceToChartData]);
-  const indproChartData = useMemo(() => buildMacroChartData(indproData, indproTimeframe), [indproData, indproTimeframe]);
+  const indproChartData = useMemo(() => buildMacroChartData(indproData, indproTimeframe, 'm'), [indproData, indproTimeframe]);
   const indproChartDataWithPrice = useMemo(() => addBtcPriceToChartData(indproChartData), [indproChartData, addBtcPriceToChartData]);
-  const houstChartData = useMemo(() => buildMacroChartData(houstData, houstTimeframe), [houstData, houstTimeframe]);
+  const houstChartData = useMemo(() => buildMacroChartData(houstData, houstTimeframe, 'm'), [houstData, houstTimeframe]);
   const houstChartDataWithPrice = useMemo(() => addBtcPriceToChartData(houstChartData), [houstChartData, addBtcPriceToChartData]);
-  const umcsentChartData = useMemo(() => buildMacroChartData(umcsentData, umcsentTimeframe), [umcsentData, umcsentTimeframe]);
+  const umcsentChartData = useMemo(() => buildMacroChartData(umcsentData, umcsentTimeframe, 'm'), [umcsentData, umcsentTimeframe]);
   const umcsentChartDataWithPrice = useMemo(() => addBtcPriceToChartData(umcsentChartData), [umcsentChartData, addBtcPriceToChartData]);
-  const rsxfsChartData = useMemo(() => buildMacroChartData(rsxfsData, rsxfsTimeframe), [rsxfsData, rsxfsTimeframe]);
+  const rsxfsChartData = useMemo(() => buildMacroChartData(rsxfsData, rsxfsTimeframe, 'm'), [rsxfsData, rsxfsTimeframe]);
   const rsxfsChartDataWithPrice = useMemo(() => addBtcPriceToChartData(rsxfsChartData), [rsxfsChartData, addBtcPriceToChartData]);
   const dcoilwticoChartData = useMemo(() => buildWtiChartData(dcoilwticoData, dcoilwticoTimeframe), [dcoilwticoData, dcoilwticoTimeframe]);
   const dcoilwticoChartDataWithPrice = useMemo(() => addBtcPriceToChartData(dcoilwticoChartData), [dcoilwticoChartData, addBtcPriceToChartData]);
-  const bamlh0a0hym2ChartData = useMemo(() => buildMacroChartData(bamlh0a0hym2Data, bamlh0a0hym2Timeframe), [bamlh0a0hym2Data, bamlh0a0hym2Timeframe]);
+  const bamlh0a0hym2ChartData = useMemo(() => buildMacroChartData(bamlh0a0hym2Data, bamlh0a0hym2Timeframe, 'd'), [bamlh0a0hym2Data, bamlh0a0hym2Timeframe]);
   const bamlh0a0hym2ChartDataWithPrice = useMemo(() => addBtcPriceToChartData(bamlh0a0hym2ChartData), [bamlh0a0hym2ChartData, addBtcPriceToChartData]);
-  const mortgage30usChartData = useMemo(() => buildMacroChartData(mortgage30usData, mortgage30usTimeframe), [mortgage30usData, mortgage30usTimeframe]);
+  const mortgage30usChartData = useMemo(() => buildMacroChartData(mortgage30usData, mortgage30usTimeframe, 'w'), [mortgage30usData, mortgage30usTimeframe]);
   const mortgage30usChartDataWithPrice = useMemo(() => addBtcPriceToChartData(mortgage30usChartData), [mortgage30usChartData, addBtcPriceToChartData]);
-  const bogmbaseChartData = useMemo(() => buildMacroChartData(bogmbaseData, bogmbaseTimeframe), [bogmbaseData, bogmbaseTimeframe]);
+  const bogmbaseChartData = useMemo(() => buildMacroChartData(bogmbaseData, bogmbaseTimeframe, 'm'), [bogmbaseData, bogmbaseTimeframe]);
   const bogmbaseChartDataWithPrice = useMemo(() => addBtcPriceToChartData(bogmbaseChartData), [bogmbaseChartData, addBtcPriceToChartData]);
-  const totalslChartData = useMemo(() => buildMacroChartData(totalslData, totalslTimeframe), [totalslData, totalslTimeframe]);
+  const totalslChartData = useMemo(() => buildMacroChartData(totalslData, totalslTimeframe, 'm'), [totalslData, totalslTimeframe]);
   const totalslChartDataWithPrice = useMemo(() => addBtcPriceToChartData(totalslChartData), [totalslChartData, addBtcPriceToChartData]);
 
   // STH MVRV zone function
