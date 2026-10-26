@@ -986,7 +986,7 @@ export function useSentimentData() {
         if (d.realizedProfit && d.realizedLoss && d.realizedProfit.length > 0) {
           const lossMap: Record<string, number> = {};
           d.realizedLoss.forEach((l) => {
-            if (l.time && typeof l.realized_loss === 'number') lossMap[l.time.slice(0, 10)] = l.realized_loss;
+            if (l.time && typeof l.realized_loss === 'number') lossMap[l.time.slice(0, 10)] = Math.abs(l.realized_loss);
           });
           const derivedNrpl: IndicatorPoint[] = [];
           d.realizedProfit.forEach((p) => {
@@ -1166,9 +1166,24 @@ export function useSentimentData() {
           const r = await fetchWithSSCache(withSentimentDataVersion(url), { headers: { 'Accept': 'application/json' } });
           if (r.ok) {
             const result: IndicatorApiResponse = await r.json();
-            if (result.success && result.data?.length > 0) return result.data;
+            // D1 /api/nrpl contains shallow corrupted mixed-unit records (< 1000 items). Reject and fall through to full 5,945 USD onchain dataset.
+            if (url === '/api/nrpl' && result.data && result.data.length < 1000) {
+              // fall through to onchain fallback
+            } else if (result.success && result.data?.length > 0) {
+              return result.data;
+            }
           }
         } catch { /* silent */ }
+        // On-chain static cache fallback (e.g. NRPL with full 5,945 USD records)
+        if (url === '/api/nrpl') {
+          try {
+            const r2 = await fetchWithSSCache(withSentimentDataVersion('/data/onchain/nrpl.json'), { headers: { 'Accept': 'application/json' } });
+            if (r2.ok) {
+              const res2: IndicatorApiResponse = await r2.json();
+              if (res2.success && res2.data?.length > 0) return res2.data;
+            }
+          } catch { /* silent */ }
+        }
         // Instant static fallback if API function returns 503 or is not populated in D1
         if (url.startsWith('/api/fred-')) {
           const staticUrl = url.replace('/api/fred-', '/data/fred/') + '.json';
@@ -1226,9 +1241,24 @@ export function useSentimentData() {
           const r = await fetchWithSSCache(withSentimentDataVersion(url), { headers: { 'Accept': 'application/json' } });
           if (r.ok) {
             const result: IndicatorApiResponse = await r.json();
-            if (result.success && result.data?.length > 0) return result.data;
+            // D1 /api/nrpl contains shallow corrupted mixed-unit records (< 1000 items). Reject and fall through to full 5,945 USD onchain dataset.
+            if (url === '/api/nrpl' && result.data && result.data.length < 1000) {
+              // fall through to onchain fallback
+            } else if (result.success && result.data?.length > 0) {
+              return result.data;
+            }
           }
         } catch { /* silent */ }
+        // On-chain static cache fallback (e.g. NRPL with full 5,945 USD records)
+        if (url === '/api/nrpl') {
+          try {
+            const r2 = await fetchWithSSCache(withSentimentDataVersion('/data/onchain/nrpl.json'), { headers: { 'Accept': 'application/json' } });
+            if (r2.ok) {
+              const res2: IndicatorApiResponse = await r2.json();
+              if (res2.success && res2.data?.length > 0) return res2.data;
+            }
+          } catch { /* silent */ }
+        }
         // Instant static fallback if API function returns 503 or is not populated in D1
         if (url.startsWith('/api/fred-')) {
           const staticUrl = url.replace('/api/fred-', '/data/fred/') + '.json';

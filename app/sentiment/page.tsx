@@ -64,7 +64,7 @@ const NVT_ZSCORE_REFERENCE_BANDS = [lowerBand(-1.0), upperBand(1.8)];
 const SSR_OSCILLATOR_REFERENCE_BANDS = [lowerBand(-0.5), upperBand(0.8)];
 const FUNDING_RATE_REFERENCE_BANDS = [lowerBand(0.0), upperBand(0.03)];
 const OPEN_INTEREST_REFERENCE_BANDS = [lowerBand(150000), upperBand(450000)];
-const NRPL_REFERENCE_BANDS = [lowerBand(0), upperBand(100000)];
+const NRPL_REFERENCE_BANDS = [lowerBand(0), upperBand(1_000_000_000)];
 const MPI_REFERENCE_BANDS = [lowerBand(0.2), upperBand(2.0)];
 const MINER_SELL_PRESSURE_REFERENCE_BANDS = [lowerBand(0.0010), upperBand(0.0070)];
 const UTXO_PROFIT_REFERENCE_BANDS = [lowerBand(0.55), upperBand(0.95)];
@@ -829,10 +829,10 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
 
   // KEY 3 zone helpers
   const getNrplZone = (v: number) => {
-    if (v < 0)      return { label: 'NET LOSS',     color: '#C2344D' };
-    if (v < 20000)  return { label: 'ACCUMULATION', color: '#7AAAD0' };
-    if (v < 100000) return { label: 'NET PROFIT',   color: '#10B981' };
-    return                 { label: 'PEAK PROFIT',  color: '#4CAF50' };
+    if (v < 0)           return { label: 'NET LOSS',     color: '#C2344D' };
+    if (v < 100_000_000) return { label: 'ACCUMULATION', color: '#7AAAD0' };
+    if (v < 500_000_000) return { label: 'NET PROFIT',   color: '#10B981' };
+    return                      { label: 'PEAK PROFIT',  color: '#4CAF50' };
   };
   const getRhodlZone = (v: number) => {
     if (v < 5000)   return { label: 'EXTREME LOW',  color: '#10B981' };
