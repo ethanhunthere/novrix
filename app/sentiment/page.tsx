@@ -66,7 +66,7 @@ const FUNDING_RATE_REFERENCE_BANDS = [lowerBand(0.0), upperBand(0.03)];
 const OPEN_INTEREST_REFERENCE_BANDS = [lowerBand(150000), upperBand(450000)];
 const NRPL_REFERENCE_BANDS = [lowerBand(0), upperBand(100000)];
 const MPI_REFERENCE_BANDS = [lowerBand(0.2), upperBand(2.0)];
-const MINER_SELL_PRESSURE_REFERENCE_BANDS = [lowerBand(0.10), upperBand(0.35)];
+const MINER_SELL_PRESSURE_REFERENCE_BANDS = [lowerBand(0.0010), upperBand(0.0070)];
 const UTXO_PROFIT_REFERENCE_BANDS = [lowerBand(0.55), upperBand(0.95)];
 const UTXO_LOSS_REFERENCE_BANDS = [{ from: 0.35, fill: SENTIMENT_BAND_GREEN, fillOpacity: SENTIMENT_BAND_OPACITY }, { to: 0.05, fill: SENTIMENT_BAND_RED, fillOpacity: SENTIMENT_BAND_OPACITY }];
 const VTPX_REFERENCE_BANDS = [lowerBand(1.0), upperBand(4.0)];
@@ -770,10 +770,10 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
     return              { label: 'MINER STOCKPILE', color: '#00E5FF' };
   };
   const getMinerSellPressureZone = (v: number) => {
-    if (v >= 0.35) return { label: 'HIGH SELL PRESSURE', color: '#C2344D' };
-    if (v >= 0.20) return { label: 'ELEVATED',           color: '#EF5350' };
-    if (v >= 0.10) return { label: 'MODERATE',           color: '#F59E0B' };
-    return              { label: 'LOW PRESSURE',      color: '#4CAF50' };
+    if (v >= 0.0080) return { label: 'HIGH SELL PRESSURE', color: '#C2344D' };
+    if (v >= 0.0050) return { label: 'ELEVATED',           color: '#EF5350' };
+    if (v >= 0.0020) return { label: 'MODERATE',           color: '#F59E0B' };
+    return               { label: 'LOW PRESSURE',       color: '#4CAF50' };
   };
   const getUtxoProfitZone = (v: number) => {
     if (v >= 0.97) return { label: 'TOP SIGNAL',   color: '#C2344D' };
@@ -1618,8 +1618,8 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       data: minerSellPressureChartData, dataWithPrice: minerSellPressureChartDataWithPrice, isLoading: isMinerSellPressureLoading,
       timeframe: minerSellPressureTimeframe, setTimeframe: setMinerSellPressureTimeframe, zoneFn: getMinerSellPressureZone,
       referenceBands: MINER_SELL_PRESSURE_REFERENCE_BANDS,
-      headerValue: (v: number) => v.toFixed(4), tooltipValue: (v: number) => v.toFixed(4),
-      yAxisTick: (v: number) => v.toFixed(3),
+      headerValue: (v: number) => `${(v * 100).toFixed(3)}%`, tooltipValue: (v: number) => `${(v * 100).toFixed(3)}%`,
+      yAxisTick: (v: number) => `${(v * 100).toFixed(2)}%`,
     },
     {
       panelId: 'utxo-profit', indicatorKey: 'utxoProfit', code: 'UTXOP', title: 'UTXO in Profit', desc: '% of UTXOs currently in profit', metricLabel: 'UTXO PROFIT',

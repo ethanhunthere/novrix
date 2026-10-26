@@ -3,7 +3,7 @@ import { requireSeedAdmin } from '../../lib/admin';
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const denied = requireSeedAdmin(request, env); if (denied) return denied;
   try {
-    const res = await fetch(`https://bitcoin-data.com/v1/mpi?startday=2013-01-01&token=${env.BGEOMETRICS_API_KEY_4 || ''}`, { headers: { Accept: 'application/json', 'User-Agent': 'NOVRIX Seed' }, signal: AbortSignal.timeout(30000) });
+    const res = await fetch(`https://bitcoin-data.com/v1/miner-position-index?startday=2013-01-01&token=${env.BGEOMETRICS_API_KEY_4 || ''}`, { headers: { Accept: 'application/json', 'User-Agent': 'NOVRIX Seed' }, signal: AbortSignal.timeout(30000) });
     if (!res.ok) throw new Error(`status ${res.status}`);
     const raw: Array<{ d: string; mpi: string | number }> = await res.json();
     let inserted = 0;

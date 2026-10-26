@@ -1291,6 +1291,24 @@ export function useSentimentData() {
             }
           } catch { /* silent */ }
         }
+        if (url === '/api/mpi') {
+          try {
+            const r2 = await fetchWithSSCache(withSentimentDataVersion('/data/onchain/mpi.json'), { headers: { 'Accept': 'application/json' } });
+            if (r2.ok) {
+              const result2: IndicatorApiResponse = await r2.json();
+              if (result2.success && result2.data?.length > 0) return result2.data;
+            }
+          } catch { /* silent */ }
+        }
+        if (url === '/api/miner-sell-pressure') {
+          try {
+            const r2 = await fetchWithSSCache(withSentimentDataVersion('/data/onchain/miner-sell-pressure.json'), { headers: { 'Accept': 'application/json' } });
+            if (r2.ok) {
+              const result2: IndicatorApiResponse = await r2.json();
+              if (result2.success && result2.data?.length > 0) return result2.data;
+            }
+          } catch { /* silent */ }
+        }
         return [];
       };
       const [
@@ -1339,7 +1357,7 @@ export function useSentimentData() {
       if (utxoLoss.length > 0)          setUtxoLossData(ensureFreshToToday(utxoLoss, 'value'));
       setIsUtxoLossLoading(false);
     };
-    const timer = setTimeout(fetchKey4Indicators, 3200);
+    const timer = setTimeout(fetchKey4Indicators, 200);
     return () => clearTimeout(timer);
   }, []);
 

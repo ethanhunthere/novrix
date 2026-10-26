@@ -298,16 +298,7 @@ const KEY4_ENDPOINTS: Record<string, Key2Endpoint> = {
     table: 'sth_position_change_data',
     fields: [{ apiField: 'sthNetPositionChange30dBtc', column: 'value', type: 'real' }],
   },
-  mpi: {
-    path: 'miner-position-index',
-    table: 'mpi_data',
-    fields: [{ apiField: 'mpi', column: 'value', type: 'real' }],
-  },
-  miner_sell_pressure: {
-    path: 'miner-sell-pressure',
-    table: 'miner_sell_pressure_data',
-    fields: [{ apiField: 'minerSellPressure', column: 'value', type: 'real' }],
-  },
+  // mpi & miner_sell_pressure moved to KEY5_ENDPOINTS — KEY4 has no valid token, KEY5 has spare slots
   utxo_profit: {
     path: 'utxos-in-profit-pct',
     table: 'utxo_profit_data',
@@ -431,6 +422,18 @@ const KEY5_ENDPOINTS: Record<string, Key2Endpoint> = {
     path: 'mvrv-zscore',
     table: 'mvrv_zscore_data',
     fields: [{ apiField: 'mvrvZscore', column: 'value', type: 'real' }],
+  },
+  // Moved from KEY4 because BGEOMETRICS_API_KEY_4 has no valid quota/token.
+  // KEY5 has spare slots under the daily limit.
+  mpi: {
+    path: 'miner-position-index',
+    table: 'mpi_data',
+    fields: [{ apiField: 'mpi', column: 'value', type: 'real' }],
+  },
+  miner_sell_pressure: {
+    path: 'miner-sell-pressure',
+    table: 'miner_sell_pressure_data',
+    fields: [{ apiField: 'minerSellPressure', column: 'value', type: 'real' }],
   },
 };
 
