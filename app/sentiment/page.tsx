@@ -2656,9 +2656,17 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
         className="flex-1 w-full max-w-[2000px] 3xl:max-w-[2800px] 4xl:max-w-[3800px] 5xl:max-w-[4800px] mx-auto px-4 lg:px-6 xl:px-8 2xl:px-10 3xl:px-16 4xl:px-20 5xl:px-28 pt-2 pb-6 sm:pb-8 flex flex-col"
       >
 
-        <div className="sentiment-comfort flex flex-row items-start gap-6 w-full">
-          {/* ─── Indicators Registry Sidebar (Left side: short in width, bigger in height) ─── */}
-          <aside className="w-[204px] min-w-[204px] max-w-[204px] lg:w-[216px] lg:min-w-[216px] lg:max-w-[216px] 3xl:w-[260px] 3xl:min-w-[260px] 3xl:max-w-[260px] 4xl:w-[300px] 4xl:min-w-[300px] 4xl:max-w-[300px] 5xl:w-[340px] 5xl:min-w-[340px] 5xl:max-w-[340px] shrink-0 sticky top-3">
+        <div
+          className={`sentiment-comfort flex flex-row ${
+            selectedIndicator !== null ? 'items-stretch' : 'items-start'
+          } gap-6 w-full`}
+        >
+          {/* ─── Indicators Registry Sidebar ─── */}
+          <aside
+            className={`w-[204px] min-w-[204px] max-w-[204px] lg:w-[216px] lg:min-w-[216px] lg:max-w-[216px] 3xl:w-[260px] 3xl:min-w-[260px] 3xl:max-w-[260px] 4xl:w-[300px] 4xl:min-w-[300px] 4xl:max-w-[300px] 5xl:w-[340px] 5xl:min-w-[340px] 5xl:max-w-[340px] shrink-0 ${
+              selectedIndicator !== null ? 'self-stretch flex flex-col' : 'sticky top-3'
+            }`}
+          >
             <SentimentSidebar
               registryCats={registryCats}
               registrySearch={registrySearch}
