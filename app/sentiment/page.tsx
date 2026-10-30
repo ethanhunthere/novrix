@@ -14,6 +14,7 @@ import {
   getXAxisTicks, formatXAxisTick, DateAxisTick, downsample,
   PANEL_CODES, PanelMaximizeWrapper,
   getHalvingIndices,
+  Y_AXIS_LEFT_PROPS, Y_AXIS_RIGHT_PROPS, formatBtcAxisTick,
 } from '@/components/sentiment/SentimentPanelUtils';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceArea, ReferenceLine } from 'recharts';
 import { motion } from 'framer-motion';
@@ -2709,10 +2710,8 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                   <ChartSkeleton height={ch('sentiment-oscillator')} />
                 ) : (
                   <div className={`min-w-0 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}>
-                      {isHistoricalLoading ? (
-                        <div className="flex items-center justify-center h-64">
-                          <span className="text-[9px] text-[#71717A] tracking-[0.2em]" style={{ fontFamily: 'var(--ff-mono)' }}>LOADING</span>
-                        </div>
+                      {isHistoricalLoading || chartData.length === 0 ? (
+                        <ChartSkeleton height={ch('sentiment-oscillator')} />
                       ) : (
                         <>
                           {(() => {
@@ -2796,22 +2795,17 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                                       height={24}
                                     />
                                     <YAxis
+                                      {...Y_AXIS_LEFT_PROPS}
                                       domain={[0, 100]}
-                                      stroke="none"
-                                      tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
-                                      width={38}
                                       ticks={[0, 25, 50, 75, 100]}
                                     />
                                     {isBtcOn && (
                                       <YAxis
+                                        {...Y_AXIS_RIGHT_PROPS}
                                         yAxisId="btcPrice"
-                                        orientation="right"
                                         scale="log"
                                         domain={['auto', 'auto']}
-                                        stroke="none"
-                                        tick={{ fill: '#8C857C', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
-                                        tickFormatter={(v: number) => (v >= 1e3 ? `$${(v / 1e3).toFixed(0)}K` : `$${v}`)}
-                                        width={62}
+                                        tickFormatter={formatBtcAxisTick}
                                       />
                                     )}
                                     <Tooltip
@@ -3053,13 +3047,11 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                           interval={0}
                           height={24}
                         />
-                        <YAxis domain={['auto', 'auto']} stroke="none"
-                          tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
-                          tickFormatter={(v) => `${v.toFixed(0)}%`} width={56} />
+                        <YAxis {...Y_AXIS_LEFT_PROPS} domain={['auto', 'auto']}
+                          tickFormatter={(v) => `${v.toFixed(0)}%`} />
                         {showBtcPrice['dominance'] && (
-                          <YAxis yAxisId="btcPrice" orientation="right" scale="log" domain={['auto', 'auto']} stroke="none"
-                            tick={{ fill: '#8C857C', fontSize: 10, fontFamily: 'var(--ff-mono)' }}
-                            tickFormatter={(v) => v >= 1e3 ? `$${(v/1e3).toFixed(0)}K` : `$${v}`} width={46} />
+                          <YAxis {...Y_AXIS_RIGHT_PROPS} yAxisId="btcPrice" scale="log" domain={['auto', 'auto']}
+                            tickFormatter={formatBtcAxisTick} />
                         )}
                         <Tooltip cursor={{ stroke: 'rgba(245,241,234,0.65)', strokeWidth: 2 }} animationDuration={0} isAnimationActive={false}
                           content={(props) => (
@@ -3301,7 +3293,9 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
               {(() => {
                 const last = hashribbonsChartData.length > 0 ? hashribbonsChartData[hashribbonsChartData.length - 1] : null;
                 const zone = last?.signal ? getHashribbonsSignalZone(last.signal) : null;
-                const val = last?.sma30 != null ? `${(last.sma30 >= 1e6 ? `${(last.sma30/1e6).toFixed(1)}E` : `${(last.sma30/1e3).toFixed(0)}P`)} EH` : null;
+                const val = last?.sma30 != null
+                  ? (last.sma30 >= 1e6 ? `${(last.sma30 / 1e6).toFixed(1)} EH/s` : last.sma30 >= 1e3 ? `${(last.sma30 / 1e3).toFixed(1)} PH/s` : `${last.sma30.toFixed(0)} TH/s`)
+                  : null;
                 const lastDate = last?.dateFormatted ?? null;
                 const zoneColor = zone?.color ?? '#F7931A';
                 return (
@@ -3322,7 +3316,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 className={`px-4 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
                 style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
               >
-                {(!visiblePanels.has('hashribbons') || isHashribbonsLoading) ? <ChartSkeleton height={ch('hashribbons')} /> : (
+                {(!visiblePanels.has('hashribbons') || isHashribbonsLoading || hashribbonsChartData.length === 0) ? <ChartSkeleton height={ch('hashribbons')} /> : (
                   <div className={selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : undefined}>
                     <div className="flex flex-row items-center justify-between gap-3 mb-2.5 flex-wrap shrink-0">
                       <LineToggle items={[
@@ -3370,12 +3364,11 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                           interval={0}
                           height={24}
                         />
-                        <YAxis stroke="none" tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
-                          tickFormatter={(v) => v >= 1e6 ? `${(v/1e6).toFixed(0)}E` : v >= 1e3 ? `${(v/1e3).toFixed(0)}P` : `${v.toFixed(0)}T`} width={56} />
+                        <YAxis {...Y_AXIS_LEFT_PROPS}
+                          tickFormatter={(v) => v >= 1e6 ? `${(v/1e6).toFixed(0)}E` : v >= 1e3 ? `${(v/1e3).toFixed(0)}P` : `${v.toFixed(0)}T`} />
                         {showBtcPrice['hashribbons'] && (
-                          <YAxis yAxisId="btcPrice" orientation="right" scale="log" domain={['auto', 'auto']} stroke="none"
-                            tick={{ fill: '#8C857C', fontSize: 10, fontFamily: 'var(--ff-mono)' }}
-                            tickFormatter={(v) => v >= 1e3 ? `$${(v/1e3).toFixed(0)}K` : `$${v}`} width={46} />
+                          <YAxis {...Y_AXIS_RIGHT_PROPS} yAxisId="btcPrice" scale="log" domain={['auto', 'auto']}
+                            tickFormatter={formatBtcAxisTick} />
                         )}
                         <Tooltip cursor={{ stroke: 'rgba(245,241,234,0.65)', strokeWidth: 2 }} animationDuration={0} isAnimationActive={false}
                           content={(props) => (
@@ -3392,8 +3385,8 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                               return rows;
                             }} />
                           )} />
-{showIndicator['hashribbonsSma30'] && <Area type="monotone" dataKey="sma30" stroke={zoneColor} strokeWidth={3} fill="url(#hribSma30Fill)" animationDuration={0} isAnimationActive={false} dot={false} />}
-{showIndicator['hashribbonsSma60'] && <Area type="monotone" dataKey="sma60" stroke={zoneColor} strokeWidth={3} fill="url(#hribSma60Fill)" animationDuration={0} isAnimationActive={false} dot={false} />}
+{showIndicator['hashribbonsSma30'] && <Area type="monotone" dataKey="sma30" stroke="#F7931A" strokeWidth={3} fill="url(#hribSma30Fill)" animationDuration={0} isAnimationActive={false} dot={false} />}
+{showIndicator['hashribbonsSma60'] && <Area type="monotone" dataKey="sma60" stroke="#60A5FA" strokeWidth={3} fill="url(#hribSma60Fill)" animationDuration={0} isAnimationActive={false} dot={false} />}
                         {showBtcPrice['hashribbons'] && <Area type="monotone" dataKey="btcPrice" yAxisId="btcPrice" stroke="#FFFFFF" strokeWidth={1.5} fill="none" animationDuration={0} isAnimationActive={false} dot={false} />}
                         {(hashribbonsTimeframe === '1460' || hashribbonsTimeframe === '999999') && getHalvingIndices(hashribbonsChartDataWithPrice).map((h) => (
                           <ReferenceLine key={h.index} x={h.index} stroke="rgba(247,147,26,0.2)" strokeDasharray="2 4" label={{ value: `${h.year}↑`, position: 'top', fill: 'rgba(247,147,26,0.4)', fontSize: 8, fontFamily: 'var(--ff-mono)' }} />
@@ -3658,7 +3651,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                         style={{ outline: 'none' }}
                         margin={{
                           top: 6,
-                          right: showBtcPrice['weekMa200'] ? 6 : 14,
+                          right: 14,
                           bottom: 0,
                           left: 10,
                         }}
@@ -3685,8 +3678,8 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                           interval={0}
                           height={24}
                         />
-                        <YAxis domain={['auto', 'auto']} stroke="none" tick={{ fill: '#A9A29A', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
-                          tickFormatter={(v) => `$${v >= 1000 ? `${(v/1000).toFixed(0)}K` : v.toFixed(0)}`} width={56} />
+                        <YAxis {...Y_AXIS_LEFT_PROPS} domain={['auto', 'auto']}
+                          tickFormatter={(v) => `$${v >= 1000 ? `${(v/1000).toFixed(0)}K` : v.toFixed(0)}`} />
                         <Tooltip cursor={{ stroke: 'rgba(245,241,234,0.65)', strokeWidth: 2 }} animationDuration={0} isAnimationActive={false}
                           content={(props) => (
                             <PrecisionTooltip {...props} accentColor="#00E5FF" getRows={(pt, pl) => {

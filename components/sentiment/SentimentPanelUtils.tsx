@@ -7,6 +7,7 @@
  */
 
 import { useState, useEffect, forwardRef, useRef } from 'react';
+import type { YAxisTickContentProps } from 'recharts';
 import { createPortal } from 'react-dom';
 import { getIndicatorMetadata, type IndicatorMetadata } from '@/lib/sentiment/indicatorMetadata';
 
@@ -500,7 +501,7 @@ export const getXAxisTicks = (data: ChartDateItem[], tf: string): number[] => {
     }
   } else if (spanDays <= 220 || tf === '180') {
     // 6M: 1st of month, ensuring first tick is at least 15 days from start
-    let cur = new Date(first.getFullYear(), first.getMonth() + 1, 1);
+    const cur = new Date(first.getFullYear(), first.getMonth() + 1, 1);
     if (cur.getTime() - first.getTime() < 15 * 86_400_000) {
       cur.setMonth(cur.getMonth() + 1);
     }
@@ -510,7 +511,7 @@ export const getXAxisTicks = (data: ChartDateItem[], tf: string): number[] => {
     }
   } else if (spanDays <= 500 || tf === '365') {
     // 1Y: every 2 months, ensuring first tick is at least 25 days from start
-    let cur = new Date(first.getFullYear(), first.getMonth() + 1, 1);
+    const cur = new Date(first.getFullYear(), first.getMonth() + 1, 1);
     if (cur.getTime() - first.getTime() < 25 * 86_400_000) {
       cur.setMonth(cur.getMonth() + 1);
     }
@@ -700,7 +701,7 @@ export const DateAxisTick = (props: DateAxisTickProps) => {
 
   // Boundary protection:
   // Ensure the left-most date tick NEVER enters into the left Y-axis value column territory.
-  const isFirst = index === 0 || x < 85;
+  const isFirst = index === 0 || x < Y_AXIS_WIDTH + 18;
   const isLast = visibleTicksCount > 1 ? index === visibleTicksCount - 1 : false;
   const textAnchor = isFirst ? 'start' : isLast ? 'end' : 'middle';
   const dx = isFirst ? 10 : isLast ? -8 : 0;
@@ -720,6 +721,88 @@ export const DateAxisTick = (props: DateAxisTickProps) => {
     </text>
   );
 };
+
+export const Y_AXIS_WIDTH = 64;
+export const Y_AXIS_RIGHT_WIDTH = 56;
+const Y_AXIS_LABEL_INSET = 2;
+
+function axisCoord(value: number | string | undefined): number {
+  const n = typeof value === 'number' ? value : Number(value);
+  return Number.isFinite(n) ? n : 0;
+}
+
+function formatAxisTickLabel(
+  payload: YAxisTickContentProps['payload'] | undefined,
+  tickFormatter: YAxisTickContentProps['tickFormatter'],
+  index: number,
+): string {
+  if (!payload || payload.value == null || payload.value === '') return '';
+  const numeric = typeof payload.value === 'number' ? payload.value : Number(payload.value);
+  if (tickFormatter && Number.isFinite(numeric)) return String(tickFormatter(numeric, index));
+  return String(payload.value);
+}
+
+export function LeftValueTick(props: YAxisTickContentProps) {
+  const label = formatAxisTickLabel(props.payload, props.tickFormatter, props.index);
+  if (!label) return null;
+  return (
+    <text
+      x={axisCoord(props.x) - Y_AXIS_WIDTH + Y_AXIS_LABEL_INSET}
+      y={axisCoord(props.y)}
+      dy="0.35em"
+      textAnchor="start"
+      fill="var(--color-steel)"
+      fontSize={11}
+      fontFamily="var(--ff-mono)"
+    >
+      {label}
+    </text>
+  );
+}
+
+export function RightValueTick(props: YAxisTickContentProps) {
+  const label = formatAxisTickLabel(props.payload, props.tickFormatter, props.index);
+  if (!label) return null;
+  return (
+    <text
+      x={axisCoord(props.x) + Y_AXIS_LABEL_INSET}
+      y={axisCoord(props.y)}
+      dy="0.35em"
+      textAnchor="start"
+      fill="var(--text-tertiary)"
+      fontSize={11}
+      fontFamily="var(--ff-mono)"
+    >
+      {label}
+    </text>
+  );
+}
+
+export const Y_AXIS_LEFT_PROPS = {
+  orientation: 'left' as const,
+  width: Y_AXIS_WIDTH,
+  tickSize: 0,
+  tickMargin: 0,
+  tickLine: false,
+  axisLine: false,
+  stroke: 'none',
+  tick: LeftValueTick,
+};
+
+export const Y_AXIS_RIGHT_PROPS = {
+  orientation: 'right' as const,
+  width: Y_AXIS_RIGHT_WIDTH,
+  tickSize: 0,
+  tickMargin: 0,
+  tickLine: false,
+  axisLine: false,
+  stroke: 'none',
+  tick: RightValueTick,
+};
+
+export function formatBtcAxisTick(v: number): string {
+  return v >= 1e3 ? `$${(v / 1e3).toFixed(0)}K` : `$${v}`;
+}
 
 export const getHalvingIndices = (data: Array<{ dateObj?: Date; rawDate?: string }>) => {
   const halvings = [

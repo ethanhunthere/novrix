@@ -23,6 +23,9 @@ import {
   DateAxisTick,
   getHalvingIndices,
   FRED_TF_OPTS,
+  Y_AXIS_LEFT_PROPS,
+  Y_AXIS_RIGHT_PROPS,
+  formatBtcAxisTick,
 } from '@/components/sentiment/SentimentPanelUtils';
 
 type UpdateFrequency = 'bg' | 'd' | 'w' | 'm' | 'q';
@@ -379,16 +382,18 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
                     height={26}
                   />
                   <YAxis
+                    {...Y_AXIS_LEFT_PROPS}
                     domain={['auto', 'auto']}
-                    stroke="none"
-                    tick={{ fill: '#A9A29A', fontSize: 12, fontFamily: 'var(--ff-mono)' }}
                     tickFormatter={panel.yAxisTick}
-                    width={70}
                   />
                   {showBtc && showBtcPrice[panel.indicatorKey] && !panel.btcSameAxis && (
-                    <YAxis yAxisId="btcPrice" orientation="right" scale="log" domain={['auto', 'auto']} stroke="none"
-                      tick={{ fill: '#8C857C', fontSize: 11, fontFamily: 'var(--ff-mono)' }}
-                      tickFormatter={(v: number) => v >= 1e3 ? `$${(v/1e3).toFixed(0)}K` : `$${v}`} width={62} />
+                    <YAxis
+                      {...Y_AXIS_RIGHT_PROPS}
+                      yAxisId="btcPrice"
+                      scale="log"
+                      domain={['auto', 'auto']}
+                      tickFormatter={formatBtcAxisTick}
+                    />
                   )}
                   <Tooltip cursor={{ stroke: 'rgba(245,241,234,0.65)', strokeWidth: 2 }} animationDuration={0} isAnimationActive={false}
                     content={(props: Record<string, unknown>) => (
