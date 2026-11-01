@@ -131,6 +131,29 @@ export default function RootLayout({
                   description: siteDescription,
                   publisher: { "@id": `${siteUrl}/#organization` },
                   inLanguage: "en-US",
+                  hasPart: [
+                    {
+                      "@type": "WebPage",
+                      "@id": `${siteUrl}/#home`,
+                      url: siteUrl,
+                      name: "NOVRIX Terminal",
+                      description: "System overview, module router, and workspace navigation.",
+                    },
+                    {
+                      "@type": "WebPage",
+                      "@id": `${siteUrl}/sentiment#page`,
+                      url: `${siteUrl}/sentiment`,
+                      name: "Sentiment Intelligence",
+                      description: "Interactive 94-indicator workspace covering on-chain valuation, cycle distribution zones, and Federal Reserve macro liquidity.",
+                    },
+                    {
+                      "@type": "WebPage",
+                      "@id": `${siteUrl}/documentation#page`,
+                      url: `${siteUrl}/documentation`,
+                      name: "Documentation & System Reference",
+                      description: "Complete mathematical formulations, methodology, update schedules, and operational architecture.",
+                    },
+                  ],
                 },
                 {
                   "@type": "WebApplication",

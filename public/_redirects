@@ -13,3 +13,6 @@
 /privacy/         /documentation#policy     301
 /terms            /documentation#policy     301
 /terms/           /documentation#policy     301
+/insights         /sentiment                301
+/insights/        /sentiment                301
+/insights/*       /sentiment                301

@@ -38,7 +38,6 @@ NOVRIX operates with zero accounts, zero subscriptions, zero paywalls, zero Goog
 [Novrix Edge Presentation Surface]
   ├── / (Homepage router & module summaries)
   ├── /sentiment (Interactive 94-indicator workspace with 1Y and ALL cycle views)
-  ├── /insights (Long-form market research & structural analysis)
   └── /documentation (Unified technical reference, methodology & operations)
 ```
 
@@ -162,7 +161,6 @@ When interpreting on-chain indicators, researchers must account for intrinsic le
 
 - System Homepage: `https://novrix.io/`
 - Sentiment Intelligence Workspace: `https://novrix.io/sentiment`
-- Editorial & Market Research: `https://novrix.io/insights`
 - Technical Documentation & Reference: `https://novrix.io/documentation`
 - Analytical Methodology Section: `https://novrix.io/documentation#methodology`
 - Platform Operations & Node Support: `https://novrix.io/documentation#operations`

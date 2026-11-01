@@ -144,7 +144,7 @@ export default function DesktopGate({
         </Link>
 
         <p style={{ fontFamily: SANS, fontSize: '13px', lineHeight: 1.6, color: 'var(--text-tertiary)', textAlign: 'center', margin: '16px 0 0' }}>
-          <Link href="/insights" className="gate-return" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Read Insights instead</Link>
+          <Link href="/documentation" className="gate-return" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Read Documentation instead</Link>
         </p>
       </div>
 

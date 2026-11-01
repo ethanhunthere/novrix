@@ -80,7 +80,7 @@ const RELEASES = [
     date: 'October 2026',
     changes: [
       'Architectural streamlining: completely removed auxiliary bloated routes including metrilytics, tracking, standalone methodology, about, changelog, privacy, terms, and donations.',
-      'Core focus: consolidated the entire platform into four dedicated surfaces: Home, Sentiment, Insights, and Documentation.',
+      'Core focus: consolidated the entire platform into three dedicated surfaces: Home, Sentiment, and Documentation.',
       'Unified system reference: merged platform architecture, analytical methodology, update schedules, privacy policies, and node infrastructure support into one comprehensive reference.',
       'Intel Registry upgrade: expanded the on chain analysis engine to 94 active Bitcoin valuation, profitability, holder behavior, miner security, and macroeconomic liquidity series.',
       'Edge routing reliability: mapped previous legacy URLs to permanent 301 redirects with instant browser and search crawler resolution.',
@@ -209,7 +209,7 @@ export default function DocumentationPage() {
       <DocSection id="overview" title="Platform overview">
         <Prose>
           <P>NOVRIX is an autonomous on chain and macroeconomic intelligence terminal. It reads blockchain ledger behavior, market valuation, and macroeconomic conditions into a single unified analytical surface.</P>
-          <P>With the v2 release, the platform was intentionally streamlined to eliminate unnecessary auxiliary surfaces such as metrilytics and extraneous tracking pages. The system is concentrated exclusively into four core spaces: Home, Sentiment, Insights, and Documentation.</P>
+          <P>With the platform evolution, NOVRIX was intentionally streamlined to eliminate unnecessary auxiliary surfaces. The system is concentrated exclusively into three core spaces: Home, Sentiment, and Documentation.</P>
           <P>The entire platform is accessible directly without an account, paywall, email registration, or tracking cookies.</P>
         </Prose>
       </DocSection>
@@ -306,7 +306,6 @@ export default function DocumentationPage() {
         items={[
           { label: '← Return Home', href: '/' },
           { label: 'Open Sentiment Workspace', href: '/sentiment' },
-          { label: 'Read Editorial Insights', href: '/insights' },
         ]}
       />
     </EditorialPage>

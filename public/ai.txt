@@ -20,7 +20,7 @@ The following autonomous crawlers are permitted full read access to all public e
 
 ## Access Policy
 
-- **Allowed paths**: All public endpoints (`/`, `/sentiment`, `/insights`, `/documentation`).
+- **Allowed paths**: All public endpoints (`/`, `/sentiment`, `/documentation`).
 - **Disallowed paths**: `/admin/` and `/api/auth/` (private editorial administration and authentication).
 - **Rate limits**: Crawlers should respect HTTP 429 response headers and use reasonable backoff. No hard crawl-delay is enforced.
 

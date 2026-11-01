@@ -9,7 +9,6 @@ const HAIRLINE = 'rgba(250, 247, 242, 0.12)';
 const NAV_LINKS = [
   { label: 'Home', href: '/' },
   { label: 'Sentiment', href: '/sentiment' },
-  { label: 'Insights', href: '/insights' },
   { label: 'Documentation', href: '/documentation' },
 ];
 

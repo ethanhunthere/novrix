@@ -49,11 +49,11 @@ const MODULES = [
     lede: 'Interactive charts for NUPL, MVRV, miner reserves, futures leverage, and global central bank liquidity.',
   },
   {
-    category: 'EDITORIAL RESEARCH',
-    label: 'Read publications',
-    href: '/insights',
-    title: 'Research and perspectives',
-    lede: 'Long-form analysis covering capital rotation, exchange reserves, and structural tendencies observed across Bitcoin history.',
+    category: 'DOCUMENTATION & REFERENCE',
+    label: 'Explore documentation',
+    href: '/documentation',
+    title: 'Methodology and system reference',
+    lede: 'Mathematical formulations, calculation methodology, operational principles, and update cadences for all 94 on-chain and macro indicators.',
   },
 ];
 
@@ -111,8 +111,8 @@ export default function Home() {
                 Open workspace
                 <Arrow />
               </Link>
-              <Link href="/insights" className="home-quiet-link">
-                Read research
+              <Link href="/documentation" className="home-quiet-link">
+                Explore documentation
                 <Arrow />
               </Link>
             </div>

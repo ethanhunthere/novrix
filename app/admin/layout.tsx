@@ -3,7 +3,7 @@ import { defaultOgImages, defaultTwitterImages } from '@/lib/og-config';
 
 export const metadata: Metadata = {
   title: 'NOVRIX - Admin',
-  description: 'NOVRIX editorial administration. Manage articles, insights, and platform content.',
+  description: 'NOVRIX system administration and workspace configuration.',
   robots: {
     index: false,
     follow: false,
@@ -17,12 +17,12 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'NOVRIX - Admin',
-    description: 'NOVRIX editorial administration. Manage articles, insights, and platform content.',
+    description: 'NOVRIX system administration and workspace configuration.',
     images: defaultOgImages,
   },
   twitter: {
     title: 'NOVRIX - Admin',
-    description: 'NOVRIX editorial administration. Manage articles, insights, and platform content.',
+    description: 'NOVRIX system administration and workspace configuration.',
     images: defaultTwitterImages,
   },
 };

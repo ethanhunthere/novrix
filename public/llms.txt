@@ -22,7 +22,6 @@ The platform is designed for analysts, researchers, and long-term allocators who
 |---|---|---|
 | `/` | Novrix Terminal | System introduction, module router, and workspace navigation. |
 | `/sentiment` | Sentiment Intelligence | Live multi-panel workspace featuring 94 on-chain, price model, profitability, and macro indicators with 1Y and ALL timeframes. |
-| `/insights` | Editorial & Research | In-depth essays and research notes analyzing structural market regimes, liquidity rotations, and cycle dynamics. |
 | `/documentation` | Reference & System Architecture | Unified technical documentation covering analytical methodology, primary data providers, update cadences, operational principles, and privacy disclosures. |
 
 ## Indicator Categories (94 Total)
