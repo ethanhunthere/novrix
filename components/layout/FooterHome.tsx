@@ -21,11 +21,6 @@ export default function FooterHome() {
         paddingBottom: 'env(safe-area-inset-bottom, 0px)',
       }}
     >
-      <style>{`
-        .footer-link { transition: color 160ms ease; }
-        .footer-link:hover { color: ${INK}; }
-      `}</style>
-
       <div style={{ padding: 'clamp(12px, 1.5vh, 18px) var(--container-pad)' }}>
         <div
           className="mx-auto w-full max-w-[1240px] 2xl:max-w-[1440px] 3xl:max-w-[1800px] 4xl:max-w-[2400px] 5xl:max-w-[3200px] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-6 min-w-0"
@@ -48,8 +43,8 @@ export default function FooterHome() {
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="footer-link"
-                    style={{ fontFamily: SANS, fontSize: '12.5px', color: MUTED, textDecoration: 'none' }}
+                    className="text-[#C5BEB3] hover:text-[#FAF7F2] transition-colors duration-160 text-[12.5px]"
+                    style={{ fontFamily: SANS, textDecoration: 'none' }}
                   >
                     {link.label}
                   </Link>

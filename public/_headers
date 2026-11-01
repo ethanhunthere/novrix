@@ -69,8 +69,17 @@
 /og-image.png
   Cache-Control: public, max-age=3600, stale-while-revalidate=86400
 
-# Favicon — cache 7 days, serve stale 30 days.
+# Favicon & brand icons — cache 7 days, serve stale 30 days.
 /favicon.ico
+  Cache-Control: public, max-age=604800, stale-while-revalidate=2592000
+
+/logo.png
+  Cache-Control: public, max-age=604800, stale-while-revalidate=2592000
+
+/apple-touch-icon.png
+  Cache-Control: public, max-age=604800, stale-while-revalidate=2592000
+
+/android-chrome-*.png
   Cache-Control: public, max-age=604800, stale-while-revalidate=2592000
 
 # Search-engine verification files — never change.

@@ -103,6 +103,8 @@ export default function TerminalCycleMonitor() {
 
       {/* Tab Switcher: Plain-English Questions */}
       <div
+        role="tablist"
+        aria-label="Bitcoin cycle indicators"
         className="grid grid-cols-3 gap-1 px-2.5 sm:px-3 py-1.5"
         style={{
           borderBottom: `1px solid ${HAIRLINE}`,
@@ -114,6 +116,8 @@ export default function TerminalCycleMonitor() {
           return (
             <button
               key={tab.id}
+              role="tab"
+              aria-selected={isActive}
               type="button"
               onClick={() => setActiveTabId(tab.id)}
               className="px-2 py-1 rounded-[2px] transition-colors duration-150 text-center truncate"
