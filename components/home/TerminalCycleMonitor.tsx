@@ -257,9 +257,9 @@ export default function TerminalCycleMonitor() {
         </div>
       </div>
 
-      {/* 3 Plain Vitals */}
+      {/* Onchain Vitals */}
       <div
-        className="grid grid-cols-3 divide-x px-2 py-2"
+        className="grid grid-cols-2 divide-x px-2 py-2"
         style={{
           borderTop: `1px solid ${HAIRLINE}`,
           borderBottom: `1px solid ${HAIRLINE}`,
@@ -282,15 +282,6 @@ export default function TerminalCycleMonitor() {
           </div>
           <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '13px', fontWeight: 600, color: INK, marginTop: '2px' }}>
             Belief
-          </div>
-        </div>
-
-        <div className="px-2 sm:px-3">
-          <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '8.5px', color: MUTED }}>
-            CYCLE CLOCK
-          </div>
-          <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '13px', fontWeight: 600, color: INK, marginTop: '2px' }}>
-            Year 2 of 4
           </div>
         </div>
       </div>
