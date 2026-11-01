@@ -38,4 +38,5 @@ package-lock.json
 # Agent/playbook working dirs
 .playbook/
 .agents/
+.swarm/
 skills-lock.json

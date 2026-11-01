@@ -340,9 +340,9 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
                     style={{ outline: 'none' }}
                   margin={{
                     top: 6,
-                    right: showBtc && showBtcPrice[panel.indicatorKey] && !panel.btcSameAxis ? 6 : 14,
+                    right: showBtc && showBtcPrice[panel.indicatorKey] && !panel.btcSameAxis ? 8 : 14,
                     bottom: 0,
-                    left: 10,
+                    left: 8,
                   }}
                 >
                   <defs>

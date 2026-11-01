@@ -722,9 +722,9 @@ export const DateAxisTick = (props: DateAxisTickProps) => {
   );
 };
 
-export const Y_AXIS_WIDTH = 64;
+export const Y_AXIS_CHART_PADDING = 8;
+export const Y_AXIS_WIDTH = 58;
 export const Y_AXIS_RIGHT_WIDTH = 56;
-const Y_AXIS_LABEL_INSET = 2;
 
 function axisCoord(value: number | string | undefined): number {
   const n = typeof value === 'number' ? value : Number(value);
@@ -747,10 +747,10 @@ export function LeftValueTick(props: YAxisTickContentProps) {
   if (!label) return null;
   return (
     <text
-      x={axisCoord(props.x) - Y_AXIS_WIDTH + Y_AXIS_LABEL_INSET}
+      x={axisCoord(props.x) - Y_AXIS_CHART_PADDING}
       y={axisCoord(props.y)}
       dy="0.35em"
-      textAnchor="start"
+      textAnchor="end"
       fill="var(--color-steel)"
       fontSize={11}
       fontFamily="var(--ff-mono)"
@@ -765,7 +765,7 @@ export function RightValueTick(props: YAxisTickContentProps) {
   if (!label) return null;
   return (
     <text
-      x={axisCoord(props.x) + Y_AXIS_LABEL_INSET}
+      x={axisCoord(props.x) + Y_AXIS_CHART_PADDING}
       y={axisCoord(props.y)}
       dy="0.35em"
       textAnchor="start"

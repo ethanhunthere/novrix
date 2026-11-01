@@ -2751,9 +2751,9 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                                     data={fngDataToRender}
                                     margin={{
                                       top: 6,
-                                      right: isBtcOn ? 6 : 14,
+                                      right: isBtcOn ? 8 : 14,
                                       bottom: 0,
-                                      left: 10,
+                                      left: 8,
                                     }}
                                     style={{ outline: 'none' }}
                                   >
@@ -3016,9 +3016,9 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                         style={{ outline: 'none' }}
                         margin={{
                           top: 6,
-                          right: showBtcPrice['dominance'] ? 6 : 14,
+                          right: showBtcPrice['dominance'] ? 8 : 14,
                           bottom: 0,
-                          left: 10,
+                          left: 8,
                         }}
                       >
                         <defs>
@@ -3333,9 +3333,9 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                         style={{ outline: 'none' }}
                         margin={{
                           top: 6,
-                          right: showBtcPrice['hashribbons'] ? 6 : 14,
+                          right: showBtcPrice['hashribbons'] ? 8 : 14,
                           bottom: 0,
-                          left: 10,
+                          left: 8,
                         }}
                       >
                         <defs>
@@ -3653,7 +3653,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                           top: 6,
                           right: 14,
                           bottom: 0,
-                          left: 10,
+                          left: 8,
                         }}
                       >
                         <defs>
