@@ -5,7 +5,7 @@ import FooterHome from '@/components/layout/FooterHome';
 import { defaultOgImages, defaultTwitterImages } from '@/lib/og-config';
 
 export const metadata: Metadata = {
-  title: 'NOVRIX - Bitcoin On-Chain Intelligence & Macro Liquidity Terminal',
+  title: 'NOVRIX · Bitcoin On-Chain Intelligence & Macro Liquidity Terminal',
   description:
     'Bitcoin network fundamentals, valuation models, holder distribution metrics, and Federal Reserve macro liquidity across historical market cycles.',
   keywords: [
@@ -21,14 +21,14 @@ export const metadata: Metadata = {
     canonical: 'https://novrix.io/',
   },
   openGraph: {
-    title: 'NOVRIX - Bitcoin On-Chain Intelligence & Macro Liquidity Terminal',
+    title: 'NOVRIX · Bitcoin On-Chain Intelligence & Macro Liquidity Terminal',
     description:
       'Bitcoin network fundamentals, valuation models, holder distribution metrics, and Federal Reserve macro liquidity across historical market cycles.',
     url: 'https://novrix.io/',
     images: defaultOgImages,
   },
   twitter: {
-    title: 'NOVRIX - Bitcoin On-Chain Intelligence & Macro Liquidity Terminal',
+    title: 'NOVRIX · Bitcoin On-Chain Intelligence & Macro Liquidity Terminal',
     description:
       'Bitcoin network fundamentals, valuation models, holder distribution metrics, and Federal Reserve macro liquidity across historical market cycles.',
     images: defaultTwitterImages,
@@ -37,25 +37,6 @@ export const metadata: Metadata = {
 
 const INK = '#FAF7F2';
 const BODY = '#D8D2C7';
-const MUTED = '#A8A196';
-const HAIRLINE = 'rgba(250, 247, 242, 0.12)';
-
-const MODULES = [
-  {
-    category: 'MARKET INDICATORS',
-    label: 'Open workspace',
-    href: '/sentiment',
-    title: 'On-chain valuation and sentiment',
-    lede: 'Interactive charts for NUPL, MVRV, miner reserves, futures leverage, and global central bank liquidity.',
-  },
-  {
-    category: 'DOCUMENTATION & REFERENCE',
-    label: 'Explore documentation',
-    href: '/documentation',
-    title: 'Methodology and system reference',
-    lede: 'Mathematical formulations, calculation methodology, operational principles, and update cadences for all 94 on-chain and macro indicators.',
-  },
-];
 
 function Arrow() {
   return (
@@ -67,21 +48,21 @@ function Arrow() {
 
 export default function Home() {
   return (
-    <div className="home-shell min-h-screen flex flex-col">
+    <div className="home-shell min-h-screen flex flex-col justify-between">
       <Navbar />
 
-      <main className="flex-1">
+      <main className="flex-1 flex flex-col justify-center">
         <section
           style={{
-            padding: 'clamp(52px, 8vh, 84px) var(--container-pad) clamp(44px, 6vh, 64px)',
+            padding: 'clamp(56px, 10vh, 120px) var(--container-pad)',
           }}
         >
           <div className="mx-auto w-full max-w-[1180px] 2xl:max-w-[1400px] 3xl:max-w-[1800px] 4xl:max-w-[2400px] 5xl:max-w-[3200px] min-w-0">
             <h1
               style={{
                 fontFamily: 'var(--ff-display)',
-                fontSize: 'clamp(1.25rem, 2.8vw, 3.2rem)',
-                lineHeight: 1.2,
+                fontSize: 'clamp(1.5rem, 3.2vw, 3.6rem)',
+                lineHeight: 1.18,
                 letterSpacing: '-0.015em',
                 fontWeight: 500,
                 color: INK,
@@ -95,10 +76,10 @@ export default function Home() {
 
             <p
               style={{
-                marginTop: '18px',
+                marginTop: '20px',
                 maxWidth: 'min(100%, 640px)',
                 color: BODY,
-                fontSize: 'clamp(0.85rem, 0.8rem + 0.35vw, 1.25rem)',
+                fontSize: 'clamp(0.9rem, 0.84rem + 0.3vw, 1.25rem)',
                 lineHeight: 1.72,
                 overflowWrap: 'break-word',
               }}
@@ -106,70 +87,11 @@ export default function Home() {
               Novrix tracks Bitcoin market cycles through on-chain data and central bank liquidity. Built for investors who study historical distribution, holder behavior, and macro trends directly from the source.
             </p>
 
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-3 mt-6 sm:mt-8">
+            <div className="mt-8 sm:mt-10">
               <Link href="/sentiment" className="home-btn home-btn-primary">
                 Open workspace
                 <Arrow />
               </Link>
-              <Link href="/documentation" className="home-quiet-link">
-                Explore documentation
-                <Arrow />
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        <section
-          style={{
-            borderTop: `1px solid ${HAIRLINE}`,
-            padding: 'clamp(48px, 6vh, 76px) var(--container-pad) clamp(64px, 8vh, 96px)',
-          }}
-        >
-          <div className="mx-auto w-full max-w-[1180px] 2xl:max-w-[1400px] 3xl:max-w-[1800px] 4xl:max-w-[2400px] 5xl:max-w-[3200px] min-w-0">
-            <h2
-              style={{
-                fontFamily: 'var(--ff-display)',
-                fontSize: 'clamp(1.2rem, 2.2vw, 2.4rem)',
-                lineHeight: 1.15,
-                letterSpacing: '-0.018em',
-                fontWeight: 500,
-                color: INK,
-                overflowWrap: 'break-word',
-              }}
-            >
-              Workspaces
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-7 mt-6 sm:mt-8 md:mt-10">
-              {MODULES.map((item) => (
-                <Link key={item.href} href={item.href} className="home-entry min-w-0">
-                  <div className="mb-4">
-                    <span style={{ fontFamily: 'var(--ff-mono)', fontSize: '10px', letterSpacing: '0.14em', color: MUTED, textTransform: 'uppercase' }}>
-                      {item.category}
-                    </span>
-                  </div>
-                  <h3
-                    style={{
-                      fontFamily: 'var(--ff-display)',
-                      fontSize: 'clamp(1.1rem, 1.6vw, 1.85rem)',
-                      lineHeight: 1.25,
-                      letterSpacing: '-0.015em',
-                      fontWeight: 500,
-                      color: INK,
-                      overflowWrap: 'break-word',
-                    }}
-                  >
-                    {item.title}
-                  </h3>
-                  <p style={{ marginTop: '12px', color: BODY, fontSize: 'clamp(0.85rem, 0.82rem + 0.2vw, 1.05rem)', lineHeight: 1.72, overflowWrap: 'break-word' }}>
-                    {item.lede}
-                  </p>
-                  <span className="home-entry-link">
-                    {item.label}
-                    <Arrow />
-                  </span>
-                </Link>
-              ))}
             </div>
           </div>
         </section>
