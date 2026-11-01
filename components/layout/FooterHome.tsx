@@ -26,30 +26,30 @@ export default function FooterHome() {
         .footer-link:hover { color: ${INK}; }
       `}</style>
 
-      <div style={{ padding: 'clamp(40px, 5vw, 60px) var(--container-pad)' }}>
+      <div style={{ padding: 'clamp(12px, 1.5vh, 18px) var(--container-pad)' }}>
         <div
-          className="mx-auto w-full max-w-[1180px] 2xl:max-w-[1400px] 3xl:max-w-[1800px] 4xl:max-w-[2400px] 5xl:max-w-[3200px] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 sm:gap-8 min-w-0"
+          className="mx-auto w-full max-w-[1240px] 2xl:max-w-[1440px] 3xl:max-w-[1800px] 4xl:max-w-[2400px] 5xl:max-w-[3200px] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-6 min-w-0"
         >
-          <div className="flex items-center gap-3.5">
+          <div className="flex items-center gap-3">
             <Image
               src="/logo.png" alt="Novrix"
-              width={26} height={26}
-              className="w-[26px] h-[26px] block"
+              width={22} height={22}
+              className="w-[20px] h-[20px] block"
               style={{ pointerEvents: 'none' }}
             />
-            <p style={{ color: MUTED, fontSize: '13.5px', fontFamily: SANS, margin: 0 }}>
-              On-chain intelligence, read as one calm surface.
+            <p style={{ color: MUTED, fontSize: '12.5px', fontFamily: SANS, margin: 0 }}>
+              On-chain intelligence terminal
             </p>
           </div>
 
           <nav>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexWrap: 'wrap', gap: '24px' }}>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
               {NAV_LINKS.map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
                     className="footer-link"
-                    style={{ fontFamily: SANS, fontSize: '13.5px', color: MUTED, textDecoration: 'none' }}
+                    style={{ fontFamily: SANS, fontSize: '12.5px', color: MUTED, textDecoration: 'none' }}
                   >
                     {link.label}
                   </Link>
