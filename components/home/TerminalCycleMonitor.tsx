@@ -3,49 +3,48 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-type TabKey = 'mvrv' | 'realized' | 'liquidity';
+type TabKey = 'valuation' | 'cost' | 'liquidity';
 
 interface TabConfig {
   id: TabKey;
-  label: string;
-  metricLabel: string;
+  tabLabel: string;
+  question: string;
   metricValue: string;
-  subLabel: string;
-  regime: string;
-  rangeNote: string;
-  insight: string;
+  statusBadge: string;
+  contextNote: string;
+  simpleExplanation: string;
 }
 
 const TABS: TabConfig[] = [
   {
-    id: 'mvrv',
-    label: 'MVRV Z-Score',
-    metricLabel: 'Current Z-Score',
-    metricValue: '2.14',
-    subLabel: 'Historical Mean: 1.00',
-    regime: 'Mid-Cycle Expansion',
-    rangeNote: 'Bottom < 0.10 · Mania Top > 6.00',
-    insight: 'Measures standard deviations between market value and aggregate cost basis. Identifies generational bottoms when score dips below zero.',
+    id: 'valuation',
+    tabLabel: 'Is Bitcoin Cheap?',
+    question: 'Market Valuation Score (MVRV)',
+    metricValue: 'Fair Value',
+    statusBadge: 'Score 2.14 · Normal Zone',
+    contextNote: 'Historical Bargain: < 0.10 · Bubble Top: > 6.00',
+    simpleExplanation:
+      'Compares Bitcoin current market price to what every investor actually paid for their coins. Below zero means historic discount. Above 6 means the market is dangerously overheated.',
   },
   {
-    id: 'realized',
-    label: 'Realized Price',
-    metricLabel: 'Network Cost Basis',
+    id: 'cost',
+    tabLabel: 'Average Buy Price',
+    question: 'Network Average Purchase Cost',
     metricValue: '$34,920',
-    subLabel: 'BTC Spot: $69,500 · 1.99x Multiple',
-    regime: 'Sovereign Floor Intact',
-    rangeNote: 'Historical cycle support baseline',
-    insight: 'The true aggregate cost basis of all circulating coins. Throughout Bitcoin history, realized price has acted as the ultimate cycle floor.',
+    statusBadge: 'Spot Price $69,500 · 2x In Profit',
+    contextNote: 'Historic safety floor across every past crash',
+    simpleExplanation:
+      'The exact average price at which all circulating Bitcoin was purchased. In every past market crash, Bitcoin price bounced off this exact cost floor without staying below it.',
   },
   {
     id: 'liquidity',
-    label: 'US Net Liquidity',
-    metricLabel: 'Federal Net Liquidity',
+    tabLabel: 'Market Cash Flow',
+    question: 'US Financial System Liquidity',
     metricValue: '$6.42T',
-    subLabel: 'WALCL $7.01T - TGA $820B - RRP $210B',
-    regime: 'Expanding Fiat Trend',
-    rangeNote: '+ $142B 30-day net expansion',
-    insight: 'Federal Reserve balance sheet minus Treasury General Account and Reverse Repo. Tracks global fiat liquidity backing macro risk assets.',
+    statusBadge: 'Money Supply Expanding',
+    contextNote: '+ $142 Billion added over past 30 days',
+    simpleExplanation:
+      'Total cash flowing into markets from the US Federal Reserve. When central banks pump cash into the system, Bitcoin prices tend to expand. When cash dries up, markets cool off.',
   },
 ];
 
@@ -55,7 +54,7 @@ const MUTED = '#A8A196';
 const HAIRLINE = 'rgba(250, 247, 242, 0.10)';
 
 export default function TerminalCycleMonitor() {
-  const [activeTabId, setActiveTabId] = useState<TabKey>('mvrv');
+  const [activeTabId, setActiveTabId] = useState<TabKey>('valuation');
   const activeTab = TABS.find((t) => t.id === activeTabId) ?? TABS[0];
 
   return (
@@ -70,7 +69,7 @@ export default function TerminalCycleMonitor() {
         overflow: 'hidden',
       }}
     >
-      {/* Top Header: Sovereign Cycle State */}
+      {/* Top Header: Friendly, plain-English sovereign state */}
       <div
         className="flex items-center justify-between px-4 sm:px-5 py-3"
         style={{
@@ -88,7 +87,7 @@ export default function TerminalCycleMonitor() {
             textTransform: 'uppercase',
           }}
         >
-          Bitcoin Cycle V Monitor
+          Bitcoin Live Cycle Radar
         </span>
         <span
           style={{
@@ -98,11 +97,11 @@ export default function TerminalCycleMonitor() {
             color: MUTED,
           }}
         >
-          Epoch 5 · Day 560
+          Daily On-Chain Sync
         </span>
       </div>
 
-      {/* Tab Switcher: The 3 Core On-Chain & Macro Signals */}
+      {/* Tab Switcher: Plain-English Questions */}
       <div
         className="grid grid-cols-3 gap-1 px-3 sm:px-4 py-2"
         style={{
@@ -122,7 +121,7 @@ export default function TerminalCycleMonitor() {
                 fontFamily: 'var(--ff-mono)',
                 fontSize: '11px',
                 fontWeight: isActive ? 600 : 500,
-                letterSpacing: '0.02em',
+                letterSpacing: '0.01em',
                 color: isActive ? INK : MUTED,
                 background: isActive ? 'rgba(250, 247, 242, 0.12)' : 'transparent',
                 border: isActive
@@ -131,28 +130,28 @@ export default function TerminalCycleMonitor() {
                 cursor: 'pointer',
               }}
             >
-              {tab.label}
+              {tab.tabLabel}
             </button>
           );
         })}
       </div>
 
-      {/* Active Signal Telemetry Hero */}
+      {/* Active Signal Hero with Clear Explanations */}
       <div className="px-4 sm:px-5 pt-4 pb-3">
-        <div className="flex items-baseline justify-between gap-2">
+        <div className="flex items-baseline justify-between gap-2 flex-wrap">
           <div>
-            <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '10px', color: MUTED, letterSpacing: '0.04em' }}>
-              {activeTab.metricLabel}
+            <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '10.5px', color: MUTED }}>
+              {activeTab.question}
             </div>
             <div
               style={{
                 fontFamily: 'var(--ff-mono)',
-                fontSize: 'clamp(1.75rem, 3.2vw, 2.4rem)',
+                fontSize: 'clamp(1.65rem, 3vw, 2.3rem)',
                 fontWeight: 600,
                 color: INK,
                 letterSpacing: '-0.02em',
                 fontVariantNumeric: 'tabular-nums',
-                lineHeight: 1.1,
+                lineHeight: 1.15,
                 marginTop: '4px',
               }}
             >
@@ -160,7 +159,7 @@ export default function TerminalCycleMonitor() {
             </div>
           </div>
 
-          <div className="text-right">
+          <div className="text-right sm:text-right">
             <span
               style={{
                 fontFamily: 'var(--ff-mono)',
@@ -169,13 +168,13 @@ export default function TerminalCycleMonitor() {
                 letterSpacing: '0.04em',
                 color: '#FAF7F2',
                 background: 'rgba(250, 247, 242, 0.08)',
-                padding: '3px 7px',
+                padding: '3px 8px',
                 borderRadius: '2px',
                 border: '1px solid rgba(250, 247, 242, 0.16)',
                 display: 'inline-block',
               }}
             >
-              {activeTab.regime}
+              {activeTab.statusBadge}
             </span>
             <div
               style={{
@@ -185,72 +184,70 @@ export default function TerminalCycleMonitor() {
                 marginTop: '4px',
               }}
             >
-              {activeTab.subLabel}
+              {activeTab.contextNote}
             </div>
           </div>
         </div>
 
-        {/* Dynamic Vector Cycle Trajectory Visualization */}
+        {/* Intuitive visual gauge / trajectory curve */}
         <div className="mt-3.5 mb-2.5">
-          {activeTabId === 'mvrv' && (
+          {activeTabId === 'valuation' && (
             <div>
               <div className="flex items-center justify-between text-[9px] text-[#A8A196] font-mono mb-1">
-                <span>0.0 CAPITULATION FLOOR</span>
-                <span>HISTORICAL MVRV Z-SCORE OSCILLATION</span>
-                <span>6.0+ EUPHORIA TOP</span>
+                <span>BARGAIN BOTTOM (SCORE &lt; 0)</span>
+                <span>FAIR VALUE (SCORE 2.14)</span>
+                <span>BUBBLE TOP (SCORE &gt; 6)</span>
               </div>
-              <svg viewBox="0 0 380 64" className="w-full h-auto block" aria-hidden="true">
+              <svg viewBox="0 0 380 56" className="w-full h-auto block" aria-hidden="true">
                 {/* Zone horizontal reference lines */}
-                <line x1="0" y1="52" x2="380" y2="52" stroke="rgba(250,247,242,0.12)" strokeDasharray="2 3" />
-                <line x1="0" y1="36" x2="380" y2="36" stroke="rgba(250,247,242,0.06)" />
-                <line x1="0" y1="12" x2="380" y2="12" stroke="rgba(250,247,242,0.12)" strokeDasharray="2 3" />
+                <line x1="0" y1="46" x2="380" y2="46" stroke="rgba(250,247,242,0.12)" strokeDasharray="2 3" />
+                <line x1="0" y1="30" x2="380" y2="30" stroke="rgba(250,247,242,0.06)" />
+                <line x1="0" y1="10" x2="380" y2="10" stroke="rgba(250,247,242,0.12)" strokeDasharray="2 3" />
 
-                {/* 4 Historical Cycle MVRV Waves */}
+                {/* 4 Historical Cycle Waves */}
                 <path
-                  d="M 10 52 Q 25 10 45 10 Q 65 52 85 54 Q 115 14 140 12 Q 170 50 195 53 Q 225 15 255 14 Q 285 52 315 50 Q 345 32 370 34"
+                  d="M 10 46 Q 25 10 45 10 Q 65 46 85 48 Q 115 12 140 10 Q 170 44 195 47 Q 225 12 255 10 Q 285 46 315 44 Q 345 28 370 30"
                   fill="none"
                   stroke="#FAF7F2"
                   strokeWidth="1.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
-                {/* Current level indicator */}
-                <circle cx="370" cy="34" r="3" fill="#FAF7F2" />
-                <line x1="370" y1="34" x2="370" y2="52" stroke="rgba(250,247,242,0.4)" strokeDasharray="1 2" />
+                <circle cx="370" cy="30" r="3" fill="#FAF7F2" />
+                <line x1="370" y1="30" x2="370" y2="46" stroke="rgba(250,247,242,0.4)" strokeDasharray="1 2" />
               </svg>
             </div>
           )}
 
-          {activeTabId === 'realized' && (
+          {activeTabId === 'cost' && (
             <div>
               <div className="flex items-center justify-between text-[9px] text-[#A8A196] font-mono mb-1">
-                <span>LOG BITCOIN SPOT PRICE</span>
-                <span>REALIZED PRICE SOVEREIGN FLOOR</span>
+                <span>BITCOIN MARKET PRICE ($69.5K)</span>
+                <span>AVERAGE BUY PRICE FLOOR ($34.9K)</span>
               </div>
-              <svg viewBox="0 0 380 64" className="w-full h-auto block" aria-hidden="true">
-                <line x1="0" y1="56" x2="380" y2="56" stroke="rgba(250,247,242,0.05)" strokeDasharray="2 3" />
-                <line x1="0" y1="32" x2="380" y2="32" stroke="rgba(250,247,242,0.05)" strokeDasharray="2 3" />
-                <line x1="0" y1="10" x2="380" y2="10" stroke="rgba(250,247,242,0.05)" strokeDasharray="2 3" />
+              <svg viewBox="0 0 380 56" className="w-full h-auto block" aria-hidden="true">
+                <line x1="0" y1="48" x2="380" y2="48" stroke="rgba(250,247,242,0.05)" strokeDasharray="2 3" />
+                <line x1="0" y1="26" x2="380" y2="26" stroke="rgba(250,247,242,0.05)" strokeDasharray="2 3" />
 
-                {/* Stepped Realized Price Floor (sovereign cost basis) */}
+                {/* Stepped Realized Average Buy Price (Support floor) */}
                 <path
-                  d="M 5 60 L 50 58 L 90 52 L 140 48 L 190 40 L 240 34 L 290 26 L 330 22 L 375 20"
+                  d="M 5 52 L 50 50 L 90 44 L 140 40 L 190 34 L 240 28 L 290 22 L 330 18 L 375 16"
                   fill="none"
                   stroke="rgba(255, 160, 40, 0.85)"
                   strokeWidth="1.4"
                   strokeDasharray="3 2"
                 />
 
-                {/* Spot Price Waves bounding above Realized Floor */}
+                {/* Bitcoin Market Spot Price */}
                 <path
-                  d="M 5 62 Q 25 35 50 42 Q 75 60 100 48 Q 135 12 160 25 Q 185 50 215 36 Q 240 8 265 18 Q 295 40 325 24 Q 355 10 375 14"
+                  d="M 5 54 Q 25 28 50 34 Q 75 52 100 40 Q 135 10 160 20 Q 185 44 215 30 Q 240 6 265 14 Q 295 34 325 20 Q 355 8 375 10"
                   fill="none"
                   stroke="#FAF7F2"
                   strokeWidth="1.6"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
-                <circle cx="375" cy="14" r="3" fill="#FAF7F2" />
+                <circle cx="375" cy="10" r="3" fill="#FAF7F2" />
               </svg>
             </div>
           )}
@@ -258,37 +255,38 @@ export default function TerminalCycleMonitor() {
           {activeTabId === 'liquidity' && (
             <div>
               <div className="flex items-center justify-between text-[9px] text-[#A8A196] font-mono mb-1">
-                <span>US NET LIQUIDITY ($T)</span>
-                <span>GLOBAL MACRO LIQUIDITY INDEX</span>
+                <span>US CENTRAL BANK LIQUIDITY ($6.42T)</span>
+                <span>BITCOIN MARKET CYCLE EXPANSION</span>
               </div>
-              <svg viewBox="0 0 380 64" className="w-full h-auto block" aria-hidden="true">
-                <line x1="0" y1="50" x2="380" y2="50" stroke="rgba(250,247,242,0.05)" strokeDasharray="2 3" />
-                <line x1="0" y1="28" x2="380" y2="28" stroke="rgba(250,247,242,0.05)" strokeDasharray="2 3" />
+              <svg viewBox="0 0 380 56" className="w-full h-auto block" aria-hidden="true">
+                <line x1="0" y1="42" x2="380" y2="42" stroke="rgba(250,247,242,0.05)" strokeDasharray="2 3" />
+                <line x1="0" y1="22" x2="380" y2="22" stroke="rgba(250,247,242,0.05)" strokeDasharray="2 3" />
 
                 {/* Net Liquidity Curve */}
                 <path
-                  d="M 5 48 Q 45 46 85 44 Q 130 14 175 12 Q 220 32 265 38 Q 310 26 350 20 L 375 18"
+                  d="M 5 44 Q 45 42 85 40 Q 130 14 175 12 Q 220 28 265 32 Q 310 22 350 16 L 375 14"
                   fill="none"
                   stroke="rgba(250, 247, 242, 0.45)"
                   strokeWidth="1.3"
                   strokeDasharray="2 2"
                 />
 
-                {/* Bitcoin Macro Response */}
+                {/* Bitcoin Price Waves following Liquidity */}
                 <path
-                  d="M 5 52 Q 45 50 85 46 Q 130 10 175 16 Q 220 42 265 44 Q 310 22 350 16 L 375 12"
+                  d="M 5 46 Q 45 44 85 40 Q 130 8 175 14 Q 220 36 265 38 Q 310 18 350 12 L 375 8"
                   fill="none"
                   stroke="#FAF7F2"
                   strokeWidth="1.6"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
-                <circle cx="375" cy="12" r="3" fill="#FAF7F2" />
+                <circle cx="375" cy="8" r="3" fill="#FAF7F2" />
               </svg>
             </div>
           )}
         </div>
 
+        {/* Plain-English summary anyone can understand */}
         <p
           style={{
             fontFamily: 'var(--ff-sans)',
@@ -298,11 +296,11 @@ export default function TerminalCycleMonitor() {
             margin: 0,
           }}
         >
-          {activeTab.insight}
+          {activeTab.simpleExplanation}
         </p>
       </div>
 
-      {/* Sovereign Cycle Vitals: 3 Critical Institutional Metrics */}
+      {/* 3 Plain-English Vitals (Easy for newbies, essential for veterans) */}
       <div
         className="grid grid-cols-3 divide-x px-2 py-3"
         style={{
@@ -314,42 +312,42 @@ export default function TerminalCycleMonitor() {
       >
         <div className="px-2 sm:px-3">
           <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', color: MUTED }}>
-            LTH SUPPLY
+            STRONG HANDS
           </div>
           <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '13.5px', fontWeight: 600, color: INK, marginTop: '2px' }}>
-            14.8M BTC
+            70.2%
           </div>
           <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', color: BODY, marginTop: '1px' }}>
-            70.2% diamond hands
+            Held by long-term investors
           </div>
         </div>
 
         <div className="px-2 sm:px-3">
           <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', color: MUTED }}>
-            NUPL RATIO
+            MARKET MOOD
           </div>
           <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '13.5px', fontWeight: 600, color: INK, marginTop: '2px' }}>
-            0.52
+            Belief
           </div>
           <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', color: BODY, marginTop: '1px' }}>
-            Belief regime
+            Investors are profitable
           </div>
         </div>
 
         <div className="px-2 sm:px-3">
           <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', color: MUTED }}>
-            PUELL MULTIPLE
+            CYCLE CLOCK
           </div>
           <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '13.5px', fontWeight: 600, color: INK, marginTop: '2px' }}>
-            1.08
+            Year 2 of 4
           </div>
           <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '9px', color: BODY, marginTop: '1px' }}>
-            Miner health balance
+            Post-halving accumulation
           </div>
         </div>
       </div>
 
-      {/* Direct Interactive Callout into Sentiment Workspace */}
+      {/* Direct Interactive Callout */}
       <Link
         href="/sentiment"
         className="group flex items-center justify-between px-4 sm:px-5 py-3 transition-colors duration-150 text-decoration-none block"
@@ -372,7 +370,7 @@ export default function TerminalCycleMonitor() {
             letterSpacing: '0.02em',
           }}
         >
-          Open Sentiment Workspace · 94 Live Models
+          Open Sentiment Workspace · Explore All 94 Charts
         </span>
         <span
           className="group-hover:translate-x-1 transition-transform duration-150"
