@@ -8,43 +8,32 @@ type TabKey = 'valuation' | 'cost' | 'liquidity';
 interface TabConfig {
   id: TabKey;
   tabLabel: string;
-  question: string;
+  metricLabel: string;
   metricValue: string;
   statusBadge: string;
-  contextNote: string;
-  simpleExplanation: string;
 }
 
 const TABS: TabConfig[] = [
   {
     id: 'valuation',
-    tabLabel: 'Is Bitcoin Cheap?',
-    question: 'Market Valuation Score (MVRV)',
+    tabLabel: 'Valuation',
+    metricLabel: 'MVRV Ratio',
     metricValue: 'Fair Value',
-    statusBadge: 'Score 2.14 · Normal',
-    contextNote: 'Bargain: < 0.10 · Bubble: > 6.00',
-    simpleExplanation:
-      'Compares Bitcoin market price to what every investor actually paid for their coins. Below zero means a historic discount. Above 6 means dangerously overheated.',
+    statusBadge: 'Score 2.14',
   },
   {
     id: 'cost',
-    tabLabel: 'Average Buy Price',
-    question: 'Network Average Purchase Cost',
+    tabLabel: 'Realized Cost',
+    metricLabel: 'Cost Basis Floor',
     metricValue: '$34,920',
-    statusBadge: 'Spot $69.5K · 2x In Profit',
-    contextNote: 'Historic safety floor across every past crash',
-    simpleExplanation:
-      'The exact average price at which all circulating Bitcoin was bought. In every past market crash, Bitcoin price bounced off this exact cost floor.',
+    statusBadge: 'Spot $69.5K',
   },
   {
     id: 'liquidity',
-    tabLabel: 'Market Cash Flow',
-    question: 'US Financial System Liquidity',
+    tabLabel: 'Liquidity',
+    metricLabel: 'Net Liquidity',
     metricValue: '$6.42T',
-    statusBadge: 'Expanding Trend',
-    contextNote: '+ $142B added over past 30 days',
-    simpleExplanation:
-      'Total cash flowing into markets from the US Federal Reserve. When central banks pump cash into the system, Bitcoin prices tend to grow with it.',
+    statusBadge: 'Expanding',
   },
 ];
 
@@ -69,7 +58,7 @@ export default function TerminalCycleMonitor() {
         overflow: 'hidden',
       }}
     >
-      {/* Top Header: Friendly, plain-English sovereign state */}
+      {/* Top Header */}
       <div
         className="flex items-center justify-between px-3 sm:px-4 py-2"
         style={{
@@ -87,7 +76,7 @@ export default function TerminalCycleMonitor() {
             textTransform: 'uppercase',
           }}
         >
-          Bitcoin Live Cycle Radar
+          Bitcoin Cycle Monitor
         </span>
         <span
           style={{
@@ -97,11 +86,11 @@ export default function TerminalCycleMonitor() {
             color: MUTED,
           }}
         >
-          Daily On-Chain Sync
+          Live Telemetry
         </span>
       </div>
 
-      {/* Tab Switcher: Plain-English Questions */}
+      {/* Tab Switcher */}
       <div
         role="tablist"
         aria-label="Bitcoin cycle indicators"
@@ -140,12 +129,12 @@ export default function TerminalCycleMonitor() {
         })}
       </div>
 
-      {/* Active Signal Hero with Clear Explanations */}
-      <div className="px-3 sm:px-4 pt-2.5 pb-2">
-        <div className="flex items-baseline justify-between gap-2 flex-wrap">
+      {/* Active Signal Hero */}
+      <div className="px-3 sm:px-4 pt-3 pb-2.5">
+        <div className="flex items-baseline justify-between gap-2">
           <div>
             <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '9.5px', color: MUTED }}>
-              {activeTab.question}
+              {activeTab.metricLabel}
             </div>
             <div
               style={{
@@ -163,39 +152,27 @@ export default function TerminalCycleMonitor() {
             </div>
           </div>
 
-          <div className="text-right sm:text-right">
-            <div
-              style={{
-                fontFamily: 'var(--ff-mono)',
-                fontSize: '10.5px',
-                fontWeight: 600,
-                letterSpacing: '0.02em',
-                color: INK,
-              }}
-            >
-              {activeTab.statusBadge}
-            </div>
-            <div
-              style={{
-                fontFamily: 'var(--ff-mono)',
-                fontSize: '9px',
-                color: MUTED,
-                marginTop: '2px',
-              }}
-            >
-              {activeTab.contextNote}
-            </div>
+          <div
+            style={{
+              fontFamily: 'var(--ff-mono)',
+              fontSize: '10.5px',
+              fontWeight: 600,
+              letterSpacing: '0.02em',
+              color: INK,
+            }}
+          >
+            {activeTab.statusBadge}
           </div>
         </div>
 
         {/* Intuitive compact visual trajectory curve */}
-        <div className="my-1.5">
+        <div className="mt-3 mb-1">
           {activeTabId === 'valuation' && (
             <div>
               <div className="flex items-center justify-between text-[8px] text-[#A8A196] font-mono mb-0.5">
-                <span>BARGAIN BOTTOM (&lt; 0)</span>
-                <span>FAIR VALUE (2.14)</span>
-                <span>BUBBLE TOP (&gt; 6)</span>
+                <span>Discount</span>
+                <span>Fair Value</span>
+                <span>Peak</span>
               </div>
               <svg viewBox="0 0 380 40" className="w-full h-auto block" style={{ maxHeight: '38px' }} aria-hidden="true">
                 <line x1="0" y1="34" x2="380" y2="34" stroke="rgba(250,247,242,0.12)" strokeDasharray="2 3" />
@@ -219,8 +196,8 @@ export default function TerminalCycleMonitor() {
           {activeTabId === 'cost' && (
             <div>
               <div className="flex items-center justify-between text-[8px] text-[#A8A196] font-mono mb-0.5">
-                <span>BITCOIN MARKET SPOT ($69.5K)</span>
-                <span>AVERAGE BUY PRICE FLOOR ($34.9K)</span>
+                <span>Floor $34.9K</span>
+                <span>Spot $69.5K</span>
               </div>
               <svg viewBox="0 0 380 40" className="w-full h-auto block" style={{ maxHeight: '38px' }} aria-hidden="true">
                 <line x1="0" y1="36" x2="380" y2="36" stroke="rgba(250,247,242,0.05)" strokeDasharray="2 3" />
@@ -250,8 +227,8 @@ export default function TerminalCycleMonitor() {
           {activeTabId === 'liquidity' && (
             <div>
               <div className="flex items-center justify-between text-[8px] text-[#A8A196] font-mono mb-0.5">
-                <span>US CENTRAL BANK LIQUIDITY ($6.42T)</span>
-                <span>BITCOIN MARKET CYCLE EXPANSION</span>
+                <span>Liquidity $6.42T</span>
+                <span>Expansion</span>
               </div>
               <svg viewBox="0 0 380 40" className="w-full h-auto block" style={{ maxHeight: '38px' }} aria-hidden="true">
                 <line x1="0" y1="32" x2="380" y2="32" stroke="rgba(250,247,242,0.05)" strokeDasharray="2 3" />
@@ -278,24 +255,11 @@ export default function TerminalCycleMonitor() {
             </div>
           )}
         </div>
-
-        {/* Plain-English summary anyone can understand */}
-        <p
-          style={{
-            fontFamily: 'var(--ff-sans)',
-            fontSize: '11px',
-            lineHeight: 1.45,
-            color: MUTED,
-            margin: 0,
-          }}
-        >
-          {activeTab.simpleExplanation}
-        </p>
       </div>
 
-      {/* 3 Plain-English Vitals (Easy for newbies, essential for veterans) */}
+      {/* 3 Plain Vitals */}
       <div
-        className="grid grid-cols-3 divide-x px-2 py-1.5"
+        className="grid grid-cols-3 divide-x px-2 py-2"
         style={{
           borderTop: `1px solid ${HAIRLINE}`,
           borderBottom: `1px solid ${HAIRLINE}`,
@@ -303,39 +267,30 @@ export default function TerminalCycleMonitor() {
           background: 'rgba(250, 247, 242, 0.015)',
         }}
       >
-        <div className="px-1.5 sm:px-2.5">
+        <div className="px-2 sm:px-3">
           <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '8.5px', color: MUTED }}>
             STRONG HANDS
           </div>
-          <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '12px', fontWeight: 600, color: INK, marginTop: '1px' }}>
+          <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '13px', fontWeight: 600, color: INK, marginTop: '2px' }}>
             70.2%
-          </div>
-          <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '8.5px', color: BODY }}>
-            Long-term holders
           </div>
         </div>
 
-        <div className="px-1.5 sm:px-2.5">
+        <div className="px-2 sm:px-3">
           <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '8.5px', color: MUTED }}>
             MARKET MOOD
           </div>
-          <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '12px', fontWeight: 600, color: INK, marginTop: '1px' }}>
+          <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '13px', fontWeight: 600, color: INK, marginTop: '2px' }}>
             Belief
-          </div>
-          <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '8.5px', color: BODY }}>
-            Profitable investors
           </div>
         </div>
 
-        <div className="px-1.5 sm:px-2.5">
+        <div className="px-2 sm:px-3">
           <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '8.5px', color: MUTED }}>
             CYCLE CLOCK
           </div>
-          <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '12px', fontWeight: 600, color: INK, marginTop: '1px' }}>
+          <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '13px', fontWeight: 600, color: INK, marginTop: '2px' }}>
             Year 2 of 4
-          </div>
-          <div style={{ fontFamily: 'var(--ff-mono)', fontSize: '8.5px', color: BODY }}>
-            Post-halving phase
           </div>
         </div>
       </div>
