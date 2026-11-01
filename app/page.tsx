@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import FooterHome from '@/components/layout/FooterHome';
-import TerminalWorkspaceIndex from '@/components/home/TerminalWorkspaceIndex';
+import TerminalCycleMonitor from '@/components/home/TerminalCycleMonitor';
 import { defaultOgImages, defaultTwitterImages } from '@/lib/og-config';
 
 export const metadata: Metadata = {
@@ -110,9 +110,9 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Right Column: Terminal Workspace Index */}
+              {/* Right Column: Bitcoin Sovereign Cycle Monitor */}
               <div className="lg:col-span-5 w-full min-w-0">
-                <TerminalWorkspaceIndex />
+                <TerminalCycleMonitor />
               </div>
             </div>
           </div>
