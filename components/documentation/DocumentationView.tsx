@@ -30,21 +30,6 @@ export default function DocumentationView() {
 
       <main className="flex-1 w-full max-w-5xl px-4 sm:px-8 lg:px-12 py-10 sm:py-16">
         <header className="pb-8 border-b border-[#2A231E]">
-          <div className="flex items-center gap-2 mb-3">
-            <span
-              className="text-[10px] uppercase tracking-widest text-[#C2344D] bg-[#C2344D]/10 px-2 py-0.5 rounded border border-[#C2344D]/30"
-              style={{ fontFamily: 'var(--ff-mono)' }}
-            >
-              Open Source Terminal
-            </span>
-            <span
-              className="text-[11px] text-[#736B63]"
-              style={{ fontFamily: 'var(--ff-mono)' }}
-            >
-              Public Infrastructure
-            </span>
-          </div>
-
           <h1 className="text-3xl sm:text-4xl font-serif text-[#FAF7F2] tracking-tight">
             Documentation
           </h1>
@@ -110,7 +95,7 @@ export default function DocumentationView() {
                   <p className="text-xs text-[#A8A196] mt-0.5">Bitcoin on chain valuation, profitability, holder behavior, and miner metrics.</p>
                 </div>
                 <span
-                  className="text-[10px] text-[#8C857C] bg-[#1E1916] px-2 py-0.5 rounded border border-[#2A231E] shrink-0 self-start sm:self-auto"
+                  className="text-[11px] text-[#8C857C] shrink-0 self-start sm:self-auto"
                   style={{ fontFamily: 'var(--ff-mono)' }}
                 >
                   04:00 UTC Daily
@@ -124,7 +109,7 @@ export default function DocumentationView() {
                   <p className="text-xs text-[#A8A196] mt-0.5">Macroeconomic indicators, Fed funds rate, Treasury yields, and money supply.</p>
                 </div>
                 <span
-                  className="text-[10px] text-[#8C857C] bg-[#1E1916] px-2 py-0.5 rounded border border-[#2A231E] shrink-0 self-start sm:self-auto"
+                  className="text-[11px] text-[#8C857C] shrink-0 self-start sm:self-auto"
                   style={{ fontFamily: 'var(--ff-mono)' }}
                 >
                   Official Releases
@@ -138,7 +123,7 @@ export default function DocumentationView() {
                   <p className="text-xs text-[#A8A196] mt-0.5">Market psychology and Fear &amp; Greed composite sentiment index.</p>
                 </div>
                 <span
-                  className="text-[10px] text-[#8C857C] bg-[#1E1916] px-2 py-0.5 rounded border border-[#2A231E] shrink-0 self-start sm:self-auto"
+                  className="text-[11px] text-[#8C857C] shrink-0 self-start sm:self-auto"
                   style={{ fontFamily: 'var(--ff-mono)' }}
                 >
                   04:00 UTC Daily
@@ -167,15 +152,15 @@ export default function DocumentationView() {
                     className="p-3.5 rounded border border-[#2A231E] bg-[#161210] flex flex-col sm:flex-row sm:items-center justify-between gap-3"
                   >
                     <div className="min-w-0 space-y-0.5">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5">
                         <span className="text-xs font-bold text-[#FAF7F2]" style={{ fontFamily: 'var(--ff-mono)' }}>
                           {d.asset}
                         </span>
                         <span
-                          className="text-[10px] text-[#8C857C] bg-[#1F1916] px-1.5 py-0.5 rounded border border-[#2A231E]"
+                          className="text-xs text-[#8C857C]"
                           style={{ fontFamily: 'var(--ff-mono)' }}
                         >
-                          {d.symbol}
+                          ({d.symbol})
                         </span>
                       </div>
                       <div
