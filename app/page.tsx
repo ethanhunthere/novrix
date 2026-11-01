@@ -105,7 +105,7 @@ export default function Home() {
                       letterSpacing: '0.04em',
                     }}
                   >
-                    94 live cycle panels
+                    Live market radar
                   </span>
                 </div>
               </div>

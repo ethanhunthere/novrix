@@ -10,7 +10,7 @@ import SentimentSidebar from '@/components/sentiment/SentimentSidebar';
 import SentimentChartPanel, { type SentimentPanelConfig } from '@/components/sentiment/SentimentChartPanel';
 import {
   PanelHeader, FngTooltip, PrecisionTooltip, ChartSkeleton,
-  TF_OPTS, FRED_TF_OPTS, NOVRIX_TF_OPTS, TfSelector, LineToggle,
+  TF_OPTS, FRED_TF_OPTS, TfSelector, LineToggle,
   getXAxisTicks, formatXAxisTick, DateAxisTick, downsample,
   PANEL_CODES, PanelMaximizeWrapper,
   getHalvingIndices,
@@ -71,16 +71,6 @@ const MPI_REFERENCE_BANDS = [lowerBand(0.2), upperBand(2.0)];
 const MINER_SELL_PRESSURE_REFERENCE_BANDS = [lowerBand(0.0010), upperBand(0.0070)];
 const UTXO_PROFIT_REFERENCE_BANDS = [lowerBand(0.55), upperBand(0.95)];
 const UTXO_LOSS_REFERENCE_BANDS = [{ from: 0.35, fill: SENTIMENT_BAND_GREEN, fillOpacity: SENTIMENT_BAND_OPACITY }, { to: 0.05, fill: SENTIMENT_BAND_RED, fillOpacity: SENTIMENT_BAND_OPACITY }];
-const VTPX_REFERENCE_BANDS = [lowerBand(1.0), upperBand(4.0)];
-const SHAX_REFERENCE_BANDS = [{ from: 100_000, fill: SENTIMENT_BAND_GREEN, fillOpacity: SENTIMENT_BAND_OPACITY }, { to: -100_000, fill: SENTIMENT_BAND_RED, fillOpacity: SENTIMENT_BAND_OPACITY }];
-const SMFX_REFERENCE_BANDS = [{ from: 300_000, fill: SENTIMENT_BAND_GREEN, fillOpacity: SENTIMENT_BAND_OPACITY }, { to: -300_000, fill: SENTIMENT_BAND_RED, fillOpacity: SENTIMENT_BAND_OPACITY }];
-const LEVR_REFERENCE_BANDS = [lowerBand(1.0), upperBand(4.0)];
-const RCFX_REFERENCE_BANDS = [lowerBand(-2.0), upperBand(2.0)];
-const CPRX_REFERENCE_BANDS = [{ from: 0.80, fill: SENTIMENT_BAND_GREEN, fillOpacity: SENTIMENT_BAND_OPACITY }, { to: 0.20, fill: SENTIMENT_BAND_RED, fillOpacity: SENTIMENT_BAND_OPACITY }];
-const RPIX_REFERENCE_BANDS = [lowerBand(-0.3), upperBand(0.3)];
-const CRRX_REFERENCE_BANDS = [lowerBand(0.001), upperBand(0.08)];
-const SGRX_REFERENCE_BANDS = [lowerBand(25), upperBand(75)];
-const DOMX_REFERENCE_BANDS = [{ from: 2.0, fill: SENTIMENT_BAND_GREEN, fillOpacity: SENTIMENT_BAND_OPACITY }, { to: -2.0, fill: SENTIMENT_BAND_RED, fillOpacity: SENTIMENT_BAND_OPACITY }];
 const VIX_REFERENCE_BANDS = [lowerBand(15.0), upperBand(35.0)];
 const DXY_REFERENCE_BANDS = [lowerBand(95.0), upperBand(105.0)];
 const FEDFUNDS_REFERENCE_BANDS = [lowerBand(1.0), upperBand(5.0)];
@@ -429,8 +419,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
     lthPositionChange: true, sthPositionChange: true, mpi: true, minerSellPressure: true,
     utxoProfit: true, utxoLoss: true,
     nvts: true, nvtZscore: true, cvdd: true,
-    sofr: true, walcl: true, wresbal: true, rrpontsyd: true, cpiaucsl: true, cpilfesl: true, pcepi: true, pcepilfe: true, mich: true, t5yie: true, t10yie: true, dgs1mo: true, dgs3mo: true, dgs6mo: true, dgs1: true, dgs5: true, dgs20: true, dgs30: true, t10y2y: true, t10y3m: true, m1sl: true, mabmm301: true, unrate: true, payems: true, icsa: true, jtsjol: true, emratio: true, gdpc1: true, indpro: true, houst: true, umcsent: true, rsxfs: true, dcoilwtico: true, bamlh0a0hym2: true, mortgage30us: true, bogmbase: true, totalsl: true, vtpx: true, shax: true, smfx: true, levr: true, rcfx: true,
-    cprx: true, rpix: true, crrx: true, sgrx: true, domx: true,
+    sofr: true, walcl: true, wresbal: true, rrpontsyd: true, cpiaucsl: true, cpilfesl: true, pcepi: true, pcepilfe: true, mich: true, t5yie: true, t10yie: true, dgs1mo: true, dgs3mo: true, dgs6mo: true, dgs1: true, dgs5: true, dgs20: true, dgs30: true, t10y2y: true, t10y3m: true, m1sl: true, mabmm301: true, unrate: true, payems: true, icsa: true, jtsjol: true, emratio: true, gdpc1: true, indpro: true, houst: true, umcsent: true, rsxfs: true, dcoilwtico: true, bamlh0a0hym2: true, mortgage30us: true, bogmbase: true, totalsl: true,
   });
   const [showIndicator, setShowIndicator] = useState<Record<string, boolean>>({
     nupl: true, mvrv: true, 'lth-mvrv': true, sopr: true, ssr: true,
@@ -451,20 +440,8 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
     lthPositionChange: true, sthPositionChange: true, mpi: true, minerSellPressure: true,
     utxoProfit: true, utxoLoss: true,
     nvts: true, nvtZscore: true, cvdd: true,
-    sofr: true, walcl: true, wresbal: true, rrpontsyd: true, cpiaucsl: true, cpilfesl: true, pcepi: true, pcepilfe: true, mich: true, t5yie: true, t10yie: true, dgs1mo: true, dgs3mo: true, dgs6mo: true, dgs1: true, dgs5: true, dgs20: true, dgs30: true, t10y2y: true, t10y3m: true, m1sl: true, mabmm301: true, unrate: true, payems: true, icsa: true, jtsjol: true, emratio: true, gdpc1: true, indpro: true, houst: true, umcsent: true, rsxfs: true, dcoilwtico: true, bamlh0a0hym2: true, mortgage30us: true, bogmbase: true, totalsl: true, vtpx: true, shax: true, smfx: true, levr: true, rcfx: true,
-    cprx: true, rpix: true, crrx: true, sgrx: true, domx: true,
+    sofr: true, walcl: true, wresbal: true, rrpontsyd: true, cpiaucsl: true, cpilfesl: true, pcepi: true, pcepilfe: true, mich: true, t5yie: true, t10yie: true, dgs1mo: true, dgs3mo: true, dgs6mo: true, dgs1: true, dgs5: true, dgs20: true, dgs30: true, t10y2y: true, t10y3m: true, m1sl: true, mabmm301: true, unrate: true, payems: true, icsa: true, jtsjol: true, emratio: true, gdpc1: true, indpro: true, houst: true, umcsent: true, rsxfs: true, dcoilwtico: true, bamlh0a0hym2: true, mortgage30us: true, bogmbase: true, totalsl: true,
   });
-  // NOVRIX INTELLIGENCE timeframe states
-  const [vtpxTimeframe, setVtpxTimeframe] = useState('365');
-  const [shaxTimeframe, setShaxTimeframe] = useState('365');
-  const [smfxTimeframe, setSmfxTimeframe] = useState('365');
-  const [levrTimeframe, setLevrTimeframe] = useState('365');
-  const [rcfxTimeframe, setRcfxTimeframe] = useState('365');
-  const [cprxTimeframe, setCprxTimeframe] = useState('365');
-  const [rpixTimeframe, setRpixTimeframe] = useState('365');
-  const [crrxTimeframe, setCrrxTimeframe] = useState('365');
-  const [sgrxTimeframe, setSgrxTimeframe] = useState('365');
-  const [domxTimeframe, setDomxTimeframe] = useState('365');
   const [capturedPanel, setCapturedPanel] = useState<string | null>(null);
   const [selectedIndicator, setSelectedIndicator] = useState<string | null>(null);
   const DEFAULT_OVERVIEW_IDS = useMemo(() => new Set([
@@ -528,10 +505,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
         'fred-umcsent', 'fred-rsxfs', 'fred-dcoilwtico', 'fred-bamlh0a0hym2', 'fred-mortgage30us', 'fred-m1sl',
         'fred-mabmm301usm189s', 'fred-bogmbase', 'fred-totalsl', 'fred-mich', 'fred-t5yie', 'fred-t10yie',
         'fred-dgs1mo', 'fred-dgs3mo', 'fred-dgs6mo', 'fred-dgs1', 'fred-dgs5', 'fred-dgs20', 'fred-dgs30',
-        'fred-t10y2y', 'fred-t10y3m', 'fred-rrpontsyd', 'fred-sofr',
-        'vtpx', 'shax', 'smfx', 'levr', 'rcfx', 'cprx', 'rpix', 'crrx', 'sgrx', 'domx',
-        'novrix-vtpx', 'novrix-shax', 'novrix-smfx', 'novrix-levr', 'novrix-rcfx',
-        'novrix-cprx', 'novrix-rpix', 'novrix-crrx', 'novrix-sgrx', 'novrix-domx'
+        'fred-t10y2y', 'fred-t10y3m', 'fred-rrpontsyd', 'fred-sofr'
       ];
       const hydrateRest = () => {
         setVisiblePanels((prev) => {
@@ -1377,258 +1351,9 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
     return sliced.map((pt, i) => ({ ...pt, index: i }));
   };
 
-  // VTPX: Veteran Premium (replaces CVIX)
-  // Formula: LTH-MVRV / STH-MVRV — how much more profitable veterans are
-  // than tourists. At the 2017 and 2021 tops long-term holders sat on 3-10x
-  // the profitability of short-term holders (fuel for distribution); at
-  // every major bottom (2015, 2018-19, 2022) the ratio converged toward 1,
-  // and below 1 veterans themselves are underwater — generational max pain.
-  const vtpxChartData = useMemo(() => {
-    const full = alignByDate(lthMvrvChartData, 'lth_mvrv', sthMvrvChartData, 'value', (lth, sth) => {
-      return sth > 0 ? lth / sth : null;
-    });
-    return sliceByTimeframe(full, vtpxTimeframe);
-  }, [lthMvrvChartData, sthMvrvChartData, vtpxTimeframe, alignByDate]);
-  const vtpxChartDataWithPrice = useMemo(() => addBtcPriceToChartData(vtpxChartData), [vtpxChartData, addBtcPriceToChartData]);
-
-  // SHAX: Strong-Hand Accumulation (replaces LSGX)
-  // Formula: 30-day change in illiquid supply (BTC). Glassnode's illiquid
-  // supply tracks coins held by entities with little spending history — the
-  // "strong hands". It grew through every bear-market bottom (2018-19,
-  // 2022) as conviction buyers absorbed coins, and fell sharply into the
-  // 2021 double top as veterans distributed into strength.
-  const shaxChartData = useMemo(() => {
-    const full = changeOverDays(illiquidSupplyChartData, 'illiquidSupply', 30);
-    return sliceByTimeframe(full, shaxTimeframe);
-  }, [illiquidSupplyChartData, shaxTimeframe, changeOverDays]);
-  const shaxChartDataWithPrice = useMemo(() => addBtcPriceToChartData(shaxChartData), [shaxChartData, addBtcPriceToChartData]);
-
-  // SMFX: Smart Money Flow (replaces SMDX)
-  // Formula: LTH 30d net position change − STH 30d net position change (BTC).
-  // Glassnode's LTH Net Position Change is the classic smart-money cycle
-  // tool: veterans distribute into retail FOMO at every top (negative flow)
-  // and accumulate through every bottom (positive flow). Subtracting the
-  // short-term side sharpens the transfer-of-coins signal.
-  const smfxChartData = useMemo(() => {
-    const full = alignByDate(lthPositionChangeChartData, 'value', sthPositionChangeChartData, 'value', (lth, sth) => lth - sth);
-    return sliceByTimeframe(full, smfxTimeframe);
-  }, [lthPositionChangeChartData, sthPositionChangeChartData, smfxTimeframe, alignByDate]);
-  const smfxChartDataWithPrice = useMemo(() => addBtcPriceToChartData(smfxChartData), [smfxChartData, addBtcPriceToChartData]);
-
-  // LEVR: Estimated Leverage Ratio (replaces SMOX)
-  // Formula: futures open interest / market cap × 100 (%). CryptoQuant's
-  // Estimated Leverage Ratio concept — the share of network value parked in
-  // leveraged positions. Above ~3-4% the market is one liquidation cascade
-  // away from a flush (every 2021 leverage peak); below ~1.5% leverage is
-  // cleansed and durable bottoms can form. Computed per-day with the
-  // correct historical market cap (the previous gauge divided all of
-  // history by a single constant price — broken normalization).
-  const levrChartData = useMemo(() => {
-    const full = alignByDate(openInterestChartData, 'value', marketCapK4ChartData, 'value', (oi, mc) => {
-      return mc > 0 ? (oi / mc) * 100 : null;
-    });
-    return sliceByTimeframe(full, levrTimeframe);
-  }, [openInterestChartData, marketCapK4ChartData, levrTimeframe, alignByDate]);
-  const levrChartDataWithPrice = useMemo(() => addBtcPriceToChartData(levrChartData), [levrChartData, addBtcPriceToChartData]);
-
-  // RCFX: Realized Cap Flow (replaces NVEX)
-  // Formula: 30-day % change of realized capitalization
-  // (realizedPrice × supply, where supply ≈ marketCap / spotPrice).
-  // Glassnode's realized-cap change is the cleanest measure of real capital
-  // entering or leaving the network's aggregate cost basis — it stayed
-  // negative through the 2018 and 2022 bear markets and flipped decisively
-  // positive at every recovery. Sustained outflows = accumulation window.
-  const rcfxChartData = useMemo(() => {
-    const mcapByDate = new Map<string, number>();
-    marketCapK4ChartData.forEach(pt => {
-      const v = Number(pt.value);
-      if (pt.dateObj && Number.isFinite(v)) mcapByDate.set(formatDateKey(pt.dateObj), v);
-    });
-    const realizedCap: ChartDataPoint[] = [];
-    realizedPriceChartData.forEach(pt => {
-      const rp = Number(pt.value);
-      if (!pt.dateObj || !Number.isFinite(rp) || rp <= 0) return;
-      const key = formatDateKey(pt.dateObj);
-      const mc = mcapByDate.get(key);
-      const spot = btcPriceLookup[key];
-      if (!mc || mc <= 0 || !spot || spot <= 0) return;
-      const supply = mc / spot;
-      realizedCap.push({ index: realizedCap.length, value: rp * supply, dateFormatted: pt.dateFormatted, dateObj: pt.dateObj });
-    });
-    const full = changeOverDays(realizedCap, 'value', 30, true);
-    return sliceByTimeframe(full, rcfxTimeframe);
-  }, [realizedPriceChartData, marketCapK4ChartData, btcPriceLookup, rcfxTimeframe, changeOverDays]);
-  const rcfxChartDataWithPrice = useMemo(() => addBtcPriceToChartData(rcfxChartData), [rcfxChartData, addBtcPriceToChartData]);
-
-  // Zone functions for NOVRIX INTELLIGENCE indicators.
-  // Every threshold below is anchored to documented cycle behavior — see the
-  // comment above each function for the historical basis.
-  //
-  // VTPX: ratio converged to ~1 at the 2015, 2018-19 and 2022 bottoms; at the
-  // 2017 and 2021 tops veterans were 3-10x as profitable as tourists.
-  const getVtpxZone = (v: number) => {
-    if (v >= 4.0)  return { label: 'EUPHORIA',     color: '#EF4444' };
-    if (v >= 2.0)  return { label: 'LATE CYCLE',   color: '#F7931A' };
-    if (v >= 1.2)  return { label: 'HEALTHY',      color: '#88B4D0' };
-    if (v >= 1.0)  return { label: 'CONVERGENCE',  color: '#4CAF50' };
-    return                { label: 'MAX PAIN',      color: '#10B981' };
-  };
-  // SHAX (BTC / 30d): illiquid supply swelled by six figures monthly through
-  // historical accumulation windows; comparable outflows marked the 2021 tops.
-  const getShaxZone = (v: number) => {
-    if (v >= 100_000)  return { label: 'ACCUMULATION',   color: '#10B981' };
-    if (v >= 25_000)   return { label: 'ACCUMULATING',   color: '#4CAF50' };
-    if (v >= -25_000)  return { label: 'NEUTRAL',        color: '#88B4D0' };
-    if (v >= -100_000) return { label: 'DISTRIBUTING',   color: '#F7931A' };
-    return                    { label: 'DISTRIBUTION',    color: '#EF4444' };
-  };
-  // SMFX (BTC / 30d): LTH net position swings of ±300K BTC or more marked
-  // historical distribution tops and accumulation bottoms.
-  const getSmfxZone = (v: number) => {
-    if (v >= 300_000)  return { label: 'STRONG ACCUM',   color: '#10B981' };
-    if (v >= 50_000)   return { label: 'ACCUMULATING',   color: '#4CAF50' };
-    if (v >= -50_000)  return { label: 'NEUTRAL',        color: '#88B4D0' };
-    if (v >= -300_000) return { label: 'DISTRIBUTING',   color: '#F7931A' };
-    return                    { label: 'DISTRIBUTION',    color: '#EF4444' };
-  };
-  // LEVR (% of mcap): OI/mcap above ~4% preceded every 2021 liquidation
-  // cascade; below ~1.5% the market is de-levered (post-flush bottoms).
-  const getLevrZone = (v: number) => {
-    if (v >= 4.0)  return { label: 'OVERLEVERAGED', color: '#EF4444' };
-    if (v >= 2.5)  return { label: 'ELEVATED',      color: '#F7931A' };
-    if (v >= 1.5)  return { label: 'NORMAL',        color: '#88B4D0' };
-    if (v >= 1.0)  return { label: 'CLEANSING',     color: '#4CAF50' };
-    return                { label: 'CLEANSED',       color: '#10B981' };
-  };
-  // RCFX (% / 30d): realized-cap change stayed negative through the 2018 and
-  // 2022 bears; sustained inflows above +2%/mo marked late-stage bull phases.
-  const getRcfxZone = (v: number) => {
-    if (v >= 2.0)   return { label: 'STRONG INFLOW',  color: '#EF4444' };
-    if (v >= 0.5)   return { label: 'INFLOW',         color: '#F7931A' };
-    if (v >= -0.5)  return { label: 'FLAT',           color: '#88B4D0' };
-    if (v >= -2.0)  return { label: 'OUTFLOW',        color: '#4CAF50' };
-    return                 { label: 'CAPITAL FLIGHT',  color: '#10B981' };
-  };
-
-  // NOVRIX-6: Capitulation Pressure (CPRX)
-  // Formula: realizedLoss / (realizedLoss + realizedProfit)
-  // Fraction of total realized P&L that is losses. Measures actual financial
-  // pain being absorbed by sellers — not survey sentiment, real bleeding.
-  // Range [0,1]: 0 = pure profit-taking, 1 = pure capitulation.
-  const cprxChartData = useMemo(() => {
-    const full = alignByDate(realizedLossChartData, 'value', realizedProfitChartData, 'value', (loss, profit) => {
-      const total = Math.abs(loss) + Math.abs(profit);
-      return total > 0 ? Math.abs(loss) / total : null;
-    });
-    return sliceByTimeframe(full, cprxTimeframe);
-  }, [realizedLossChartData, realizedProfitChartData, cprxTimeframe, alignByDate]);
-  const cprxChartDataWithPrice = useMemo(() => addBtcPriceToChartData(cprxChartData), [cprxChartData, addBtcPriceToChartData]);
-
-  // RPIX: Realized P&L Intensity (replaces HCSX)
-  // Formula: NRPL / market cap × 100 (%). Daily realized profit/loss sized
-  // against the network's value — the magnitude lens that complements CPRX's
-  // loss-share ratio. Deep negative spikes (≤-0.3%) occurred only at
-  // capitulation bottoms (Mar 2020, Jun 2022, Nov 2022); sustained +0.3%+
-  // profit-taking marked the 2017 and 2021 distribution zones.
-  const rpixChartData = useMemo(() => {
-    const full = alignByDate(nrplChartData, 'value', marketCapK4ChartData, 'value', (nrpl, mc) => {
-      return mc > 0 ? (nrpl / mc) * 100 : null;
-    });
-    return sliceByTimeframe(full, rpixTimeframe);
-  }, [nrplChartData, marketCapK4ChartData, rpixTimeframe, alignByDate]);
-  const rpixChartDataWithPrice = useMemo(() => addBtcPriceToChartData(rpixChartData), [rpixChartData, addBtcPriceToChartData]);
-
-  // CRRX: Cycle Risk-Reward (replaces MNSX)
-  // Formula: Mayer Multiple × Reserve Risk — price stretch above the
-  // 200-week average multiplied by confidence-adjusted risk. Both floored
-  // together only at generational bottoms (2015, early 2019, Mar 2020,
-  // late 2022: MM < 0.8 AND RR < 0.002); the product compresses roughly
-  // three orders of magnitude between bottoms (~0.0005) and tops (~0.05+).
-  const crrxChartData = useMemo(() => {
-    const full = alignByDate(mayerMultipleChartData, 'value', reserveRiskChartData, 'value', (mm, rr) => mm * rr);
-    return sliceByTimeframe(full, crrxTimeframe);
-  }, [mayerMultipleChartData, reserveRiskChartData, crrxTimeframe, alignByDate]);
-  const crrxChartDataWithPrice = useMemo(() => addBtcPriceToChartData(crrxChartData), [crrxChartData, addBtcPriceToChartData]);
-
-  // SGRX: Sentiment Regime (replaces PTIX)
-  // Formula: trailing 30-calendar-day average of the Fear & Greed index.
-  // The daily print whipsaws; the monthly regime doesn't. Sustained readings
-  // below 25 marked every accumulation window since 2018 (late 2018,
-  // Mar 2020, mid-2021, 2022); sustained above 75 marked the 2021
-  // distribution months. Actionable for 12-24 month positioning.
-  const sgrxChartData = useMemo(() => {
-    const fgPoints: ChartDataPoint[] = chartData.map((pt, i) => ({
-      index: i,
-      value: Number(pt.score),
-      dateFormatted: pt.date,
-      dateObj: pt.dateObj,
-    }));
-    const full = trailingAvg(fgPoints, 'value', 30);
-    return sliceByTimeframe(full, sgrxTimeframe);
-  }, [chartData, sgrxTimeframe, trailingAvg]);
-  const sgrxChartDataWithPrice = useMemo(() => addBtcPriceToChartData(sgrxChartData), [sgrxChartData, addBtcPriceToChartData]);
-
-  // DOMX: Dominance Rotation (replaces OCFX)
-  // Formula: 30-calendar-day change in BTC dominance (percentage points).
-  // Capital rotates into BTC when scared and out of it when greedy —
-  // dominance bled hard into every alt-euphoria phase (early 2018, May 2021)
-  // marking cycle tops, and climbed through bear markets as alts bled
-  // faster. The documented "altseason gauge".
-  const domxChartData = useMemo(() => {
-    const full = changeOverDays(dominanceChartData, 'btcDom', 30);
-    return sliceByTimeframe(full, domxTimeframe);
-  }, [dominanceChartData, domxTimeframe, changeOverDays]);
-  const domxChartDataWithPrice = useMemo(() => addBtcPriceToChartData(domxChartData), [domxChartData, addBtcPriceToChartData]);
-
   const slicedDominanceChartDataWithPrice = useMemo(() => {
     return sliceByTimeframe(dominanceChartDataWithPrice, dominanceTimeframe);
   }, [dominanceChartDataWithPrice, dominanceTimeframe]);
-
-  // Zone functions for NOVRIX-6 through NOVRIX-10
-  const getCprxZone = (v: number) => {
-    if (v >= 0.8)  return { label: 'MAX PAIN',       color: '#10B981' };
-    if (v >= 0.6)  return { label: 'CAPITULATION',   color: '#4CAF50' };
-    if (v >= 0.4)  return { label: 'BALANCED',       color: '#88B4D0' };
-    if (v >= 0.2)  return { label: 'PROFIT TAKING',  color: '#F7931A' };
-    return                { label: 'EUPHORIA',        color: '#EF4444' };
-  };
-  // RPIX zones (% of mcap / day): deep negative spikes only at capitulation
-  // bottoms (Mar 2020, Jun/Nov 2022); sustained high positive at the
-  // 2017/2021 distribution tops.
-  const getRpixZone = (v: number) => {
-    if (v >= 0.3)   return { label: 'EUPHORIA',      color: '#EF4444' };
-    if (v >= 0.1)   return { label: 'PROFIT TAKING', color: '#F7931A' };
-    if (v >= -0.1)  return { label: 'NEUTRAL',       color: '#88B4D0' };
-    if (v >= -0.3)  return { label: 'PAIN',          color: '#4CAF50' };
-    return                 { label: 'CAPITULATION',   color: '#10B981' };
-  };
-  // CRRX zones: the Mayer × Reserve Risk product floored below 0.001 only at
-  // generational bottoms (2015, 2019, 2020, 2022); above 0.08 only near tops.
-  const getCrrxZone = (v: number) => {
-    if (v >= 0.08)   return { label: 'TOP ZONE',         color: '#EF4444' };
-    if (v >= 0.02)   return { label: 'ELEVATED',         color: '#F7931A' };
-    if (v >= 0.005)  return { label: 'FAIR VALUE',       color: '#88B4D0' };
-    if (v >= 0.001)  return { label: 'ACCUMULATION',     color: '#4CAF50' };
-    return                  { label: 'GENERATIONAL BUY',  color: '#10B981' };
-  };
-  // SGRX zones (30d avg F&G): sustained fear below 25 = accumulation
-  // windows; sustained greed above 75 = distribution windows.
-  const getSgrxZone = (v: number) => {
-    if (v >= 75)  return { label: 'SUSTAINED GREED', color: '#EF4444' };
-    if (v >= 60)  return { label: 'GREEDY',          color: '#F7931A' };
-    if (v >= 45)  return { label: 'NEUTRAL',         color: '#88B4D0' };
-    if (v >= 25)  return { label: 'FEARFUL',         color: '#4CAF50' };
-    return               { label: 'SUSTAINED FEAR',   color: '#10B981' };
-  };
-  // DOMX zones (pp / 30d): sharp dominance drops = alt-euphoria (top risk);
-  // steady climbs = risk-off rotation typical of bears and early recovery.
-  const getDomxZone = (v: number) => {
-    if (v >= 2.0)   return { label: 'BTC ROTATION', color: '#10B981' };
-    if (v >= 0.5)   return { label: 'ROTATING',     color: '#4CAF50' };
-    if (v >= -0.5)  return { label: 'STABLE',       color: '#88B4D0' };
-    if (v >= -2.0)  return { label: 'RISK-ON',      color: '#F7931A' };
-    return                 { label: 'ALT EUPHORIA',  color: '#EF4444' };
-  };
 
   // KEY 4 panels array (simple single-line panels)
   const key4SimplePanels = useMemo<SentimentPanelConfig[]>(() => [
@@ -1711,110 +1436,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
     utxoLossChartData, utxoLossChartDataWithPrice, isUtxoLossLoading, utxoLossTimeframe,
   ]);
 
-  // NOVRIX INTELLIGENCE composite panels
-  const novrixPanels = useMemo<SentimentPanelConfig[]>(() => [
-    {
-      panelId: 'vtpx', indicatorKey: 'vtpx', code: 'VTPX', title: 'Veteran Premium', desc: 'LTH-MVRV to STH-MVRV: veteran vs tourist profitability spread', metricLabel: 'VTPX',
-      id: 'indicator-vtpx', accentColor: '#FF6B35', gradientId: 'vtpxFill', tag: '', updateFreq: 'd',
-      data: vtpxChartData, dataWithPrice: vtpxChartDataWithPrice, isLoading: isLthMvrvLoading || isSthMvrvLoading,
-      timeframe: vtpxTimeframe, setTimeframe: setVtpxTimeframe, zoneFn: getVtpxZone, tfOpts: NOVRIX_TF_OPTS,
-      referenceBands: VTPX_REFERENCE_BANDS,
-      headerValue: (v: number) => v.toFixed(2) + 'x', tooltipValue: (v: number) => v.toFixed(3) + 'x',
-      yAxisTick: (v: number) => v.toFixed(1) + 'x',
-    },
-    {
-      panelId: 'shax', indicatorKey: 'shax', code: 'SHAX', title: 'Strong-Hand Accumulation', desc: '30d Δ illiquid supply: coins gained or shed by strong hands', metricLabel: 'SHAX',
-      id: 'indicator-shax', accentColor: '#FF6B35', gradientId: 'shaxFill', tag: '', updateFreq: 'd',
-      data: shaxChartData, dataWithPrice: shaxChartDataWithPrice, isLoading: isIlliquidSupplyLoading,
-      timeframe: shaxTimeframe, setTimeframe: setShaxTimeframe, zoneFn: getShaxZone, tfOpts: NOVRIX_TF_OPTS,
-      referenceBands: SHAX_REFERENCE_BANDS,
-      headerValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(0)} BTC`, tooltipValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(0)} BTC`,
-      yAxisTick: (v: number) => v >= 1000 ? `${(v/1000).toFixed(0)}K` : v >= -1000 ? v.toFixed(0) : `${(v/1000).toFixed(0)}K`,
-    },
-    {
-      panelId: 'smfx', indicatorKey: 'smfx', code: 'SMFX', title: 'Smart Money Flow', desc: 'LTHΔ − STHΔ 30d position: coins flowing to veterans vs tourists', metricLabel: 'SMFX',
-      id: 'indicator-smfx', accentColor: '#FF6B35', gradientId: 'smfxFill', tag: '', updateFreq: 'd',
-      data: smfxChartData, dataWithPrice: smfxChartDataWithPrice, isLoading: isLthPositionChangeLoading || isSthPositionChangeLoading,
-      timeframe: smfxTimeframe, setTimeframe: setSmfxTimeframe, zoneFn: getSmfxZone, tfOpts: NOVRIX_TF_OPTS,
-      referenceBands: SMFX_REFERENCE_BANDS,
-      headerValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(0)} BTC`, tooltipValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(0)} BTC`,
-      yAxisTick: (v: number) => v >= 1000 ? `${(v/1000).toFixed(0)}K` : v >= -1000 ? v.toFixed(0) : `${(v/1000).toFixed(0)}K`,
-    },
-    {
-      panelId: 'levr', indicatorKey: 'levr', code: 'LEVR', title: 'Estimated Leverage Ratio', desc: 'OI to Market Cap: leveraged share of network value', metricLabel: 'LEVR',
-      id: 'indicator-levr', accentColor: '#FF6B35', gradientId: 'levrFill', tag: '', updateFreq: 'd',
-      data: levrChartData, dataWithPrice: levrChartDataWithPrice, isLoading: isOpenInterestLoading || isMarketCapK4Loading,
-      timeframe: levrTimeframe, setTimeframe: setLevrTimeframe, zoneFn: getLevrZone, tfOpts: NOVRIX_TF_OPTS,
-      referenceBands: LEVR_REFERENCE_BANDS,
-      headerValue: (v: number) => v.toFixed(2) + '%', tooltipValue: (v: number) => v.toFixed(3) + '%',
-      yAxisTick: (v: number) => v.toFixed(1) + '%',
-    },
-    {
-      panelId: 'rcfx', indicatorKey: 'rcfx', code: 'RCFX', title: 'Realized Cap Flow', desc: '30d %Δ realized cap: capital entering or leaving the cost basis', metricLabel: 'RCFX',
-      id: 'indicator-rcfx', accentColor: '#FF6B35', gradientId: 'rcfxFill', tag: '', updateFreq: 'd',
-      data: rcfxChartData, dataWithPrice: rcfxChartDataWithPrice, isLoading: isRealizedPriceLoading || isMarketCapK4Loading,
-      timeframe: rcfxTimeframe, setTimeframe: setRcfxTimeframe, zoneFn: getRcfxZone, tfOpts: NOVRIX_TF_OPTS,
-      referenceBands: RCFX_REFERENCE_BANDS,
-      headerValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(2)}%`, tooltipValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(2)}%`,
-      yAxisTick: (v: number) => `${v.toFixed(1)}%`,
-    },
-    {
-      panelId: 'cprx', indicatorKey: 'cprx', code: 'CPRX', title: 'Capitulation Pressure', desc: 'Realized Loss to Total P&L: actual financial pain ratio', metricLabel: 'CPRX',
-      id: 'indicator-cprx', accentColor: '#FF6B35', gradientId: 'cprxFill', tag: '', updateFreq: 'd',
-      data: cprxChartData, dataWithPrice: cprxChartDataWithPrice, isLoading: isRealizedLossLoading || isRealizedProfitLoading,
-      timeframe: cprxTimeframe, setTimeframe: setCprxTimeframe, zoneFn: getCprxZone, tfOpts: NOVRIX_TF_OPTS,
-      referenceBands: CPRX_REFERENCE_BANDS,
-      headerValue: (v: number) => (v * 100).toFixed(1) + '%', tooltipValue: (v: number) => (v * 100).toFixed(2) + '%',
-      yAxisTick: (v: number) => (v * 100).toFixed(0) + '%',
-    },
-    {
-      panelId: 'rpix', indicatorKey: 'rpix', code: 'RPIX', title: 'Realized P&L Intensity', desc: 'NRPL to Market Cap: realized P&L sized by network value', metricLabel: 'RPIX',
-      id: 'indicator-rpix', accentColor: '#FF6B35', gradientId: 'rpixFill', tag: '', updateFreq: 'd',
-      data: rpixChartData, dataWithPrice: rpixChartDataWithPrice, isLoading: isNrplLoading || isMarketCapK4Loading,
-      timeframe: rpixTimeframe, setTimeframe: setRpixTimeframe, zoneFn: getRpixZone, tfOpts: NOVRIX_TF_OPTS,
-      referenceBands: RPIX_REFERENCE_BANDS,
-      headerValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(3)}%`, tooltipValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(3)}%`,
-      yAxisTick: (v: number) => `${v.toFixed(1)}%`,
-    },
-    {
-      panelId: 'crrx', indicatorKey: 'crrx', code: 'CRRX', title: 'Cycle Risk-Reward', desc: 'Mayer × Reserve Risk: generational bottom confluence', metricLabel: 'CRRX',
-      id: 'indicator-crrx', accentColor: '#FF6B35', gradientId: 'crrxFill', tag: '', updateFreq: 'd',
-      data: crrxChartData, dataWithPrice: crrxChartDataWithPrice, isLoading: isMayerMultipleLoading || isReserveRiskLoading,
-      timeframe: crrxTimeframe, setTimeframe: setCrrxTimeframe, zoneFn: getCrrxZone, tfOpts: NOVRIX_TF_OPTS,
-      referenceBands: CRRX_REFERENCE_BANDS,
-      headerValue: (v: number) => v.toFixed(4), tooltipValue: (v: number) => v.toFixed(5),
-      yAxisTick: (v: number) => v.toFixed(3),
-    },
-    {
-      panelId: 'sgrx', indicatorKey: 'sgrx', code: 'SGRX', title: 'Sentiment Regime', desc: '30d average Fear & Greed: sustained fear and greed regimes', metricLabel: 'SGRX',
-      id: 'indicator-sgrx', accentColor: '#FF6B35', gradientId: 'sgrxFill', tag: '', updateFreq: 'd',
-      data: sgrxChartData, dataWithPrice: sgrxChartDataWithPrice, isLoading: isLoading,
-      timeframe: sgrxTimeframe, setTimeframe: setSgrxTimeframe, zoneFn: getSgrxZone, tfOpts: NOVRIX_TF_OPTS,
-      referenceBands: SGRX_REFERENCE_BANDS,
-      headerValue: (v: number) => v.toFixed(0), tooltipValue: (v: number) => v.toFixed(1),
-      yAxisTick: (v: number) => v.toFixed(0),
-    },
-    {
-      panelId: 'domx', indicatorKey: 'domx', code: 'DOMX', title: 'Dominance Rotation', desc: '30d Δ BTC dominance: risk-off rotation vs altseason', metricLabel: 'DOMX',
-      id: 'indicator-domx', accentColor: '#FF6B35', gradientId: 'domxFill', tag: '', updateFreq: 'd',
-      data: domxChartData, dataWithPrice: domxChartDataWithPrice, isLoading: isDominanceLoading,
-      timeframe: domxTimeframe, setTimeframe: setDomxTimeframe, zoneFn: getDomxZone, tfOpts: NOVRIX_TF_OPTS,
-      referenceBands: DOMX_REFERENCE_BANDS,
-      headerValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(1)} pp`, tooltipValue: (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(2)} pp`,
-      yAxisTick: (v: number) => `${v.toFixed(0)} pp`,
-    },
-  ], [
-    vtpxChartData, vtpxChartDataWithPrice, isLthMvrvLoading, isSthMvrvLoading,
-    shaxChartData, shaxChartDataWithPrice, isIlliquidSupplyLoading,
-    smfxChartData, smfxChartDataWithPrice, isLthPositionChangeLoading, isSthPositionChangeLoading,
-    levrChartData, levrChartDataWithPrice, isOpenInterestLoading, isMarketCapK4Loading,
-    rcfxChartData, rcfxChartDataWithPrice, isRealizedPriceLoading, isMarketCapK4Loading,
-    cprxChartData, cprxChartDataWithPrice, isRealizedLossLoading, isRealizedProfitLoading,
-    rpixChartData, rpixChartDataWithPrice, isNrplLoading, isMarketCapK4Loading,
-    crrxChartData, crrxChartDataWithPrice, isMayerMultipleLoading, isReserveRiskLoading,
-    sgrxChartData, sgrxChartDataWithPrice, isLoading,
-    domxChartData, domxChartDataWithPrice, isDominanceLoading,
-  ]);
+
 
   const macroPanels = useMemo<SentimentPanelConfig[]>(() => [
     {
@@ -2559,18 +2181,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
 
   // Intel Registry categories — pure static data, memoized to avoid rebuilding on every render
   const registryCats = useMemo(() => [
-    { id: 'novrix-intelligence', label: 'NOVRIX INTELLIGENCE', accent: '#FF6B35', items: [
-      { name: 'Veteran Premium',          id: 'indicator-vtpx', live: true, freq: '' },
-      { name: 'Strong-Hand Accumulation', id: 'indicator-shax', live: true, freq: '' },
-      { name: 'Smart Money Flow',         id: 'indicator-smfx', live: true, freq: '' },
-      { name: 'Estimated Leverage Ratio', id: 'indicator-levr', live: true, freq: '' },
-      { name: 'Realized Cap Flow',        id: 'indicator-rcfx', live: true, freq: '' },
-      { name: 'Capitulation Pressure',    id: 'indicator-cprx', live: true, freq: '' },
-      { name: 'Realized P&L Intensity',   id: 'indicator-rpix', live: true, freq: '' },
-      { name: 'Cycle Risk-Reward',        id: 'indicator-crrx', live: true, freq: '' },
-      { name: 'Sentiment Regime',         id: 'indicator-sgrx', live: true, freq: '' },
-      { name: 'Dominance Rotation',       id: 'indicator-domx', live: true, freq: '' },
-    ]},
     { id: 'sentiment', label: 'SENTIMENT', accent: '#C2344D', items: [
       { name: 'Fear & Greed',       id: 'indicator-fear-greed',       live: true,  freq: '' },
       { name: 'NUPL',               id: 'indicator-nupl',             live: true,  freq: ''   },
@@ -3851,25 +3461,6 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
               />
             ))}
 
-            {/* ── NOVRIX INTELLIGENCE Composite Panels ── */}
-            {novrixPanels.filter(p => selectedIndicator === null || p.id === selectedIndicator).map((panel) => (
-              <SentimentChartPanel
-                key={panel.panelId}
-                panel={panel}
-                selectedIndicator={selectedIndicator}
-                capturePanel={capturePanel}
-                preloadCapture={preloadCapture}
-                setPanelRef={setPanelRef}
-                showBtcPrice={showBtcPrice}
-                setShowBtcPrice={setShowBtcPrice}
-                showIndicator={showIndicator}
-                setShowIndicator={setShowIndicator}
-                visiblePanels={visiblePanels}
-                rechartsReady={true}
-                ch={ch}
-                recharts={_rechartsModule ?? {}}
-              />
-            ))}
 
             {/* Social Sentiment Analysis Panel */}
             {(selectedIndicator === null || selectedIndicator === 'indicator-social-sentiment') && (

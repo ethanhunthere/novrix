@@ -44,11 +44,6 @@ const SentimentSidebar = memo(function SentimentSidebar({
     ? (typeof height === 'number' ? `${height}px` : height)
     : undefined;
 
-  // Total count of concrete indicators
-  const totalIndicators = registryCats.reduce((acc, cat) => {
-    return acc + cat.items.filter((it) => !it.isDivider).length;
-  }, 0);
-
   return (
     <div
       className="w-full flex flex-col overflow-hidden select-none"
@@ -83,20 +78,6 @@ const SentimentSidebar = memo(function SentimentSidebar({
             }}
           >
             Intel Registry
-          </span>
-          <span
-            style={{
-              fontSize: '9.5px',
-              fontFamily: 'var(--ff-mono)',
-              color: '#8C857C',
-              background: '#191512',
-              border: '1px solid rgba(245, 241, 234, 0.08)',
-              padding: '1px 6px',
-              borderRadius: '2px',
-              fontWeight: 600,
-            }}
-          >
-            {totalIndicators}
           </span>
         </div>
 
@@ -268,15 +249,6 @@ const SentimentSidebar = memo(function SentimentSidebar({
                   </span>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
-                  <span
-                    style={{
-                      fontSize: '9px',
-                      fontFamily: 'var(--ff-mono)',
-                      color: '#736B63',
-                    }}
-                  >
-                    {visibleIndicators.length}
-                  </span>
                   {!q && (
                     <span
                       style={{

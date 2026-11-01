@@ -144,7 +144,7 @@ export default function RootLayout({
                       "@id": `${siteUrl}/sentiment#page`,
                       url: `${siteUrl}/sentiment`,
                       name: "Sentiment Intelligence",
-                      description: "Interactive 94-indicator workspace covering on-chain valuation, cycle distribution zones, and Federal Reserve macro liquidity.",
+                      description: "Interactive workspace covering on-chain valuation, cycle distribution zones, and Federal Reserve macro liquidity.",
                     },
                     {
                       "@type": "WebPage",
@@ -170,7 +170,7 @@ export default function RootLayout({
                     priceCurrency: "USD",
                   },
                   featureList: [
-                    "94 live Bitcoin on-chain and macroeconomic indicators",
+                    "Live Bitcoin on-chain and macroeconomic indicators",
                     "Dual 1Y and ALL cycle timeframes with logarithmic price scales",
                     "Historical Bitcoin halving reference epochs",
                     "Distribution zone bands for accumulation and top detection",

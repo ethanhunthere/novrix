@@ -3,7 +3,7 @@ import { defaultOgImages, defaultTwitterImages } from '@/lib/og-config';
 
 export const metadata: Metadata = {
   title: 'Novrix - Sentiment',
-  description: 'Bitcoin on-chain intelligence workspace featuring 94 indicators across valuation models, profitability dynamics, holder behavior, miner economics, and Federal Reserve macro liquidity.',
+  description: 'Bitcoin on-chain intelligence workspace across valuation models, profitability dynamics, holder behavior, miner economics, and Federal Reserve macro liquidity.',
   keywords: [
     'Bitcoin on-chain metrics',
     'NUPL',
@@ -22,13 +22,13 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Novrix - Sentiment',
-    description: 'Bitcoin on-chain intelligence workspace featuring 94 indicators across valuation models, profitability dynamics, holder behavior, miner economics, and Federal Reserve macro liquidity.',
+    description: 'Bitcoin on-chain intelligence workspace across valuation models, profitability dynamics, holder behavior, miner economics, and Federal Reserve macro liquidity.',
     url: 'https://novrix.io/sentiment',
     images: defaultOgImages,
   },
   twitter: {
     title: 'Novrix - Sentiment',
-    description: 'Bitcoin on-chain intelligence workspace featuring 94 indicators across valuation models, profitability dynamics, holder behavior, miner economics, and Federal Reserve macro liquidity.',
+    description: 'Bitcoin on-chain intelligence workspace across valuation models, profitability dynamics, holder behavior, miner economics, and Federal Reserve macro liquidity.',
     images: defaultTwitterImages,
   },
 };
@@ -40,7 +40,7 @@ const sentimentJsonLd = {
       '@type': 'Dataset',
       '@id': 'https://novrix.io/sentiment#dataset',
       name: 'NOVRIX Bitcoin On-Chain & Sentiment Indicator Registry',
-      description: 'Historical and daily time-series dataset of 94 indicators spanning Bitcoin valuation, profitability, holder distribution, miner economics, and central bank macro liquidity.',
+      description: 'Historical and daily time-series dataset of indicators spanning Bitcoin valuation, profitability, holder distribution, miner economics, and central bank macro liquidity.',
       url: 'https://novrix.io/sentiment',
       license: 'https://opensource.org/licenses/MIT',
       creator: {

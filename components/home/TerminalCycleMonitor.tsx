@@ -364,7 +364,7 @@ export default function TerminalCycleMonitor() {
             letterSpacing: '0.02em',
           }}
         >
-          Open Sentiment Workspace · Explore All 94 Charts
+          Open Sentiment Workspace · Live Market Radar
         </span>
         <span
           className="group-hover:translate-x-1 transition-transform duration-150"
