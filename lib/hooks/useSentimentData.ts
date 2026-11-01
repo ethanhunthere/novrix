@@ -2,7 +2,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { fetchCached } from '@/lib/bootCache';
 import { fetchWithSSCache } from '@/lib/fetchWithSSCache';
-import { withSentimentDataVersion } from '@/lib/sentimentDataVersion';
+import { SENTIMENT_DATA_VERSION, withSentimentDataVersion } from '@/lib/sentimentDataVersion';
 import type { IndicatorPoint, IndicatorApiResponse, BulkIndicatorsResponse, DominancePoint, SocialCoin, ChartDataPoint, TrendingCoin } from '@/lib/types/sentiment';
 import { downsample, fastFormatDate, fastFormatFreqDate, SHORT_MONTHS } from '@/components/sentiment/SentimentPanelUtils';
 
@@ -146,46 +146,203 @@ export function ensureFreshToToday(data: IndicatorPoint[], valueKey = 'value'): 
 
 export const ensureFreshToOct24 = ensureFreshToToday;
 
+let _cachedBulkData: BulkIndicatorsResponse | null = null;
+function getInitialBulkData(): BulkIndicatorsResponse | null {
+  if (_cachedBulkData) return _cachedBulkData;
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = sessionStorage.getItem(`nvrix-ind-${SENTIMENT_DATA_VERSION}`);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      const d = parsed?.d;
+      const t = parsed?.t;
+      if (Date.now() - t < 3600_000 && d?.success && d?.data) {
+        _cachedBulkData = d.data as BulkIndicatorsResponse;
+        return _cachedBulkData;
+      }
+    }
+  } catch {
+    // sessionStorage error — ignore
+  }
+  return null;
+}
+
+function getInitialFngData(): IndicatorPoint[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = sessionStorage.getItem(`novrix_${SENTIMENT_DATA_VERSION}__fear_greed_days_999999_cache`);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      const d = parsed?.d;
+      const t = parsed?.t;
+      if (Date.now() - t < 3600_000 && d?.success && Array.isArray(d?.data) && d.data.length > 0) {
+        const seen = new Set<string>();
+        return d.data.filter((item: { timestamp?: string; time?: string }) => {
+          const dateKey = (item.timestamp || item.time || '').substring(0, 10);
+          if (!dateKey || seen.has(dateKey)) return false;
+          seen.add(dateKey);
+          return true;
+        }).map((item: { timestamp?: string; time?: string; score?: number; value?: string | number; label?: string; value_classification?: string }) => {
+          const iso = item.timestamp || item.time || '';
+          const scoreVal = Number(item.score ?? item.value ?? 0);
+          return {
+            time: iso,
+            timestamp: iso,
+            value: scoreVal,
+            score: scoreVal,
+            label: item.label ?? item.value_classification ?? '',
+            dominance: null,
+            eth_dominance: null,
+            trend_direction: (scoreVal < 25 ? 'bearish' : scoreVal > 75 ? 'bullish' : 'neutral') as 'bearish' | 'bullish' | 'neutral',
+          };
+        });
+      }
+    }
+  } catch {}
+  return [];
+}
+
+function getInitialCurrentSentiment(): CurrentSentimentResponse | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = sessionStorage.getItem(`novrix_${SENTIMENT_DATA_VERSION}__sentiment_cached_cache`);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      const d = parsed?.d;
+      const t = parsed?.t;
+      if (Date.now() - t < 3600_000 && d?.success && d?.data) {
+        return d as CurrentSentimentResponse;
+      }
+    }
+  } catch {}
+  return null;
+}
+
+function getInitialDerivedData(b: BulkIndicatorsResponse | null) {
+  if (!b) return {};
+
+  const derivedRealizedPrice: IndicatorPoint[] = [];
+  if (b.btcPrice && b.mvrv && b.btcPrice.length > 0 && b.mvrv.length > 0) {
+    const mvrvMap: Record<string, number> = {};
+    b.mvrv.forEach((m) => {
+      if (m.time && typeof m.mvrv === 'number') mvrvMap[m.time.slice(0, 10)] = m.mvrv;
+    });
+    b.btcPrice.forEach((p) => {
+      const dt = p.time ? p.time.slice(0, 10) : '';
+      const m = mvrvMap[dt];
+      if (m && m > 0 && typeof p.price === 'number' && p.price > 0) {
+        derivedRealizedPrice.push({
+          time: p.time,
+          value: Math.round((p.price / m) * 100) / 100,
+        });
+      }
+    });
+  }
+
+  const derivedNrpl: IndicatorPoint[] = [];
+  if (b.realizedProfit && b.realizedLoss && b.realizedProfit.length > 0) {
+    const lossMap: Record<string, number> = {};
+    b.realizedLoss.forEach((l) => {
+      if (l.time && typeof l.realized_loss === 'number') lossMap[l.time.slice(0, 10)] = Math.abs(l.realized_loss);
+    });
+    b.realizedProfit.forEach((p) => {
+      const dt = p.time ? p.time.slice(0, 10) : '';
+      const loss = lossMap[dt] ?? 0;
+      if (typeof p.realized_profit === 'number') {
+        derivedNrpl.push({
+          time: p.time,
+          value: Math.round((p.realized_profit - loss) * 100) / 100,
+        });
+      }
+    });
+  }
+
+  const derivedUtxoP: IndicatorPoint[] = [];
+  const derivedUtxoL: IndicatorPoint[] = [];
+  if (b.supplyProfit && b.supplyLoss && b.supplyProfit.length > 0 && b.supplyLoss.length > 0) {
+    const lossMap: Record<string, number> = {};
+    b.supplyLoss.forEach(l => {
+      if (l.time && typeof l.supply_in_loss === 'number') lossMap[l.time.slice(0, 10)] = l.supply_in_loss;
+    });
+    b.supplyProfit.forEach(p => {
+      const dt = p.time ? p.time.slice(0, 10) : '';
+      const loss = lossMap[dt];
+      const profit = p.supply_in_profit;
+      if (typeof profit === 'number' && typeof loss === 'number' && (profit + loss) > 0) {
+        const total = profit + loss;
+        derivedUtxoP.push({ time: p.time, value: Math.round((profit / total) * 10000) / 100 });
+        derivedUtxoL.push({ time: p.time, value: Math.round((loss / total) * 10000) / 100 });
+      }
+    });
+  }
+
+  return {
+    realizedPrice: derivedRealizedPrice,
+    nrpl: derivedNrpl,
+    utxoProfit: derivedUtxoP,
+    utxoLoss: derivedUtxoL,
+  };
+}
+
+function getInitialMacroData(key: string): IndicatorPoint[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const filename = (key === 'mabmm301' ? 'mabmm301usm189s' : key).toLowerCase();
+    const cacheKey = `novrix_${SENTIMENT_DATA_VERSION}__data_fred_${filename}_json_cache`;
+    const raw = sessionStorage.getItem(cacheKey);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed?.d?.success && Array.isArray(parsed.d.data) && parsed.d.data.length > 0) {
+        return parsed.d.data;
+      }
+    }
+  } catch {}
+  return [];
+}
+
 export function useSentimentData() {
-  const [sentimentData, setSentimentData] = useState<CurrentSentimentResponse | null>(null);
-  const [allFngData, setAllFngData] = useState<IndicatorPoint[]>([]);
+  const initialBulk = useMemo(() => getInitialBulkData(), []);
+  const initialDerived = useMemo(() => getInitialDerivedData(initialBulk), [initialBulk]);
+
+  const [sentimentData, setSentimentData] = useState<CurrentSentimentResponse | null>(() => getInitialCurrentSentiment());
+  const [allFngData, setAllFngData] = useState<IndicatorPoint[]>(() => getInitialFngData());
   const [historicalData, setHistoricalData] = useState<IndicatorPoint[]>([]);
   const [dominanceData, setDominanceData] = useState<IndicatorPoint[]>([]);
   const [ethDominanceData, setEthDominanceData] = useState<IndicatorPoint[]>([]);
   const [selectedTimeframe, setSelectedTimeframe] = useState<string>('365');
   const [dominanceTimeframe, setDominanceTimeframe] = useState<string>('365');
-  const [nuplData, setNuplData] = useState<IndicatorPoint[]>([]);
-  const [isNuplLoading, setIsNuplLoading] = useState(true);
+  const [nuplData, setNuplData] = useState<IndicatorPoint[]>(() => initialBulk?.nupl ?? []);
+  const [isNuplLoading, setIsNuplLoading] = useState(() => !(initialBulk?.nupl?.length));
   const [nuplTimeframe, setNuplTimeframe] = useState<string>('999999');
-  const [mvrvData, setMvrvData] = useState<IndicatorPoint[]>([]);
-  const [isMvrvLoading, setIsMvrvLoading] = useState(true);
+  const [mvrvData, setMvrvData] = useState<IndicatorPoint[]>(() => initialBulk?.mvrv ?? []);
+  const [isMvrvLoading, setIsMvrvLoading] = useState(() => !(initialBulk?.mvrv?.length));
   const [mvrvTimeframe, setMvrvTimeframe] = useState<string>('999999');
-  const [soprData, setSoprData] = useState<IndicatorPoint[]>([]);
-  const [isSoprLoading, setIsSoprLoading] = useState(true);
+  const [soprData, setSoprData] = useState<IndicatorPoint[]>(() => initialBulk?.sopr ?? []);
+  const [isSoprLoading, setIsSoprLoading] = useState(() => !(initialBulk?.sopr?.length));
   const [soprTimeframe, setSoprTimeframe] = useState<string>('999999');
-  const [supplyLossData, setSupplyLossData] = useState<IndicatorPoint[]>([]);
-  const [isSupplyLossLoading, setIsSupplyLossLoading] = useState(true);
+  const [supplyLossData, setSupplyLossData] = useState<IndicatorPoint[]>(() => initialBulk?.supplyLoss ?? []);
+  const [isSupplyLossLoading, setIsSupplyLossLoading] = useState(() => !(initialBulk?.supplyLoss?.length));
   const [supplyLossTimeframe, setSupplyLossTimeframe] = useState<string>('999999');
-  const [supplyProfitData, setSupplyProfitData] = useState<IndicatorPoint[]>([]);
-  const [isSupplyProfitLoading, setIsSupplyProfitLoading] = useState(true);
+  const [supplyProfitData, setSupplyProfitData] = useState<IndicatorPoint[]>(() => initialBulk?.supplyProfit ?? []);
+  const [isSupplyProfitLoading, setIsSupplyProfitLoading] = useState(() => !(initialBulk?.supplyProfit?.length));
   const [supplyProfitTimeframe, setSupplyProfitTimeframe] = useState<string>('999999');
-  const [realizedProfitData, setRealizedProfitData] = useState<IndicatorPoint[]>([]);
-  const [isRealizedProfitLoading, setIsRealizedProfitLoading] = useState(true);
+  const [realizedProfitData, setRealizedProfitData] = useState<IndicatorPoint[]>(() => initialBulk?.realizedProfit ?? []);
+  const [isRealizedProfitLoading, setIsRealizedProfitLoading] = useState(() => !(initialBulk?.realizedProfit?.length));
   const [realizedProfitTimeframe, setRealizedProfitTimeframe] = useState<string>('999999');
-  const [realizedLossData, setRealizedLossData] = useState<IndicatorPoint[]>([]);
-  const [isRealizedLossLoading, setIsRealizedLossLoading] = useState(true);
+  const [realizedLossData, setRealizedLossData] = useState<IndicatorPoint[]>(() => initialBulk?.realizedLoss ?? []);
+  const [isRealizedLossLoading, setIsRealizedLossLoading] = useState(() => !(initialBulk?.realizedLoss?.length));
   const [realizedLossTimeframe, setRealizedLossTimeframe] = useState<string>('999999');
-  const [sthMvrvData, setSthMvrvData] = useState<IndicatorPoint[]>([]);
-  const [isSthMvrvLoading, setIsSthMvrvLoading] = useState(true);
+  const [sthMvrvData, setSthMvrvData] = useState<IndicatorPoint[]>(() => initialBulk?.sthMvrv ?? []);
+  const [isSthMvrvLoading, setIsSthMvrvLoading] = useState(() => !(initialBulk?.sthMvrv?.length));
   const [sthMvrvTimeframe, setSthMvrvTimeframe] = useState<string>('999999');
-  const [hashrateData, setHashrateData] = useState<IndicatorPoint[]>([]);
-  const [isHashrateLoading, setIsHashrateLoading] = useState(true);
+  const [hashrateData, setHashrateData] = useState<IndicatorPoint[]>(() => initialBulk?.hashrate ?? []);
+  const [isHashrateLoading, setIsHashrateLoading] = useState(() => !(initialBulk?.hashrate?.length));
   const [hashrateTimeframe, setHashrateTimeframe] = useState<string>('999999');
-  const [lthMvrvData, setLthMvrvData] = useState<IndicatorPoint[]>([]);
-  const [isLthMvrvLoading, setIsLthMvrvLoading] = useState(true);
+  const [lthMvrvData, setLthMvrvData] = useState<IndicatorPoint[]>(() => initialBulk?.lthMvrv ?? []);
+  const [isLthMvrvLoading, setIsLthMvrvLoading] = useState(() => !(initialBulk?.lthMvrv?.length));
   const [lthMvrvTimeframe, setLthMvrvTimeframe] = useState<string>('999999');
-  const [ssrData, setSsrData] = useState<IndicatorPoint[]>([]);
-  const [isSsrLoading, setIsSsrLoading] = useState(true);
+  const [ssrData, setSsrData] = useState<IndicatorPoint[]>(() => initialBulk?.ssr ?? []);
+  const [isSsrLoading, setIsSsrLoading] = useState(() => !(initialBulk?.ssr?.length));
   const [ssrTimeframe, setSsrTimeframe] = useState<string>('999999');
   // KEY 2 indicators
   const [puellMultipleData, setPuellMultipleData] = useState<IndicatorPoint[]>([]);
@@ -223,8 +380,8 @@ export function useSentimentData() {
   const [hashribbonsTimeframe, setHashribbonsTimeframe] = useState<string>('999999');
 
   // KEY3 indicators
-  const [nrplData, setNrplData] = useState<IndicatorPoint[]>([]);
-  const [isNrplLoading, setIsNrplLoading] = useState(true);
+  const [nrplData, setNrplData] = useState<IndicatorPoint[]>(() => initialDerived.nrpl ?? []);
+  const [isNrplLoading, setIsNrplLoading] = useState(() => !(initialDerived.nrpl?.length));
   const [nrplTimeframe, setNrplTimeframe] = useState<string>('999999');
   const [rhodlData, setRhodlData] = useState<IndicatorPoint[]>([]);
   const [isRhodlLoading, setIsRhodlLoading] = useState(true);
@@ -246,8 +403,8 @@ export function useSentimentData() {
   const [cvddTimeframe, setCvddTimeframe] = useState<string>('999999');
 
   // KEY 4 indicators
-  const [realizedPriceData, setRealizedPriceData] = useState<IndicatorPoint[]>([]);
-  const [isRealizedPriceLoading, setIsRealizedPriceLoading] = useState(true);
+  const [realizedPriceData, setRealizedPriceData] = useState<IndicatorPoint[]>(() => initialDerived.realizedPrice ?? []);
+  const [isRealizedPriceLoading, setIsRealizedPriceLoading] = useState(() => !(initialDerived.realizedPrice?.length));
   const [realizedPriceTimeframe, setRealizedPriceTimeframe] = useState<string>('999999');
   const [marketCapK4Data, setMarketCapK4Data] = useState<IndicatorPoint[]>([]);
   const [isMarketCapK4Loading, setIsMarketCapK4Loading] = useState(true);
@@ -270,35 +427,35 @@ export function useSentimentData() {
   const [minerSellPressureData, setMinerSellPressureData] = useState<IndicatorPoint[]>([]);
   const [isMinerSellPressureLoading, setIsMinerSellPressureLoading] = useState(true);
   const [minerSellPressureTimeframe, setMinerSellPressureTimeframe] = useState<string>('999999');
-  const [utxoProfitData, setUtxoProfitData] = useState<IndicatorPoint[]>([]);
-  const [isUtxoProfitLoading, setIsUtxoProfitLoading] = useState(true);
+  const [utxoProfitData, setUtxoProfitData] = useState<IndicatorPoint[]>(() => initialDerived.utxoProfit ?? []);
+  const [isUtxoProfitLoading, setIsUtxoProfitLoading] = useState(() => !(initialDerived.utxoProfit?.length));
   const [utxoProfitTimeframe, setUtxoProfitTimeframe] = useState<string>('999999');
-  const [utxoLossData, setUtxoLossData] = useState<IndicatorPoint[]>([]);
-  const [isUtxoLossLoading, setIsUtxoLossLoading] = useState(true);
+  const [utxoLossData, setUtxoLossData] = useState<IndicatorPoint[]>(() => initialDerived.utxoLoss ?? []);
+  const [isUtxoLossLoading, setIsUtxoLossLoading] = useState(() => !(initialDerived.utxoLoss?.length));
   const [utxoLossTimeframe, setUtxoLossTimeframe] = useState<string>('999999');
 
 
   // KEY 5 macro indicators
-  const [m2Data, setM2Data] = useState<IndicatorPoint[]>([]);
-  const [isM2Loading, setIsM2Loading] = useState(true);
+  const [m2Data, setM2Data] = useState<IndicatorPoint[]>(() => getInitialMacroData('m2'));
+  const [isM2Loading, setIsM2Loading] = useState(() => !getInitialMacroData('m2').length);
   const [m2Timeframe, setM2Timeframe] = useState<string>('999999');
-  const [dxyData, setDxyData] = useState<IndicatorPoint[]>([]);
-  const [isDxyLoading, setIsDxyLoading] = useState(true);
+  const [dxyData, setDxyData] = useState<IndicatorPoint[]>(() => getInitialMacroData('dxy'));
+  const [isDxyLoading, setIsDxyLoading] = useState(() => !getInitialMacroData('dxy').length);
   const [dxyTimeframe, setDxyTimeframe] = useState<string>('999999');
-  const [vixData, setVixData] = useState<IndicatorPoint[]>([]);
-  const [isVixLoading, setIsVixLoading] = useState(true);
+  const [vixData, setVixData] = useState<IndicatorPoint[]>(() => getInitialMacroData('vix'));
+  const [isVixLoading, setIsVixLoading] = useState(() => !getInitialMacroData('vix').length);
   const [vixTimeframe, setVixTimeframe] = useState<string>('999999');
-  const [fedfundsData, setFedfundsData] = useState<IndicatorPoint[]>([]);
-  const [isFedfundsLoading, setIsFedfundsLoading] = useState(true);
+  const [fedfundsData, setFedfundsData] = useState<IndicatorPoint[]>(() => getInitialMacroData('fedfunds'));
+  const [isFedfundsLoading, setIsFedfundsLoading] = useState(() => !getInitialMacroData('fedfunds').length);
   const [fedfundsTimeframe, setFedfundsTimeframe] = useState<string>('999999');
   const [etfData, setEtfData] = useState<IndicatorPoint[]>([]);
   const [isEtfLoading, setIsEtfLoading] = useState(true);
   const [etfTimeframe, setEtfTimeframe] = useState<string>('999999');
-  const [sp500Data, setSp500Data] = useState<IndicatorPoint[]>([]);
-  const [isSp500Loading, setIsSp500Loading] = useState(true);
+  const [sp500Data, setSp500Data] = useState<IndicatorPoint[]>(() => getInitialMacroData('sp500'));
+  const [isSp500Loading, setIsSp500Loading] = useState(() => !getInitialMacroData('sp500').length);
   const [sp500Timeframe, setSp500Timeframe] = useState<string>('999999');
-  const [goldData, setGoldData] = useState<IndicatorPoint[]>([]);
-  const [isGoldLoading, setIsGoldLoading] = useState(true);
+  const [goldData, setGoldData] = useState<IndicatorPoint[]>(() => getInitialMacroData('gold'));
+  const [isGoldLoading, setIsGoldLoading] = useState(() => !getInitialMacroData('gold').length);
   const [goldTimeframe, setGoldTimeframe] = useState<string>('999999');
   const [stablecoinSupplyData, setStablecoinSupplyData] = useState<IndicatorPoint[]>([]);
   const [isStablecoinSupplyLoading, setIsStablecoinSupplyLoading] = useState(true);
@@ -311,123 +468,123 @@ export function useSentimentData() {
   const [cryptoMarketCapTimeframe, setCryptoMarketCapTimeframe] = useState<string>('999999');
 
   // FRED extended macro state
-  const [sofrData, setSofrData] = useState<IndicatorPoint[]>([]);
-  const [isSofrLoading, setIsSofrLoading] = useState(true);
+  const [sofrData, setSofrData] = useState<IndicatorPoint[]>(() => getInitialMacroData('sofr'));
+  const [isSofrLoading, setIsSofrLoading] = useState(() => !getInitialMacroData('sofr').length);
   const [sofrTimeframe, setSofrTimeframe] = useState<string>('999999');
-  const [walclData, setWalclData] = useState<IndicatorPoint[]>([]);
-  const [isWalclLoading, setIsWalclLoading] = useState(true);
+  const [walclData, setWalclData] = useState<IndicatorPoint[]>(() => getInitialMacroData('walcl'));
+  const [isWalclLoading, setIsWalclLoading] = useState(() => !getInitialMacroData('walcl').length);
   const [walclTimeframe, setWalclTimeframe] = useState<string>('999999');
-  const [wresbalData, setWresbalData] = useState<IndicatorPoint[]>([]);
-  const [isWresbalLoading, setIsWresbalLoading] = useState(true);
+  const [wresbalData, setWresbalData] = useState<IndicatorPoint[]>(() => getInitialMacroData('wresbal'));
+  const [isWresbalLoading, setIsWresbalLoading] = useState(() => !getInitialMacroData('wresbal').length);
   const [wresbalTimeframe, setWresbalTimeframe] = useState<string>('999999');
-  const [rrpontsydData, setRrpontsydData] = useState<IndicatorPoint[]>([]);
-  const [isRrpontsydLoading, setIsRrpontsydLoading] = useState(true);
+  const [rrpontsydData, setRrpontsydData] = useState<IndicatorPoint[]>(() => getInitialMacroData('rrpontsyd'));
+  const [isRrpontsydLoading, setIsRrpontsydLoading] = useState(() => !getInitialMacroData('rrpontsyd').length);
   const [rrpontsydTimeframe, setRrpontsydTimeframe] = useState<string>('999999');
-  const [cpiaucslData, setCpiaucslData] = useState<IndicatorPoint[]>([]);
-  const [isCpiaucslLoading, setIsCpiaucslLoading] = useState(true);
+  const [cpiaucslData, setCpiaucslData] = useState<IndicatorPoint[]>(() => getInitialMacroData('cpiaucsl'));
+  const [isCpiaucslLoading, setIsCpiaucslLoading] = useState(() => !getInitialMacroData('cpiaucsl').length);
   const [cpiaucslTimeframe, setCpiaucslTimeframe] = useState<string>('999999');
-  const [cpilfeslData, setCpilfeslData] = useState<IndicatorPoint[]>([]);
-  const [isCpilfeslLoading, setIsCpilfeslLoading] = useState(true);
+  const [cpilfeslData, setCpilfeslData] = useState<IndicatorPoint[]>(() => getInitialMacroData('cpilfesl'));
+  const [isCpilfeslLoading, setIsCpilfeslLoading] = useState(() => !getInitialMacroData('cpilfesl').length);
   const [cpilfeslTimeframe, setCpilfeslTimeframe] = useState<string>('999999');
-  const [pcepiData, setPcepiData] = useState<IndicatorPoint[]>([]);
-  const [isPcepiLoading, setIsPcepiLoading] = useState(true);
+  const [pcepiData, setPcepiData] = useState<IndicatorPoint[]>(() => getInitialMacroData('pcepi'));
+  const [isPcepiLoading, setIsPcepiLoading] = useState(() => !getInitialMacroData('pcepi').length);
   const [pcepiTimeframe, setPcepiTimeframe] = useState<string>('999999');
-  const [pcepilfeData, setPcepilfeData] = useState<IndicatorPoint[]>([]);
-  const [isPcepilfeLoading, setIsPcepilfeLoading] = useState(true);
+  const [pcepilfeData, setPcepilfeData] = useState<IndicatorPoint[]>(() => getInitialMacroData('pcepilfe'));
+  const [isPcepilfeLoading, setIsPcepilfeLoading] = useState(() => !getInitialMacroData('pcepilfe').length);
   const [pcepilfeTimeframe, setPcepilfeTimeframe] = useState<string>('999999');
-  const [michData, setMichData] = useState<IndicatorPoint[]>([]);
-  const [isMichLoading, setIsMichLoading] = useState(true);
+  const [michData, setMichData] = useState<IndicatorPoint[]>(() => getInitialMacroData('mich'));
+  const [isMichLoading, setIsMichLoading] = useState(() => !getInitialMacroData('mich').length);
   const [michTimeframe, setMichTimeframe] = useState<string>('999999');
-  const [t5yieData, setT5yieData] = useState<IndicatorPoint[]>([]);
-  const [isT5yieLoading, setIsT5yieLoading] = useState(true);
+  const [t5yieData, setT5yieData] = useState<IndicatorPoint[]>(() => getInitialMacroData('t5yie'));
+  const [isT5yieLoading, setIsT5yieLoading] = useState(() => !getInitialMacroData('t5yie').length);
   const [t5yieTimeframe, setT5yieTimeframe] = useState<string>('999999');
-  const [t10yieData, setT10yieData] = useState<IndicatorPoint[]>([]);
-  const [isT10yieLoading, setIsT10yieLoading] = useState(true);
+  const [t10yieData, setT10yieData] = useState<IndicatorPoint[]>(() => getInitialMacroData('t10yie'));
+  const [isT10yieLoading, setIsT10yieLoading] = useState(() => !getInitialMacroData('t10yie').length);
   const [t10yieTimeframe, setT10yieTimeframe] = useState<string>('999999');
-  const [dgs1moData, setDgs1moData] = useState<IndicatorPoint[]>([]);
-  const [isDgs1moLoading, setIsDgs1moLoading] = useState(true);
+  const [dgs1moData, setDgs1moData] = useState<IndicatorPoint[]>(() => getInitialMacroData('dgs1mo'));
+  const [isDgs1moLoading, setIsDgs1moLoading] = useState(() => !getInitialMacroData('dgs1mo').length);
   const [dgs1moTimeframe, setDgs1moTimeframe] = useState<string>('999999');
-  const [dgs3moData, setDgs3moData] = useState<IndicatorPoint[]>([]);
-  const [isDgs3moLoading, setIsDgs3moLoading] = useState(true);
+  const [dgs3moData, setDgs3moData] = useState<IndicatorPoint[]>(() => getInitialMacroData('dgs3mo'));
+  const [isDgs3moLoading, setIsDgs3moLoading] = useState(() => !getInitialMacroData('dgs3mo').length);
   const [dgs3moTimeframe, setDgs3moTimeframe] = useState<string>('999999');
-  const [dgs6moData, setDgs6moData] = useState<IndicatorPoint[]>([]);
-  const [isDgs6moLoading, setIsDgs6moLoading] = useState(true);
+  const [dgs6moData, setDgs6moData] = useState<IndicatorPoint[]>(() => getInitialMacroData('dgs6mo'));
+  const [isDgs6moLoading, setIsDgs6moLoading] = useState(() => !getInitialMacroData('dgs6mo').length);
   const [dgs6moTimeframe, setDgs6moTimeframe] = useState<string>('999999');
-  const [dgs1Data, setDgs1Data] = useState<IndicatorPoint[]>([]);
-  const [isDgs1Loading, setIsDgs1Loading] = useState(true);
+  const [dgs1Data, setDgs1Data] = useState<IndicatorPoint[]>(() => getInitialMacroData('dgs1'));
+  const [isDgs1Loading, setIsDgs1Loading] = useState(() => !getInitialMacroData('dgs1').length);
   const [dgs1Timeframe, setDgs1Timeframe] = useState<string>('999999');
-  const [dgs5Data, setDgs5Data] = useState<IndicatorPoint[]>([]);
-  const [isDgs5Loading, setIsDgs5Loading] = useState(true);
+  const [dgs5Data, setDgs5Data] = useState<IndicatorPoint[]>(() => getInitialMacroData('dgs5'));
+  const [isDgs5Loading, setIsDgs5Loading] = useState(() => !getInitialMacroData('dgs5').length);
   const [dgs5Timeframe, setDgs5Timeframe] = useState<string>('999999');
-  const [dgs20Data, setDgs20Data] = useState<IndicatorPoint[]>([]);
-  const [isDgs20Loading, setIsDgs20Loading] = useState(true);
+  const [dgs20Data, setDgs20Data] = useState<IndicatorPoint[]>(() => getInitialMacroData('dgs20'));
+  const [isDgs20Loading, setIsDgs20Loading] = useState(() => !getInitialMacroData('dgs20').length);
   const [dgs20Timeframe, setDgs20Timeframe] = useState<string>('999999');
-  const [dgs30Data, setDgs30Data] = useState<IndicatorPoint[]>([]);
-  const [isDgs30Loading, setIsDgs30Loading] = useState(true);
+  const [dgs30Data, setDgs30Data] = useState<IndicatorPoint[]>(() => getInitialMacroData('dgs30'));
+  const [isDgs30Loading, setIsDgs30Loading] = useState(() => !getInitialMacroData('dgs30').length);
   const [dgs30Timeframe, setDgs30Timeframe] = useState<string>('999999');
-  const [t10y2yData, setT10y2yData] = useState<IndicatorPoint[]>([]);
-  const [isT10y2yLoading, setIsT10y2yLoading] = useState(true);
+  const [t10y2yData, setT10y2yData] = useState<IndicatorPoint[]>(() => getInitialMacroData('t10y2y'));
+  const [isT10y2yLoading, setIsT10y2yLoading] = useState(() => !getInitialMacroData('t10y2y').length);
   const [t10y2yTimeframe, setT10y2yTimeframe] = useState<string>('999999');
-  const [t10y3mData, setT10y3mData] = useState<IndicatorPoint[]>([]);
-  const [isT10y3mLoading, setIsT10y3mLoading] = useState(true);
+  const [t10y3mData, setT10y3mData] = useState<IndicatorPoint[]>(() => getInitialMacroData('t10y3m'));
+  const [isT10y3mLoading, setIsT10y3mLoading] = useState(() => !getInitialMacroData('t10y3m').length);
   const [t10y3mTimeframe, setT10y3mTimeframe] = useState<string>('999999');
-  const [m1slData, setM1slData] = useState<IndicatorPoint[]>([]);
-  const [isM1slLoading, setIsM1slLoading] = useState(true);
+  const [m1slData, setM1slData] = useState<IndicatorPoint[]>(() => getInitialMacroData('m1sl'));
+  const [isM1slLoading, setIsM1slLoading] = useState(() => !getInitialMacroData('m1sl').length);
   const [m1slTimeframe, setM1slTimeframe] = useState<string>('999999');
-  const [mabmm301Data, setMabmm301Data] = useState<IndicatorPoint[]>([]);
-  const [isMabmm301Loading, setIsMabmm301Loading] = useState(true);
+  const [mabmm301Data, setMabmm301Data] = useState<IndicatorPoint[]>(() => getInitialMacroData('mabmm301'));
+  const [isMabmm301Loading, setIsMabmm301Loading] = useState(() => !getInitialMacroData('mabmm301').length);
   const [mabmm301Timeframe, setMabmm301Timeframe] = useState<string>('999999');
-  const [unrateData, setUnrateData] = useState<IndicatorPoint[]>([]);
-  const [isUnrateLoading, setIsUnrateLoading] = useState(true);
+  const [unrateData, setUnrateData] = useState<IndicatorPoint[]>(() => getInitialMacroData('unrate'));
+  const [isUnrateLoading, setIsUnrateLoading] = useState(() => !getInitialMacroData('unrate').length);
   const [unrateTimeframe, setUnrateTimeframe] = useState<string>('999999');
-  const [payemsData, setPayemsData] = useState<IndicatorPoint[]>([]);
-  const [isPayemsLoading, setIsPayemsLoading] = useState(true);
+  const [payemsData, setPayemsData] = useState<IndicatorPoint[]>(() => getInitialMacroData('payems'));
+  const [isPayemsLoading, setIsPayemsLoading] = useState(() => !getInitialMacroData('payems').length);
   const [payemsTimeframe, setPayemsTimeframe] = useState<string>('999999');
-  const [icsaData, setIcsaData] = useState<IndicatorPoint[]>([]);
-  const [isIcsaLoading, setIsIcsaLoading] = useState(true);
+  const [icsaData, setIcsaData] = useState<IndicatorPoint[]>(() => getInitialMacroData('icsa'));
+  const [isIcsaLoading, setIsIcsaLoading] = useState(() => !getInitialMacroData('icsa').length);
   const [icsaTimeframe, setIcsaTimeframe] = useState<string>('999999');
-  const [jtsjolData, setJtsjolData] = useState<IndicatorPoint[]>([]);
-  const [isJtsjolLoading, setIsJtsjolLoading] = useState(true);
+  const [jtsjolData, setJtsjolData] = useState<IndicatorPoint[]>(() => getInitialMacroData('jtsjol'));
+  const [isJtsjolLoading, setIsJtsjolLoading] = useState(() => !getInitialMacroData('jtsjol').length);
   const [jtsjolTimeframe, setJtsjolTimeframe] = useState<string>('999999');
-  const [emratioData, setEmratioData] = useState<IndicatorPoint[]>([]);
-  const [isEmratioLoading, setIsEmratioLoading] = useState(true);
+  const [emratioData, setEmratioData] = useState<IndicatorPoint[]>(() => getInitialMacroData('emratio'));
+  const [isEmratioLoading, setIsEmratioLoading] = useState(() => !getInitialMacroData('emratio').length);
   const [emratioTimeframe, setEmratioTimeframe] = useState<string>('999999');
-  const [gdpc1Data, setGdpc1Data] = useState<IndicatorPoint[]>([]);
-  const [isGdpc1Loading, setIsGdpc1Loading] = useState(true);
+  const [gdpc1Data, setGdpc1Data] = useState<IndicatorPoint[]>(() => getInitialMacroData('gdpc1'));
+  const [isGdpc1Loading, setIsGdpc1Loading] = useState(() => !getInitialMacroData('gdpc1').length);
   const [gdpc1Timeframe, setGdpc1Timeframe] = useState<string>('999999');
-  const [indproData, setIndproData] = useState<IndicatorPoint[]>([]);
-  const [isIndproLoading, setIsIndproLoading] = useState(true);
+  const [indproData, setIndproData] = useState<IndicatorPoint[]>(() => getInitialMacroData('indpro'));
+  const [isIndproLoading, setIsIndproLoading] = useState(() => !getInitialMacroData('indpro').length);
   const [indproTimeframe, setIndproTimeframe] = useState<string>('999999');
-  const [houstData, setHoustData] = useState<IndicatorPoint[]>([]);
-  const [isHoustLoading, setIsHoustLoading] = useState(true);
+  const [houstData, setHoustData] = useState<IndicatorPoint[]>(() => getInitialMacroData('houst'));
+  const [isHoustLoading, setIsHoustLoading] = useState(() => !getInitialMacroData('houst').length);
   const [houstTimeframe, setHoustTimeframe] = useState<string>('999999');
-  const [umcsentData, setUmcsentData] = useState<IndicatorPoint[]>([]);
-  const [isUmcsentLoading, setIsUmcsentLoading] = useState(true);
+  const [umcsentData, setUmcsentData] = useState<IndicatorPoint[]>(() => getInitialMacroData('umcsent'));
+  const [isUmcsentLoading, setIsUmcsentLoading] = useState(() => !getInitialMacroData('umcsent').length);
   const [umcsentTimeframe, setUmcsentTimeframe] = useState<string>('999999');
-  const [rsxfsData, setRsxfsData] = useState<IndicatorPoint[]>([]);
-  const [isRsxfsLoading, setIsRsxfsLoading] = useState(true);
+  const [rsxfsData, setRsxfsData] = useState<IndicatorPoint[]>(() => getInitialMacroData('rsxfs'));
+  const [isRsxfsLoading, setIsRsxfsLoading] = useState(() => !getInitialMacroData('rsxfs').length);
   const [rsxfsTimeframe, setRsxfsTimeframe] = useState<string>('999999');
-  const [dcoilwticoData, setDcoilwticoData] = useState<IndicatorPoint[]>([]);
-  const [isDcoilwticoLoading, setIsDcoilwticoLoading] = useState(true);
+  const [dcoilwticoData, setDcoilwticoData] = useState<IndicatorPoint[]>(() => getInitialMacroData('dcoilwtico'));
+  const [isDcoilwticoLoading, setIsDcoilwticoLoading] = useState(() => !getInitialMacroData('dcoilwtico').length);
   const [dcoilwticoTimeframe, setDcoilwticoTimeframe] = useState<string>('999999');
-  const [bamlh0a0hym2Data, setBamlh0a0hym2Data] = useState<IndicatorPoint[]>([]);
-  const [isBamlh0a0hym2Loading, setIsBamlh0a0hym2Loading] = useState(true);
+  const [bamlh0a0hym2Data, setBamlh0a0hym2Data] = useState<IndicatorPoint[]>(() => getInitialMacroData('bamlh0a0hym2'));
+  const [isBamlh0a0hym2Loading, setIsBamlh0a0hym2Loading] = useState(() => !getInitialMacroData('bamlh0a0hym2').length);
   const [bamlh0a0hym2Timeframe, setBamlh0a0hym2Timeframe] = useState<string>('999999');
-  const [mortgage30usData, setMortgage30usData] = useState<IndicatorPoint[]>([]);
-  const [isMortgage30usLoading, setIsMortgage30usLoading] = useState(true);
+  const [mortgage30usData, setMortgage30usData] = useState<IndicatorPoint[]>(() => getInitialMacroData('mortgage30us'));
+  const [isMortgage30usLoading, setIsMortgage30usLoading] = useState(() => !getInitialMacroData('mortgage30us').length);
   const [mortgage30usTimeframe, setMortgage30usTimeframe] = useState<string>('999999');
-  const [bogmbaseData, setBogmbaseData] = useState<IndicatorPoint[]>([]);
-  const [isBogmbaseLoading, setIsBogmbaseLoading] = useState(true);
+  const [bogmbaseData, setBogmbaseData] = useState<IndicatorPoint[]>(() => getInitialMacroData('bogmbase'));
+  const [isBogmbaseLoading, setIsBogmbaseLoading] = useState(() => !getInitialMacroData('bogmbase').length);
   const [bogmbaseTimeframe, setBogmbaseTimeframe] = useState<string>('999999');
-  const [totalslData, setTotalslData] = useState<IndicatorPoint[]>([]);
-  const [isTotalslLoading, setIsTotalslLoading] = useState(true);
+  const [totalslData, setTotalslData] = useState<IndicatorPoint[]>(() => getInitialMacroData('totalsl'));
+  const [isTotalslLoading, setIsTotalslLoading] = useState(() => !getInitialMacroData('totalsl').length);
   const [totalslTimeframe, setTotalslTimeframe] = useState<string>('999999');
 
-  const [btcPriceData, setBtcPriceData] = useState<IndicatorPoint[]>([]);
-  const [isBtcPriceLoading, setIsBtcPriceLoading] = useState(true);
+  const [btcPriceData, setBtcPriceData] = useState<IndicatorPoint[]>(() => initialBulk?.btcPrice ?? []);
+  const [isBtcPriceLoading, setIsBtcPriceLoading] = useState(() => !(initialBulk?.btcPrice?.length));
   // Additional loading/social state
-  const [isLoading, setIsLoading] = useState(true);
-  const [isHistoricalLoading, setIsHistoricalLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(() => !sentimentData);
+  const [isHistoricalLoading, setIsHistoricalLoading] = useState(() => !(allFngData.length > 0));
   const [isDominanceLoading, setIsDominanceLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [systemLogs, setSystemLogs] = useState<string[]>([]);
@@ -1236,7 +1393,7 @@ export function useSentimentData() {
       if (hashribbons.length > 0)    setHashribbonsData(ensureFreshToToday(hashribbons, 'sma_30'));
       setIsHashribbonsLoading(false);
     };
-    const timer = setTimeout(fetchKey2Indicators, 1600);
+    const timer = setTimeout(fetchKey2Indicators, 0);
     return () => clearTimeout(timer);
   }, []);
 
@@ -1302,7 +1459,7 @@ export function useSentimentData() {
       if (cvdd.length > 0)        setCvddData(ensureFreshToToday(cvdd, 'value'));
       setIsCvddLoading(false);
     };
-    const timer = setTimeout(fetchKey3Indicators, 2400);
+    const timer = setTimeout(fetchKey3Indicators, 0);
     return () => clearTimeout(timer);
   }, []);
 
@@ -1394,14 +1551,14 @@ export function useSentimentData() {
       if (utxoLoss.length > 0)          setUtxoLossData(ensureFreshToToday(utxoLoss, 'value'));
       setIsUtxoLossLoading(false);
     };
-    const timer = setTimeout(fetchKey4Indicators, 200);
+    const timer = setTimeout(fetchKey4Indicators, 0);
     return () => clearTimeout(timer);
   }, []);
 
   // Fetch all KEY 5 macro indicators in parallel — instant static asset loading for FRED series
   useEffect(() => {
     const fetchMacroIndicators = async () => {
-      // 1. Fast static loader for FRED series — resolves from local static CDN in < 15ms
+      // 1. Fast static loader for FRED and Macro series — resolves from local static CDN in < 15ms
       const fetchFred = async (key: string): Promise<IndicatorPoint[]> => {
         const filename = (key === 'mabmm301' ? 'mabmm301usm189s' : key).toLowerCase();
         const staticUrl = `/data/fred/${filename}.json`;
@@ -1415,7 +1572,9 @@ export function useSentimentData() {
           }
         } catch { /* silent fallback */ }
         try {
-          const apiUrl = `/api/fred-${filename}`;
+          const apiUrl = ['m2', 'dxy', 'vix', 'fedfunds', 'sp500', 'gold'].includes(key)
+            ? `/api/${key}`
+            : `/api/fred-${filename}`;
           const r2 = await fetchWithSSCache(withSentimentDataVersion(apiUrl), { headers: { 'Accept': 'application/json' } });
           if (r2.ok) {
             const res2 = await r2.json() as IndicatorApiResponse;
@@ -1432,6 +1591,12 @@ export function useSentimentData() {
         valKey?: string;
         isDaily?: boolean;
       }> = [
+        { key: 'm2', setter: setM2Data, setLoading: setIsM2Loading },
+        { key: 'dxy', setter: setDxyData, setLoading: setIsDxyLoading, isDaily: true },
+        { key: 'vix', setter: setVixData, setLoading: setIsVixLoading, isDaily: true },
+        { key: 'fedfunds', setter: setFedfundsData, setLoading: setIsFedfundsLoading },
+        { key: 'sp500', setter: setSp500Data, setLoading: setIsSp500Loading, isDaily: true },
+        { key: 'gold', setter: setGoldData, setLoading: setIsGoldLoading, isDaily: true },
         { key: 'sofr', setter: setSofrData, setLoading: setIsSofrLoading, isDaily: true },
         { key: 'walcl', setter: setWalclData, setLoading: setIsWalclLoading },
         { key: 'wresbal', setter: setWresbalData, setLoading: setIsWresbalLoading },
@@ -1485,8 +1650,17 @@ export function useSentimentData() {
         })
       );
 
-      // 2. Fetch standard market macro endpoints
-      const fMacro = async (url: string): Promise<IndicatorPoint[]> => {
+      // 2. Fetch standard market macro endpoints with deterministic static fallbacks
+      const fMacro = async (url: string, staticPath?: string): Promise<IndicatorPoint[]> => {
+        if (staticPath) {
+          try {
+            const rStatic = await fetchWithSSCache(staticPath, { headers: { 'Accept': 'application/json' } });
+            if (rStatic.ok) {
+              const res = await rStatic.json() as IndicatorApiResponse;
+              if (res.success && Array.isArray(res.data) && res.data.length > 0) return res.data;
+            }
+          } catch { /* continue to api */ }
+        }
         try {
           const r = await fetchWithSSCache(withSentimentDataVersion(url), { headers: { 'Accept': 'application/json' } });
           if (r.ok) {
@@ -1497,36 +1671,29 @@ export function useSentimentData() {
         return [];
       };
 
-      const [
-        m2, dxy, vix, fedfunds, etf, sp500, gold,
-        stablecoinSupply, cryptoMarketCap,
-      ] = await Promise.all([
-        fMacro('/api/m2'),                fMacro('/api/dxy'),               fMacro('/api/vix'),
-        fMacro('/api/fedfunds'),
-        fMacro('/api/etf'),               fMacro('/api/sp500'),
-        fMacro('/api/gold'),              fMacro('/api/stablecoin-supply'),
-        fMacro('/api/crypto-market-cap'),
-      ]);
+      fMacro('/api/etf').then((etf) => {
+        if (etf.length > 0) setEtfData(ensureFreshToToday(etf, 'value'));
+        setIsEtfLoading(false);
+      });
 
-      if (m2.length > 0)               setM2Data(ensureFreshToToday(m2, 'value'));              setIsM2Loading(false);
-      if (dxy.length > 0)              setDxyData(ensureFreshToToday(dxy, 'value'));            setIsDxyLoading(false);
-      if (vix.length > 0)              setVixData(ensureFreshToToday(vix, 'value'));            setIsVixLoading(false);
-      if (fedfunds.length > 0)         setFedfundsData(ensureFreshToToday(fedfunds, 'value'));  setIsFedfundsLoading(false);
-      if (etf.length > 0)              setEtfData(ensureFreshToToday(etf, 'value'));            setIsEtfLoading(false);
-      if (sp500.length > 0)            setSp500Data(ensureFreshToToday(sp500, 'value'));        setIsSp500Loading(false);
-      if (gold.length > 0)             setGoldData(ensureFreshToToday(gold, 'value'));          setIsGoldLoading(false);
-      if (stablecoinSupply.length > 0) {
-        const freshStbl = ensureFreshToToday(stablecoinSupply, 'value');
-        setStablecoinSupplyData(freshStbl);
-        const derivedOsc: IndicatorPoint[] = freshStbl.map((pt, i) => ({
-          time: pt.time,
-          value: Math.round(Math.sin(i * 0.1) * 45) / 100,
-        }));
-        setSsrOscillatorData(derivedOsc);
-      }
-      setIsStablecoinSupplyLoading(false);
-      setIsSsrOscillatorLoading(false);
-      if (cryptoMarketCap.length > 0)  setCryptoMarketCapData(ensureFreshToToday(cryptoMarketCap, 'value')); setIsCryptoMarketCapLoading(false);
+      fMacro('/api/stablecoin-supply').then((stablecoinSupply) => {
+        if (stablecoinSupply.length > 0) {
+          const freshStbl = ensureFreshToToday(stablecoinSupply, 'value');
+          setStablecoinSupplyData(freshStbl);
+          const derivedOsc: IndicatorPoint[] = freshStbl.map((pt, i) => ({
+            time: pt.time,
+            value: Math.round(Math.sin(i * 0.1) * 45) / 100,
+          }));
+          setSsrOscillatorData(derivedOsc);
+        }
+        setIsStablecoinSupplyLoading(false);
+        setIsSsrOscillatorLoading(false);
+      });
+
+      fMacro('/api/crypto-market-cap').then((cryptoMarketCap) => {
+        if (cryptoMarketCap.length > 0) setCryptoMarketCapData(ensureFreshToToday(cryptoMarketCap, 'value'));
+        setIsCryptoMarketCapLoading(false);
+      });
 
       await fredPromise;
     };
@@ -1583,7 +1750,7 @@ export function useSentimentData() {
       }
     };
 
-    const timer = setTimeout(fetchDominanceData, 1000);
+    const timer = setTimeout(fetchDominanceData, 0);
     return () => clearTimeout(timer);
   }, []);
 
@@ -1651,7 +1818,7 @@ export function useSentimentData() {
         setIsSocialLoading(false);
       }
     };
-    const timer = setTimeout(fetchSocialData, 5500);
+    const timer = setTimeout(fetchSocialData, 600);
     return () => clearTimeout(timer);
   }, []);
 

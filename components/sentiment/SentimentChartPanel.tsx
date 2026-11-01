@@ -264,7 +264,8 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
   const metricColor = normalizeMetricColor(panel.accentColor);
   const lineColor = getHighIntensityLineColor(panel.accentColor);
 
-  const isVisible = selectedIndicator === panel.id || visiblePanels.has(panel.panelId);
+  const isSelected = selectedIndicator === panel.id || selectedIndicator?.replace(/^indicator-/, '') === panel.panelId;
+  const isVisible = isSelected || visiblePanels.has(panel.panelId) || selectedIndicator === null;
 
   const zoneBands = useMemo(
     () => isVisible ? getReferenceBands(panel.data, valueKey, panel.referenceBands) : [],
@@ -277,9 +278,24 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
     [isVisible, panel.data, valueKey, chartHeight, panel.panelId]
   );
 
+  const sampleValues = useMemo(() => {
+    if (!panel.data || panel.data.length === 0) return undefined;
+    const k = panel.valueKey || 'value';
+    const vals: number[] = [];
+    const len = panel.data.length;
+    const step = Math.max(1, Math.floor(len / 20));
+    for (let i = 0; i < len; i += step) {
+      const v = Number(panel.data[i][k]);
+      if (Number.isFinite(v)) vals.push(v);
+    }
+    const lastV = Number(panel.data[len - 1][k]);
+    if (Number.isFinite(lastV)) vals.push(lastV);
+    return vals;
+  }, [panel.data, panel.valueKey]);
+
   const leftAxisWidth = useMemo(
-    () => panel.yAxisWidth ?? getLeftYAxisWidth(panel.yAxisTick),
-    [panel.yAxisWidth, panel.yAxisTick]
+    () => panel.yAxisWidth ?? getLeftYAxisWidth(panel.yAxisTick, sampleValues),
+    [panel.yAxisWidth, panel.yAxisTick, sampleValues]
   );
 
   return (
@@ -321,15 +337,16 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
       })()}
 
       <div
-        className={`px-1.5 sm:px-2 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
+        className={`px-1 sm:px-1.5 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
         style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
       >
 
-        {(!isVisible || panel.isLoading || !rechartsReady || panel.data.length === 0) ? (
+        {(!rechartsReady || panel.data.length === 0) ? (
           <ChartSkeleton height={ch(panel.panelId)} />
         ) : (() => {
-          const isFred = panel.panelId.startsWith('fred-') || !!panel.useFredTfOpts;
-          const showBtc = !isFred && !panel.hideBtcPrice;
+          const isFred = panel.panelId.startsWith('fred-') || !!panel.useFredTfOpts || !!panel.hideBtcPrice;
+          const showBtc = !isFred;
+          const hasRightAxis = showBtc && showBtcPrice[panel.indicatorKey] && !panel.btcSameAxis;
           const chartData = showBtc ? (panel.dataWithPrice ?? panel.data) : panel.data;
           return (
             <div className={selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : undefined}>
@@ -347,7 +364,7 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
                     style={{ outline: 'none' }}
                   margin={{
                     top: 6,
-                    right: 2,
+                    right: hasRightAxis ? 2 : 1,
                     bottom: 0,
                     left: 1,
                   }}

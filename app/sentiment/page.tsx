@@ -507,7 +507,18 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
 
   // Top panels render immediately on frame 1; offscreen panels mount when scrolled near viewport (600px margin)
   const [visiblePanels, setVisiblePanels] = useState<Set<string>>(() => new Set([
-    'sentiment-oscillator', 'nupl', 'mvrv', 'fred-cpiaucsl', 'fred-walcl', 'fred-unrate', 'fred-rrpontsyd', 'fred-sofr'
+    'sentiment-oscillator', 'nupl', 'mvrv', 'lth-mvrv', 'sopr', 'ssr',
+    'supply-loss', 'supply-profit', 'realized-profit', 'realized-loss',
+    'sth-mvrv', 'hashrate', 'puell-multiple', 'mayer-multiple',
+    'open-interest', 'nrpl', 'realized-price',
+    'dominance', 'hashribbons', '200-week-ma', 'social-sentiment', 'trending-coins',
+    'm2', 'dxy', 'vix', 'fedfunds', 'sp500', 'gold', 'etf', 'stablecoin-supply', 'ssr-oscillator', 'crypto-market-cap',
+    'fred-cpiaucsl', 'fred-cpilfesl', 'fred-pcepi', 'fred-pcepilfe', 'fred-walcl', 'fred-wresbal',
+    'fred-unrate', 'fred-payems', 'fred-icsa', 'fred-jtsjol', 'fred-emratio', 'fred-gdpc1', 'fred-indpro', 'fred-houst',
+    'fred-umcsent', 'fred-rsxfs', 'fred-dcoilwtico', 'fred-bamlh0a0hym2', 'fred-mortgage30us', 'fred-m1sl',
+    'fred-mabmm301usm189s', 'fred-bogmbase', 'fred-totalsl', 'fred-mich', 'fred-t5yie', 'fred-t10yie',
+    'fred-dgs1mo', 'fred-dgs3mo', 'fred-dgs6mo', 'fred-dgs1', 'fred-dgs5', 'fred-dgs20', 'fred-dgs30',
+    'fred-t10y2y', 'fred-t10y3m', 'fred-rrpontsyd', 'fred-sofr'
   ]));
 
   const observerRef = useRef<IntersectionObserver | null>(null);
@@ -1760,8 +1771,8 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
   const macroPanels = useMemo<SentimentPanelConfig[]>(() => [
     {
       panelId: 'm2', indicatorKey: 'm2', code: 'M2', title: 'M2 Money Supply', desc: 'US money supply vs BTC price', metricLabel: 'M2',
-      id: 'indicator-m2', accentColor: '#10B981', gradientId: 'm2Fill', tag: '', updateFreq: 'w',
-      data: m2ChartData, dataWithPrice: m2ChartDataWithPrice, isLoading: isM2Loading,
+      id: 'indicator-m2', accentColor: '#10B981', gradientId: 'm2Fill', tag: '', hideBtcPrice: true, useFredTfOpts: true, updateFreq: 'w',
+      data: m2ChartData, dataWithPrice: m2ChartData, isLoading: isM2Loading,
       timeframe: m2Timeframe, setTimeframe: setM2Timeframe, zoneFn: getM2Zone,
       headerValue: (v: number) => `$${(v / 1e12).toFixed(2)}T`, tooltipValue: (v: number) => `$${(v / 1e12).toFixed(2)}T`,
       yAxisTick: (v: number) => `$${(v / 1e12).toFixed(1)}T`,
@@ -2704,14 +2715,14 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 onScreenshot={() => capturePanel('sentiment-oscillator')}
               />
               <div
-                className={`px-1.5 sm:px-2 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
+                className={`px-1 sm:px-1.5 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
                 style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
               >
-                {((!visiblePanels.has('sentiment-oscillator') && selectedIndicator !== 'indicator-fear-greed') || isLoading) ? (
+                {((!visiblePanels.has('sentiment-oscillator') && selectedIndicator !== 'indicator-fear-greed') || (isLoading && !sentiment)) ? (
                   <ChartSkeleton height={ch('sentiment-oscillator')} />
                 ) : (
                   <div className={`min-w-0 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}>
-                      {isHistoricalLoading || chartData.length === 0 ? (
+                      {chartData.length === 0 ? (
                         <ChartSkeleton height={ch('sentiment-oscillator')} />
                       ) : (
                         <>
@@ -2752,7 +2763,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                                     data={fngDataToRender}
                                     margin={{
                                       top: 6,
-                                      right: 2,
+                                      right: isBtcOn ? 2 : 1,
                                       bottom: 0,
                                       left: 1,
                                     }}
@@ -2996,10 +3007,10 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 onScreenshot={() => capturePanel('dominance')}
               />
               <div
-                className={`px-1.5 sm:px-2 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
+                className={`px-1 sm:px-1.5 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
                 style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
               >
-                {((!visiblePanels.has('dominance') && selectedIndicator !== 'indicator-dominance') || isDominanceLoading || slicedDominanceChartDataWithPrice.length === 0) ? (
+                {((!visiblePanels.has('dominance') && selectedIndicator !== 'indicator-dominance') || slicedDominanceChartDataWithPrice.length === 0) ? (
                   <ChartSkeleton height={ch('dominance')} />
                 ) : (
                   <div className={selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : undefined}>
@@ -3018,7 +3029,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                         style={{ outline: 'none' }}
                         margin={{
                           top: 6,
-                          right: 2,
+                          right: 1,
                           bottom: 0,
                           left: 1,
                         }}
@@ -3315,10 +3326,10 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                     onScreenshot={() => capturePanel('hashribbons')}
                   />
               <div
-                className={`px-1.5 sm:px-2 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
+                className={`px-1 sm:px-1.5 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
                 style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
               >
-                {((!visiblePanels.has('hashribbons') && selectedIndicator !== 'indicator-hashribbons') || isHashribbonsLoading || hashribbonsChartData.length === 0) ? <ChartSkeleton height={ch('hashribbons')} /> : (
+                {((!visiblePanels.has('hashribbons') && selectedIndicator !== 'indicator-hashribbons') || hashribbonsChartData.length === 0) ? <ChartSkeleton height={ch('hashribbons')} /> : (
                   <div className={selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : undefined}>
                     <div className="flex flex-row items-center justify-between gap-3 mb-2.5 flex-wrap shrink-0">
                       <LineToggle items={[
@@ -3335,7 +3346,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                         style={{ outline: 'none' }}
                         margin={{
                           top: 6,
-                          right: 2,
+                          right: 1,
                           bottom: 0,
                           left: 1,
                         }}
@@ -3633,10 +3644,10 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                     onScreenshot={() => capturePanel('200-week-ma')}
                   />
               <div
-                className={`px-1.5 sm:px-2 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
+                className={`px-1 sm:px-1.5 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
                 style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
               >
-                {((!visiblePanels.has('200-week-ma') && selectedIndicator !== 'indicator-200-week-ma') || isWeekMa200Loading || weekMa200ChartData.length === 0) ? (
+                {((!visiblePanels.has('200-week-ma') && selectedIndicator !== 'indicator-200-week-ma') || weekMa200ChartData.length === 0) ? (
                   <ChartSkeleton height={ch('200-week-ma')} />
                 ) : (
                   <div className={selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : undefined}>
@@ -3654,7 +3665,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                         style={{ outline: 'none' }}
                         margin={{
                           top: 6,
-                          right: 2,
+                          right: 1,
                           bottom: 0,
                           left: 1,
                         }}

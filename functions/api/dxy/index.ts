@@ -60,6 +60,20 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     console.error('[dxy] D1 error:', e);
   }
 
+  // Instant static asset fallback if D1 is not populated
+  try {
+    const staticUrl = new URL("/data/fred/dxy.json", request.url);
+    const assetRes = (env as unknown as { ASSETS?: { fetch: typeof fetch } })?.ASSETS
+      ? await (env as unknown as { ASSETS: { fetch: typeof fetch } }).ASSETS.fetch(staticUrl)
+      : await fetch(staticUrl);
+    if (assetRes.ok) {
+      const json = await assetRes.json();
+      return new Response(JSON.stringify(json), {
+        headers: { ...CORS, "Cache-Control": CACHE, "Content-Type": "application/json" },
+      });
+    }
+  } catch { /* proceed to live FRED */ }
+
   try {
     const key = env.FRED_API_KEY ?? '';
     let data: Array<{ time: string; value: number }> = [];
@@ -116,6 +130,14 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     console.error('[dxy] Fallback failed:', message);
+    try {
+      const origin = new URL(request.url).origin;
+      const staticRes = await fetch(`${origin}/data/fred/dxy.json`);
+      if (staticRes.ok) {
+        const staticJson = await staticRes.json();
+        return new Response(JSON.stringify(staticJson), { headers: { ...CORS, 'Cache-Control': CACHE } });
+      }
+    } catch {}
     return new Response(
       JSON.stringify({ success: false, error: 'No DXY data available' }),
       { status: 503, headers: CORS }

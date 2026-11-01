@@ -546,6 +546,9 @@ export const getXAxisTicks = (data: ChartDateItem[], tf: string): number[] => {
         targetTimes.push(t);
       }
     }
+    if (targetTimes.length > 0 && (last.getTime() - targetTimes[targetTimes.length - 1] > 500 * 86_400_000)) {
+      targetTimes.push(last.getTime());
+    }
   }
 
   // Fallback if targetTimes has too few ticks
@@ -722,25 +725,25 @@ export const DateAxisTick = (props: DateAxisTickProps) => {
   );
 };
 
-export const Y_AXIS_CHART_PADDING = 5;
-export const Y_AXIS_WIDTH = 30;
-export const Y_AXIS_RIGHT_WIDTH = 36;
+export const Y_AXIS_CHART_PADDING = 3;
+export const Y_AXIS_WIDTH = 26;
+export const Y_AXIS_RIGHT_WIDTH = 34;
 
 /**
  * Computes the optimal left Y-axis width (in px) for an indicator based on its tickFormatter output.
- * Dynamically tightens the axis for short indicators (e.g. 24-28px for ratios, FNG, dominance)
- * while providing safe room for currency/large numbers (34-44px for NRPL, 200W MA, trillions).
+ * Dynamically tightens the axis for short indicators (e.g. 22-25px for ratios, FNG, percentages)
+ * while providing safe room for currency/large numbers (30-36px for NRPL, 200W MA, trillions).
  * This eliminates wasted left-side blank spaces and expands the inner chart width.
  */
 export function getLeftYAxisWidth(
   formatter?: ((v: number) => string) | null,
   sampleDomainOrValues?: readonly number[] | number[],
 ): number {
-  if (!formatter) return 28;
+  if (!formatter) return 24;
   try {
     const testValues = sampleDomainOrValues && sampleDomainOrValues.length > 0
       ? sampleDomainOrValues
-      : [-1e9, -7e8, -1e6, -1000, -100, -1, -0.5, 0, 0.5, 1, 3, 6, 9, 10, 50, 100, 1000, 1e6, 1e9, 1e12];
+      : [-5, -1, 0, 0.5, 1, 2, 5, 10, 25, 50, 100];
     let maxChars = 0;
     for (const v of testValues) {
       try {
@@ -752,12 +755,13 @@ export function getLeftYAxisWidth(
         // continue
       }
     }
-    if (maxChars <= 3) return 24; // "9.0", "100", "50%"
-    if (maxChars <= 4) return 28; // "-3.0", "1.5x", "100%"
-    if (maxChars <= 5) return 34; // "$100K", "5.25%"
-    return Math.min(44, Math.ceil(maxChars * 6) + Y_AXIS_CHART_PADDING); // e.g. "-$700M" -> 41px
+    if (maxChars <= 3) return 22; // "100", "2.1", "50"
+    if (maxChars <= 4) return 25; // "1.05", "4.2%", "5800"
+    if (maxChars <= 5) return 29; // "102.5", "$2650", "5.25%"
+    if (maxChars <= 6) return 33; // "$22.0T", "-10.5%", "-0.50%"
+    return Math.min(40, Math.ceil(maxChars * 5.8) + Y_AXIS_CHART_PADDING); // e.g. "-$700M" -> 38px
   } catch {
-    return 28;
+    return 24;
   }
 }
 
