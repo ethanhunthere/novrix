@@ -505,20 +505,26 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
 
 
 
-  // Top panels render immediately on frame 1; offscreen panels mount when scrolled near viewport (600px margin)
+  // Pre-load all indicator panels so rapid scrolling to any point of the page reveals instant charts without blanking
   const [visiblePanels, setVisiblePanels] = useState<Set<string>>(() => new Set([
     'sentiment-oscillator', 'nupl', 'mvrv', 'lth-mvrv', 'sopr', 'ssr',
     'supply-loss', 'supply-profit', 'realized-profit', 'realized-loss',
-    'sth-mvrv', 'hashrate', 'puell-multiple', 'mayer-multiple',
-    'open-interest', 'nrpl', 'realized-price',
-    'dominance', 'hashribbons', '200-week-ma', 'social-sentiment', 'trending-coins',
+    'sth-mvrv', 'hashrate', 'aviv', 'mvrv-zscore', 'supply-shock', 'illiquid-supply',
+    'hot-supply', 'puell-multiple', 'mayer-multiple', 'reserve-risk', 'vdd', 'active-addresses',
+    'open-interest', 'funding-rate', 'nrpl', 'rhodl-ratio', 'nvts', 'nvt-zscore', 'cvdd',
+    'realized-price', 'market-cap-k4', 'highly-liquid-supply', 'lth-position-change',
+    'sth-position-change', 'mpi', 'miner-sell-pressure', 'utxo-profit', 'utxo-loss',
+    'dominance', 'hashribbons', '200-week-ma', 'social-sentiment', 'trending', 'trending-coins',
     'm2', 'dxy', 'vix', 'fedfunds', 'sp500', 'gold', 'etf', 'stablecoin-supply', 'ssr-oscillator', 'crypto-market-cap',
     'fred-cpiaucsl', 'fred-cpilfesl', 'fred-pcepi', 'fred-pcepilfe', 'fred-walcl', 'fred-wresbal',
     'fred-unrate', 'fred-payems', 'fred-icsa', 'fred-jtsjol', 'fred-emratio', 'fred-gdpc1', 'fred-indpro', 'fred-houst',
     'fred-umcsent', 'fred-rsxfs', 'fred-dcoilwtico', 'fred-bamlh0a0hym2', 'fred-mortgage30us', 'fred-m1sl',
     'fred-mabmm301usm189s', 'fred-bogmbase', 'fred-totalsl', 'fred-mich', 'fred-t5yie', 'fred-t10yie',
     'fred-dgs1mo', 'fred-dgs3mo', 'fred-dgs6mo', 'fred-dgs1', 'fred-dgs5', 'fred-dgs20', 'fred-dgs30',
-    'fred-t10y2y', 'fred-t10y3m', 'fred-rrpontsyd', 'fred-sofr'
+    'fred-t10y2y', 'fred-t10y3m', 'fred-rrpontsyd', 'fred-sofr',
+    'vtpx', 'shax', 'smfx', 'levr', 'rcfx', 'cprx', 'rpix', 'crrx', 'sgrx', 'domx',
+    'novrix-vtpx', 'novrix-shax', 'novrix-smfx', 'novrix-levr', 'novrix-rcfx',
+    'novrix-cprx', 'novrix-rpix', 'novrix-crrx', 'novrix-sgrx', 'novrix-domx'
   ]));
 
   const observerRef = useRef<IntersectionObserver | null>(null);
@@ -526,26 +532,34 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    // Offscreen panels are mounted strictly on-demand as user scrolls near them,
-    // keeping the main thread 100% responsive and clickable immediately on page landing.
+    // Fast-scroll observer: 1200px ahead with batched state updates to eliminate scroll stutter
     const observer = new IntersectionObserver(
       (entries) => {
+        const added: string[] = [];
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const panelId = entry.target.getAttribute('data-panel-id');
             if (panelId) {
-              setVisiblePanels((prev) => {
-                if (prev.has(panelId)) return prev;
-                const next = new Set(prev);
-                next.add(panelId);
-                return next;
-              });
+              added.push(panelId);
               observer.unobserve(entry.target);
             }
           }
         });
+        if (added.length > 0) {
+          setVisiblePanels((prev) => {
+            let changed = false;
+            const next = new Set(prev);
+            for (const id of added) {
+              if (!next.has(id)) {
+                next.add(id);
+                changed = true;
+              }
+            }
+            return changed ? next : prev;
+          });
+        }
       },
-      { rootMargin: '600px 0px' }
+      { rootMargin: '1200px 0px' }
     );
     observerRef.current = observer;
 
@@ -2922,7 +2936,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             )}
 
             {/* NUPL On-Chain Indicator - Panel 02 */}
-            {bgeoPanels.filter(p => p.panelId === 'nupl' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'nupl' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -2942,57 +2956,57 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             ))}
 
             {/* ── Panel 03: MVRV Ratio ── */}
-            {bgeoPanels.filter(p => p.panelId === 'mvrv' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'mvrv' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
             ))}
 
             {/* ── Panel 04: LTH-MVRV ── */}
-            {bgeoPanels.filter(p => p.panelId === 'lth-mvrv' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'lth-mvrv' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
             ))}
 
             {/* ── Panel 05: SOPR ── */}
-            {bgeoPanels.filter(p => p.panelId === 'sopr' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'sopr' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
             ))}
 
             {/* ── Panel 06: SSR ── */}
-            {bgeoPanels.filter(p => p.panelId === 'ssr' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'ssr' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
             ))}
 
             {/* ── Panel 07: Supply in Loss ── */}
-            {bgeoPanels.filter(p => p.panelId === 'supply-loss' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'supply-loss' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
             ))}
 
             {/* ── Panel 08: Supply in Profit ── */}
-            {bgeoPanels.filter(p => p.panelId === 'supply-profit' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'supply-profit' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
             ))}
 
             {/* ── Panel 09: Realized Profit ── */}
-            {bgeoPanels.filter(p => p.panelId === 'realized-profit' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'realized-profit' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
             ))}
 
             {/* ── Panel 10: Realized Loss ── */}
-            {bgeoPanels.filter(p => p.panelId === 'realized-loss' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'realized-loss' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
             ))}
 
             {/* ── Panel 10: STH MVRV ── */}
-            {bgeoPanels.filter(p => p.panelId === 'sth-mvrv' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'sth-mvrv' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
             ))}
 
             {/* ── Panel 11: Hashrate ── */}
-            {bgeoPanels.filter(p => p.panelId === 'hashrate' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'hashrate' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel key={panel.panelId} panel={panel} selectedIndicator={selectedIndicator} capturePanel={capturePanel} preloadCapture={preloadCapture} setPanelRef={setPanelRef} showBtcPrice={showBtcPrice} setShowBtcPrice={setShowBtcPrice} showIndicator={showIndicator} setShowIndicator={setShowIndicator} visiblePanels={visiblePanels} rechartsReady={true} ch={ch} recharts={_rechartsModule ?? {}} />
             ))}
 
             {/* BTC & ETH Dominance Kernel - Panel 03 */}
-            {selectedIndicator === 'indicator-dominance' && (
+            {(selectedIndicator === null || selectedIndicator === 'indicator-dominance') && (
             <PanelMaximizeWrapper
               fullHeight={false}
               panelId="dominance"
@@ -3101,7 +3115,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             )}
 
             {/* ── Panel: AVIV Ratio ── */}
-            {bgeoPanels.filter(p => p.panelId === 'aviv' && p.id === selectedIndicator).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'aviv' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -3121,7 +3135,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             ))}
 
             {/* ── Panel: MVRV Z-Score ── */}
-            {bgeoPanels.filter(p => p.panelId === 'mvrv-zscore' && p.id === selectedIndicator).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'mvrv-zscore' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -3141,7 +3155,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             ))}
 
             {/* ── Panel: Supply Shock Ratio ── */}
-            {bgeoPanels.filter(p => p.panelId === 'supply-shock' && p.id === selectedIndicator).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'supply-shock' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -3161,7 +3175,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             ))}
 
             {/* ── Panel: Illiquid Supply ── */}
-            {bgeoPanels.filter(p => p.panelId === 'illiquid-supply' && p.id === selectedIndicator).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'illiquid-supply' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -3181,7 +3195,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             ))}
 
             {/* ── Panel: Hot Supply ── */}
-            {bgeoPanels.filter(p => p.panelId === 'hot-supply' && p.id === selectedIndicator).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'hot-supply' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -3201,7 +3215,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             ))}
 
             {/* ── Panel: Puell Multiple ── */}
-            {bgeoPanels.filter(p => p.panelId === 'puell-multiple' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'puell-multiple' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -3221,7 +3235,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             ))}
 
             {/* ── Panel: Mayer Multiple ── */}
-            {bgeoPanels.filter(p => p.panelId === 'mayer-multiple' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'mayer-multiple' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -3241,7 +3255,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             ))}
 
             {/* ── Panel: Reserve Risk ── */}
-            {bgeoPanels.filter(p => p.panelId === 'reserve-risk' && p.id === selectedIndicator).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'reserve-risk' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -3261,7 +3275,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             ))}
 
             {/* ── Panel: VDD Multiple ── */}
-            {bgeoPanels.filter(p => p.panelId === 'vdd' && p.id === selectedIndicator).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'vdd' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -3281,7 +3295,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             ))}
 
             {/* ── Panel: Active Addresses ── */}
-            {bgeoPanels.filter(p => p.panelId === 'active-addresses' && p.id === selectedIndicator).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'active-addresses' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -3301,7 +3315,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             ))}
 
             {/* ── Panel: Hash Ribbons ── */}
-            {selectedIndicator === 'indicator-hashribbons' && (
+            {(selectedIndicator === null || selectedIndicator === 'indicator-hashribbons') && (
             <PanelMaximizeWrapper
               fullHeight={false}
               panelId="hashribbons"
@@ -3446,7 +3460,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             ))}
 
             {/* ── Panel: Open Interest ── */}
-            {bgeoPanels.filter(p => p.panelId === 'open-interest' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'open-interest' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -3466,7 +3480,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             ))}
 
             {/* ── Panel: Funding Rate ── */}
-            {bgeoPanels.filter(p => p.panelId === 'funding-rate' && p.id === selectedIndicator).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'funding-rate' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -3486,7 +3500,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             ))}
 
             {/* ── Panel: NRPL ── */}
-            {bgeoPanels.filter(p => p.panelId === 'nrpl' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'nrpl' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -3506,7 +3520,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             ))}
 
             {/* ── Panel: RHODL Ratio ── */}
-            {bgeoPanels.filter(p => p.panelId === 'rhodl-ratio' && p.id === selectedIndicator).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'rhodl-ratio' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -3526,7 +3540,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             ))}
 
             {/* ── Panel: NVTS ── */}
-            {bgeoPanels.filter(p => p.panelId === 'nvts' && p.id === selectedIndicator).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'nvts' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -3546,7 +3560,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             ))}
 
             {/* ── Panel: NVT Z-Score ── */}
-            {bgeoPanels.filter(p => p.panelId === 'nvt-zscore' && p.id === selectedIndicator).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'nvt-zscore' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -3566,7 +3580,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             ))}
 
             {/* ── Panel: CVDD ── */}
-            {bgeoPanels.filter(p => p.panelId === 'cvdd' && p.id === selectedIndicator).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'cvdd' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -3586,7 +3600,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             ))}
 
             {/* Realized Price — special: uses BTC price as reference */}
-            {bgeoPanels.filter(p => p.panelId === 'realized-price' && (p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id)))).map((panel) => (
+            {bgeoPanels.filter(p => p.panelId === 'realized-price' && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -3606,7 +3620,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             ))}
 
             {/* Market Cap */}
-            {key4SimplePanels.filter(p => (p.panelId === 'market-cap-k4') && p.id === selectedIndicator).map((panel) => (
+            {key4SimplePanels.filter(p => (p.panelId === 'market-cap-k4') && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -3626,7 +3640,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             ))}
 
             {/* 200-Week MA — shows MA + BTC price (both are prices, no yAxisId needed) */}
-            {selectedIndicator === 'indicator-200-week-ma' && (
+            {(selectedIndicator === null || selectedIndicator === 'indicator-200-week-ma') && (
             <PanelMaximizeWrapper
               fullHeight={false}
               panelId="200-week-ma"
@@ -3733,7 +3747,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
 
 
 
-            {key4SimplePanels.filter(p => (p.panelId === 'highly-liquid-supply') && p.id === selectedIndicator).map((panel) => (
+            {key4SimplePanels.filter(p => (p.panelId === 'highly-liquid-supply') && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -3752,7 +3766,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
               />
             ))}
 
-            {key4SimplePanels.filter(p => (p.panelId === 'lth-position-change' || p.panelId === 'sth-position-change') && p.id === selectedIndicator).map((panel) => (
+            {key4SimplePanels.filter(p => (p.panelId === 'lth-position-change' || p.panelId === 'sth-position-change') && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -3771,7 +3785,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
               />
             ))}
 
-            {key4SimplePanels.filter(p => (p.panelId === 'mpi' || p.panelId === 'miner-sell-pressure') && p.id === selectedIndicator).map((panel) => (
+            {key4SimplePanels.filter(p => (p.panelId === 'mpi' || p.panelId === 'miner-sell-pressure') && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -3790,7 +3804,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
               />
             ))}
 
-            {key4SimplePanels.filter(p => (p.panelId === 'utxo-profit' || p.panelId === 'utxo-loss') && p.id === selectedIndicator).map((panel) => (
+            {key4SimplePanels.filter(p => (p.panelId === 'utxo-profit' || p.panelId === 'utxo-loss') && (selectedIndicator === null || p.id === selectedIndicator)).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -3810,7 +3824,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             ))}
 
             {/* ── NOVRIX INTELLIGENCE Composite Panels ── */}
-            {novrixPanels.filter(p => p.id === selectedIndicator).map((panel) => (
+            {novrixPanels.filter(p => selectedIndicator === null || p.id === selectedIndicator).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -3830,7 +3844,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             ))}
 
             {/* Social Sentiment Analysis Panel */}
-            {selectedIndicator === 'indicator-social-sentiment' && (
+            {(selectedIndicator === null || selectedIndicator === 'indicator-social-sentiment') && (
             <PanelMaximizeWrapper
               fullHeight={false}
               panelId="social-sentiment"
@@ -3963,7 +3977,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             )}
 
             {/* Trending Market Monitor Panel */}
-            {selectedIndicator === 'indicator-trending' && (
+            {(selectedIndicator === null || selectedIndicator === 'indicator-trending') && (
             <PanelMaximizeWrapper
               fullHeight={false}
               panelId="trending"

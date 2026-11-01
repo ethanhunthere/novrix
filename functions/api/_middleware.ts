@@ -214,7 +214,26 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   }
 
   try {
-    const response = await readD1Indicator(context.env, config);
+    let response = await readD1Indicator(context.env, config);
+    if (response.status !== 200) {
+      const slug = pathname.replace(/^\/api\//, '');
+      const assetFetcher = (context.env as unknown as { ASSETS?: { fetch: typeof fetch } })?.ASSETS;
+      if (assetFetcher) {
+        try {
+          const staticUrl = new URL(`/data/onchain/${slug}.json`, context.request.url);
+          const assetRes = await assetFetcher.fetch(staticUrl);
+          if (assetRes.ok) {
+            const headers = new Headers(assetRes.headers);
+            headers.set('Cache-Control', CACHE);
+            headers.set('Access-Control-Allow-Origin', '*');
+            response = new Response(assetRes.body, { status: 200, headers });
+          }
+        } catch (assetErr) {
+          console.warn(`[Static asset fallback error on 503] path=${pathname}`, assetErr);
+        }
+      }
+    }
+
     if (cache && response.status === 200) {
       try {
         context.waitUntil(cache.put(cacheKey, response.clone()));

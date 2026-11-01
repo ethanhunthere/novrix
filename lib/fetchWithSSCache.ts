@@ -19,7 +19,7 @@ type ApiCachePayload = {
 };
 
 function ssCacheKey(url: string): string {
-  return SS_PREFIX + url.replace(/^\/api\//, '').replace(/[\/?=&]/g, '_') + '_cache';
+  return SS_PREFIX + url.replace(/^\/api\//, '').replace(/[\/?=&.]/g, '_') + '_cache';
 }
 
 /** Evict oldest sessionStorage entries when we exceed the cap. */
