@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import FooterHome from '@/components/layout/FooterHome';
-import TerminalTelemetryCard from '@/components/home/TerminalTelemetryCard';
+import TerminalWorkspaceIndex from '@/components/home/TerminalWorkspaceIndex';
 import { defaultOgImages, defaultTwitterImages } from '@/lib/og-config';
 
 export const metadata: Metadata = {
@@ -110,9 +110,9 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Right Column: Tactical Terminal Telemetry Card */}
+              {/* Right Column: Terminal Workspace Index */}
               <div className="lg:col-span-5 w-full min-w-0">
-                <TerminalTelemetryCard />
+                <TerminalWorkspaceIndex />
               </div>
             </div>
           </div>
