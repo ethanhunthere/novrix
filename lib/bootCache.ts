@@ -99,7 +99,19 @@ export async function fetchCached(url: string, options?: RequestInit): Promise<R
       } as unknown as Response;
     }
   }
-  // Either expired or missing — drop the stale entry and re-fetch.
+  // Either expired or missing — fetch and memoize in boot cache
+  const p = fetchWithRetry(url);
+  put(url, p);
+  const data = await p;
+  if (data !== null) {
+    return {
+      ok: true,
+      status: 200,
+      headers: new Headers({ 'Content-Type': 'application/json' }),
+      json: async () => data,
+      text: async () => (typeof data === 'string' ? data : JSON.stringify(data)),
+    } as unknown as Response;
+  }
   cache.delete(url);
   return fetch(url, options);
 }

@@ -264,7 +264,7 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
   const metricColor = normalizeMetricColor(panel.accentColor);
   const lineColor = getHighIntensityLineColor(panel.accentColor);
 
-  const isVisible = visiblePanels.has(panel.panelId);
+  const isVisible = selectedIndicator === panel.id || visiblePanels.has(panel.panelId);
 
   const zoneBands = useMemo(
     () => isVisible ? getReferenceBands(panel.data, valueKey, panel.referenceBands) : [],
@@ -325,7 +325,7 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
         style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
       >
 
-        {(!visiblePanels.has(panel.panelId) || panel.isLoading || !rechartsReady || panel.data.length === 0) ? (
+        {(!isVisible || panel.isLoading || !rechartsReady || panel.data.length === 0) ? (
           <ChartSkeleton height={ch(panel.panelId)} />
         ) : (() => {
           const isFred = panel.panelId.startsWith('fred-') || !!panel.useFredTfOpts;

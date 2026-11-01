@@ -2707,7 +2707,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 className={`px-1.5 sm:px-2 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
                 style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
               >
-                {(!visiblePanels.has('sentiment-oscillator') || isLoading) ? (
+                {((!visiblePanels.has('sentiment-oscillator') && selectedIndicator !== 'indicator-fear-greed') || isLoading) ? (
                   <ChartSkeleton height={ch('sentiment-oscillator')} />
                 ) : (
                   <div className={`min-w-0 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}>
@@ -2999,7 +2999,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 className={`px-1.5 sm:px-2 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
                 style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
               >
-                {(!visiblePanels.has('dominance') || isDominanceLoading || slicedDominanceChartDataWithPrice.length === 0) ? (
+                {((!visiblePanels.has('dominance') && selectedIndicator !== 'indicator-dominance') || isDominanceLoading || slicedDominanceChartDataWithPrice.length === 0) ? (
                   <ChartSkeleton height={ch('dominance')} />
                 ) : (
                   <div className={selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : undefined}>
@@ -3318,7 +3318,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 className={`px-1.5 sm:px-2 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
                 style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
               >
-                {(!visiblePanels.has('hashribbons') || isHashribbonsLoading || hashribbonsChartData.length === 0) ? <ChartSkeleton height={ch('hashribbons')} /> : (
+                {((!visiblePanels.has('hashribbons') && selectedIndicator !== 'indicator-hashribbons') || isHashribbonsLoading || hashribbonsChartData.length === 0) ? <ChartSkeleton height={ch('hashribbons')} /> : (
                   <div className={selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : undefined}>
                     <div className="flex flex-row items-center justify-between gap-3 mb-2.5 flex-wrap shrink-0">
                       <LineToggle items={[
@@ -3636,7 +3636,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 className={`px-1.5 sm:px-2 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
                 style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
               >
-                {(!visiblePanels.has('200-week-ma') || isWeekMa200Loading || weekMa200ChartData.length === 0) ? (
+                {((!visiblePanels.has('200-week-ma') && selectedIndicator !== 'indicator-200-week-ma') || isWeekMa200Loading || weekMa200ChartData.length === 0) ? (
                   <ChartSkeleton height={ch('200-week-ma')} />
                 ) : (
                   <div className={selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : undefined}>
@@ -3836,7 +3836,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 className={`px-4 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col overflow-y-auto' : ''}`}
                 style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
               >
-                {(!visiblePanels.has('social-sentiment') || isSocialLoading) ? (
+                {((!visiblePanels.has('social-sentiment') && selectedIndicator !== 'indicator-social-sentiment') || isSocialLoading) ? (
                   <ChartSkeleton height={200} />
                 ) : socialSentiment ? (
                   <div>
@@ -3967,7 +3967,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 className={`px-4 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col overflow-y-auto' : ''}`}
                 style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
               >
-                {(!visiblePanels.has('trending-coins') || isSocialLoading) ? (
+                {((!visiblePanels.has('trending-coins') && selectedIndicator !== 'indicator-trending') || isSocialLoading) ? (
                   <ChartSkeleton height={200} />
                 ) : trendingCoins.length > 0 ? (
                   <div>
