@@ -1,6 +1,6 @@
 'use client';
 
-import React, { memo } from 'react';
+import React, { memo, useRef } from 'react';
 
 type IndicatorEntry = { isDivider?: undefined; name: string; id: string; live: boolean; freq: string };
 type DividerEntry   = { isDivider: true; dividerLabel: string };
@@ -38,6 +38,7 @@ const SentimentSidebar = memo(function SentimentSidebar({
   setSelectedIndicator,
   height,
 }: SentimentSidebarProps) {
+  const itemsScrollRef = useRef<HTMLDivElement>(null);
   const q = registrySearch.toLowerCase().trim();
   const heightVal = height
     ? (typeof height === 'number' ? `${height}px` : height)
@@ -52,12 +53,20 @@ const SentimentSidebar = memo(function SentimentSidebar({
     <div
       className="w-full flex flex-col overflow-hidden select-none"
       style={{
-        height: heightVal ?? 'auto',
-        maxHeight: 'calc(100vh - 36px)',
+        height: heightVal ?? 'fit-content',
+        maxHeight: 'calc(100vh - 24px)',
         background: '#120F0D',
         border: '1px solid rgba(245, 241, 234, 0.08)',
         borderRadius: '2px',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.35)',
+      }}
+      onWheel={(e) => {
+        if (itemsScrollRef.current && e.target !== itemsScrollRef.current && !itemsScrollRef.current.contains(e.target as Node)) {
+          const sc = itemsScrollRef.current;
+          if (sc.scrollHeight > sc.clientHeight) {
+            sc.scrollTop += e.deltaY;
+          }
+        }
       }}
     >
       {/* ── Header ── */}
@@ -195,6 +204,7 @@ const SentimentSidebar = memo(function SentimentSidebar({
 
       {/* ── Category Accordions ── */}
       <div
+        ref={itemsScrollRef}
         className="overflow-y-auto flex-1 min-h-0 overscroll-contain"
         style={{
           scrollbarWidth: 'thin',

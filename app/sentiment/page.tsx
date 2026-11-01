@@ -15,6 +15,7 @@ import {
   PANEL_CODES, PanelMaximizeWrapper,
   getHalvingIndices,
   Y_AXIS_LEFT_PROPS, Y_AXIS_RIGHT_PROPS, formatBtcAxisTick,
+  getLeftYAxisWidth,
 } from '@/components/sentiment/SentimentPanelUtils';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceArea, ReferenceLine } from 'recharts';
 import { motion } from 'framer-motion';
@@ -592,11 +593,11 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
 
   const ch = useCallback((_panelId: string, normalH = 340) => {
     if (selectedIndicator !== null) {
-      // 375px base height for single panels, scaling smoothly on 4K/5K ultra-wide displays
-      if (vpWidth >= 4800) return 540;
-      if (vpWidth >= 3840) return 480;
-      if (vpWidth >= 2560) return 420;
-      return 375;
+      // 400px base height for single panels, scaling smoothly on 4K/5K ultra-wide displays
+      if (vpWidth >= 4800) return 560;
+      if (vpWidth >= 3840) return 500;
+      if (vpWidth >= 2560) return 440;
+      return 400;
     }
     if (vpWidth >= 4800) return 640;
     if (vpWidth >= 3840) return 560;
@@ -2703,7 +2704,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 onScreenshot={() => capturePanel('sentiment-oscillator')}
               />
               <div
-                className={`px-2.5 sm:px-3 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
+                className={`px-1.5 sm:px-2 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
                 style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
               >
                 {(!visiblePanels.has('sentiment-oscillator') || isLoading) ? (
@@ -2751,9 +2752,9 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                                     data={fngDataToRender}
                                     margin={{
                                       top: 6,
-                                      right: isBtcOn ? 2 : 6,
+                                      right: 2,
                                       bottom: 0,
-                                      left: 2,
+                                      left: 1,
                                     }}
                                     style={{ outline: 'none' }}
                                   >
@@ -2796,6 +2797,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                                     />
                                     <YAxis
                                       {...Y_AXIS_LEFT_PROPS}
+                                      width={24}
                                       domain={[0, 100]}
                                       ticks={[0, 25, 50, 75, 100]}
                                     />
@@ -2994,7 +2996,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 onScreenshot={() => capturePanel('dominance')}
               />
               <div
-                className={`px-2.5 sm:px-3 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
+                className={`px-1.5 sm:px-2 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
                 style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
               >
                 {(!visiblePanels.has('dominance') || isDominanceLoading || slicedDominanceChartDataWithPrice.length === 0) ? (
@@ -3016,9 +3018,9 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                         style={{ outline: 'none' }}
                         margin={{
                           top: 6,
-                          right: showBtcPrice['dominance'] ? 2 : 6,
+                          right: 2,
                           bottom: 0,
-                          left: 2,
+                          left: 1,
                         }}
                       >
                         <defs>
@@ -3047,7 +3049,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                           interval={0}
                           height={24}
                         />
-                        <YAxis {...Y_AXIS_LEFT_PROPS} domain={['auto', 'auto']}
+                        <YAxis {...Y_AXIS_LEFT_PROPS} width={24} domain={['auto', 'auto']}
                           tickFormatter={(v) => `${v.toFixed(0)}%`} />
                         {showBtcPrice['dominance'] && (
                           <YAxis {...Y_AXIS_RIGHT_PROPS} yAxisId="btcPrice" scale="log" domain={['auto', 'auto']}
@@ -3313,7 +3315,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                     onScreenshot={() => capturePanel('hashribbons')}
                   />
               <div
-                className={`px-2.5 sm:px-3 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
+                className={`px-1.5 sm:px-2 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
                 style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
               >
                 {(!visiblePanels.has('hashribbons') || isHashribbonsLoading || hashribbonsChartData.length === 0) ? <ChartSkeleton height={ch('hashribbons')} /> : (
@@ -3333,9 +3335,9 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                         style={{ outline: 'none' }}
                         margin={{
                           top: 6,
-                          right: showBtcPrice['hashribbons'] ? 2 : 6,
+                          right: 2,
                           bottom: 0,
-                          left: 2,
+                          left: 1,
                         }}
                       >
                         <defs>
@@ -3365,6 +3367,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                           height={24}
                         />
                         <YAxis {...Y_AXIS_LEFT_PROPS}
+                          width={30}
                           tickFormatter={(v) => v >= 1e6 ? `${(v/1e6).toFixed(0)}E` : v >= 1e3 ? `${(v/1e3).toFixed(0)}P` : `${v.toFixed(0)}T`} />
                         {showBtcPrice['hashribbons'] && (
                           <YAxis {...Y_AXIS_RIGHT_PROPS} yAxisId="btcPrice" scale="log" domain={['auto', 'auto']}
@@ -3403,7 +3406,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
             </PanelMaximizeWrapper>
             )}
 
-            {macroPanels.filter(p => p.id === selectedIndicator || (selectedIndicator === null && DEFAULT_OVERVIEW_IDS.has(p.id))).map((panel) => (
+            {macroPanels.filter(p => p.id === selectedIndicator || selectedIndicator === null).map((panel) => (
               <SentimentChartPanel
                 key={panel.panelId}
                 panel={panel}
@@ -3630,7 +3633,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                     onScreenshot={() => capturePanel('200-week-ma')}
                   />
               <div
-                className={`px-2.5 sm:px-3 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
+                className={`px-1.5 sm:px-2 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
                 style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
               >
                 {(!visiblePanels.has('200-week-ma') || isWeekMa200Loading || weekMa200ChartData.length === 0) ? (
@@ -3651,9 +3654,9 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                         style={{ outline: 'none' }}
                         margin={{
                           top: 6,
-                          right: 6,
+                          right: 2,
                           bottom: 0,
-                          left: 2,
+                          left: 1,
                         }}
                       >
                         <defs>
@@ -3678,7 +3681,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                           interval={0}
                           height={24}
                         />
-                        <YAxis {...Y_AXIS_LEFT_PROPS} domain={['auto', 'auto']}
+                        <YAxis {...Y_AXIS_LEFT_PROPS} width={36} domain={['auto', 'auto']}
                           tickFormatter={(v) => `$${v >= 1000 ? `${(v/1000).toFixed(0)}K` : v.toFixed(0)}`} />
                         <Tooltip cursor={{ stroke: 'rgba(245,241,234,0.65)', strokeWidth: 2 }} animationDuration={0} isAnimationActive={false}
                           content={(props) => (

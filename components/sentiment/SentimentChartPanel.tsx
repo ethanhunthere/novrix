@@ -26,6 +26,7 @@ import {
   Y_AXIS_LEFT_PROPS,
   Y_AXIS_RIGHT_PROPS,
   formatBtcAxisTick,
+  getLeftYAxisWidth,
 } from '@/components/sentiment/SentimentPanelUtils';
 
 type UpdateFrequency = 'bg' | 'd' | 'w' | 'm' | 'q';
@@ -87,6 +88,7 @@ export interface SentimentPanelConfig {
   headerValue: (value: number) => string;
   tooltipValue: (value: number) => string;
   yAxisTick: (value: number) => string;
+  yAxisWidth?: number;
   updateFreq?: UpdateFrequency;
   hideBtcPrice?: boolean;
   useFredTfOpts?: boolean;
@@ -275,6 +277,11 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
     [isVisible, panel.data, valueKey, chartHeight, panel.panelId]
   );
 
+  const leftAxisWidth = useMemo(
+    () => panel.yAxisWidth ?? getLeftYAxisWidth(panel.yAxisTick),
+    [panel.yAxisWidth, panel.yAxisTick]
+  );
+
   return (
     <PanelMaximizeWrapper
       fullHeight={false}
@@ -314,7 +321,7 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
       })()}
 
       <div
-        className={`px-2.5 sm:px-3 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
+        className={`px-1.5 sm:px-2 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
         style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
       >
 
@@ -340,9 +347,9 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
                     style={{ outline: 'none' }}
                   margin={{
                     top: 6,
-                    right: showBtc && showBtcPrice[panel.indicatorKey] && !panel.btcSameAxis ? 2 : 6,
+                    right: 2,
                     bottom: 0,
-                    left: 2,
+                    left: 1,
                   }}
                 >
                   <defs>
@@ -383,6 +390,7 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
                   />
                   <YAxis
                     {...Y_AXIS_LEFT_PROPS}
+                    width={leftAxisWidth}
                     domain={['auto', 'auto']}
                     tickFormatter={panel.yAxisTick}
                   />

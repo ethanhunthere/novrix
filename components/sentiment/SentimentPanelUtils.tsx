@@ -701,10 +701,10 @@ export const DateAxisTick = (props: DateAxisTickProps) => {
 
   // Boundary protection:
   // Ensure the left-most date tick NEVER enters into the left Y-axis value column territory.
-  const isFirst = index === 0 || x < Y_AXIS_WIDTH + 14;
+  const isFirst = index === 0 || x < 32;
   const isLast = visibleTicksCount > 1 ? index === visibleTicksCount - 1 : false;
   const textAnchor = isFirst ? 'start' : isLast ? 'end' : 'middle';
-  const dx = isFirst ? 10 : isLast ? -8 : 0;
+  const dx = isFirst ? 3 : isLast ? -2 : 0;
 
   return (
     <text
@@ -722,9 +722,44 @@ export const DateAxisTick = (props: DateAxisTickProps) => {
   );
 };
 
-export const Y_AXIS_CHART_PADDING = 6;
-export const Y_AXIS_WIDTH = 48;
-export const Y_AXIS_RIGHT_WIDTH = 44;
+export const Y_AXIS_CHART_PADDING = 5;
+export const Y_AXIS_WIDTH = 30;
+export const Y_AXIS_RIGHT_WIDTH = 36;
+
+/**
+ * Computes the optimal left Y-axis width (in px) for an indicator based on its tickFormatter output.
+ * Dynamically tightens the axis for short indicators (e.g. 24-28px for ratios, FNG, dominance)
+ * while providing safe room for currency/large numbers (34-44px for NRPL, 200W MA, trillions).
+ * This eliminates wasted left-side blank spaces and expands the inner chart width.
+ */
+export function getLeftYAxisWidth(
+  formatter?: ((v: number) => string) | null,
+  sampleDomainOrValues?: readonly number[] | number[],
+): number {
+  if (!formatter) return 28;
+  try {
+    const testValues = sampleDomainOrValues && sampleDomainOrValues.length > 0
+      ? sampleDomainOrValues
+      : [-1e9, -7e8, -1e6, -1000, -100, -1, -0.5, 0, 0.5, 1, 3, 6, 9, 10, 50, 100, 1000, 1e6, 1e9, 1e12];
+    let maxChars = 0;
+    for (const v of testValues) {
+      try {
+        const formatted = formatter(v);
+        if (formatted && typeof formatted === 'string' && formatted.length > maxChars) {
+          maxChars = formatted.length;
+        }
+      } catch {
+        // continue
+      }
+    }
+    if (maxChars <= 3) return 24; // "9.0", "100", "50%"
+    if (maxChars <= 4) return 28; // "-3.0", "1.5x", "100%"
+    if (maxChars <= 5) return 34; // "$100K", "5.25%"
+    return Math.min(44, Math.ceil(maxChars * 6) + Y_AXIS_CHART_PADDING); // e.g. "-$700M" -> 41px
+  } catch {
+    return 28;
+  }
+}
 
 function axisCoord(value: number | string | undefined): number {
   const n = typeof value === 'number' ? value : Number(value);

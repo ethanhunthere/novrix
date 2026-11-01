@@ -69,11 +69,21 @@ export async function fetchWithSSCache(url: string, options?: RequestInit): Prom
       // Only cache responses that actually contain data — prevents stale empty
       // responses from blocking future fetches when the DB hasn't been populated yet.
       if (data.success && Array.isArray(data.data) && data.data.length > 0 && typeof window !== 'undefined') {
-        evictOldestIfNeeded();
-        sessionStorage.setItem(cacheKey, JSON.stringify({ d: data, t: Date.now() }));
+        try {
+          const serialized = JSON.stringify({ d: data, t: Date.now() });
+          // Only store lightweight payloads (<100KB) in sessionStorage to prevent QuotaExceededError
+          if (serialized.length < 100_000) {
+            evictOldestIfNeeded();
+            sessionStorage.setItem(cacheKey, serialized);
+          }
+        } catch {
+          // sessionStorage full or QuotaExceededError — gracefully skip sessionStorage cache
+        }
       }
       return zeroCopyResponse(data);
-    } catch { /* quota exceeded or parse error — ignore */ }
+    } catch {
+      // JSON parse error — fall through to return original response
+    }
   }
   return response;
 }
