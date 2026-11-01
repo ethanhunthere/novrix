@@ -94,7 +94,7 @@ export default function Home() {
 
                 <div className="mt-4 sm:mt-5 flex flex-wrap items-center gap-3.5">
                   <Link href="/sentiment" className="home-btn home-btn-primary">
-                    Open workspace
+                    Open Terminal
                     <Arrow />
                   </Link>
                   <span

@@ -203,7 +203,7 @@ export default function DocumentationView() {
               className="px-4 py-2 text-xs font-semibold text-[#FAF7F2] bg-[#C2344D] hover:bg-[#D43B55] transition-colors rounded"
               style={{ fontFamily: 'var(--ff-mono)' }}
             >
-              Open Sentiment Workspace →
+              Open Terminal →
             </Link>
           </div>
         </div>
