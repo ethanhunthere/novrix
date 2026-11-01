@@ -300,6 +300,50 @@ function getInitialMacroData(key: string): IndicatorPoint[] {
   return [];
 }
 
+function getInitialOnchainData(key: string): IndicatorPoint[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const filename = key.toLowerCase();
+    const staticKey = `novrix_${SENTIMENT_DATA_VERSION}__data_onchain_${filename}_json_cache`;
+    const staticRaw = sessionStorage.getItem(staticKey);
+    if (staticRaw) {
+      const parsed = JSON.parse(staticRaw);
+      if (parsed?.d?.success && Array.isArray(parsed.d.data) && parsed.d.data.length > 0) {
+        return parsed.d.data;
+      }
+    }
+    const apiKey = `novrix_${SENTIMENT_DATA_VERSION}__api_${filename}_cache`;
+    const apiRaw = sessionStorage.getItem(apiKey);
+    if (apiRaw) {
+      const parsed = JSON.parse(apiRaw);
+      if (parsed?.d?.success && Array.isArray(parsed.d.data) && parsed.d.data.length > 0) {
+        return parsed.d.data;
+      }
+    }
+  } catch {}
+  return [];
+}
+
+function computeSsrOscillator(ssrPoints: IndicatorPoint[]): IndicatorPoint[] {
+  if (!ssrPoints || ssrPoints.length === 0) return [];
+  const sorted = fastSortAscending(ssrPoints);
+  const osc: IndicatorPoint[] = [];
+  for (let i = 0; i < sorted.length; i++) {
+    const windowStart = Math.max(0, i - 199);
+    const window = sorted.slice(windowStart, i + 1);
+    const mean = window.reduce((acc, p) => acc + (Number((p as unknown as Record<string, unknown>).ssr ?? p.value ?? 0)), 0) / window.length;
+    const variance = window.reduce((acc, p) => acc + Math.pow(Number((p as unknown as Record<string, unknown>).ssr ?? p.value ?? 0) - mean, 2), 0) / window.length;
+    const stdDev = Math.sqrt(variance);
+    const currentVal = Number((sorted[i] as unknown as Record<string, unknown>).ssr ?? sorted[i].value ?? 0);
+    const zScore = stdDev > 0 ? (currentVal - mean) / stdDev : 0;
+    osc.push({
+      time: sorted[i].time,
+      value: Math.round(zScore * 10000) / 10000,
+    });
+  }
+  return osc;
+}
+
 export function useSentimentData() {
   const initialBulk = useMemo(() => getInitialBulkData(), []);
   const initialDerived = useMemo(() => getInitialDerivedData(initialBulk), [initialBulk]);
@@ -341,8 +385,8 @@ export function useSentimentData() {
   const [lthMvrvData, setLthMvrvData] = useState<IndicatorPoint[]>(() => initialBulk?.lthMvrv ?? []);
   const [isLthMvrvLoading, setIsLthMvrvLoading] = useState(() => !(initialBulk?.lthMvrv?.length));
   const [lthMvrvTimeframe, setLthMvrvTimeframe] = useState<string>('999999');
-  const [ssrData, setSsrData] = useState<IndicatorPoint[]>(() => initialBulk?.ssr ?? []);
-  const [isSsrLoading, setIsSsrLoading] = useState(() => !(initialBulk?.ssr?.length));
+  const [ssrData, setSsrData] = useState<IndicatorPoint[]>(() => initialBulk?.ssr ?? getInitialOnchainData('ssr'));
+  const [isSsrLoading, setIsSsrLoading] = useState(() => !(initialBulk?.ssr?.length || getInitialOnchainData('ssr').length));
   const [ssrTimeframe, setSsrTimeframe] = useState<string>('999999');
   // KEY 2 indicators
   const [puellMultipleData, setPuellMultipleData] = useState<IndicatorPoint[]>([]);
@@ -448,8 +492,8 @@ export function useSentimentData() {
   const [fedfundsData, setFedfundsData] = useState<IndicatorPoint[]>(() => getInitialMacroData('fedfunds'));
   const [isFedfundsLoading, setIsFedfundsLoading] = useState(() => !getInitialMacroData('fedfunds').length);
   const [fedfundsTimeframe, setFedfundsTimeframe] = useState<string>('999999');
-  const [etfData, setEtfData] = useState<IndicatorPoint[]>([]);
-  const [isEtfLoading, setIsEtfLoading] = useState(true);
+  const [etfData, setEtfData] = useState<IndicatorPoint[]>(() => getInitialOnchainData('etf'));
+  const [isEtfLoading, setIsEtfLoading] = useState(() => !getInitialOnchainData('etf').length);
   const [etfTimeframe, setEtfTimeframe] = useState<string>('999999');
   const [sp500Data, setSp500Data] = useState<IndicatorPoint[]>(() => getInitialMacroData('sp500'));
   const [isSp500Loading, setIsSp500Loading] = useState(() => !getInitialMacroData('sp500').length);
@@ -457,14 +501,23 @@ export function useSentimentData() {
   const [goldData, setGoldData] = useState<IndicatorPoint[]>(() => getInitialMacroData('gold'));
   const [isGoldLoading, setIsGoldLoading] = useState(() => !getInitialMacroData('gold').length);
   const [goldTimeframe, setGoldTimeframe] = useState<string>('999999');
-  const [stablecoinSupplyData, setStablecoinSupplyData] = useState<IndicatorPoint[]>([]);
-  const [isStablecoinSupplyLoading, setIsStablecoinSupplyLoading] = useState(true);
+  const [stablecoinSupplyData, setStablecoinSupplyData] = useState<IndicatorPoint[]>(() => getInitialOnchainData('stablecoin-supply'));
+  const [isStablecoinSupplyLoading, setIsStablecoinSupplyLoading] = useState(() => !getInitialOnchainData('stablecoin-supply').length);
   const [stablecoinSupplyTimeframe, setStablecoinSupplyTimeframe] = useState<string>('999999');
-  const [ssrOscillatorData, setSsrOscillatorData] = useState<IndicatorPoint[]>([]);
-  const [isSsrOscillatorLoading, setIsSsrOscillatorLoading] = useState(true);
+  const [ssrOscillatorData, setSsrOscillatorData] = useState<IndicatorPoint[]>(() => {
+    const cached = getInitialOnchainData('ssr-oscillator');
+    if (cached.length > 0) return cached;
+    const initialSsr = initialBulk?.ssr ?? getInitialOnchainData('ssr');
+    return computeSsrOscillator(initialSsr);
+  });
+  const [isSsrOscillatorLoading, setIsSsrOscillatorLoading] = useState(() => {
+    if (getInitialOnchainData('ssr-oscillator').length > 0) return false;
+    const initialSsr = initialBulk?.ssr ?? getInitialOnchainData('ssr');
+    return initialSsr.length === 0;
+  });
   const [ssrOscillatorTimeframe, setSsrOscillatorTimeframe] = useState<string>('999999');
-  const [cryptoMarketCapData, setCryptoMarketCapData] = useState<IndicatorPoint[]>([]);
-  const [isCryptoMarketCapLoading, setIsCryptoMarketCapLoading] = useState(true);
+  const [cryptoMarketCapData, setCryptoMarketCapData] = useState<IndicatorPoint[]>(() => getInitialOnchainData('crypto-market-cap'));
+  const [isCryptoMarketCapLoading, setIsCryptoMarketCapLoading] = useState(() => !getInitialOnchainData('crypto-market-cap').length);
   const [cryptoMarketCapTimeframe, setCryptoMarketCapTimeframe] = useState<string>('999999');
 
   // FRED extended macro state
@@ -1045,6 +1098,20 @@ export function useSentimentData() {
         valueKey = 'value',
       ) => {
         try {
+          if (url === '/api/ssr') {
+            try {
+              const rStatic = await fetchWithSSCache(withSentimentDataVersion('/data/onchain/ssr.json'), { headers: { 'Accept': 'application/json' } });
+              if (rStatic.ok) {
+                const resStatic: IndicatorApiResponse = await rStatic.json();
+                if (resStatic.success && resStatic.data?.length > 0) {
+                  const freshData = ensureFreshToToday(resStatic.data, valueKey);
+                  setData(freshData);
+                  addLog(`${label}: ${freshData.length} records (static fallback)`, 'SUCCESS');
+                  return;
+                }
+              }
+            } catch { /* proceed to api */ }
+          }
           const r = await fetchWithSSCache(withSentimentDataVersion(url), { headers: { 'Accept': 'application/json' } });
           if (r.ok) {
             const result: IndicatorApiResponse = await r.json();
@@ -1052,7 +1119,22 @@ export function useSentimentData() {
               const freshData = ensureFreshToToday(result.data, valueKey);
               setData(freshData);
               addLog(`${label}: ${freshData.length} records`, 'SUCCESS');
+              return;
             }
+          }
+          if (url === '/api/ssr') {
+            try {
+              const rStatic = await fetchWithSSCache(withSentimentDataVersion('/data/onchain/ssr.json'), { headers: { 'Accept': 'application/json' } });
+              if (rStatic.ok) {
+                const resStatic: IndicatorApiResponse = await rStatic.json();
+                if (resStatic.success && resStatic.data?.length > 0) {
+                  const freshData = ensureFreshToToday(resStatic.data, valueKey);
+                  setData(freshData);
+                  addLog(`${label}: ${freshData.length} records (static fallback)`, 'SUCCESS');
+                  return;
+                }
+              }
+            } catch { /* end */ }
           }
         } catch { addLog(`${label} fallback failed`, 'ERROR'); }
         finally { setLoading(false); }
@@ -1668,29 +1750,39 @@ export function useSentimentData() {
             if (result.success && result.data?.length > 0) return result.data;
           }
         } catch { /* silent */ }
+        if (staticPath) {
+          try {
+            const rStatic = await fetchWithSSCache(staticPath, { headers: { 'Accept': 'application/json' } });
+            if (rStatic.ok) {
+              const res = await rStatic.json() as IndicatorApiResponse;
+              if (res.success && Array.isArray(res.data) && res.data.length > 0) return res.data;
+            }
+          } catch { /* end */ }
+        }
         return [];
       };
 
-      fMacro('/api/etf').then((etf) => {
+      fMacro('/api/etf', '/data/onchain/etf.json').then((etf) => {
         if (etf.length > 0) setEtfData(ensureFreshToToday(etf, 'value'));
         setIsEtfLoading(false);
       });
 
-      fMacro('/api/stablecoin-supply').then((stablecoinSupply) => {
+      fMacro('/api/stablecoin-supply', '/data/onchain/stablecoin-supply.json').then((stablecoinSupply) => {
         if (stablecoinSupply.length > 0) {
           const freshStbl = ensureFreshToToday(stablecoinSupply, 'value');
           setStablecoinSupplyData(freshStbl);
-          const derivedOsc: IndicatorPoint[] = freshStbl.map((pt, i) => ({
-            time: pt.time,
-            value: Math.round(Math.sin(i * 0.1) * 45) / 100,
-          }));
-          setSsrOscillatorData(derivedOsc);
         }
         setIsStablecoinSupplyLoading(false);
-        setIsSsrOscillatorLoading(false);
       });
 
-      fMacro('/api/crypto-market-cap').then((cryptoMarketCap) => {
+      fMacro('/api/ssr-oscillator', '/data/onchain/ssr-oscillator.json').then((ssro) => {
+        if (ssro.length > 0) {
+          setSsrOscillatorData(ensureFreshToToday(ssro, 'value'));
+          setIsSsrOscillatorLoading(false);
+        }
+      });
+
+      fMacro('/api/crypto-market-cap', '/data/onchain/crypto-market-cap.json').then((cryptoMarketCap) => {
         if (cryptoMarketCap.length > 0) setCryptoMarketCapData(ensureFreshToToday(cryptoMarketCap, 'value'));
         setIsCryptoMarketCapLoading(false);
       });
@@ -1700,6 +1792,20 @@ export function useSentimentData() {
     const timer = setTimeout(fetchMacroIndicators, 0);
     return () => clearTimeout(timer);
   }, []);
+
+  // Dynamically compute SSR Oscillator from SSR data whenever SSR data is loaded or updated
+  useEffect(() => {
+    if (ssrData && ssrData.length > 0) {
+      const handle = requestAnimationFrame(() => {
+        const osc = computeSsrOscillator(ssrData);
+        if (osc.length > 0) {
+          setSsrOscillatorData(osc);
+          setIsSsrOscillatorLoading(false);
+        }
+      });
+      return () => cancelAnimationFrame(handle);
+    }
+  }, [ssrData]);
   useEffect(() => {
 
 

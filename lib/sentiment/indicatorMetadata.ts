@@ -331,7 +331,7 @@ export const INDICATOR_METADATA: Record<string, IndicatorMetadata> = {
     zones: 'Global asset class total valuation ($T)',
     source: 'CoinMarketCap / CoinGecko (Daily)',
     formula: 'Sum of (Circulating Supply × Price) across all verified crypto assets',
-    aliases: ['indicator-crypto-market-cap', 'cryptoMarketCap', 'crypto-market-cap'],
+    aliases: ['indicator-crypto-market-cap', 'cryptoMarketCap', 'crypto-market-cap', 'crypto-total-mc', 'crypto_total_mc'],
   },
 
   // ─── PRICE MODELS ────────────────────────────────────────────────────────

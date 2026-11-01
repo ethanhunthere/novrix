@@ -103,6 +103,7 @@ const D1_BGEOMETRICS_ROUTES: Record<string, D1IndicatorConfig> = {
   '/api/rhodl-ratio': { table: 'rhodl_data', columns: ['value'], mapRow: valueRow },
   '/api/sopr': { table: 'sopr_data', columns: ['sopr'], mapRow: fieldRow('sopr', 'sopr') },
   '/api/ssr': { table: 'ssr_data', columns: ['ssr'], mapRow: fieldRow('ssr', 'ssr') },
+  '/api/ssr-oscillator': { table: 'ssr_data', columns: ['ssr'], mapRow: fieldRow('ssr', 'value') },
   '/api/stablecoin-supply': { table: 'stablecoin_supply_data', columns: ['value'], mapRow: valueRow },
   '/api/sth-mvrv': { table: 'sth_mvrv_data', columns: ['sth_mvrv'], mapRow: fieldRow('sth_mvrv', 'sth_mvrv') },
   '/api/sth-position-change': { table: 'sth_position_change_data', columns: ['value'], mapRow: valueRow },
@@ -225,6 +226,26 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     console.error(`[BGeometrics D1 API] path=${pathname} error=${message}`);
+
+    // High-resilience static fallback: when D1 is unavailable or daily free tier row read limit is reached,
+    // fetch pre-generated static snapshot from ASSETS if it exists.
+    const slug = pathname.replace(/^\/api\//, '');
+    const assetFetcher = (context.env as unknown as { ASSETS?: { fetch: typeof fetch } })?.ASSETS;
+    if (assetFetcher) {
+      try {
+        const staticUrl = new URL(`/data/onchain/${slug}.json`, context.request.url);
+        const assetRes = await assetFetcher.fetch(staticUrl);
+        if (assetRes.ok) {
+          const headers = new Headers(assetRes.headers);
+          headers.set('Cache-Control', CACHE);
+          headers.set('Access-Control-Allow-Origin', '*');
+          return new Response(assetRes.body, { status: 200, headers });
+        }
+      } catch (assetErr) {
+        console.warn(`[Static asset fallback error] path=${pathname}`, assetErr);
+      }
+    }
+
     return json(
       { success: false, error: 'D1 indicator query failed', message, source: 'd1' },
       { status: 503, headers: { 'Cache-Control': 'no-store' } }

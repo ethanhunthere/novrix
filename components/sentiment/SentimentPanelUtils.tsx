@@ -725,45 +725,19 @@ export const DateAxisTick = (props: DateAxisTickProps) => {
   );
 };
 
-export const Y_AXIS_CHART_PADDING = 3;
-export const Y_AXIS_WIDTH = 26;
-export const Y_AXIS_RIGHT_WIDTH = 34;
+import {
+  Y_AXIS_CHART_PADDING,
+  Y_AXIS_WIDTH,
+  Y_AXIS_RIGHT_WIDTH,
+  getLeftYAxisWidth,
+} from '@/lib/sentiment/yAxisUtils';
 
-/**
- * Computes the optimal left Y-axis width (in px) for an indicator based on its tickFormatter output.
- * Dynamically tightens the axis for short indicators (e.g. 22-25px for ratios, FNG, percentages)
- * while providing safe room for currency/large numbers (30-36px for NRPL, 200W MA, trillions).
- * This eliminates wasted left-side blank spaces and expands the inner chart width.
- */
-export function getLeftYAxisWidth(
-  formatter?: ((v: number) => string) | null,
-  sampleDomainOrValues?: readonly number[] | number[],
-): number {
-  if (!formatter) return 24;
-  try {
-    const testValues = sampleDomainOrValues && sampleDomainOrValues.length > 0
-      ? sampleDomainOrValues
-      : [-5, -1, 0, 0.5, 1, 2, 5, 10, 25, 50, 100];
-    let maxChars = 0;
-    for (const v of testValues) {
-      try {
-        const formatted = formatter(v);
-        if (formatted && typeof formatted === 'string' && formatted.length > maxChars) {
-          maxChars = formatted.length;
-        }
-      } catch {
-        // continue
-      }
-    }
-    if (maxChars <= 3) return 22; // "100", "2.1", "50"
-    if (maxChars <= 4) return 25; // "1.05", "4.2%", "5800"
-    if (maxChars <= 5) return 29; // "102.5", "$2650", "5.25%"
-    if (maxChars <= 6) return 33; // "$22.0T", "-10.5%", "-0.50%"
-    return Math.min(40, Math.ceil(maxChars * 5.8) + Y_AXIS_CHART_PADDING); // e.g. "-$700M" -> 38px
-  } catch {
-    return 24;
-  }
-}
+export {
+  Y_AXIS_CHART_PADDING,
+  Y_AXIS_WIDTH,
+  Y_AXIS_RIGHT_WIDTH,
+  getLeftYAxisWidth,
+};
 
 function axisCoord(value: number | string | undefined): number {
   const n = typeof value === 'number' ? value : Number(value);
@@ -791,7 +765,7 @@ export function LeftValueTick(props: YAxisTickContentProps) {
       dy="0.35em"
       textAnchor="end"
       fill="var(--color-steel)"
-      fontSize={11}
+      fontSize={10}
       fontFamily="var(--ff-mono)"
     >
       {label}
@@ -809,7 +783,7 @@ export function RightValueTick(props: YAxisTickContentProps) {
       dy="0.35em"
       textAnchor="start"
       fill="var(--text-tertiary)"
-      fontSize={11}
+      fontSize={10}
       fontFamily="var(--ff-mono)"
     >
       {label}

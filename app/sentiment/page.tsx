@@ -985,10 +985,16 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
     return             { label: 'ACCOMMODATIVE',  color: '#10B981' };
   };
   const getEtfZone = (v: number) => {
-    if (v >= 100e9) return { label: 'VERY HIGH', color: '#10B981' };
-    if (v >= 50e9)  return { label: 'HIGH',      color: '#4CAF50' };
-    if (v >= 10e9)  return { label: 'GROWING',   color: '#7AAAD0' };
-    return                 { label: 'LOW',       color: '#64748B' };
+    if (v >= 1e8) {
+      if (v >= 100e9) return { label: 'VERY HIGH', color: '#10B981' };
+      if (v >= 50e9)  return { label: 'HIGH',      color: '#4CAF50' };
+      if (v >= 10e9)  return { label: 'GROWING',   color: '#7AAAD0' };
+      return                 { label: 'LOW',       color: '#64748B' };
+    }
+    if (v >= 800_000) return { label: 'VERY HIGH', color: '#10B981' };
+    if (v >= 500_000) return { label: 'HIGH',      color: '#4CAF50' };
+    if (v >= 200_000) return { label: 'GROWING',   color: '#7AAAD0' };
+    return                   { label: 'LOW',       color: '#64748B' };
   };
   const getSp500Zone = (v: number) => {
     if (v >= 5500) return { label: 'ATH TERRITORY', color: '#10B981' };
@@ -1809,8 +1815,9 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       id: 'indicator-etf', accentColor: '#14B8A6', gradientId: 'etfFill', tag: '',
       data: etfChartData, dataWithPrice: etfChartDataWithPrice, isLoading: isEtfLoading,
       timeframe: etfTimeframe, setTimeframe: setEtfTimeframe, zoneFn: getEtfZone,
-      headerValue: (v: number) => `$${macroTickDefault(v)}`, tooltipValue: (v: number) => `$${macroTickDefault(v)}`,
-      yAxisTick: (v: number) => `$${macroTickDefault(v)}`,
+      headerValue: (v: number) => (v >= 1e8 ? `$${macroTickDefault(v)}` : `${macroTickDefault(v)} BTC`),
+      tooltipValue: (v: number) => (v >= 1e8 ? `$${macroTickDefault(v)}` : `${macroTickDefault(v)} BTC`),
+      yAxisTick: (v: number) => (v >= 1e8 ? `$${macroTickDefault(v)}` : macroTickDefault(v)),
     },
     {
       panelId: 'sp500', indicatorKey: 'sp500', code: 'SPX', title: 'S&P 500 Index', desc: 'US equity risk benchmark', metricLabel: 'S&P 500',
@@ -1842,8 +1849,9 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       data: ssrOscillatorChartData, dataWithPrice: ssrOscillatorChartDataWithPrice, isLoading: isSsrOscillatorLoading,
       timeframe: ssrOscillatorTimeframe, setTimeframe: setSsrOscillatorTimeframe, zoneFn: getSsrOscillatorZone,
       referenceBands: SSR_OSCILLATOR_REFERENCE_BANDS,
-      headerValue: (v: number) => v.toFixed(4), tooltipValue: (v: number) => v.toFixed(4),
-      yAxisTick: (v: number) => v.toFixed(2),
+      headerValue: (v: number) => (v >= 0 ? `+${v.toFixed(2)}` : v.toFixed(2)),
+      tooltipValue: (v: number) => (v >= 0 ? `+${v.toFixed(2)}` : v.toFixed(2)),
+      yAxisTick: (v: number) => (v >= 0 ? `+${v.toFixed(1)}` : v.toFixed(1)),
     },
     {
       panelId: 'crypto-market-cap', indicatorKey: 'cryptoMarketCap', code: 'CMCAP', title: 'Crypto Market Cap', desc: 'Total crypto market capitalization', metricLabel: 'CRYPTO CAP',
@@ -2576,10 +2584,11 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
       { name: 'BTC Dominance',       id: 'indicator-dominance',           live: true, freq: '' },
     ]},
     { id: 'market-structure', label: 'MARKET STRUCTURE', accent: '#EC4899', items: [
-      { name: 'Open Interest', id: 'indicator-open-interest', live: true,  freq: '' },
-      { name: 'Funding Rate',  id: 'indicator-funding-rate',  live: true,  freq: '' },
-      { name: 'ETF AUM',       id: 'indicator-etf',           live: true,  freq: ''   },
-      { name: 'SSR',           id: 'indicator-ssr',           live: true,  freq: ''   },
+      { name: 'Open Interest',   id: 'indicator-open-interest',   live: true, freq: '' },
+      { name: 'Funding Rate',    id: 'indicator-funding-rate',    live: true, freq: '' },
+      { name: 'ETF AUM',         id: 'indicator-etf',             live: true, freq: '' },
+      { name: 'SSR',             id: 'indicator-ssr',             live: true, freq: '' },
+      { name: 'SSR Oscillator',  id: 'indicator-ssr-oscillator',  live: true, freq: '' },
     ]},
     { id: 'macro', label: 'MACRO', accent: '#6B7280', items: [
       { isDivider: true as const, dividerLabel: 'MONETARY POLICY' },
@@ -2715,7 +2724,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 onScreenshot={() => capturePanel('sentiment-oscillator')}
               />
               <div
-                className={`px-1 sm:px-1.5 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
+                className={`px-2 sm:px-2.5 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
                 style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
               >
                 {((!visiblePanels.has('sentiment-oscillator') && selectedIndicator !== 'indicator-fear-greed') || (isLoading && !sentiment)) ? (
@@ -2763,9 +2772,9 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                                     data={fngDataToRender}
                                     margin={{
                                       top: 6,
-                                      right: isBtcOn ? 2 : 1,
+                                      right: isBtcOn ? 3 : 2,
                                       bottom: 0,
-                                      left: 1,
+                                      left: 3,
                                     }}
                                     style={{ outline: 'none' }}
                                   >
@@ -2808,7 +2817,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                                     />
                                     <YAxis
                                       {...Y_AXIS_LEFT_PROPS}
-                                      width={24}
+                                      width={28}
                                       domain={[0, 100]}
                                       ticks={[0, 25, 50, 75, 100]}
                                     />
@@ -3007,7 +3016,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 onScreenshot={() => capturePanel('dominance')}
               />
               <div
-                className={`px-1 sm:px-1.5 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
+                className={`px-2 sm:px-2.5 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
                 style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
               >
                 {((!visiblePanels.has('dominance') && selectedIndicator !== 'indicator-dominance') || slicedDominanceChartDataWithPrice.length === 0) ? (
@@ -3029,9 +3038,9 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                         style={{ outline: 'none' }}
                         margin={{
                           top: 6,
-                          right: 1,
+                          right: showBtcPrice['dominance'] ? 3 : 2,
                           bottom: 0,
-                          left: 1,
+                          left: 3,
                         }}
                       >
                         <defs>
@@ -3060,7 +3069,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                           interval={0}
                           height={24}
                         />
-                        <YAxis {...Y_AXIS_LEFT_PROPS} width={24} domain={['auto', 'auto']}
+                        <YAxis {...Y_AXIS_LEFT_PROPS} width={34} domain={['auto', 'auto']}
                           tickFormatter={(v) => `${v.toFixed(0)}%`} />
                         {showBtcPrice['dominance'] && (
                           <YAxis {...Y_AXIS_RIGHT_PROPS} yAxisId="btcPrice" scale="log" domain={['auto', 'auto']}
@@ -3326,7 +3335,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                     onScreenshot={() => capturePanel('hashribbons')}
                   />
               <div
-                className={`px-1 sm:px-1.5 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
+                className={`px-2 sm:px-2.5 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
                 style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
               >
                 {((!visiblePanels.has('hashribbons') && selectedIndicator !== 'indicator-hashribbons') || hashribbonsChartData.length === 0) ? <ChartSkeleton height={ch('hashribbons')} /> : (
@@ -3346,9 +3355,9 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                         style={{ outline: 'none' }}
                         margin={{
                           top: 6,
-                          right: 1,
+                          right: showBtcPrice['hashribbons'] ? 3 : 2,
                           bottom: 0,
-                          left: 1,
+                          left: 3,
                         }}
                       >
                         <defs>
@@ -3378,7 +3387,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                           height={24}
                         />
                         <YAxis {...Y_AXIS_LEFT_PROPS}
-                          width={30}
+                          width={38}
                           tickFormatter={(v) => v >= 1e6 ? `${(v/1e6).toFixed(0)}E` : v >= 1e3 ? `${(v/1e3).toFixed(0)}P` : `${v.toFixed(0)}T`} />
                         {showBtcPrice['hashribbons'] && (
                           <YAxis {...Y_AXIS_RIGHT_PROPS} yAxisId="btcPrice" scale="log" domain={['auto', 'auto']}
@@ -3644,7 +3653,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                     onScreenshot={() => capturePanel('200-week-ma')}
                   />
               <div
-                className={`px-1 sm:px-1.5 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
+                className={`px-2 sm:px-2.5 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
                 style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
               >
                 {((!visiblePanels.has('200-week-ma') && selectedIndicator !== 'indicator-200-week-ma') || weekMa200ChartData.length === 0) ? (
@@ -3665,9 +3674,9 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                         style={{ outline: 'none' }}
                         margin={{
                           top: 6,
-                          right: 1,
+                          right: showBtcPrice['weekMa200'] ? 3 : 2,
                           bottom: 0,
-                          left: 1,
+                          left: 3,
                         }}
                       >
                         <defs>
@@ -3692,7 +3701,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                           interval={0}
                           height={24}
                         />
-                        <YAxis {...Y_AXIS_LEFT_PROPS} width={36} domain={['auto', 'auto']}
+                        <YAxis {...Y_AXIS_LEFT_PROPS} width={44} domain={['auto', 'auto']}
                           tickFormatter={(v) => `$${v >= 1000 ? `${(v/1000).toFixed(0)}K` : v.toFixed(0)}`} />
                         <Tooltip cursor={{ stroke: 'rgba(245,241,234,0.65)', strokeWidth: 2 }} animationDuration={0} isAnimationActive={false}
                           content={(props) => (

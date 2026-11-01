@@ -283,13 +283,25 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
     const k = panel.valueKey || 'value';
     const vals: number[] = [];
     const len = panel.data.length;
+    let minV = Infinity;
+    let maxV = -Infinity;
     const step = Math.max(1, Math.floor(len / 20));
     for (let i = 0; i < len; i += step) {
       const v = Number(panel.data[i][k]);
-      if (Number.isFinite(v)) vals.push(v);
+      if (Number.isFinite(v)) {
+        vals.push(v);
+        if (v < minV) minV = v;
+        if (v > maxV) maxV = v;
+      }
     }
     const lastV = Number(panel.data[len - 1][k]);
-    if (Number.isFinite(lastV)) vals.push(lastV);
+    if (Number.isFinite(lastV)) {
+      vals.push(lastV);
+      if (lastV < minV) minV = lastV;
+      if (lastV > maxV) maxV = lastV;
+    }
+    if (minV !== Infinity) vals.push(minV);
+    if (maxV !== -Infinity) vals.push(maxV);
     return vals;
   }, [panel.data, panel.valueKey]);
 
@@ -337,7 +349,7 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
       })()}
 
       <div
-        className={`px-1 sm:px-1.5 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
+        className={`px-2 sm:px-2.5 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
         style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
       >
 
@@ -364,9 +376,9 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
                     style={{ outline: 'none' }}
                   margin={{
                     top: 6,
-                    right: hasRightAxis ? 2 : 1,
+                    right: hasRightAxis ? 3 : 2,
                     bottom: 0,
-                    left: 1,
+                    left: 3,
                   }}
                 >
                   <defs>
