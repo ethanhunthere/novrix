@@ -6,7 +6,7 @@ import TerminalTelemetryCard from '@/components/home/TerminalTelemetryCard';
 import { defaultOgImages, defaultTwitterImages } from '@/lib/og-config';
 
 export const metadata: Metadata = {
-  title: 'NOVRIX · Bitcoin On-Chain Intelligence & Macro Liquidity Terminal',
+  title: 'Novrix',
   description:
     'Bitcoin network fundamentals, valuation models, holder distribution metrics, and Federal Reserve macro liquidity across historical market cycles.',
   keywords: [
@@ -22,14 +22,14 @@ export const metadata: Metadata = {
     canonical: 'https://novrix.io/',
   },
   openGraph: {
-    title: 'NOVRIX · Bitcoin On-Chain Intelligence & Macro Liquidity Terminal',
+    title: 'Novrix',
     description:
       'Bitcoin network fundamentals, valuation models, holder distribution metrics, and Federal Reserve macro liquidity across historical market cycles.',
     url: 'https://novrix.io/',
     images: defaultOgImages,
   },
   twitter: {
-    title: 'NOVRIX · Bitcoin On-Chain Intelligence & Macro Liquidity Terminal',
+    title: 'Novrix',
     description:
       'Bitcoin network fundamentals, valuation models, holder distribution metrics, and Federal Reserve macro liquidity across historical market cycles.',
     images: defaultTwitterImages,

@@ -2,20 +2,20 @@ import { EditorialPage, DocSection, Prose, P, DataRow, InlineCode, PageLinks } f
 import { defaultOgImages, defaultTwitterImages } from '@/lib/og-config';
 
 export const metadata = {
-  title: 'NOVRIX · Documentation & System Reference',
+  title: 'Novrix - Docs',
   description: 'Complete documentation for the NOVRIX on-chain intelligence workspace, analytical methodology, platform architecture, data policy, and operations.',
   keywords: ['NOVRIX documentation', 'crypto analytics guide', 'how to use NOVRIX', 'sentiment methodology', 'on-chain indicators'],
   alternates: {
     canonical: 'https://novrix.io/documentation',
   },
   openGraph: {
-    title: 'NOVRIX · Documentation & System Reference',
+    title: 'Novrix - Docs',
     description: 'Complete documentation for the NOVRIX on-chain intelligence workspace, analytical methodology, platform architecture, data policy, and operations.',
     url: 'https://novrix.io/documentation',
     images: defaultOgImages,
   },
   twitter: {
-    title: 'NOVRIX · Documentation & System Reference',
+    title: 'Novrix - Docs',
     description: 'Complete documentation for the NOVRIX on-chain intelligence workspace, analytical methodology, platform architecture, data policy, and operations.',
     images: defaultTwitterImages,
   },

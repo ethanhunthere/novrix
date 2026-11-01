@@ -29,7 +29,7 @@ const maskIcon = '/safari-pinned-tab.svg';
 const ogImage = '/og-image.png';
 const siteManifest = '/site.webmanifest';
 const siteUrl = "https://novrix.io";
-const siteTitle = "NOVRIX - Sentiment Intelligence & On-Chain Terminal";
+const siteTitle = "Novrix";
 const siteDescription = "Independent Bitcoin on-chain intelligence workspace. Real-time valuation models, holder behavior metrics, miner health, and macroeconomic overlays across historical market cycles.";
 
 export const metadata: Metadata = {

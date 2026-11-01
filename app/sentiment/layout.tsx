@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { defaultOgImages, defaultTwitterImages } from '@/lib/og-config';
 
 export const metadata: Metadata = {
-  title: 'NOVRIX - Sentiment Intelligence & On-Chain Registry',
+  title: 'Novrix - Sentiment',
   description: 'Bitcoin on-chain intelligence workspace featuring 94 indicators across valuation models, profitability dynamics, holder behavior, miner economics, and Federal Reserve macro liquidity.',
   keywords: [
     'Bitcoin on-chain metrics',
@@ -21,13 +21,13 @@ export const metadata: Metadata = {
     canonical: 'https://novrix.io/sentiment',
   },
   openGraph: {
-    title: 'NOVRIX - Sentiment Intelligence & On-Chain Registry',
+    title: 'Novrix - Sentiment',
     description: 'Bitcoin on-chain intelligence workspace featuring 94 indicators across valuation models, profitability dynamics, holder behavior, miner economics, and Federal Reserve macro liquidity.',
     url: 'https://novrix.io/sentiment',
     images: defaultOgImages,
   },
   twitter: {
-    title: 'NOVRIX - Sentiment Intelligence & On-Chain Registry',
+    title: 'Novrix - Sentiment',
     description: 'Bitcoin on-chain intelligence workspace featuring 94 indicators across valuation models, profitability dynamics, holder behavior, miner economics, and Federal Reserve macro liquidity.',
     images: defaultTwitterImages,
   },
