@@ -505,27 +505,55 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
 
 
 
-  // Pre-load all indicator panels so rapid scrolling to any point of the page reveals instant charts without blanking
+  // Priority initial viewport panels — rendering top visible charts first cuts initial paint latency to under 1s
   const [visiblePanels, setVisiblePanels] = useState<Set<string>>(() => new Set([
     'sentiment-oscillator', 'nupl', 'mvrv', 'lth-mvrv', 'sopr', 'ssr',
-    'supply-loss', 'supply-profit', 'realized-profit', 'realized-loss',
-    'sth-mvrv', 'hashrate', 'aviv', 'mvrv-zscore', 'supply-shock', 'illiquid-supply',
-    'hot-supply', 'puell-multiple', 'mayer-multiple', 'reserve-risk', 'vdd', 'active-addresses',
-    'open-interest', 'funding-rate', 'nrpl', 'rhodl-ratio', 'nvts', 'nvt-zscore', 'cvdd',
-    'realized-price', 'market-cap-k4', 'highly-liquid-supply', 'lth-position-change',
-    'sth-position-change', 'mpi', 'miner-sell-pressure', 'utxo-profit', 'utxo-loss',
-    'dominance', 'hashribbons', '200-week-ma', 'social-sentiment', 'trending', 'trending-coins',
-    'm2', 'dxy', 'vix', 'fedfunds', 'sp500', 'gold', 'etf', 'stablecoin-supply', 'ssr-oscillator', 'crypto-market-cap',
-    'fred-cpiaucsl', 'fred-cpilfesl', 'fred-pcepi', 'fred-pcepilfe', 'fred-walcl', 'fred-wresbal',
-    'fred-unrate', 'fred-payems', 'fred-icsa', 'fred-jtsjol', 'fred-emratio', 'fred-gdpc1', 'fred-indpro', 'fred-houst',
-    'fred-umcsent', 'fred-rsxfs', 'fred-dcoilwtico', 'fred-bamlh0a0hym2', 'fred-mortgage30us', 'fred-m1sl',
-    'fred-mabmm301usm189s', 'fred-bogmbase', 'fred-totalsl', 'fred-mich', 'fred-t5yie', 'fred-t10yie',
-    'fred-dgs1mo', 'fred-dgs3mo', 'fred-dgs6mo', 'fred-dgs1', 'fred-dgs5', 'fred-dgs20', 'fred-dgs30',
-    'fred-t10y2y', 'fred-t10y3m', 'fred-rrpontsyd', 'fred-sofr',
-    'vtpx', 'shax', 'smfx', 'levr', 'rcfx', 'cprx', 'rpix', 'crrx', 'sgrx', 'domx',
-    'novrix-vtpx', 'novrix-shax', 'novrix-smfx', 'novrix-levr', 'novrix-rcfx',
-    'novrix-cprx', 'novrix-rpix', 'novrix-crrx', 'novrix-sgrx', 'novrix-domx'
   ]));
+
+  // Progressive background hydration for the rest of the 94 panels so subsequent scrolling remains instant
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const timer = setTimeout(() => {
+      const ALL_REST = [
+        'supply-loss', 'supply-profit', 'realized-profit', 'realized-loss',
+        'sth-mvrv', 'hashrate', 'aviv', 'mvrv-zscore', 'supply-shock', 'illiquid-supply',
+        'hot-supply', 'puell-multiple', 'mayer-multiple', 'reserve-risk', 'vdd', 'active-addresses',
+        'open-interest', 'funding-rate', 'nrpl', 'rhodl-ratio', 'nvts', 'nvt-zscore', 'cvdd',
+        'realized-price', 'market-cap-k4', 'highly-liquid-supply', 'lth-position-change',
+        'sth-position-change', 'mpi', 'miner-sell-pressure', 'utxo-profit', 'utxo-loss',
+        'dominance', 'hashribbons', '200-week-ma', 'social-sentiment', 'trending', 'trending-coins',
+        'm2', 'dxy', 'vix', 'fedfunds', 'sp500', 'gold', 'etf', 'stablecoin-supply', 'ssr-oscillator', 'crypto-market-cap',
+        'fred-cpiaucsl', 'fred-cpilfesl', 'fred-pcepi', 'fred-pcepilfe', 'fred-walcl', 'fred-wresbal',
+        'fred-unrate', 'fred-payems', 'fred-icsa', 'fred-jtsjol', 'fred-emratio', 'fred-gdpc1', 'fred-indpro', 'fred-houst',
+        'fred-umcsent', 'fred-rsxfs', 'fred-dcoilwtico', 'fred-bamlh0a0hym2', 'fred-mortgage30us', 'fred-m1sl',
+        'fred-mabmm301usm189s', 'fred-bogmbase', 'fred-totalsl', 'fred-mich', 'fred-t5yie', 'fred-t10yie',
+        'fred-dgs1mo', 'fred-dgs3mo', 'fred-dgs6mo', 'fred-dgs1', 'fred-dgs5', 'fred-dgs20', 'fred-dgs30',
+        'fred-t10y2y', 'fred-t10y3m', 'fred-rrpontsyd', 'fred-sofr',
+        'vtpx', 'shax', 'smfx', 'levr', 'rcfx', 'cprx', 'rpix', 'crrx', 'sgrx', 'domx',
+        'novrix-vtpx', 'novrix-shax', 'novrix-smfx', 'novrix-levr', 'novrix-rcfx',
+        'novrix-cprx', 'novrix-rpix', 'novrix-crrx', 'novrix-sgrx', 'novrix-domx'
+      ];
+      const hydrateRest = () => {
+        setVisiblePanels((prev) => {
+          let changed = false;
+          const next = new Set(prev);
+          for (const id of ALL_REST) {
+            if (!next.has(id)) {
+              next.add(id);
+              changed = true;
+            }
+          }
+          return changed ? next : prev;
+        });
+      };
+      if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(hydrateRest, { timeout: 2500 });
+      } else {
+        hydrateRest();
+      }
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, []);
 
   const observerRef = useRef<IntersectionObserver | null>(null);
 

@@ -18,9 +18,20 @@ export interface BootSequenceProps {
  */
 export default function BootSequence({ children, prefetchUrls }: BootSequenceProps) {
   useEffect(() => {
-    if (prefetchUrls && prefetchUrls.length > 0) {
-      prefetchUrls.forEach(bootPrefetch);
-    }
+    if (!prefetchUrls || prefetchUrls.length === 0) return;
+
+    // Defer bulk module prefetching to idle time so it never contends with initial viewport chart renders
+    const timer = setTimeout(() => {
+      if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+        window.requestIdleCallback(() => {
+          prefetchUrls.forEach(bootPrefetch);
+        }, { timeout: 3000 });
+      } else {
+        prefetchUrls.forEach(bootPrefetch);
+      }
+    }, 1200);
+
+    return () => clearTimeout(timer);
   }, [prefetchUrls]);
 
   return <>{children}</>;

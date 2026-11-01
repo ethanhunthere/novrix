@@ -1486,7 +1486,7 @@ export function useSentimentData() {
       if (hashribbons.length > 0)    setHashribbonsData(ensureFreshToToday(hashribbons, 'sma_30'));
       setIsHashribbonsLoading(false);
     };
-    const timer = setTimeout(fetchKey2Indicators, 0);
+    const timer = setTimeout(fetchKey2Indicators, 300);
     return () => clearTimeout(timer);
   }, []);
 
@@ -1550,7 +1550,7 @@ export function useSentimentData() {
       if (cvdd.length > 0)        setCvddData(ensureFreshToToday(cvdd, 'value'));
       setIsCvddLoading(false);
     };
-    const timer = setTimeout(fetchKey3Indicators, 0);
+    const timer = setTimeout(fetchKey3Indicators, 600);
     return () => clearTimeout(timer);
   }, []);
 
@@ -1633,7 +1633,7 @@ export function useSentimentData() {
       if (utxoLoss.length > 0)          setUtxoLossData(ensureFreshToToday(utxoLoss, 'value'));
       setIsUtxoLossLoading(false);
     };
-    const timer = setTimeout(fetchKey4Indicators, 0);
+    const timer = setTimeout(fetchKey4Indicators, 900);
     return () => clearTimeout(timer);
   }, []);
 
@@ -1789,7 +1789,7 @@ export function useSentimentData() {
 
       await fredPromise;
     };
-    const timer = setTimeout(fetchMacroIndicators, 0);
+    const timer = setTimeout(fetchMacroIndicators, 1100);
     return () => clearTimeout(timer);
   }, []);
 
@@ -1856,7 +1856,7 @@ export function useSentimentData() {
       }
     };
 
-    const timer = setTimeout(fetchDominanceData, 0);
+    const timer = setTimeout(fetchDominanceData, 800);
     return () => clearTimeout(timer);
   }, []);
 
@@ -1963,7 +1963,7 @@ export function useSentimentData() {
         setIsSocialLoading(false);
       }
     };
-    const timer = setTimeout(fetchSocialData, 600);
+    const timer = setTimeout(fetchSocialData, 1400);
     return () => clearTimeout(timer);
   }, []);
 

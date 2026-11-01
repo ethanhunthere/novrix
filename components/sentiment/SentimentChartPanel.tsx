@@ -265,7 +265,7 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
   const lineColor = getHighIntensityLineColor(panel.accentColor);
 
   const isSelected = selectedIndicator === panel.id || selectedIndicator?.replace(/^indicator-/, '') === panel.panelId;
-  const isVisible = isSelected || visiblePanels.has(panel.panelId) || selectedIndicator === null;
+  const isVisible = isSelected || visiblePanels.has(panel.panelId);
 
   const zoneBands = useMemo(
     () => isVisible ? getReferenceBands(panel.data, valueKey, panel.referenceBands) : [],
@@ -353,7 +353,7 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
         style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
       >
 
-        {(!rechartsReady || panel.data.length === 0) ? (
+        {(!rechartsReady || !isVisible || panel.data.length === 0) ? (
           <ChartSkeleton height={ch(panel.panelId)} />
         ) : (() => {
           const isFred = panel.panelId.startsWith('fred-') || !!panel.useFredTfOpts || !!panel.hideBtcPrice;
