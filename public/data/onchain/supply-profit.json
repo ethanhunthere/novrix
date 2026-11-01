@@ -1,0 +1,7270 @@
+{
+  "success": true,
+  "data": [
+    {
+      "time": "2022-11-01T00:00:00Z",
+      "supply_in_profit": 11097015,
+      "value": 11097015
+    },
+    {
+      "time": "2022-11-02T00:00:00Z",
+      "supply_in_profit": 10655938,
+      "value": 10655938
+    },
+    {
+      "time": "2022-11-03T00:00:00Z",
+      "supply_in_profit": 10675705,
+      "value": 10675705
+    },
+    {
+      "time": "2022-11-04T00:00:00Z",
+      "supply_in_profit": 11737817,
+      "value": 11737817
+    },
+    {
+      "time": "2022-11-05T00:00:00Z",
+      "supply_in_profit": 11784472,
+      "value": 11784472
+    },
+    {
+      "time": "2022-11-06T00:00:00Z",
+      "supply_in_profit": 11518117,
+      "value": 11518117
+    },
+    {
+      "time": "2022-11-07T00:00:00Z",
+      "supply_in_profit": 10998310,
+      "value": 10998310
+    },
+    {
+      "time": "2022-11-08T00:00:00Z",
+      "supply_in_profit": 9009569,
+      "value": 9009569
+    },
+    {
+      "time": "2022-11-09T00:00:00Z",
+      "supply_in_profit": 8689317,
+      "value": 8689317
+    },
+    {
+      "time": "2022-11-10T00:00:00Z",
+      "supply_in_profit": 9231281,
+      "value": 9231281
+    },
+    {
+      "time": "2022-11-11T00:00:00Z",
+      "supply_in_profit": 9135660,
+      "value": 9135660
+    },
+    {
+      "time": "2022-11-12T00:00:00Z",
+      "supply_in_profit": 8934497,
+      "value": 8934497
+    },
+    {
+      "time": "2022-11-13T00:00:00Z",
+      "supply_in_profit": 8748569,
+      "value": 8748569
+    },
+    {
+      "time": "2022-11-14T00:00:00Z",
+      "supply_in_profit": 8848797,
+      "value": 8848797
+    },
+    {
+      "time": "2022-11-15T00:00:00Z",
+      "supply_in_profit": 9354420,
+      "value": 9354420
+    },
+    {
+      "time": "2022-11-16T00:00:00Z",
+      "supply_in_profit": 9143575,
+      "value": 9143575
+    },
+    {
+      "time": "2022-11-17T00:00:00Z",
+      "supply_in_profit": 9407164,
+      "value": 9407164
+    },
+    {
+      "time": "2022-11-18T00:00:00Z",
+      "supply_in_profit": 9219322,
+      "value": 9219322
+    },
+    {
+      "time": "2022-11-19T00:00:00Z",
+      "supply_in_profit": 9494492,
+      "value": 9494492
+    },
+    {
+      "time": "2022-11-20T00:00:00Z",
+      "supply_in_profit": 8655354,
+      "value": 8655354
+    },
+    {
+      "time": "2022-11-21T00:00:00Z",
+      "supply_in_profit": 8624976,
+      "value": 8624976
+    },
+    {
+      "time": "2022-11-22T00:00:00Z",
+      "supply_in_profit": 8880881,
+      "value": 8880881
+    },
+    {
+      "time": "2022-11-23T00:00:00Z",
+      "supply_in_profit": 9325160,
+      "value": 9325160
+    },
+    {
+      "time": "2022-11-24T00:00:00Z",
+      "supply_in_profit": 9375513,
+      "value": 9375513
+    },
+    {
+      "time": "2022-11-25T00:00:00Z",
+      "supply_in_profit": 9241370,
+      "value": 9241370
+    },
+    {
+      "time": "2022-11-26T00:00:00Z",
+      "supply_in_profit": 8989949,
+      "value": 8989949
+    },
+    {
+      "time": "2022-11-27T00:00:00Z",
+      "supply_in_profit": 9048006,
+      "value": 9048006
+    },
+    {
+      "time": "2022-11-28T00:00:00Z",
+      "supply_in_profit": 8975377,
+      "value": 8975377
+    },
+    {
+      "time": "2022-11-29T00:00:00Z",
+      "supply_in_profit": 9262138,
+      "value": 9262138
+    },
+    {
+      "time": "2022-11-30T00:00:00Z",
+      "supply_in_profit": 10538822,
+      "value": 10538822
+    },
+    {
+      "time": "2022-12-01T00:00:00Z",
+      "supply_in_profit": 10345206,
+      "value": 10345206
+    },
+    {
+      "time": "2022-12-02T00:00:00Z",
+      "supply_in_profit": 10497485,
+      "value": 10497485
+    },
+    {
+      "time": "2022-12-03T00:00:00Z",
+      "supply_in_profit": 10198046,
+      "value": 10198046
+    },
+    {
+      "time": "2022-12-04T00:00:00Z",
+      "supply_in_profit": 10579152,
+      "value": 10579152
+    },
+    {
+      "time": "2022-12-05T00:00:00Z",
+      "supply_in_profit": 10323958,
+      "value": 10323958
+    },
+    {
+      "time": "2022-12-06T00:00:00Z",
+      "supply_in_profit": 10530131,
+      "value": 10530131
+    },
+    {
+      "time": "2022-12-07T00:00:00Z",
+      "supply_in_profit": 10025045,
+      "value": 10025045
+    },
+    {
+      "time": "2022-12-08T00:00:00Z",
+      "supply_in_profit": 10708191,
+      "value": 10708191
+    },
+    {
+      "time": "2022-12-09T00:00:00Z",
+      "supply_in_profit": 10552964,
+      "value": 10552964
+    },
+    {
+      "time": "2022-12-10T00:00:00Z",
+      "supply_in_profit": 10511185,
+      "value": 10511185
+    },
+    {
+      "time": "2022-12-11T00:00:00Z",
+      "supply_in_profit": 10469379,
+      "value": 10469379
+    },
+    {
+      "time": "2022-12-12T00:00:00Z",
+      "supply_in_profit": 10664108,
+      "value": 10664108
+    },
+    {
+      "time": "2022-12-13T00:00:00Z",
+      "supply_in_profit": 10903169,
+      "value": 10903169
+    },
+    {
+      "time": "2022-12-14T00:00:00Z",
+      "supply_in_profit": 10824834,
+      "value": 10824834
+    },
+    {
+      "time": "2022-12-15T00:00:00Z",
+      "supply_in_profit": 10531032,
+      "value": 10531032
+    },
+    {
+      "time": "2022-12-16T00:00:00Z",
+      "supply_in_profit": 9454284,
+      "value": 9454284
+    },
+    {
+      "time": "2022-12-17T00:00:00Z",
+      "supply_in_profit": 9691316,
+      "value": 9691316
+    },
+    {
+      "time": "2022-12-18T00:00:00Z",
+      "supply_in_profit": 9732171,
+      "value": 9732171
+    },
+    {
+      "time": "2022-12-19T00:00:00Z",
+      "supply_in_profit": 8918826,
+      "value": 8918826
+    },
+    {
+      "time": "2022-12-20T00:00:00Z",
+      "supply_in_profit": 10229412,
+      "value": 10229412
+    },
+    {
+      "time": "2022-12-21T00:00:00Z",
+      "supply_in_profit": 9848936,
+      "value": 9848936
+    },
+    {
+      "time": "2022-12-22T00:00:00Z",
+      "supply_in_profit": 9766632,
+      "value": 9766632
+    },
+    {
+      "time": "2022-12-23T00:00:00Z",
+      "supply_in_profit": 9807458,
+      "value": 9807458
+    },
+    {
+      "time": "2022-12-24T00:00:00Z",
+      "supply_in_profit": 10042497,
+      "value": 10042497
+    },
+    {
+      "time": "2022-12-25T00:00:00Z",
+      "supply_in_profit": 10071821,
+      "value": 10071821
+    },
+    {
+      "time": "2022-12-26T00:00:00Z",
+      "supply_in_profit": 10205026,
+      "value": 10205026
+    },
+    {
+      "time": "2022-12-27T00:00:00Z",
+      "supply_in_profit": 9589580,
+      "value": 9589580
+    },
+    {
+      "time": "2022-12-28T00:00:00Z",
+      "supply_in_profit": 9008885,
+      "value": 9008885
+    },
+    {
+      "time": "2022-12-29T00:00:00Z",
+      "supply_in_profit": 9471214,
+      "value": 9471214
+    },
+    {
+      "time": "2022-12-30T00:00:00Z",
+      "supply_in_profit": 9458227,
+      "value": 9458227
+    },
+    {
+      "time": "2022-12-31T00:00:00Z",
+      "supply_in_profit": 9048713,
+      "value": 9048713
+    },
+    {
+      "time": "2023-01-01T00:00:00Z",
+      "supply_in_profit": 9618954,
+      "value": 9618954
+    },
+    {
+      "time": "2023-01-02T00:00:00Z",
+      "supply_in_profit": 9921671,
+      "value": 9921671
+    },
+    {
+      "time": "2023-01-03T00:00:00Z",
+      "supply_in_profit": 9756605,
+      "value": 9756605
+    },
+    {
+      "time": "2023-01-04T00:00:00Z",
+      "supply_in_profit": 10396234,
+      "value": 10396234
+    },
+    {
+      "time": "2023-01-05T00:00:00Z",
+      "supply_in_profit": 10271618,
+      "value": 10271618
+    },
+    {
+      "time": "2023-01-06T00:00:00Z",
+      "supply_in_profit": 10849849,
+      "value": 10849849
+    },
+    {
+      "time": "2023-01-07T00:00:00Z",
+      "supply_in_profit": 10834986,
+      "value": 10834986
+    },
+    {
+      "time": "2023-01-08T00:00:00Z",
+      "supply_in_profit": 10768128,
+      "value": 10768128
+    },
+    {
+      "time": "2023-01-09T00:00:00Z",
+      "supply_in_profit": 11005524,
+      "value": 11005524
+    },
+    {
+      "time": "2023-01-10T00:00:00Z",
+      "supply_in_profit": 11212192,
+      "value": 11212192
+    },
+    {
+      "time": "2023-01-11T00:00:00Z",
+      "supply_in_profit": 11343689,
+      "value": 11343689
+    },
+    {
+      "time": "2023-01-12T00:00:00Z",
+      "supply_in_profit": 11621592,
+      "value": 11621592
+    },
+    {
+      "time": "2023-01-13T00:00:00Z",
+      "supply_in_profit": 12232770,
+      "value": 12232770
+    },
+    {
+      "time": "2023-01-14T00:00:00Z",
+      "supply_in_profit": 12913406,
+      "value": 12913406
+    },
+    {
+      "time": "2023-01-15T00:00:00Z",
+      "supply_in_profit": 12763836,
+      "value": 12763836
+    },
+    {
+      "time": "2023-01-16T00:00:00Z",
+      "supply_in_profit": 12982130,
+      "value": 12982130
+    },
+    {
+      "time": "2023-01-17T00:00:00Z",
+      "supply_in_profit": 12928844,
+      "value": 12928844
+    },
+    {
+      "time": "2023-01-18T00:00:00Z",
+      "supply_in_profit": 12351451,
+      "value": 12351451
+    },
+    {
+      "time": "2023-01-19T00:00:00Z",
+      "supply_in_profit": 12772051,
+      "value": 12772051
+    },
+    {
+      "time": "2023-01-20T00:00:00Z",
+      "supply_in_profit": 13393020,
+      "value": 13393020
+    },
+    {
+      "time": "2023-01-21T00:00:00Z",
+      "supply_in_profit": 13436038,
+      "value": 13436038
+    },
+    {
+      "time": "2023-01-22T00:00:00Z",
+      "supply_in_profit": 13230484,
+      "value": 13230484
+    },
+    {
+      "time": "2023-01-23T00:00:00Z",
+      "supply_in_profit": 13356358,
+      "value": 13356358
+    },
+    {
+      "time": "2023-01-24T00:00:00Z",
+      "supply_in_profit": 13094889,
+      "value": 13094889
+    },
+    {
+      "time": "2023-01-25T00:00:00Z",
+      "supply_in_profit": 13531189,
+      "value": 13531189
+    },
+    {
+      "time": "2023-01-26T00:00:00Z",
+      "supply_in_profit": 13319862,
+      "value": 13319862
+    },
+    {
+      "time": "2023-01-27T00:00:00Z",
+      "supply_in_profit": 13482432,
+      "value": 13482432
+    },
+    {
+      "time": "2023-01-28T00:00:00Z",
+      "supply_in_profit": 13205600,
+      "value": 13205600
+    },
+    {
+      "time": "2023-01-29T00:00:00Z",
+      "supply_in_profit": 13790365,
+      "value": 13790365
+    },
+    {
+      "time": "2023-01-30T00:00:00Z",
+      "supply_in_profit": 12929287,
+      "value": 12929287
+    },
+    {
+      "time": "2023-01-31T00:00:00Z",
+      "supply_in_profit": 13396297,
+      "value": 13396297
+    },
+    {
+      "time": "2023-02-01T00:00:00Z",
+      "supply_in_profit": 13797893,
+      "value": 13797893
+    },
+    {
+      "time": "2023-02-02T00:00:00Z",
+      "supply_in_profit": 13607672,
+      "value": 13607672
+    },
+    {
+      "time": "2023-02-03T00:00:00Z",
+      "supply_in_profit": 13546560,
+      "value": 13546560
+    },
+    {
+      "time": "2023-02-04T00:00:00Z",
+      "supply_in_profit": 13468103,
+      "value": 13468103
+    },
+    {
+      "time": "2023-02-05T00:00:00Z",
+      "supply_in_profit": 12776528,
+      "value": 12776528
+    },
+    {
+      "time": "2023-02-06T00:00:00Z",
+      "supply_in_profit": 12674939,
+      "value": 12674939
+    },
+    {
+      "time": "2023-02-07T00:00:00Z",
+      "supply_in_profit": 13446892,
+      "value": 13446892
+    },
+    {
+      "time": "2023-02-08T00:00:00Z",
+      "supply_in_profit": 12745516,
+      "value": 12745516
+    },
+    {
+      "time": "2023-02-09T00:00:00Z",
+      "supply_in_profit": 12346963,
+      "value": 12346963
+    },
+    {
+      "time": "2023-02-10T00:00:00Z",
+      "supply_in_profit": 12361052,
+      "value": 12361052
+    },
+    {
+      "time": "2023-02-11T00:00:00Z",
+      "supply_in_profit": 12529450,
+      "value": 12529450
+    },
+    {
+      "time": "2023-02-12T00:00:00Z",
+      "supply_in_profit": 12456810,
+      "value": 12456810
+    },
+    {
+      "time": "2023-02-13T00:00:00Z",
+      "supply_in_profit": 12526883,
+      "value": 12526883
+    },
+    {
+      "time": "2023-02-14T00:00:00Z",
+      "supply_in_profit": 12731991,
+      "value": 12731991
+    },
+    {
+      "time": "2023-02-15T00:00:00Z",
+      "supply_in_profit": 13975063,
+      "value": 13975063
+    },
+    {
+      "time": "2023-02-16T00:00:00Z",
+      "supply_in_profit": 13711559,
+      "value": 13711559
+    },
+    {
+      "time": "2023-02-17T00:00:00Z",
+      "supply_in_profit": 13926456,
+      "value": 13926456
+    },
+    {
+      "time": "2023-02-18T00:00:00Z",
+      "supply_in_profit": 13923355,
+      "value": 13923355
+    },
+    {
+      "time": "2023-02-19T00:00:00Z",
+      "supply_in_profit": 13773575,
+      "value": 13773575
+    },
+    {
+      "time": "2023-02-20T00:00:00Z",
+      "supply_in_profit": 13932467,
+      "value": 13932467
+    },
+    {
+      "time": "2023-02-21T00:00:00Z",
+      "supply_in_profit": 13701643,
+      "value": 13701643
+    },
+    {
+      "time": "2023-02-22T00:00:00Z",
+      "supply_in_profit": 13709984,
+      "value": 13709984
+    },
+    {
+      "time": "2023-02-23T00:00:00Z",
+      "supply_in_profit": 13529323,
+      "value": 13529323
+    },
+    {
+      "time": "2023-02-24T00:00:00Z",
+      "supply_in_profit": 13060903,
+      "value": 13060903
+    },
+    {
+      "time": "2023-02-25T00:00:00Z",
+      "supply_in_profit": 12943744,
+      "value": 12943744
+    },
+    {
+      "time": "2023-02-26T00:00:00Z",
+      "supply_in_profit": 13390210,
+      "value": 13390210
+    },
+    {
+      "time": "2023-02-27T00:00:00Z",
+      "supply_in_profit": 13361856,
+      "value": 13361856
+    },
+    {
+      "time": "2023-02-28T00:00:00Z",
+      "supply_in_profit": 13018838,
+      "value": 13018838
+    },
+    {
+      "time": "2023-03-01T00:00:00Z",
+      "supply_in_profit": 13424967,
+      "value": 13424967
+    },
+    {
+      "time": "2023-03-02T00:00:00Z",
+      "supply_in_profit": 13354160,
+      "value": 13354160
+    },
+    {
+      "time": "2023-03-03T00:00:00Z",
+      "supply_in_profit": 12275606,
+      "value": 12275606
+    },
+    {
+      "time": "2023-03-04T00:00:00Z",
+      "supply_in_profit": 12287795,
+      "value": 12287795
+    },
+    {
+      "time": "2023-03-05T00:00:00Z",
+      "supply_in_profit": 12400405,
+      "value": 12400405
+    },
+    {
+      "time": "2023-03-06T00:00:00Z",
+      "supply_in_profit": 12489761,
+      "value": 12489761
+    },
+    {
+      "time": "2023-03-07T00:00:00Z",
+      "supply_in_profit": 12187243,
+      "value": 12187243
+    },
+    {
+      "time": "2023-03-08T00:00:00Z",
+      "supply_in_profit": 12060309,
+      "value": 12060309
+    },
+    {
+      "time": "2023-03-09T00:00:00Z",
+      "supply_in_profit": 11261287,
+      "value": 11261287
+    },
+    {
+      "time": "2023-03-10T00:00:00Z",
+      "supply_in_profit": 11362261,
+      "value": 11362261
+    },
+    {
+      "time": "2023-03-17T00:00:00Z",
+      "supply_in_profit": 14374261,
+      "value": 14374261
+    },
+    {
+      "time": "2023-03-18T00:00:00Z",
+      "supply_in_profit": 14216580,
+      "value": 14216580
+    },
+    {
+      "time": "2023-03-19T00:00:00Z",
+      "supply_in_profit": 14371838,
+      "value": 14371838
+    },
+    {
+      "time": "2023-03-20T00:00:00Z",
+      "supply_in_profit": 14179322,
+      "value": 14179322
+    },
+    {
+      "time": "2023-03-21T00:00:00Z",
+      "supply_in_profit": 14342310,
+      "value": 14342310
+    },
+    {
+      "time": "2023-03-22T00:00:00Z",
+      "supply_in_profit": 13979736,
+      "value": 13979736
+    },
+    {
+      "time": "2023-03-23T00:00:00Z",
+      "supply_in_profit": 14367087,
+      "value": 14367087
+    },
+    {
+      "time": "2023-03-24T00:00:00Z",
+      "supply_in_profit": 13890458,
+      "value": 13890458
+    },
+    {
+      "time": "2023-03-25T00:00:00Z",
+      "supply_in_profit": 13923970,
+      "value": 13923970
+    },
+    {
+      "time": "2023-03-27T00:00:00Z",
+      "supply_in_profit": 13807370,
+      "value": 13807370
+    },
+    {
+      "time": "2023-03-28T00:00:00Z",
+      "supply_in_profit": 13891090,
+      "value": 13891090
+    },
+    {
+      "time": "2023-03-29T00:00:00Z",
+      "supply_in_profit": 14347978,
+      "value": 14347978
+    },
+    {
+      "time": "2023-03-30T00:00:00Z",
+      "supply_in_profit": 14025842,
+      "value": 14025842
+    },
+    {
+      "time": "2023-03-31T00:00:00Z",
+      "supply_in_profit": 14585220,
+      "value": 14585220
+    },
+    {
+      "time": "2023-04-01T00:00:00Z",
+      "supply_in_profit": 14562679,
+      "value": 14562679
+    },
+    {
+      "time": "2023-04-02T00:00:00Z",
+      "supply_in_profit": 14064529,
+      "value": 14064529
+    },
+    {
+      "time": "2023-04-03T00:00:00Z",
+      "supply_in_profit": 13806020,
+      "value": 13806020
+    },
+    {
+      "time": "2023-04-04T00:00:00Z",
+      "supply_in_profit": 14075529,
+      "value": 14075529
+    },
+    {
+      "time": "2023-04-05T00:00:00Z",
+      "supply_in_profit": 14049125,
+      "value": 14049125
+    },
+    {
+      "time": "2023-04-06T00:00:00Z",
+      "supply_in_profit": 13895080,
+      "value": 13895080
+    },
+    {
+      "time": "2023-04-07T00:00:00Z",
+      "supply_in_profit": 13787437,
+      "value": 13787437
+    },
+    {
+      "time": "2023-04-08T00:00:00Z",
+      "supply_in_profit": 13766817,
+      "value": 13766817
+    },
+    {
+      "time": "2023-04-09T00:00:00Z",
+      "supply_in_profit": 14508232,
+      "value": 14508232
+    },
+    {
+      "time": "2023-04-10T00:00:00Z",
+      "supply_in_profit": 14829981,
+      "value": 14829981
+    },
+    {
+      "time": "2023-04-11T00:00:00Z",
+      "supply_in_profit": 14935111,
+      "value": 14935111
+    },
+    {
+      "time": "2023-04-12T00:00:00Z",
+      "supply_in_profit": 14574082,
+      "value": 14574082
+    },
+    {
+      "time": "2023-04-13T00:00:00Z",
+      "supply_in_profit": 14924926,
+      "value": 14924926
+    },
+    {
+      "time": "2023-04-14T00:00:00Z",
+      "supply_in_profit": 14915963,
+      "value": 14915963
+    },
+    {
+      "time": "2023-04-15T00:00:00Z",
+      "supply_in_profit": 14839290,
+      "value": 14839290
+    },
+    {
+      "time": "2023-04-16T00:00:00Z",
+      "supply_in_profit": 14865153,
+      "value": 14865153
+    },
+    {
+      "time": "2023-04-17T00:00:00Z",
+      "supply_in_profit": 14353117,
+      "value": 14353117
+    },
+    {
+      "time": "2023-04-18T00:00:00Z",
+      "supply_in_profit": 14913019,
+      "value": 14913019
+    },
+    {
+      "time": "2023-04-19T00:00:00Z",
+      "supply_in_profit": 14056489,
+      "value": 14056489
+    },
+    {
+      "time": "2023-04-20T00:00:00Z",
+      "supply_in_profit": 13642992,
+      "value": 13642992
+    },
+    {
+      "time": "2023-04-21T00:00:00Z",
+      "supply_in_profit": 13109472,
+      "value": 13109472
+    },
+    {
+      "time": "2023-04-22T00:00:00Z",
+      "supply_in_profit": 13328798,
+      "value": 13328798
+    },
+    {
+      "time": "2023-04-23T00:00:00Z",
+      "supply_in_profit": 13209433,
+      "value": 13209433
+    },
+    {
+      "time": "2023-04-24T00:00:00Z",
+      "supply_in_profit": 13221614,
+      "value": 13221614
+    },
+    {
+      "time": "2023-04-25T00:00:00Z",
+      "supply_in_profit": 13860934,
+      "value": 13860934
+    },
+    {
+      "time": "2023-04-26T00:00:00Z",
+      "supply_in_profit": 14012500,
+      "value": 14012500
+    },
+    {
+      "time": "2023-04-27T00:00:00Z",
+      "supply_in_profit": 14419602,
+      "value": 14419602
+    },
+    {
+      "time": "2023-04-28T00:00:00Z",
+      "supply_in_profit": 14356402,
+      "value": 14356402
+    },
+    {
+      "time": "2023-04-29T00:00:00Z",
+      "supply_in_profit": 14248624,
+      "value": 14248624
+    },
+    {
+      "time": "2023-04-30T00:00:00Z",
+      "supply_in_profit": 14375148,
+      "value": 14375148
+    },
+    {
+      "time": "2023-05-01T00:00:00Z",
+      "supply_in_profit": 13524082,
+      "value": 13524082
+    },
+    {
+      "time": "2023-05-02T00:00:00Z",
+      "supply_in_profit": 14124880,
+      "value": 14124880
+    },
+    {
+      "time": "2023-05-03T00:00:00Z",
+      "supply_in_profit": 14301728,
+      "value": 14301728
+    },
+    {
+      "time": "2023-05-04T00:00:00Z",
+      "supply_in_profit": 14143554,
+      "value": 14143554
+    },
+    {
+      "time": "2023-05-05T00:00:00Z",
+      "supply_in_profit": 14591489,
+      "value": 14591489
+    },
+    {
+      "time": "2023-05-06T00:00:00Z",
+      "supply_in_profit": 14152552,
+      "value": 14152552
+    },
+    {
+      "time": "2023-05-07T00:00:00Z",
+      "supply_in_profit": 13829775,
+      "value": 13829775
+    },
+    {
+      "time": "2023-05-08T00:00:00Z",
+      "supply_in_profit": 12761315,
+      "value": 12761315
+    },
+    {
+      "time": "2023-05-09T00:00:00Z",
+      "supply_in_profit": 12742569,
+      "value": 12742569
+    },
+    {
+      "time": "2023-05-10T00:00:00Z",
+      "supply_in_profit": 12857548,
+      "value": 12857548
+    },
+    {
+      "time": "2023-05-11T00:00:00Z",
+      "supply_in_profit": 12449456,
+      "value": 12449456
+    },
+    {
+      "time": "2023-05-12T00:00:00Z",
+      "supply_in_profit": 12494577,
+      "value": 12494577
+    },
+    {
+      "time": "2023-05-13T00:00:00Z",
+      "supply_in_profit": 12535843,
+      "value": 12535843
+    },
+    {
+      "time": "2023-05-14T00:00:00Z",
+      "supply_in_profit": 12534610,
+      "value": 12534610
+    },
+    {
+      "time": "2023-05-15T00:00:00Z",
+      "supply_in_profit": 12748322,
+      "value": 12748322
+    },
+    {
+      "time": "2023-05-16T00:00:00Z",
+      "supply_in_profit": 12518385,
+      "value": 12518385
+    },
+    {
+      "time": "2023-05-17T00:00:00Z",
+      "supply_in_profit": 12900705,
+      "value": 12900705
+    },
+    {
+      "time": "2023-05-18T00:00:00Z",
+      "supply_in_profit": 12509912,
+      "value": 12509912
+    },
+    {
+      "time": "2023-05-19T00:00:00Z",
+      "supply_in_profit": 12510517,
+      "value": 12510517
+    },
+    {
+      "time": "2023-05-20T00:00:00Z",
+      "supply_in_profit": 12861805,
+      "value": 12861805
+    },
+    {
+      "time": "2023-05-21T00:00:00Z",
+      "supply_in_profit": 12331422,
+      "value": 12331422
+    },
+    {
+      "time": "2023-05-22T00:00:00Z",
+      "supply_in_profit": 12527741,
+      "value": 12527741
+    },
+    {
+      "time": "2023-05-23T00:00:00Z",
+      "supply_in_profit": 12879173,
+      "value": 12879173
+    },
+    {
+      "time": "2023-05-24T00:00:00Z",
+      "supply_in_profit": 12205243,
+      "value": 12205243
+    },
+    {
+      "time": "2023-05-25T00:00:00Z",
+      "supply_in_profit": 12345399,
+      "value": 12345399
+    },
+    {
+      "time": "2023-05-26T00:00:00Z",
+      "supply_in_profit": 12384777,
+      "value": 12384777
+    },
+    {
+      "time": "2023-05-27T00:00:00Z",
+      "supply_in_profit": 12550132,
+      "value": 12550132
+    },
+    {
+      "time": "2023-05-28T00:00:00Z",
+      "supply_in_profit": 13671315,
+      "value": 13671315
+    },
+    {
+      "time": "2023-05-29T00:00:00Z",
+      "supply_in_profit": 13340504,
+      "value": 13340504
+    },
+    {
+      "time": "2023-05-30T00:00:00Z",
+      "supply_in_profit": 13275246,
+      "value": 13275246
+    },
+    {
+      "time": "2023-05-31T00:00:00Z",
+      "supply_in_profit": 12890002,
+      "value": 12890002
+    },
+    {
+      "time": "2023-06-01T00:00:00Z",
+      "supply_in_profit": 12318542,
+      "value": 12318542
+    },
+    {
+      "time": "2023-06-02T00:00:00Z",
+      "supply_in_profit": 13038605,
+      "value": 13038605
+    },
+    {
+      "time": "2023-06-03T00:00:00Z",
+      "supply_in_profit": 12719221,
+      "value": 12719221
+    },
+    {
+      "time": "2023-06-04T00:00:00Z",
+      "supply_in_profit": 12900144,
+      "value": 12900144
+    },
+    {
+      "time": "2023-06-05T00:00:00Z",
+      "supply_in_profit": 12014424,
+      "value": 12014424
+    },
+    {
+      "time": "2023-06-06T00:00:00Z",
+      "supply_in_profit": 13002198,
+      "value": 13002198
+    },
+    {
+      "time": "2023-06-07T00:00:00Z",
+      "supply_in_profit": 12096992,
+      "value": 12096992
+    },
+    {
+      "time": "2023-06-08T00:00:00Z",
+      "supply_in_profit": 12355566,
+      "value": 12355566
+    },
+    {
+      "time": "2023-06-09T00:00:00Z",
+      "supply_in_profit": 12288348,
+      "value": 12288348
+    },
+    {
+      "time": "2023-06-10T00:00:00Z",
+      "supply_in_profit": 12054235,
+      "value": 12054235
+    },
+    {
+      "time": "2023-06-11T00:00:00Z",
+      "supply_in_profit": 12074268,
+      "value": 12074268
+    },
+    {
+      "time": "2023-06-12T00:00:00Z",
+      "supply_in_profit": 12160241,
+      "value": 12160241
+    },
+    {
+      "time": "2023-06-13T00:00:00Z",
+      "supply_in_profit": 12089031,
+      "value": 12089031
+    },
+    {
+      "time": "2023-06-14T00:00:00Z",
+      "supply_in_profit": 11835334,
+      "value": 11835334
+    },
+    {
+      "time": "2023-06-15T00:00:00Z",
+      "supply_in_profit": 12012467,
+      "value": 12012467
+    },
+    {
+      "time": "2023-06-16T00:00:00Z",
+      "supply_in_profit": 12476816,
+      "value": 12476816
+    },
+    {
+      "time": "2023-06-17T00:00:00Z",
+      "supply_in_profit": 12665606,
+      "value": 12665606
+    },
+    {
+      "time": "2023-06-18T00:00:00Z",
+      "supply_in_profit": 12415886,
+      "value": 12415886
+    },
+    {
+      "time": "2023-06-19T00:00:00Z",
+      "supply_in_profit": 12899683,
+      "value": 12899683
+    },
+    {
+      "time": "2023-06-20T00:00:00Z",
+      "supply_in_profit": 14103521,
+      "value": 14103521
+    },
+    {
+      "time": "2023-06-21T00:00:00Z",
+      "supply_in_profit": 15045415,
+      "value": 15045415
+    },
+    {
+      "time": "2023-06-22T00:00:00Z",
+      "supply_in_profit": 14859712,
+      "value": 14859712
+    },
+    {
+      "time": "2023-06-23T00:00:00Z",
+      "supply_in_profit": 15186398,
+      "value": 15186398
+    },
+    {
+      "time": "2023-06-24T00:00:00Z",
+      "supply_in_profit": 15121115,
+      "value": 15121115
+    },
+    {
+      "time": "2023-06-25T00:00:00Z",
+      "supply_in_profit": 15071389,
+      "value": 15071389
+    },
+    {
+      "time": "2023-06-26T00:00:00Z",
+      "supply_in_profit": 14940090,
+      "value": 14940090
+    },
+    {
+      "time": "2023-06-27T00:00:00Z",
+      "supply_in_profit": 15094054,
+      "value": 15094054
+    },
+    {
+      "time": "2023-06-28T00:00:00Z",
+      "supply_in_profit": 14597649,
+      "value": 14597649
+    },
+    {
+      "time": "2023-06-29T00:00:00Z",
+      "supply_in_profit": 14982758,
+      "value": 14982758
+    },
+    {
+      "time": "2023-06-30T00:00:00Z",
+      "supply_in_profit": 14948570,
+      "value": 14948570
+    },
+    {
+      "time": "2023-07-01T00:00:00Z",
+      "supply_in_profit": 15059888,
+      "value": 15059888
+    },
+    {
+      "time": "2023-07-02T00:00:00Z",
+      "supply_in_profit": 15093728,
+      "value": 15093728
+    },
+    {
+      "time": "2023-07-03T00:00:00Z",
+      "supply_in_profit": 15269164,
+      "value": 15269164
+    },
+    {
+      "time": "2023-07-04T00:00:00Z",
+      "supply_in_profit": 15135860,
+      "value": 15135860
+    },
+    {
+      "time": "2023-07-05T00:00:00Z",
+      "supply_in_profit": 14761797,
+      "value": 14761797
+    },
+    {
+      "time": "2023-07-06T00:00:00Z",
+      "supply_in_profit": 14228360,
+      "value": 14228360
+    },
+    {
+      "time": "2023-07-07T00:00:00Z",
+      "supply_in_profit": 14602079,
+      "value": 14602079
+    },
+    {
+      "time": "2023-07-08T00:00:00Z",
+      "supply_in_profit": 14412561,
+      "value": 14412561
+    },
+    {
+      "time": "2023-07-09T00:00:00Z",
+      "supply_in_profit": 14316220,
+      "value": 14316220
+    },
+    {
+      "time": "2023-07-10T00:00:00Z",
+      "supply_in_profit": 14695735,
+      "value": 14695735
+    },
+    {
+      "time": "2023-07-11T00:00:00Z",
+      "supply_in_profit": 15030515,
+      "value": 15030515
+    },
+    {
+      "time": "2023-07-12T00:00:00Z",
+      "supply_in_profit": 14623229,
+      "value": 14623229
+    },
+    {
+      "time": "2023-07-13T00:00:00Z",
+      "supply_in_profit": 15381503,
+      "value": 15381503
+    },
+    {
+      "time": "2023-07-14T00:00:00Z",
+      "supply_in_profit": 14265001,
+      "value": 14265001
+    },
+    {
+      "time": "2023-07-15T00:00:00Z",
+      "supply_in_profit": 14436620,
+      "value": 14436620
+    },
+    {
+      "time": "2023-07-16T00:00:00Z",
+      "supply_in_profit": 14456770,
+      "value": 14456770
+    },
+    {
+      "time": "2023-07-17T00:00:00Z",
+      "supply_in_profit": 14121229,
+      "value": 14121229
+    },
+    {
+      "time": "2023-07-18T00:00:00Z",
+      "supply_in_profit": 13811037,
+      "value": 13811037
+    },
+    {
+      "time": "2023-07-19T00:00:00Z",
+      "supply_in_profit": 13811650,
+      "value": 13811650
+    },
+    {
+      "time": "2023-07-20T00:00:00Z",
+      "supply_in_profit": 13845302,
+      "value": 13845302
+    },
+    {
+      "time": "2023-07-21T00:00:00Z",
+      "supply_in_profit": 13915768,
+      "value": 13915768
+    },
+    {
+      "time": "2023-07-22T00:00:00Z",
+      "supply_in_profit": 13731761,
+      "value": 13731761
+    },
+    {
+      "time": "2023-07-23T00:00:00Z",
+      "supply_in_profit": 14183334,
+      "value": 14183334
+    },
+    {
+      "time": "2023-07-26T00:00:00Z",
+      "supply_in_profit": 13744000,
+      "value": 13744000
+    },
+    {
+      "time": "2023-07-27T00:00:00Z",
+      "supply_in_profit": 13552146,
+      "value": 13552146
+    },
+    {
+      "time": "2023-07-28T00:00:00Z",
+      "supply_in_profit": 13751061,
+      "value": 13751061
+    },
+    {
+      "time": "2023-07-29T00:00:00Z",
+      "supply_in_profit": 13866355,
+      "value": 13866355
+    },
+    {
+      "time": "2023-07-30T00:00:00Z",
+      "supply_in_profit": 13649277,
+      "value": 13649277
+    },
+    {
+      "time": "2023-07-31T00:00:00Z",
+      "supply_in_profit": 13632455,
+      "value": 13632455
+    },
+    {
+      "time": "2023-08-01T00:00:00Z",
+      "supply_in_profit": 13897520,
+      "value": 13897520
+    },
+    {
+      "time": "2023-08-02T00:00:00Z",
+      "supply_in_profit": 13413997,
+      "value": 13413997
+    },
+    {
+      "time": "2023-08-03T00:00:00Z",
+      "supply_in_profit": 13702466,
+      "value": 13702466
+    },
+    {
+      "time": "2023-08-04T00:00:00Z",
+      "supply_in_profit": 13327654,
+      "value": 13327654
+    },
+    {
+      "time": "2023-08-05T00:00:00Z",
+      "supply_in_profit": 13347867,
+      "value": 13347867
+    },
+    {
+      "time": "2023-08-06T00:00:00Z",
+      "supply_in_profit": 13383585,
+      "value": 13383585
+    },
+    {
+      "time": "2023-08-07T00:00:00Z",
+      "supply_in_profit": 13495084,
+      "value": 13495084
+    },
+    {
+      "time": "2023-08-08T00:00:00Z",
+      "supply_in_profit": 14230902,
+      "value": 14230902
+    },
+    {
+      "time": "2023-08-09T00:00:00Z",
+      "supply_in_profit": 14083802,
+      "value": 14083802
+    },
+    {
+      "time": "2023-08-10T00:00:00Z",
+      "supply_in_profit": 13996835,
+      "value": 13996835
+    },
+    {
+      "time": "2023-08-11T00:00:00Z",
+      "supply_in_profit": 13869115,
+      "value": 13869115
+    },
+    {
+      "time": "2023-08-12T00:00:00Z",
+      "supply_in_profit": 14015775,
+      "value": 14015775
+    },
+    {
+      "time": "2023-08-13T00:00:00Z",
+      "supply_in_profit": 13673951,
+      "value": 13673951
+    },
+    {
+      "time": "2023-08-14T00:00:00Z",
+      "supply_in_profit": 14022990,
+      "value": 14022990
+    },
+    {
+      "time": "2023-08-15T00:00:00Z",
+      "supply_in_profit": 13416650,
+      "value": 13416650
+    },
+    {
+      "time": "2023-08-16T00:00:00Z",
+      "supply_in_profit": 13043734,
+      "value": 13043734
+    },
+    {
+      "time": "2023-08-17T00:00:00Z",
+      "supply_in_profit": 11859242,
+      "value": 11859242
+    },
+    {
+      "time": "2023-08-18T00:00:00Z",
+      "supply_in_profit": 11542550,
+      "value": 11542550
+    },
+    {
+      "time": "2023-08-19T00:00:00Z",
+      "supply_in_profit": 11595617,
+      "value": 11595617
+    },
+    {
+      "time": "2023-08-20T00:00:00Z",
+      "supply_in_profit": 11664297,
+      "value": 11664297
+    },
+    {
+      "time": "2023-08-21T00:00:00Z",
+      "supply_in_profit": 11696002,
+      "value": 11696002
+    },
+    {
+      "time": "2023-08-22T00:00:00Z",
+      "supply_in_profit": 11570042,
+      "value": 11570042
+    },
+    {
+      "time": "2023-08-23T00:00:00Z",
+      "supply_in_profit": 12057250,
+      "value": 12057250
+    },
+    {
+      "time": "2023-08-24T00:00:00Z",
+      "supply_in_profit": 11734679,
+      "value": 11734679
+    },
+    {
+      "time": "2023-08-25T00:00:00Z",
+      "supply_in_profit": 11694309,
+      "value": 11694309
+    },
+    {
+      "time": "2023-08-26T00:00:00Z",
+      "supply_in_profit": 11630573,
+      "value": 11630573
+    },
+    {
+      "time": "2023-08-27T00:00:00Z",
+      "supply_in_profit": 11800393,
+      "value": 11800393
+    },
+    {
+      "time": "2023-08-28T00:00:00Z",
+      "supply_in_profit": 11822257,
+      "value": 11822257
+    },
+    {
+      "time": "2023-08-29T00:00:00Z",
+      "supply_in_profit": 12944393,
+      "value": 12944393
+    },
+    {
+      "time": "2023-08-30T00:00:00Z",
+      "supply_in_profit": 12767722,
+      "value": 12767722
+    },
+    {
+      "time": "2023-08-31T00:00:00Z",
+      "supply_in_profit": 11512317,
+      "value": 11512317
+    },
+    {
+      "time": "2023-09-01T00:00:00Z",
+      "supply_in_profit": 11429138,
+      "value": 11429138
+    },
+    {
+      "time": "2023-09-02T00:00:00Z",
+      "supply_in_profit": 11521226,
+      "value": 11521226
+    },
+    {
+      "time": "2023-09-03T00:00:00Z",
+      "supply_in_profit": 11595818,
+      "value": 11595818
+    },
+    {
+      "time": "2023-09-04T00:00:00Z",
+      "supply_in_profit": 11372392,
+      "value": 11372392
+    },
+    {
+      "time": "2023-09-05T00:00:00Z",
+      "supply_in_profit": 11407810,
+      "value": 11407810
+    },
+    {
+      "time": "2023-09-06T00:00:00Z",
+      "supply_in_profit": 11412293,
+      "value": 11412293
+    },
+    {
+      "time": "2023-09-07T00:00:00Z",
+      "supply_in_profit": 12123817,
+      "value": 12123817
+    },
+    {
+      "time": "2023-09-08T00:00:00Z",
+      "supply_in_profit": 11670451,
+      "value": 11670451
+    },
+    {
+      "time": "2023-09-09T00:00:00Z",
+      "supply_in_profit": 11713874,
+      "value": 11713874
+    },
+    {
+      "time": "2023-09-10T00:00:00Z",
+      "supply_in_profit": 11622862,
+      "value": 11622862
+    },
+    {
+      "time": "2023-09-11T00:00:00Z",
+      "supply_in_profit": 11243448,
+      "value": 11243448
+    },
+    {
+      "time": "2023-09-12T00:00:00Z",
+      "supply_in_profit": 11758322,
+      "value": 11758322
+    },
+    {
+      "time": "2023-09-13T00:00:00Z",
+      "supply_in_profit": 12244040,
+      "value": 12244040
+    },
+    {
+      "time": "2023-09-14T00:00:00Z",
+      "supply_in_profit": 12544752,
+      "value": 12544752
+    },
+    {
+      "time": "2023-09-15T00:00:00Z",
+      "supply_in_profit": 12613712,
+      "value": 12613712
+    },
+    {
+      "time": "2023-09-16T00:00:00Z",
+      "supply_in_profit": 12540286,
+      "value": 12540286
+    },
+    {
+      "time": "2023-09-17T00:00:00Z",
+      "supply_in_profit": 12420056,
+      "value": 12420056
+    },
+    {
+      "time": "2023-09-18T00:00:00Z",
+      "supply_in_profit": 12613624,
+      "value": 12613624
+    },
+    {
+      "time": "2023-09-19T00:00:00Z",
+      "supply_in_profit": 13039077,
+      "value": 13039077
+    },
+    {
+      "time": "2023-09-20T00:00:00Z",
+      "supply_in_profit": 12909096,
+      "value": 12909096
+    },
+    {
+      "time": "2023-09-21T00:00:00Z",
+      "supply_in_profit": 12375581,
+      "value": 12375581
+    },
+    {
+      "time": "2023-09-22T00:00:00Z",
+      "supply_in_profit": 12475508,
+      "value": 12475508
+    },
+    {
+      "time": "2023-09-23T00:00:00Z",
+      "supply_in_profit": 12316281,
+      "value": 12316281
+    },
+    {
+      "time": "2023-09-24T00:00:00Z",
+      "supply_in_profit": 12186242,
+      "value": 12186242
+    },
+    {
+      "time": "2023-09-25T00:00:00Z",
+      "supply_in_profit": 12028893,
+      "value": 12028893
+    },
+    {
+      "time": "2023-09-26T00:00:00Z",
+      "supply_in_profit": 11830552,
+      "value": 11830552
+    },
+    {
+      "time": "2023-09-27T00:00:00Z",
+      "supply_in_profit": 12088515,
+      "value": 12088515
+    },
+    {
+      "time": "2023-09-28T00:00:00Z",
+      "supply_in_profit": 12826230,
+      "value": 12826230
+    },
+    {
+      "time": "2023-09-29T00:00:00Z",
+      "supply_in_profit": 12711787,
+      "value": 12711787
+    },
+    {
+      "time": "2023-09-30T00:00:00Z",
+      "supply_in_profit": 12804001,
+      "value": 12804001
+    },
+    {
+      "time": "2023-10-01T00:00:00Z",
+      "supply_in_profit": 13481276,
+      "value": 13481276
+    },
+    {
+      "time": "2023-10-02T00:00:00Z",
+      "supply_in_profit": 13179669,
+      "value": 13179669
+    },
+    {
+      "time": "2023-10-03T00:00:00Z",
+      "supply_in_profit": 13137347,
+      "value": 13137347
+    },
+    {
+      "time": "2023-10-04T00:00:00Z",
+      "supply_in_profit": 13397301,
+      "value": 13397301
+    },
+    {
+      "time": "2023-10-05T00:00:00Z",
+      "supply_in_profit": 13044868,
+      "value": 13044868
+    },
+    {
+      "time": "2023-10-06T00:00:00Z",
+      "supply_in_profit": 13511728,
+      "value": 13511728
+    },
+    {
+      "time": "2023-10-07T00:00:00Z",
+      "supply_in_profit": 13514529,
+      "value": 13514529
+    },
+    {
+      "time": "2023-10-08T00:00:00Z",
+      "supply_in_profit": 13398122,
+      "value": 13398122
+    },
+    {
+      "time": "2023-10-09T00:00:00Z",
+      "supply_in_profit": 13158830,
+      "value": 13158830
+    },
+    {
+      "time": "2023-10-10T00:00:00Z",
+      "supply_in_profit": 12968315,
+      "value": 12968315
+    },
+    {
+      "time": "2023-10-11T00:00:00Z",
+      "supply_in_profit": 12246972,
+      "value": 12246972
+    },
+    {
+      "time": "2023-10-12T00:00:00Z",
+      "supply_in_profit": 12228107,
+      "value": 12228107
+    },
+    {
+      "time": "2023-10-13T00:00:00Z",
+      "supply_in_profit": 12371091,
+      "value": 12371091
+    },
+    {
+      "time": "2023-10-14T00:00:00Z",
+      "supply_in_profit": 12410697,
+      "value": 12410697
+    },
+    {
+      "time": "2023-10-15T00:00:00Z",
+      "supply_in_profit": 12858248,
+      "value": 12858248
+    },
+    {
+      "time": "2023-10-16T00:00:00Z",
+      "supply_in_profit": 14078553,
+      "value": 14078553
+    },
+    {
+      "time": "2023-10-17T00:00:00Z",
+      "supply_in_profit": 14010976,
+      "value": 14010976
+    },
+    {
+      "time": "2023-10-18T00:00:00Z",
+      "supply_in_profit": 13603710,
+      "value": 13603710
+    },
+    {
+      "time": "2023-10-19T00:00:00Z",
+      "supply_in_profit": 14264042,
+      "value": 14264042
+    },
+    {
+      "time": "2023-10-20T00:00:00Z",
+      "supply_in_profit": 14951731,
+      "value": 14951731
+    },
+    {
+      "time": "2023-10-21T00:00:00Z",
+      "supply_in_profit": 15075426,
+      "value": 15075426
+    },
+    {
+      "time": "2023-10-22T00:00:00Z",
+      "supply_in_profit": 15107398,
+      "value": 15107398
+    },
+    {
+      "time": "2023-10-23T00:00:00Z",
+      "supply_in_profit": 15963226,
+      "value": 15963226
+    },
+    {
+      "time": "2023-10-24T00:00:00Z",
+      "supply_in_profit": 15889683,
+      "value": 15889683
+    },
+    {
+      "time": "2023-10-25T00:00:00Z",
+      "supply_in_profit": 16044653,
+      "value": 16044653
+    },
+    {
+      "time": "2023-10-26T00:00:00Z",
+      "supply_in_profit": 15883368,
+      "value": 15883368
+    },
+    {
+      "time": "2023-10-27T00:00:00Z",
+      "supply_in_profit": 15642033,
+      "value": 15642033
+    },
+    {
+      "time": "2023-10-28T00:00:00Z",
+      "supply_in_profit": 15849817,
+      "value": 15849817
+    },
+    {
+      "time": "2023-10-29T00:00:00Z",
+      "supply_in_profit": 16084842,
+      "value": 16084842
+    },
+    {
+      "time": "2023-10-30T00:00:00Z",
+      "supply_in_profit": 16032918,
+      "value": 16032918
+    },
+    {
+      "time": "2023-10-31T00:00:00Z",
+      "supply_in_profit": 16107926,
+      "value": 16107926
+    },
+    {
+      "time": "2023-11-01T00:00:00Z",
+      "supply_in_profit": 16216111,
+      "value": 16216111
+    },
+    {
+      "time": "2023-11-02T00:00:00Z",
+      "supply_in_profit": 16050842,
+      "value": 16050842
+    },
+    {
+      "time": "2023-11-03T00:00:00Z",
+      "supply_in_profit": 16014430,
+      "value": 16014430
+    },
+    {
+      "time": "2023-11-04T00:00:00Z",
+      "supply_in_profit": 16167650,
+      "value": 16167650
+    },
+    {
+      "time": "2023-11-05T00:00:00Z",
+      "supply_in_profit": 16066915,
+      "value": 16066915
+    },
+    {
+      "time": "2023-11-06T00:00:00Z",
+      "supply_in_profit": 16098824,
+      "value": 16098824
+    },
+    {
+      "time": "2023-11-07T00:00:00Z",
+      "supply_in_profit": 16195235,
+      "value": 16195235
+    },
+    {
+      "time": "2023-11-08T00:00:00Z",
+      "supply_in_profit": 16264385,
+      "value": 16264385
+    },
+    {
+      "time": "2023-11-09T00:00:00Z",
+      "supply_in_profit": 16294436,
+      "value": 16294436
+    },
+    {
+      "time": "2023-11-10T00:00:00Z",
+      "supply_in_profit": 16420286,
+      "value": 16420286
+    },
+    {
+      "time": "2023-11-11T00:00:00Z",
+      "supply_in_profit": 16161249,
+      "value": 16161249
+    },
+    {
+      "time": "2023-11-12T00:00:00Z",
+      "supply_in_profit": 16238290,
+      "value": 16238290
+    },
+    {
+      "time": "2023-11-13T00:00:00Z",
+      "supply_in_profit": 15949705,
+      "value": 15949705
+    },
+    {
+      "time": "2023-11-14T00:00:00Z",
+      "supply_in_profit": 15751078,
+      "value": 15751078
+    },
+    {
+      "time": "2023-11-15T00:00:00Z",
+      "supply_in_profit": 16508146,
+      "value": 16508146
+    },
+    {
+      "time": "2023-11-16T00:00:00Z",
+      "supply_in_profit": 15801430,
+      "value": 15801430
+    },
+    {
+      "time": "2023-11-17T00:00:00Z",
+      "supply_in_profit": 15999593,
+      "value": 15999593
+    },
+    {
+      "time": "2023-11-18T00:00:00Z",
+      "supply_in_profit": 15980809,
+      "value": 15980809
+    },
+    {
+      "time": "2023-11-19T00:00:00Z",
+      "supply_in_profit": 16366755,
+      "value": 16366755
+    },
+    {
+      "time": "2023-11-20T00:00:00Z",
+      "supply_in_profit": 16475138,
+      "value": 16475138
+    },
+    {
+      "time": "2023-11-21T00:00:00Z",
+      "supply_in_profit": 15557133,
+      "value": 15557133
+    },
+    {
+      "time": "2023-11-22T00:00:00Z",
+      "supply_in_profit": 16388712,
+      "value": 16388712
+    },
+    {
+      "time": "2023-11-23T00:00:00Z",
+      "supply_in_profit": 16233075,
+      "value": 16233075
+    },
+    {
+      "time": "2023-11-24T00:00:00Z",
+      "supply_in_profit": 16443153,
+      "value": 16443153
+    },
+    {
+      "time": "2023-11-25T00:00:00Z",
+      "supply_in_profit": 16432257,
+      "value": 16432257
+    },
+    {
+      "time": "2023-11-26T00:00:00Z",
+      "supply_in_profit": 16290281,
+      "value": 16290281
+    },
+    {
+      "time": "2023-11-27T00:00:00Z",
+      "supply_in_profit": 15983950,
+      "value": 15983950
+    },
+    {
+      "time": "2023-11-28T00:00:00Z",
+      "supply_in_profit": 16520523,
+      "value": 16520523
+    },
+    {
+      "time": "2023-11-29T00:00:00Z",
+      "supply_in_profit": 16401947,
+      "value": 16401947
+    },
+    {
+      "time": "2023-11-30T00:00:00Z",
+      "supply_in_profit": 16310730,
+      "value": 16310730
+    },
+    {
+      "time": "2023-12-01T00:00:00Z",
+      "supply_in_profit": 16771231,
+      "value": 16771231
+    },
+    {
+      "time": "2023-12-02T00:00:00Z",
+      "supply_in_profit": 16947943,
+      "value": 16947943
+    },
+    {
+      "time": "2023-12-03T00:00:00Z",
+      "supply_in_profit": 17115098,
+      "value": 17115098
+    },
+    {
+      "time": "2023-12-04T00:00:00Z",
+      "supply_in_profit": 17317425,
+      "value": 17317425
+    },
+    {
+      "time": "2023-12-05T00:00:00Z",
+      "supply_in_profit": 17574450,
+      "value": 17574450
+    },
+    {
+      "time": "2023-12-06T00:00:00Z",
+      "supply_in_profit": 17332635,
+      "value": 17332635
+    },
+    {
+      "time": "2023-12-07T00:00:00Z",
+      "supply_in_profit": 17210021,
+      "value": 17210021
+    },
+    {
+      "time": "2023-12-08T00:00:00Z",
+      "supply_in_profit": 17576617,
+      "value": 17576617
+    },
+    {
+      "time": "2023-12-09T00:00:00Z",
+      "supply_in_profit": 17317280,
+      "value": 17317280
+    },
+    {
+      "time": "2023-12-10T00:00:00Z",
+      "supply_in_profit": 17233919,
+      "value": 17233919
+    },
+    {
+      "time": "2023-12-11T00:00:00Z",
+      "supply_in_profit": 16667340,
+      "value": 16667340
+    },
+    {
+      "time": "2023-12-12T00:00:00Z",
+      "supply_in_profit": 16693545,
+      "value": 16693545
+    },
+    {
+      "time": "2023-12-13T00:00:00Z",
+      "supply_in_profit": 17165954,
+      "value": 17165954
+    },
+    {
+      "time": "2023-12-14T00:00:00Z",
+      "supply_in_profit": 17203937,
+      "value": 17203937
+    },
+    {
+      "time": "2023-12-15T00:00:00Z",
+      "supply_in_profit": 16897568,
+      "value": 16897568
+    },
+    {
+      "time": "2023-12-16T00:00:00Z",
+      "supply_in_profit": 16961019,
+      "value": 16961019
+    },
+    {
+      "time": "2023-12-17T00:00:00Z",
+      "supply_in_profit": 16572331,
+      "value": 16572331
+    },
+    {
+      "time": "2023-12-18T00:00:00Z",
+      "supply_in_profit": 17125204,
+      "value": 17125204
+    },
+    {
+      "time": "2023-12-19T00:00:00Z",
+      "supply_in_profit": 16918596,
+      "value": 16918596
+    },
+    {
+      "time": "2023-12-20T00:00:00Z",
+      "supply_in_profit": 17332429,
+      "value": 17332429
+    },
+    {
+      "time": "2023-12-21T00:00:00Z",
+      "supply_in_profit": 17454613,
+      "value": 17454613
+    },
+    {
+      "time": "2023-12-22T00:00:00Z",
+      "supply_in_profit": 17510367,
+      "value": 17510367
+    },
+    {
+      "time": "2023-12-23T00:00:00Z",
+      "supply_in_profit": 17335052,
+      "value": 17335052
+    },
+    {
+      "time": "2023-12-24T00:00:00Z",
+      "supply_in_profit": 16913074,
+      "value": 16913074
+    },
+    {
+      "time": "2023-12-25T00:00:00Z",
+      "supply_in_profit": 17266277,
+      "value": 17266277
+    },
+    {
+      "time": "2023-12-26T00:00:00Z",
+      "supply_in_profit": 16685470,
+      "value": 16685470
+    },
+    {
+      "time": "2023-12-27T00:00:00Z",
+      "supply_in_profit": 17105220,
+      "value": 17105220
+    },
+    {
+      "time": "2023-12-28T00:00:00Z",
+      "supply_in_profit": 16788634,
+      "value": 16788634
+    },
+    {
+      "time": "2023-12-29T00:00:00Z",
+      "supply_in_profit": 16264589,
+      "value": 16264589
+    },
+    {
+      "time": "2023-12-30T00:00:00Z",
+      "supply_in_profit": 16494486,
+      "value": 16494486
+    },
+    {
+      "time": "2023-12-31T00:00:00Z",
+      "supply_in_profit": 16557983,
+      "value": 16557983
+    },
+    {
+      "time": "2024-01-01T00:00:00Z",
+      "supply_in_profit": 17495057,
+      "value": 17495057
+    },
+    {
+      "time": "2024-01-02T00:00:00Z",
+      "supply_in_profit": 17570222,
+      "value": 17570222
+    },
+    {
+      "time": "2024-01-03T00:00:00Z",
+      "supply_in_profit": 16809106,
+      "value": 16809106
+    },
+    {
+      "time": "2024-01-04T00:00:00Z",
+      "supply_in_profit": 17507415,
+      "value": 17507415
+    },
+    {
+      "time": "2024-01-05T00:00:00Z",
+      "supply_in_profit": 17484677,
+      "value": 17484677
+    },
+    {
+      "time": "2024-01-06T00:00:00Z",
+      "supply_in_profit": 17275828,
+      "value": 17275828
+    },
+    {
+      "time": "2024-01-07T00:00:00Z",
+      "supply_in_profit": 17280397,
+      "value": 17280397
+    },
+    {
+      "time": "2024-01-08T00:00:00Z",
+      "supply_in_profit": 17870826,
+      "value": 17870826
+    },
+    {
+      "time": "2024-01-09T00:00:00Z",
+      "supply_in_profit": 17562107,
+      "value": 17562107
+    },
+    {
+      "time": "2024-01-10T00:00:00Z",
+      "supply_in_profit": 17872451,
+      "value": 17872451
+    },
+    {
+      "time": "2024-01-11T00:00:00Z",
+      "supply_in_profit": 17501114,
+      "value": 17501114
+    },
+    {
+      "time": "2024-01-12T00:00:00Z",
+      "supply_in_profit": 16106748,
+      "value": 16106748
+    },
+    {
+      "time": "2024-01-13T00:00:00Z",
+      "supply_in_profit": 16419172,
+      "value": 16419172
+    },
+    {
+      "time": "2024-01-14T00:00:00Z",
+      "supply_in_profit": 15847559,
+      "value": 15847559
+    },
+    {
+      "time": "2024-01-15T00:00:00Z",
+      "supply_in_profit": 16051969,
+      "value": 16051969
+    },
+    {
+      "time": "2024-01-16T00:00:00Z",
+      "supply_in_profit": 16764099,
+      "value": 16764099
+    },
+    {
+      "time": "2024-01-17T00:00:00Z",
+      "supply_in_profit": 15980705,
+      "value": 15980705
+    },
+    {
+      "time": "2024-01-18T00:00:00Z",
+      "supply_in_profit": 15271840,
+      "value": 15271840
+    },
+    {
+      "time": "2024-01-19T00:00:00Z",
+      "supply_in_profit": 15560643,
+      "value": 15560643
+    },
+    {
+      "time": "2024-01-20T00:00:00Z",
+      "supply_in_profit": 15631925,
+      "value": 15631925
+    },
+    {
+      "time": "2024-01-21T00:00:00Z",
+      "supply_in_profit": 15552244,
+      "value": 15552244
+    },
+    {
+      "time": "2024-01-22T00:00:00Z",
+      "supply_in_profit": 14935465,
+      "value": 14935465
+    },
+    {
+      "time": "2024-01-23T00:00:00Z",
+      "supply_in_profit": 15010702,
+      "value": 15010702
+    },
+    {
+      "time": "2024-01-24T00:00:00Z",
+      "supply_in_profit": 15219258,
+      "value": 15219258
+    },
+    {
+      "time": "2024-01-25T00:00:00Z",
+      "supply_in_profit": 15120133,
+      "value": 15120133
+    },
+    {
+      "time": "2024-01-26T00:00:00Z",
+      "supply_in_profit": 15893479,
+      "value": 15893479
+    },
+    {
+      "time": "2024-01-27T00:00:00Z",
+      "supply_in_profit": 16098295,
+      "value": 16098295
+    },
+    {
+      "time": "2024-01-28T00:00:00Z",
+      "supply_in_profit": 15857894,
+      "value": 15857894
+    },
+    {
+      "time": "2024-01-29T00:00:00Z",
+      "supply_in_profit": 16896184,
+      "value": 16896184
+    },
+    {
+      "time": "2024-01-30T00:00:00Z",
+      "supply_in_profit": 16704748,
+      "value": 16704748
+    },
+    {
+      "time": "2024-01-31T00:00:00Z",
+      "supply_in_profit": 16018947,
+      "value": 16018947
+    },
+    {
+      "time": "2024-02-01T00:00:00Z",
+      "supply_in_profit": 16694491,
+      "value": 16694491
+    },
+    {
+      "time": "2024-02-02T00:00:00Z",
+      "supply_in_profit": 16819074,
+      "value": 16819074
+    },
+    {
+      "time": "2024-02-03T00:00:00Z",
+      "supply_in_profit": 16719835,
+      "value": 16719835
+    },
+    {
+      "time": "2024-02-04T00:00:00Z",
+      "supply_in_profit": 16059524,
+      "value": 16059524
+    },
+    {
+      "time": "2024-02-05T00:00:00Z",
+      "supply_in_profit": 15970074,
+      "value": 15970074
+    },
+    {
+      "time": "2024-02-06T00:00:00Z",
+      "supply_in_profit": 16747903,
+      "value": 16747903
+    },
+    {
+      "time": "2024-02-07T00:00:00Z",
+      "supply_in_profit": 17500254,
+      "value": 17500254
+    },
+    {
+      "time": "2024-02-08T00:00:00Z",
+      "supply_in_profit": 17638378,
+      "value": 17638378
+    },
+    {
+      "time": "2024-02-09T00:00:00Z",
+      "supply_in_profit": 17894412,
+      "value": 17894412
+    },
+    {
+      "time": "2024-02-10T00:00:00Z",
+      "supply_in_profit": 18077784,
+      "value": 18077784
+    },
+    {
+      "time": "2024-02-11T00:00:00Z",
+      "supply_in_profit": 18068760,
+      "value": 18068760
+    },
+    {
+      "time": "2024-02-12T00:00:00Z",
+      "supply_in_profit": 18405397,
+      "value": 18405397
+    },
+    {
+      "time": "2024-02-13T00:00:00Z",
+      "supply_in_profit": 18170664,
+      "value": 18170664
+    },
+    {
+      "time": "2024-02-14T00:00:00Z",
+      "supply_in_profit": 18534584,
+      "value": 18534584
+    },
+    {
+      "time": "2024-02-15T00:00:00Z",
+      "supply_in_profit": 18343148,
+      "value": 18343148
+    },
+    {
+      "time": "2024-02-16T00:00:00Z",
+      "supply_in_profit": 18455820,
+      "value": 18455820
+    },
+    {
+      "time": "2024-02-17T00:00:00Z",
+      "supply_in_profit": 18246654,
+      "value": 18246654
+    },
+    {
+      "time": "2024-02-18T00:00:00Z",
+      "supply_in_profit": 18516306,
+      "value": 18516306
+    },
+    {
+      "time": "2024-02-19T00:00:00Z",
+      "supply_in_profit": 18197103,
+      "value": 18197103
+    },
+    {
+      "time": "2024-02-20T00:00:00Z",
+      "supply_in_profit": 18535609,
+      "value": 18535609
+    },
+    {
+      "time": "2024-02-21T00:00:00Z",
+      "supply_in_profit": 18029867,
+      "value": 18029867
+    },
+    {
+      "time": "2024-02-22T00:00:00Z",
+      "supply_in_profit": 17899089,
+      "value": 17899089
+    },
+    {
+      "time": "2024-02-23T00:00:00Z",
+      "supply_in_profit": 17685964,
+      "value": 17685964
+    },
+    {
+      "time": "2024-02-24T00:00:00Z",
+      "supply_in_profit": 18138379,
+      "value": 18138379
+    },
+    {
+      "time": "2024-02-25T00:00:00Z",
+      "supply_in_profit": 18310173,
+      "value": 18310173
+    },
+    {
+      "time": "2024-02-26T00:00:00Z",
+      "supply_in_profit": 18680152,
+      "value": 18680152
+    },
+    {
+      "time": "2024-02-27T00:00:00Z",
+      "supply_in_profit": 18959798,
+      "value": 18959798
+    },
+    {
+      "time": "2024-02-28T00:00:00Z",
+      "supply_in_profit": 19540084,
+      "value": 19540084
+    },
+    {
+      "time": "2024-02-29T00:00:00Z",
+      "supply_in_profit": 19250223,
+      "value": 19250223
+    },
+    {
+      "time": "2024-03-01T00:00:00Z",
+      "supply_in_profit": 19392589,
+      "value": 19392589
+    },
+    {
+      "time": "2024-03-02T00:00:00Z",
+      "supply_in_profit": 19216587,
+      "value": 19216587
+    },
+    {
+      "time": "2024-03-03T00:00:00Z",
+      "supply_in_profit": 19561302,
+      "value": 19561302
+    },
+    {
+      "time": "2024-03-04T00:00:00Z",
+      "supply_in_profit": 19638718,
+      "value": 19638718
+    },
+    {
+      "time": "2024-03-05T00:00:00Z",
+      "supply_in_profit": 19231132,
+      "value": 19231132
+    },
+    {
+      "time": "2024-03-06T00:00:00Z",
+      "supply_in_profit": 19094463,
+      "value": 19094463
+    },
+    {
+      "time": "2024-03-07T00:00:00Z",
+      "supply_in_profit": 19413848,
+      "value": 19413848
+    },
+    {
+      "time": "2024-03-08T00:00:00Z",
+      "supply_in_profit": 19532691,
+      "value": 19532691
+    },
+    {
+      "time": "2024-03-09T00:00:00Z",
+      "supply_in_profit": 19545494,
+      "value": 19545494
+    },
+    {
+      "time": "2024-03-10T00:00:00Z",
+      "supply_in_profit": 19499221,
+      "value": 19499221
+    },
+    {
+      "time": "2024-03-11T00:00:00Z",
+      "supply_in_profit": 19567091,
+      "value": 19567091
+    },
+    {
+      "time": "2024-03-12T00:00:00Z",
+      "supply_in_profit": 19269251,
+      "value": 19269251
+    },
+    {
+      "time": "2024-03-13T00:00:00Z",
+      "supply_in_profit": 19504108,
+      "value": 19504108
+    },
+    {
+      "time": "2024-03-14T00:00:00Z",
+      "supply_in_profit": 18864250,
+      "value": 18864250
+    },
+    {
+      "time": "2024-03-15T00:00:00Z",
+      "supply_in_profit": 18796219,
+      "value": 18796219
+    },
+    {
+      "time": "2024-03-16T00:00:00Z",
+      "supply_in_profit": 18038356,
+      "value": 18038356
+    },
+    {
+      "time": "2024-03-17T00:00:00Z",
+      "supply_in_profit": 18699668,
+      "value": 18699668
+    },
+    {
+      "time": "2024-03-18T00:00:00Z",
+      "supply_in_profit": 18541295,
+      "value": 18541295
+    },
+    {
+      "time": "2024-03-19T00:00:00Z",
+      "supply_in_profit": 17571074,
+      "value": 17571074
+    },
+    {
+      "time": "2024-03-20T00:00:00Z",
+      "supply_in_profit": 18712173,
+      "value": 18712173
+    },
+    {
+      "time": "2024-03-21T00:00:00Z",
+      "supply_in_profit": 18069988,
+      "value": 18069988
+    },
+    {
+      "time": "2024-03-22T00:00:00Z",
+      "supply_in_profit": 17773877,
+      "value": 17773877
+    },
+    {
+      "time": "2024-03-23T00:00:00Z",
+      "supply_in_profit": 18016605,
+      "value": 18016605
+    },
+    {
+      "time": "2024-03-24T00:00:00Z",
+      "supply_in_profit": 18583885,
+      "value": 18583885
+    },
+    {
+      "time": "2024-03-25T00:00:00Z",
+      "supply_in_profit": 18936654,
+      "value": 18936654
+    },
+    {
+      "time": "2024-03-26T00:00:00Z",
+      "supply_in_profit": 18852901,
+      "value": 18852901
+    },
+    {
+      "time": "2024-03-27T00:00:00Z",
+      "supply_in_profit": 18716054,
+      "value": 18716054
+    },
+    {
+      "time": "2024-03-28T00:00:00Z",
+      "supply_in_profit": 18992294,
+      "value": 18992294
+    },
+    {
+      "time": "2024-03-29T00:00:00Z",
+      "supply_in_profit": 18694213,
+      "value": 18694213
+    },
+    {
+      "time": "2024-03-30T00:00:00Z",
+      "supply_in_profit": 18594824,
+      "value": 18594824
+    },
+    {
+      "time": "2024-03-31T00:00:00Z",
+      "supply_in_profit": 19244730,
+      "value": 19244730
+    },
+    {
+      "time": "2024-04-01T00:00:00Z",
+      "supply_in_profit": 18864039,
+      "value": 18864039
+    },
+    {
+      "time": "2024-04-02T00:00:00Z",
+      "supply_in_profit": 17615788,
+      "value": 17615788
+    },
+    {
+      "time": "2024-04-03T00:00:00Z",
+      "supply_in_profit": 17712978,
+      "value": 17712978
+    },
+    {
+      "time": "2024-04-04T00:00:00Z",
+      "supply_in_profit": 18551833,
+      "value": 18551833
+    },
+    {
+      "time": "2024-04-05T00:00:00Z",
+      "supply_in_profit": 18405149,
+      "value": 18405149
+    },
+    {
+      "time": "2024-04-06T00:00:00Z",
+      "supply_in_profit": 18897933,
+      "value": 18897933
+    },
+    {
+      "time": "2024-04-07T00:00:00Z",
+      "supply_in_profit": 18893051,
+      "value": 18893051
+    },
+    {
+      "time": "2024-04-08T00:00:00Z",
+      "supply_in_profit": 19177350,
+      "value": 19177350
+    },
+    {
+      "time": "2024-04-09T00:00:00Z",
+      "supply_in_profit": 18623318,
+      "value": 18623318
+    },
+    {
+      "time": "2024-04-10T00:00:00Z",
+      "supply_in_profit": 19110282,
+      "value": 19110282
+    },
+    {
+      "time": "2024-04-11T00:00:00Z",
+      "supply_in_profit": 18874925,
+      "value": 18874925
+    },
+    {
+      "time": "2024-04-12T00:00:00Z",
+      "supply_in_profit": 17832665,
+      "value": 17832665
+    },
+    {
+      "time": "2024-04-13T00:00:00Z",
+      "supply_in_profit": 17231333,
+      "value": 17231333
+    },
+    {
+      "time": "2024-04-14T00:00:00Z",
+      "supply_in_profit": 17395559,
+      "value": 17395559
+    },
+    {
+      "time": "2024-04-15T00:00:00Z",
+      "supply_in_profit": 16992824,
+      "value": 16992824
+    },
+    {
+      "time": "2024-04-16T00:00:00Z",
+      "supply_in_profit": 17281110,
+      "value": 17281110
+    },
+    {
+      "time": "2024-04-17T00:00:00Z",
+      "supply_in_profit": 16663738,
+      "value": 16663738
+    },
+    {
+      "time": "2024-04-18T00:00:00Z",
+      "supply_in_profit": 17231472,
+      "value": 17231472
+    },
+    {
+      "time": "2024-04-19T00:00:00Z",
+      "supply_in_profit": 17181101,
+      "value": 17181101
+    },
+    {
+      "time": "2024-04-20T00:00:00Z",
+      "supply_in_profit": 17490552,
+      "value": 17490552
+    },
+    {
+      "time": "2024-04-21T00:00:00Z",
+      "supply_in_profit": 17510629,
+      "value": 17510629
+    },
+    {
+      "time": "2024-04-22T00:00:00Z",
+      "supply_in_profit": 18042644,
+      "value": 18042644
+    },
+    {
+      "time": "2024-04-23T00:00:00Z",
+      "supply_in_profit": 17777322,
+      "value": 17777322
+    },
+    {
+      "time": "2024-04-24T00:00:00Z",
+      "supply_in_profit": 17145722,
+      "value": 17145722
+    },
+    {
+      "time": "2024-04-25T00:00:00Z",
+      "supply_in_profit": 17301663,
+      "value": 17301663
+    },
+    {
+      "time": "2024-04-26T00:00:00Z",
+      "supply_in_profit": 17053928,
+      "value": 17053928
+    },
+    {
+      "time": "2024-04-27T00:00:00Z",
+      "supply_in_profit": 16853459,
+      "value": 16853459
+    },
+    {
+      "time": "2024-04-28T00:00:00Z",
+      "supply_in_profit": 16784914,
+      "value": 16784914
+    },
+    {
+      "time": "2024-04-29T00:00:00Z",
+      "supply_in_profit": 17186975,
+      "value": 17186975
+    },
+    {
+      "time": "2024-04-30T00:00:00Z",
+      "supply_in_profit": 16226380,
+      "value": 16226380
+    },
+    {
+      "time": "2024-05-01T00:00:00Z",
+      "supply_in_profit": 16002224,
+      "value": 16002224
+    },
+    {
+      "time": "2024-05-02T00:00:00Z",
+      "supply_in_profit": 16227093,
+      "value": 16227093
+    },
+    {
+      "time": "2024-05-03T00:00:00Z",
+      "supply_in_profit": 17084092,
+      "value": 17084092
+    },
+    {
+      "time": "2024-05-04T00:00:00Z",
+      "supply_in_profit": 17413362,
+      "value": 17413362
+    },
+    {
+      "time": "2024-05-05T00:00:00Z",
+      "supply_in_profit": 17466921,
+      "value": 17466921
+    },
+    {
+      "time": "2024-05-06T00:00:00Z",
+      "supply_in_profit": 17045792,
+      "value": 17045792
+    },
+    {
+      "time": "2024-05-07T00:00:00Z",
+      "supply_in_profit": 16801902,
+      "value": 16801902
+    },
+    {
+      "time": "2024-05-08T00:00:00Z",
+      "supply_in_profit": 16378788,
+      "value": 16378788
+    },
+    {
+      "time": "2024-05-09T00:00:00Z",
+      "supply_in_profit": 16956256,
+      "value": 16956256
+    },
+    {
+      "time": "2024-05-10T00:00:00Z",
+      "supply_in_profit": 16292877,
+      "value": 16292877
+    },
+    {
+      "time": "2024-05-11T00:00:00Z",
+      "supply_in_profit": 16322833,
+      "value": 16322833
+    },
+    {
+      "time": "2024-05-12T00:00:00Z",
+      "supply_in_profit": 16541816,
+      "value": 16541816
+    },
+    {
+      "time": "2024-05-13T00:00:00Z",
+      "supply_in_profit": 17020858,
+      "value": 17020858
+    },
+    {
+      "time": "2024-05-14T00:00:00Z",
+      "supply_in_profit": 16518920,
+      "value": 16518920
+    },
+    {
+      "time": "2024-05-15T00:00:00Z",
+      "supply_in_profit": 17900165,
+      "value": 17900165
+    },
+    {
+      "time": "2024-05-16T00:00:00Z",
+      "supply_in_profit": 17677969,
+      "value": 17677969
+    },
+    {
+      "time": "2024-05-17T00:00:00Z",
+      "supply_in_profit": 18239842,
+      "value": 18239842
+    },
+    {
+      "time": "2024-05-18T00:00:00Z",
+      "supply_in_profit": 18216572,
+      "value": 18216572
+    },
+    {
+      "time": "2024-05-19T00:00:00Z",
+      "supply_in_profit": 17854528,
+      "value": 17854528
+    },
+    {
+      "time": "2024-05-20T00:00:00Z",
+      "supply_in_profit": 19228126,
+      "value": 19228126
+    },
+    {
+      "time": "2024-05-21T00:00:00Z",
+      "supply_in_profit": 19045325,
+      "value": 19045325
+    },
+    {
+      "time": "2024-05-22T00:00:00Z",
+      "supply_in_profit": 18710855,
+      "value": 18710855
+    },
+    {
+      "time": "2024-05-23T00:00:00Z",
+      "supply_in_profit": 18297607,
+      "value": 18297607
+    },
+    {
+      "time": "2024-05-24T00:00:00Z",
+      "supply_in_profit": 18558149,
+      "value": 18558149
+    },
+    {
+      "time": "2024-05-25T00:00:00Z",
+      "supply_in_profit": 18834467,
+      "value": 18834467
+    },
+    {
+      "time": "2024-05-26T00:00:00Z",
+      "supply_in_profit": 18450743,
+      "value": 18450743
+    },
+    {
+      "time": "2024-05-27T00:00:00Z",
+      "supply_in_profit": 18843218,
+      "value": 18843218
+    },
+    {
+      "time": "2024-05-28T00:00:00Z",
+      "supply_in_profit": 18404204,
+      "value": 18404204
+    },
+    {
+      "time": "2024-05-29T00:00:00Z",
+      "supply_in_profit": 17998678,
+      "value": 17998678
+    },
+    {
+      "time": "2024-05-30T00:00:00Z",
+      "supply_in_profit": 18381316,
+      "value": 18381316
+    },
+    {
+      "time": "2024-05-31T00:00:00Z",
+      "supply_in_profit": 17855597,
+      "value": 17855597
+    },
+    {
+      "time": "2024-06-01T00:00:00Z",
+      "supply_in_profit": 18055032,
+      "value": 18055032
+    },
+    {
+      "time": "2024-06-02T00:00:00Z",
+      "supply_in_profit": 18098788,
+      "value": 18098788
+    },
+    {
+      "time": "2024-06-03T00:00:00Z",
+      "supply_in_profit": 18702283,
+      "value": 18702283
+    },
+    {
+      "time": "2024-06-04T00:00:00Z",
+      "supply_in_profit": 19191434,
+      "value": 19191434
+    },
+    {
+      "time": "2024-06-05T00:00:00Z",
+      "supply_in_profit": 19248962,
+      "value": 19248962
+    },
+    {
+      "time": "2024-06-06T00:00:00Z",
+      "supply_in_profit": 19095641,
+      "value": 19095641
+    },
+    {
+      "time": "2024-06-07T00:00:00Z",
+      "supply_in_profit": 18575752,
+      "value": 18575752
+    },
+    {
+      "time": "2024-06-08T00:00:00Z",
+      "supply_in_profit": 18570346,
+      "value": 18570346
+    },
+    {
+      "time": "2024-06-09T00:00:00Z",
+      "supply_in_profit": 18736361,
+      "value": 18736361
+    },
+    {
+      "time": "2024-06-10T00:00:00Z",
+      "supply_in_profit": 18600772,
+      "value": 18600772
+    },
+    {
+      "time": "2024-06-11T00:00:00Z",
+      "supply_in_profit": 17524922,
+      "value": 17524922
+    },
+    {
+      "time": "2024-06-12T00:00:00Z",
+      "supply_in_profit": 17901813,
+      "value": 17901813
+    },
+    {
+      "time": "2024-06-13T00:00:00Z",
+      "supply_in_profit": 17133466,
+      "value": 17133466
+    },
+    {
+      "time": "2024-06-14T00:00:00Z",
+      "supply_in_profit": 16836160,
+      "value": 16836160
+    },
+    {
+      "time": "2024-06-15T00:00:00Z",
+      "supply_in_profit": 16877914,
+      "value": 16877914
+    },
+    {
+      "time": "2024-06-16T00:00:00Z",
+      "supply_in_profit": 17166161,
+      "value": 17166161
+    },
+    {
+      "time": "2024-06-17T00:00:00Z",
+      "supply_in_profit": 17160628,
+      "value": 17160628
+    },
+    {
+      "time": "2024-06-18T00:00:00Z",
+      "supply_in_profit": 16674106,
+      "value": 16674106
+    },
+    {
+      "time": "2024-06-19T00:00:00Z",
+      "supply_in_profit": 16566039,
+      "value": 16566039
+    },
+    {
+      "time": "2024-06-20T00:00:00Z",
+      "supply_in_profit": 16599903,
+      "value": 16599903
+    },
+    {
+      "time": "2024-06-21T00:00:00Z",
+      "supply_in_profit": 16395232,
+      "value": 16395232
+    },
+    {
+      "time": "2024-06-22T00:00:00Z",
+      "supply_in_profit": 16521808,
+      "value": 16521808
+    },
+    {
+      "time": "2024-06-23T00:00:00Z",
+      "supply_in_profit": 16104120,
+      "value": 16104120
+    },
+    {
+      "time": "2024-06-24T00:00:00Z",
+      "supply_in_profit": 15365136,
+      "value": 15365136
+    },
+    {
+      "time": "2024-06-25T00:00:00Z",
+      "supply_in_profit": 15907655,
+      "value": 15907655
+    },
+    {
+      "time": "2024-06-26T00:00:00Z",
+      "supply_in_profit": 15470235,
+      "value": 15470235
+    },
+    {
+      "time": "2024-06-27T00:00:00Z",
+      "supply_in_profit": 15910259,
+      "value": 15910259
+    },
+    {
+      "time": "2024-06-28T00:00:00Z",
+      "supply_in_profit": 15234266,
+      "value": 15234266
+    },
+    {
+      "time": "2024-06-29T00:00:00Z",
+      "supply_in_profit": 15605356,
+      "value": 15605356
+    },
+    {
+      "time": "2024-06-30T00:00:00Z",
+      "supply_in_profit": 16380614,
+      "value": 16380614
+    },
+    {
+      "time": "2024-07-01T00:00:00Z",
+      "supply_in_profit": 16351401,
+      "value": 16351401
+    },
+    {
+      "time": "2024-07-02T00:00:00Z",
+      "supply_in_profit": 15992881,
+      "value": 15992881
+    },
+    {
+      "time": "2024-07-03T00:00:00Z",
+      "supply_in_profit": 15303035,
+      "value": 15303035
+    },
+    {
+      "time": "2024-07-04T00:00:00Z",
+      "supply_in_profit": 15017422,
+      "value": 15017422
+    },
+    {
+      "time": "2024-07-05T00:00:00Z",
+      "supply_in_profit": 14863884,
+      "value": 14863884
+    },
+    {
+      "time": "2024-07-06T00:00:00Z",
+      "supply_in_profit": 15290262,
+      "value": 15290262
+    },
+    {
+      "time": "2024-07-07T00:00:00Z",
+      "supply_in_profit": 14726550,
+      "value": 14726550
+    },
+    {
+      "time": "2024-07-08T00:00:00Z",
+      "supply_in_profit": 14906397,
+      "value": 14906397
+    },
+    {
+      "time": "2024-07-09T00:00:00Z",
+      "supply_in_profit": 15352504,
+      "value": 15352504
+    },
+    {
+      "time": "2024-07-10T00:00:00Z",
+      "supply_in_profit": 15179268,
+      "value": 15179268
+    },
+    {
+      "time": "2024-07-11T00:00:00Z",
+      "supply_in_profit": 15015895,
+      "value": 15015895
+    },
+    {
+      "time": "2024-07-12T00:00:00Z",
+      "supply_in_profit": 15282532,
+      "value": 15282532
+    },
+    {
+      "time": "2024-07-13T00:00:00Z",
+      "supply_in_profit": 15624147,
+      "value": 15624147
+    },
+    {
+      "time": "2024-07-14T00:00:00Z",
+      "supply_in_profit": 16044713,
+      "value": 16044713
+    },
+    {
+      "time": "2024-07-15T00:00:00Z",
+      "supply_in_profit": 17201044,
+      "value": 17201044
+    },
+    {
+      "time": "2024-07-16T00:00:00Z",
+      "supply_in_profit": 17353338,
+      "value": 17353338
+    },
+    {
+      "time": "2024-07-17T00:00:00Z",
+      "supply_in_profit": 17016445,
+      "value": 17016445
+    },
+    {
+      "time": "2024-07-18T00:00:00Z",
+      "supply_in_profit": 16892510,
+      "value": 16892510
+    },
+    {
+      "time": "2024-07-19T00:00:00Z",
+      "supply_in_profit": 17772763,
+      "value": 17772763
+    },
+    {
+      "time": "2024-07-20T00:00:00Z",
+      "supply_in_profit": 18061261,
+      "value": 18061261
+    },
+    {
+      "time": "2024-07-21T00:00:00Z",
+      "supply_in_profit": 18436592,
+      "value": 18436592
+    },
+    {
+      "time": "2024-07-22T00:00:00Z",
+      "supply_in_profit": 18275334,
+      "value": 18275334
+    },
+    {
+      "time": "2024-07-23T00:00:00Z",
+      "supply_in_profit": 17182786,
+      "value": 17182786
+    },
+    {
+      "time": "2024-07-24T00:00:00Z",
+      "supply_in_profit": 16916807,
+      "value": 16916807
+    },
+    {
+      "time": "2024-07-25T00:00:00Z",
+      "supply_in_profit": 17191503,
+      "value": 17191503
+    },
+    {
+      "time": "2024-07-26T00:00:00Z",
+      "supply_in_profit": 18435014,
+      "value": 18435014
+    },
+    {
+      "time": "2024-07-27T00:00:00Z",
+      "supply_in_profit": 18504525,
+      "value": 18504525
+    },
+    {
+      "time": "2024-07-28T00:00:00Z",
+      "supply_in_profit": 18437869,
+      "value": 18437869
+    },
+    {
+      "time": "2024-07-29T00:00:00Z",
+      "supply_in_profit": 17481345,
+      "value": 17481345
+    },
+    {
+      "time": "2024-07-30T00:00:00Z",
+      "supply_in_profit": 17207467,
+      "value": 17207467
+    },
+    {
+      "time": "2024-07-31T00:00:00Z",
+      "supply_in_profit": 16550716,
+      "value": 16550716
+    },
+    {
+      "time": "2024-08-01T00:00:00Z",
+      "supply_in_profit": 16835256,
+      "value": 16835256
+    },
+    {
+      "time": "2024-08-02T00:00:00Z",
+      "supply_in_profit": 15621911,
+      "value": 15621911
+    },
+    {
+      "time": "2024-08-03T00:00:00Z",
+      "supply_in_profit": 15162419,
+      "value": 15162419
+    },
+    {
+      "time": "2024-08-04T00:00:00Z",
+      "supply_in_profit": 14852916,
+      "value": 14852916
+    },
+    {
+      "time": "2024-08-05T00:00:00Z",
+      "supply_in_profit": 14377646,
+      "value": 14377646
+    },
+    {
+      "time": "2024-08-06T00:00:00Z",
+      "supply_in_profit": 14589144,
+      "value": 14589144
+    },
+    {
+      "time": "2024-08-07T00:00:00Z",
+      "supply_in_profit": 14317058,
+      "value": 14317058
+    },
+    {
+      "time": "2024-08-08T00:00:00Z",
+      "supply_in_profit": 16115408,
+      "value": 16115408
+    },
+    {
+      "time": "2024-08-09T00:00:00Z",
+      "supply_in_profit": 15519664,
+      "value": 15519664
+    },
+    {
+      "time": "2024-08-10T00:00:00Z",
+      "supply_in_profit": 15752890,
+      "value": 15752890
+    },
+    {
+      "time": "2024-08-11T00:00:00Z",
+      "supply_in_profit": 15060470,
+      "value": 15060470
+    },
+    {
+      "time": "2024-08-12T00:00:00Z",
+      "supply_in_profit": 15147648,
+      "value": 15147648
+    },
+    {
+      "time": "2024-08-13T00:00:00Z",
+      "supply_in_profit": 15584246,
+      "value": 15584246
+    },
+    {
+      "time": "2024-08-14T00:00:00Z",
+      "supply_in_profit": 15025935,
+      "value": 15025935
+    },
+    {
+      "time": "2024-08-15T00:00:00Z",
+      "supply_in_profit": 14771666,
+      "value": 14771666
+    },
+    {
+      "time": "2024-08-16T00:00:00Z",
+      "supply_in_profit": 15156942,
+      "value": 15156942
+    },
+    {
+      "time": "2024-08-17T00:00:00Z",
+      "supply_in_profit": 15380376,
+      "value": 15380376
+    },
+    {
+      "time": "2024-08-18T00:00:00Z",
+      "supply_in_profit": 15161623,
+      "value": 15161623
+    },
+    {
+      "time": "2024-08-19T00:00:00Z",
+      "supply_in_profit": 15347510,
+      "value": 15347510
+    },
+    {
+      "time": "2024-08-20T00:00:00Z",
+      "supply_in_profit": 15264956,
+      "value": 15264956
+    },
+    {
+      "time": "2024-08-21T00:00:00Z",
+      "supply_in_profit": 16167568,
+      "value": 16167568
+    },
+    {
+      "time": "2024-08-22T00:00:00Z",
+      "supply_in_profit": 15573697,
+      "value": 15573697
+    },
+    {
+      "time": "2024-08-23T00:00:00Z",
+      "supply_in_profit": 17076623,
+      "value": 17076623
+    },
+    {
+      "time": "2024-08-24T00:00:00Z",
+      "supply_in_profit": 16875642,
+      "value": 16875642
+    },
+    {
+      "time": "2024-08-25T00:00:00Z",
+      "supply_in_profit": 17235355,
+      "value": 17235355
+    },
+    {
+      "time": "2024-08-26T00:00:00Z",
+      "supply_in_profit": 16520939,
+      "value": 16520939
+    },
+    {
+      "time": "2024-08-27T00:00:00Z",
+      "supply_in_profit": 15170698,
+      "value": 15170698
+    },
+    {
+      "time": "2024-08-28T00:00:00Z",
+      "supply_in_profit": 15022987,
+      "value": 15022987
+    },
+    {
+      "time": "2024-08-29T00:00:00Z",
+      "supply_in_profit": 15169426,
+      "value": 15169426
+    },
+    {
+      "time": "2024-08-30T00:00:00Z",
+      "supply_in_profit": 15065107,
+      "value": 15065107
+    },
+    {
+      "time": "2024-08-31T00:00:00Z",
+      "supply_in_profit": 14921300,
+      "value": 14921300
+    },
+    {
+      "time": "2024-09-01T00:00:00Z",
+      "supply_in_profit": 14520750,
+      "value": 14520750
+    },
+    {
+      "time": "2024-09-02T00:00:00Z",
+      "supply_in_profit": 15230108,
+      "value": 15230108
+    },
+    {
+      "time": "2024-09-03T00:00:00Z",
+      "supply_in_profit": 14578748,
+      "value": 14578748
+    },
+    {
+      "time": "2024-09-04T00:00:00Z",
+      "supply_in_profit": 14910888,
+      "value": 14910888
+    },
+    {
+      "time": "2024-09-05T00:00:00Z",
+      "supply_in_profit": 14168654,
+      "value": 14168654
+    },
+    {
+      "time": "2024-09-06T00:00:00Z",
+      "supply_in_profit": 13795695,
+      "value": 13795695
+    },
+    {
+      "time": "2024-09-07T00:00:00Z",
+      "supply_in_profit": 13827642,
+      "value": 13827642
+    },
+    {
+      "time": "2024-09-08T00:00:00Z",
+      "supply_in_profit": 14112428,
+      "value": 14112428
+    },
+    {
+      "time": "2024-09-09T00:00:00Z",
+      "supply_in_profit": 14707285,
+      "value": 14707285
+    },
+    {
+      "time": "2024-09-10T00:00:00Z",
+      "supply_in_profit": 14905127,
+      "value": 14905127
+    },
+    {
+      "time": "2024-09-11T00:00:00Z",
+      "supply_in_profit": 14865877,
+      "value": 14865877
+    },
+    {
+      "time": "2024-09-12T00:00:00Z",
+      "supply_in_profit": 15194137,
+      "value": 15194137
+    },
+    {
+      "time": "2024-09-13T00:00:00Z",
+      "supply_in_profit": 16000377,
+      "value": 16000377
+    },
+    {
+      "time": "2024-09-14T00:00:00Z",
+      "supply_in_profit": 15813066,
+      "value": 15813066
+    },
+    {
+      "time": "2024-09-15T00:00:00Z",
+      "supply_in_profit": 15483545,
+      "value": 15483545
+    },
+    {
+      "time": "2024-09-16T00:00:00Z",
+      "supply_in_profit": 15053195,
+      "value": 15053195
+    },
+    {
+      "time": "2024-09-17T00:00:00Z",
+      "supply_in_profit": 15816108,
+      "value": 15816108
+    },
+    {
+      "time": "2024-09-18T00:00:00Z",
+      "supply_in_profit": 16047595,
+      "value": 16047595
+    },
+    {
+      "time": "2024-09-19T00:00:00Z",
+      "supply_in_profit": 16873711,
+      "value": 16873711
+    },
+    {
+      "time": "2024-09-20T00:00:00Z",
+      "supply_in_profit": 16929417,
+      "value": 16929417
+    },
+    {
+      "time": "2024-09-21T00:00:00Z",
+      "supply_in_profit": 16981146,
+      "value": 16981146
+    },
+    {
+      "time": "2024-09-22T00:00:00Z",
+      "supply_in_profit": 17094129,
+      "value": 17094129
+    },
+    {
+      "time": "2024-09-23T00:00:00Z",
+      "supply_in_profit": 16863356,
+      "value": 16863356
+    },
+    {
+      "time": "2024-09-24T00:00:00Z",
+      "supply_in_profit": 17458469,
+      "value": 17458469
+    },
+    {
+      "time": "2024-09-25T00:00:00Z",
+      "supply_in_profit": 16575649,
+      "value": 16575649
+    },
+    {
+      "time": "2024-09-26T00:00:00Z",
+      "supply_in_profit": 17559998,
+      "value": 17559998
+    },
+    {
+      "time": "2024-09-27T00:00:00Z",
+      "supply_in_profit": 17651272,
+      "value": 17651272
+    },
+    {
+      "time": "2024-09-28T00:00:00Z",
+      "supply_in_profit": 17556784,
+      "value": 17556784
+    },
+    {
+      "time": "2024-09-29T00:00:00Z",
+      "supply_in_profit": 17543382,
+      "value": 17543382
+    },
+    {
+      "time": "2024-09-30T00:00:00Z",
+      "supply_in_profit": 16599189,
+      "value": 16599189
+    },
+    {
+      "time": "2024-10-01T00:00:00Z",
+      "supply_in_profit": 15439606,
+      "value": 15439606
+    },
+    {
+      "time": "2024-10-02T00:00:00Z",
+      "supply_in_profit": 15408365,
+      "value": 15408365
+    },
+    {
+      "time": "2024-10-03T00:00:00Z",
+      "supply_in_profit": 15539182,
+      "value": 15539182
+    },
+    {
+      "time": "2024-10-04T00:00:00Z",
+      "supply_in_profit": 16187821,
+      "value": 16187821
+    },
+    {
+      "time": "2024-10-05T00:00:00Z",
+      "supply_in_profit": 16091367,
+      "value": 16091367
+    },
+    {
+      "time": "2024-10-06T00:00:00Z",
+      "supply_in_profit": 16406000,
+      "value": 16406000
+    },
+    {
+      "time": "2024-10-07T00:00:00Z",
+      "supply_in_profit": 16349085,
+      "value": 16349085
+    },
+    {
+      "time": "2024-10-08T00:00:00Z",
+      "supply_in_profit": 15879113,
+      "value": 15879113
+    },
+    {
+      "time": "2024-10-09T00:00:00Z",
+      "supply_in_profit": 15073008,
+      "value": 15073008
+    },
+    {
+      "time": "2024-10-10T00:00:00Z",
+      "supply_in_profit": 14960712,
+      "value": 14960712
+    },
+    {
+      "time": "2024-10-11T00:00:00Z",
+      "supply_in_profit": 16313052,
+      "value": 16313052
+    },
+    {
+      "time": "2024-10-12T00:00:00Z",
+      "supply_in_profit": 16736427,
+      "value": 16736427
+    },
+    {
+      "time": "2024-10-13T00:00:00Z",
+      "supply_in_profit": 16452146,
+      "value": 16452146
+    },
+    {
+      "time": "2024-10-14T00:00:00Z",
+      "supply_in_profit": 18002281,
+      "value": 18002281
+    },
+    {
+      "time": "2024-10-15T00:00:00Z",
+      "supply_in_profit": 18147032,
+      "value": 18147032
+    },
+    {
+      "time": "2024-10-16T00:00:00Z",
+      "supply_in_profit": 18689092,
+      "value": 18689092
+    },
+    {
+      "time": "2024-10-17T00:00:00Z",
+      "supply_in_profit": 18464190,
+      "value": 18464190
+    },
+    {
+      "time": "2024-10-18T00:00:00Z",
+      "supply_in_profit": 18751243,
+      "value": 18751243
+    },
+    {
+      "time": "2024-10-19T00:00:00Z",
+      "supply_in_profit": 18749778,
+      "value": 18749778
+    },
+    {
+      "time": "2024-10-20T00:00:00Z",
+      "supply_in_profit": 19129884,
+      "value": 19129884
+    },
+    {
+      "time": "2024-10-21T00:00:00Z",
+      "supply_in_profit": 18325722,
+      "value": 18325722
+    },
+    {
+      "time": "2024-10-22T00:00:00Z",
+      "supply_in_profit": 18454636,
+      "value": 18454636
+    },
+    {
+      "time": "2024-10-23T00:00:00Z",
+      "supply_in_profit": 17527775,
+      "value": 17527775
+    },
+    {
+      "time": "2024-10-24T00:00:00Z",
+      "supply_in_profit": 18617638,
+      "value": 18617638
+    },
+    {
+      "time": "2024-10-25T00:00:00Z",
+      "supply_in_profit": 17394151,
+      "value": 17394151
+    },
+    {
+      "time": "2024-10-26T00:00:00Z",
+      "supply_in_profit": 17742562,
+      "value": 17742562
+    },
+    {
+      "time": "2024-10-27T00:00:00Z",
+      "supply_in_profit": 18553738,
+      "value": 18553738
+    },
+    {
+      "time": "2024-10-28T00:00:00Z",
+      "supply_in_profit": 19301700,
+      "value": 19301700
+    },
+    {
+      "time": "2024-10-29T00:00:00Z",
+      "supply_in_profit": 19668012,
+      "value": 19668012
+    },
+    {
+      "time": "2024-10-30T00:00:00Z",
+      "supply_in_profit": 19634919,
+      "value": 19634919
+    },
+    {
+      "time": "2024-10-31T00:00:00Z",
+      "supply_in_profit": 18955122,
+      "value": 18955122
+    },
+    {
+      "time": "2024-11-01T00:00:00Z",
+      "supply_in_profit": 18708376,
+      "value": 18708376
+    },
+    {
+      "time": "2024-11-02T00:00:00Z",
+      "supply_in_profit": 18665284,
+      "value": 18665284
+    },
+    {
+      "time": "2024-11-03T00:00:00Z",
+      "supply_in_profit": 18378905,
+      "value": 18378905
+    },
+    {
+      "time": "2024-11-04T00:00:00Z",
+      "supply_in_profit": 17926436,
+      "value": 17926436
+    },
+    {
+      "time": "2024-11-05T00:00:00Z",
+      "supply_in_profit": 18838598,
+      "value": 18838598
+    },
+    {
+      "time": "2024-11-06T00:00:00Z",
+      "supply_in_profit": 19721176,
+      "value": 19721176
+    },
+    {
+      "time": "2024-11-07T00:00:00Z",
+      "supply_in_profit": 19703861,
+      "value": 19703861
+    },
+    {
+      "time": "2024-11-08T00:00:00Z",
+      "supply_in_profit": 19710237,
+      "value": 19710237
+    },
+    {
+      "time": "2024-11-09T00:00:00Z",
+      "supply_in_profit": 19764075,
+      "value": 19764075
+    },
+    {
+      "time": "2024-11-10T00:00:00Z",
+      "supply_in_profit": 19734867,
+      "value": 19734867
+    },
+    {
+      "time": "2024-11-11T00:00:00Z",
+      "supply_in_profit": 19780787,
+      "value": 19780787
+    },
+    {
+      "time": "2024-11-12T00:00:00Z",
+      "supply_in_profit": 19599256,
+      "value": 19599256
+    },
+    {
+      "time": "2024-11-13T00:00:00Z",
+      "supply_in_profit": 19649137,
+      "value": 19649137
+    },
+    {
+      "time": "2024-11-14T00:00:00Z",
+      "supply_in_profit": 19180696,
+      "value": 19180696
+    },
+    {
+      "time": "2024-11-15T00:00:00Z",
+      "supply_in_profit": 19707366,
+      "value": 19707366
+    },
+    {
+      "time": "2024-11-16T00:00:00Z",
+      "supply_in_profit": 19525851,
+      "value": 19525851
+    },
+    {
+      "time": "2024-11-17T00:00:00Z",
+      "supply_in_profit": 19403656,
+      "value": 19403656
+    },
+    {
+      "time": "2024-11-18T00:00:00Z",
+      "supply_in_profit": 19398199,
+      "value": 19398199
+    },
+    {
+      "time": "2024-11-19T00:00:00Z",
+      "supply_in_profit": 19614387,
+      "value": 19614387
+    },
+    {
+      "time": "2024-11-20T00:00:00Z",
+      "supply_in_profit": 19668262,
+      "value": 19668262
+    },
+    {
+      "time": "2024-11-21T00:00:00Z",
+      "supply_in_profit": 19781486,
+      "value": 19781486
+    },
+    {
+      "time": "2024-11-22T00:00:00Z",
+      "supply_in_profit": 19603860,
+      "value": 19603860
+    },
+    {
+      "time": "2024-11-23T00:00:00Z",
+      "supply_in_profit": 19085885,
+      "value": 19085885
+    },
+    {
+      "time": "2024-11-24T00:00:00Z",
+      "supply_in_profit": 19195116,
+      "value": 19195116
+    },
+    {
+      "time": "2024-11-25T00:00:00Z",
+      "supply_in_profit": 18687096,
+      "value": 18687096
+    },
+    {
+      "time": "2024-11-26T00:00:00Z",
+      "supply_in_profit": 18515353,
+      "value": 18515353
+    },
+    {
+      "time": "2024-11-27T00:00:00Z",
+      "supply_in_profit": 19024297,
+      "value": 19024297
+    },
+    {
+      "time": "2024-11-28T00:00:00Z",
+      "supply_in_profit": 18993062,
+      "value": 18993062
+    },
+    {
+      "time": "2024-11-29T00:00:00Z",
+      "supply_in_profit": 19147778,
+      "value": 19147778
+    },
+    {
+      "time": "2024-11-30T00:00:00Z",
+      "supply_in_profit": 18912780,
+      "value": 18912780
+    },
+    {
+      "time": "2024-12-01T00:00:00Z",
+      "supply_in_profit": 19154689,
+      "value": 19154689
+    },
+    {
+      "time": "2024-12-02T00:00:00Z",
+      "supply_in_profit": 18745413,
+      "value": 18745413
+    },
+    {
+      "time": "2024-12-03T00:00:00Z",
+      "supply_in_profit": 18876497,
+      "value": 18876497
+    },
+    {
+      "time": "2024-12-04T00:00:00Z",
+      "supply_in_profit": 19668587,
+      "value": 19668587
+    },
+    {
+      "time": "2024-12-05T00:00:00Z",
+      "supply_in_profit": 18675521,
+      "value": 18675521
+    },
+    {
+      "time": "2024-12-06T00:00:00Z",
+      "supply_in_profit": 19426046,
+      "value": 19426046
+    },
+    {
+      "time": "2024-12-07T00:00:00Z",
+      "supply_in_profit": 19440337,
+      "value": 19440337
+    },
+    {
+      "time": "2024-12-08T00:00:00Z",
+      "supply_in_profit": 19470474,
+      "value": 19470474
+    },
+    {
+      "time": "2024-12-09T00:00:00Z",
+      "supply_in_profit": 18309102,
+      "value": 18309102
+    },
+    {
+      "time": "2024-12-10T00:00:00Z",
+      "supply_in_profit": 18176927,
+      "value": 18176927
+    },
+    {
+      "time": "2024-12-11T00:00:00Z",
+      "supply_in_profit": 19541179,
+      "value": 19541179
+    },
+    {
+      "time": "2024-12-12T00:00:00Z",
+      "supply_in_profit": 19274402,
+      "value": 19274402
+    },
+    {
+      "time": "2024-12-13T00:00:00Z",
+      "supply_in_profit": 19484752,
+      "value": 19484752
+    },
+    {
+      "time": "2024-12-14T00:00:00Z",
+      "supply_in_profit": 19417935,
+      "value": 19417935
+    },
+    {
+      "time": "2024-12-15T00:00:00Z",
+      "supply_in_profit": 19796467,
+      "value": 19796467
+    },
+    {
+      "time": "2024-12-16T00:00:00Z",
+      "supply_in_profit": 19610839,
+      "value": 19610839
+    },
+    {
+      "time": "2024-12-17T00:00:00Z",
+      "supply_in_profit": 19464759,
+      "value": 19464759
+    },
+    {
+      "time": "2024-12-18T00:00:00Z",
+      "supply_in_profit": 18885126,
+      "value": 18885126
+    },
+    {
+      "time": "2024-12-19T00:00:00Z",
+      "supply_in_profit": 17792694,
+      "value": 17792694
+    },
+    {
+      "time": "2024-12-20T00:00:00Z",
+      "supply_in_profit": 17834696,
+      "value": 17834696
+    },
+    {
+      "time": "2024-12-21T00:00:00Z",
+      "supply_in_profit": 17569795,
+      "value": 17569795
+    },
+    {
+      "time": "2024-12-22T00:00:00Z",
+      "supply_in_profit": 17162352,
+      "value": 17162352
+    },
+    {
+      "time": "2024-12-23T00:00:00Z",
+      "supply_in_profit": 17097388,
+      "value": 17097388
+    },
+    {
+      "time": "2024-12-24T00:00:00Z",
+      "supply_in_profit": 18622383,
+      "value": 18622383
+    },
+    {
+      "time": "2024-12-25T00:00:00Z",
+      "supply_in_profit": 18632728,
+      "value": 18632728
+    },
+    {
+      "time": "2024-12-26T00:00:00Z",
+      "supply_in_profit": 17258896,
+      "value": 17258896
+    },
+    {
+      "time": "2024-12-27T00:00:00Z",
+      "supply_in_profit": 16920714,
+      "value": 16920714
+    },
+    {
+      "time": "2024-12-28T00:00:00Z",
+      "supply_in_profit": 17235953,
+      "value": 17235953
+    },
+    {
+      "time": "2024-12-29T00:00:00Z",
+      "supply_in_profit": 16638337,
+      "value": 16638337
+    },
+    {
+      "time": "2024-12-30T00:00:00Z",
+      "supply_in_profit": 16557561,
+      "value": 16557561
+    },
+    {
+      "time": "2024-12-31T00:00:00Z",
+      "supply_in_profit": 16680681,
+      "value": 16680681
+    },
+    {
+      "time": "2025-01-01T00:00:00Z",
+      "supply_in_profit": 17209821,
+      "value": 17209821
+    },
+    {
+      "time": "2025-01-02T00:00:00Z",
+      "supply_in_profit": 17618251,
+      "value": 17618251
+    },
+    {
+      "time": "2025-01-03T00:00:00Z",
+      "supply_in_profit": 18470267,
+      "value": 18470267
+    },
+    {
+      "time": "2025-01-04T00:00:00Z",
+      "supply_in_profit": 18486545,
+      "value": 18486545
+    },
+    {
+      "time": "2025-01-05T00:00:00Z",
+      "supply_in_profit": 18665255,
+      "value": 18665255
+    },
+    {
+      "time": "2025-01-06T00:00:00Z",
+      "supply_in_profit": 19422255,
+      "value": 19422255
+    },
+    {
+      "time": "2025-01-07T00:00:00Z",
+      "supply_in_profit": 17511298,
+      "value": 17511298
+    },
+    {
+      "time": "2025-01-08T00:00:00Z",
+      "supply_in_profit": 17077863,
+      "value": 17077863
+    },
+    {
+      "time": "2025-01-09T00:00:00Z",
+      "supply_in_profit": 16325577,
+      "value": 16325577
+    },
+    {
+      "time": "2025-01-10T00:00:00Z",
+      "supply_in_profit": 17092521,
+      "value": 17092521
+    },
+    {
+      "time": "2025-01-11T00:00:00Z",
+      "supply_in_profit": 17100817,
+      "value": 17100817
+    },
+    {
+      "time": "2025-01-12T00:00:00Z",
+      "supply_in_profit": 16829895,
+      "value": 16829895
+    },
+    {
+      "time": "2025-01-13T00:00:00Z",
+      "supply_in_profit": 17063988,
+      "value": 17063988
+    },
+    {
+      "time": "2025-01-14T00:00:00Z",
+      "supply_in_profit": 17670591,
+      "value": 17670591
+    },
+    {
+      "time": "2025-01-15T00:00:00Z",
+      "supply_in_profit": 19051771,
+      "value": 19051771
+    },
+    {
+      "time": "2025-01-16T00:00:00Z",
+      "supply_in_profit": 18978855,
+      "value": 18978855
+    },
+    {
+      "time": "2025-01-17T00:00:00Z",
+      "supply_in_profit": 19504306,
+      "value": 19504306
+    },
+    {
+      "time": "2025-01-18T00:00:00Z",
+      "supply_in_profit": 19520556,
+      "value": 19520556
+    },
+    {
+      "time": "2025-01-19T00:00:00Z",
+      "supply_in_profit": 18940518,
+      "value": 18940518
+    },
+    {
+      "time": "2025-01-20T00:00:00Z",
+      "supply_in_profit": 19261939,
+      "value": 19261939
+    },
+    {
+      "time": "2025-01-21T00:00:00Z",
+      "supply_in_profit": 19504063,
+      "value": 19504063
+    },
+    {
+      "time": "2025-01-22T00:00:00Z",
+      "supply_in_profit": 19205339,
+      "value": 19205339
+    },
+    {
+      "time": "2025-01-23T00:00:00Z",
+      "supply_in_profit": 19249342,
+      "value": 19249342
+    },
+    {
+      "time": "2025-01-24T00:00:00Z",
+      "supply_in_profit": 19317136,
+      "value": 19317136
+    },
+    {
+      "time": "2025-01-25T00:00:00Z",
+      "supply_in_profit": 19319507,
+      "value": 19319507
+    },
+    {
+      "time": "2025-01-26T00:00:00Z",
+      "supply_in_profit": 18985046,
+      "value": 18985046
+    },
+    {
+      "time": "2025-01-27T00:00:00Z",
+      "supply_in_profit": 18880489,
+      "value": 18880489
+    },
+    {
+      "time": "2025-01-28T00:00:00Z",
+      "supply_in_profit": 18549999,
+      "value": 18549999
+    },
+    {
+      "time": "2025-01-29T00:00:00Z",
+      "supply_in_profit": 19162789,
+      "value": 19162789
+    },
+    {
+      "time": "2025-01-30T00:00:00Z",
+      "supply_in_profit": 19337619,
+      "value": 19337619
+    },
+    {
+      "time": "2025-01-31T00:00:00Z",
+      "supply_in_profit": 18721673,
+      "value": 18721673
+    },
+    {
+      "time": "2025-02-01T00:00:00Z",
+      "supply_in_profit": 18333780,
+      "value": 18333780
+    },
+    {
+      "time": "2025-02-02T00:00:00Z",
+      "supply_in_profit": 17073806,
+      "value": 17073806
+    },
+    {
+      "time": "2025-02-03T00:00:00Z",
+      "supply_in_profit": 18739028,
+      "value": 18739028
+    },
+    {
+      "time": "2025-02-04T00:00:00Z",
+      "supply_in_profit": 17001238,
+      "value": 17001238
+    },
+    {
+      "time": "2025-02-05T00:00:00Z",
+      "supply_in_profit": 16759819,
+      "value": 16759819
+    },
+    {
+      "time": "2025-02-06T00:00:00Z",
+      "supply_in_profit": 16754256,
+      "value": 16754256
+    },
+    {
+      "time": "2025-02-07T00:00:00Z",
+      "supply_in_profit": 16659573,
+      "value": 16659573
+    },
+    {
+      "time": "2025-02-08T00:00:00Z",
+      "supply_in_profit": 16828476,
+      "value": 16828476
+    },
+    {
+      "time": "2025-02-09T00:00:00Z",
+      "supply_in_profit": 16604867,
+      "value": 16604867
+    },
+    {
+      "time": "2025-02-10T00:00:00Z",
+      "supply_in_profit": 17150347,
+      "value": 17150347
+    },
+    {
+      "time": "2025-02-11T00:00:00Z",
+      "supply_in_profit": 16538158,
+      "value": 16538158
+    },
+    {
+      "time": "2025-02-12T00:00:00Z",
+      "supply_in_profit": 17581205,
+      "value": 17581205
+    },
+    {
+      "time": "2025-02-13T00:00:00Z",
+      "supply_in_profit": 16794642,
+      "value": 16794642
+    },
+    {
+      "time": "2025-02-14T00:00:00Z",
+      "supply_in_profit": 17280737,
+      "value": 17280737
+    },
+    {
+      "time": "2025-02-15T00:00:00Z",
+      "supply_in_profit": 17499244,
+      "value": 17499244
+    },
+    {
+      "time": "2025-02-16T00:00:00Z",
+      "supply_in_profit": 16676917,
+      "value": 16676917
+    },
+    {
+      "time": "2025-02-17T00:00:00Z",
+      "supply_in_profit": 16486952,
+      "value": 16486952
+    },
+    {
+      "time": "2025-02-18T00:00:00Z",
+      "supply_in_profit": 16437750,
+      "value": 16437750
+    },
+    {
+      "time": "2025-02-19T00:00:00Z",
+      "supply_in_profit": 16929772,
+      "value": 16929772
+    },
+    {
+      "time": "2025-02-20T00:00:00Z",
+      "supply_in_profit": 18076109,
+      "value": 18076109
+    },
+    {
+      "time": "2025-02-21T00:00:00Z",
+      "supply_in_profit": 16514091,
+      "value": 16514091
+    },
+    {
+      "time": "2025-02-22T00:00:00Z",
+      "supply_in_profit": 16809885,
+      "value": 16809885
+    },
+    {
+      "time": "2025-02-23T00:00:00Z",
+      "supply_in_profit": 16504875,
+      "value": 16504875
+    },
+    {
+      "time": "2025-02-24T00:00:00Z",
+      "supply_in_profit": 15559395,
+      "value": 15559395
+    },
+    {
+      "time": "2025-02-25T00:00:00Z",
+      "supply_in_profit": 15474491,
+      "value": 15474491
+    },
+    {
+      "time": "2025-02-26T00:00:00Z",
+      "supply_in_profit": 15264683,
+      "value": 15264683
+    },
+    {
+      "time": "2025-02-27T00:00:00Z",
+      "supply_in_profit": 15306686,
+      "value": 15306686
+    },
+    {
+      "time": "2025-02-28T00:00:00Z",
+      "supply_in_profit": 15412163,
+      "value": 15412163
+    },
+    {
+      "time": "2025-03-01T00:00:00Z",
+      "supply_in_profit": 15547363,
+      "value": 15547363
+    },
+    {
+      "time": "2025-03-02T00:00:00Z",
+      "supply_in_profit": 16426194,
+      "value": 16426194
+    },
+    {
+      "time": "2025-03-03T00:00:00Z",
+      "supply_in_profit": 15488544,
+      "value": 15488544
+    },
+    {
+      "time": "2025-03-04T00:00:00Z",
+      "supply_in_profit": 15594011,
+      "value": 15594011
+    },
+    {
+      "time": "2025-03-05T00:00:00Z",
+      "supply_in_profit": 15931493,
+      "value": 15931493
+    },
+    {
+      "time": "2025-03-06T00:00:00Z",
+      "supply_in_profit": 15862504,
+      "value": 15862504
+    },
+    {
+      "time": "2025-03-07T00:00:00Z",
+      "supply_in_profit": 15392804,
+      "value": 15392804
+    },
+    {
+      "time": "2025-03-08T00:00:00Z",
+      "supply_in_profit": 15387186,
+      "value": 15387186
+    },
+    {
+      "time": "2025-03-09T00:00:00Z",
+      "supply_in_profit": 15090055,
+      "value": 15090055
+    },
+    {
+      "time": "2025-03-10T00:00:00Z",
+      "supply_in_profit": 15066619,
+      "value": 15066619
+    },
+    {
+      "time": "2025-03-11T00:00:00Z",
+      "supply_in_profit": 15340675,
+      "value": 15340675
+    },
+    {
+      "time": "2025-03-12T00:00:00Z",
+      "supply_in_profit": 15442208,
+      "value": 15442208
+    },
+    {
+      "time": "2025-03-13T00:00:00Z",
+      "supply_in_profit": 15149016,
+      "value": 15149016
+    },
+    {
+      "time": "2025-03-14T00:00:00Z",
+      "supply_in_profit": 15561961,
+      "value": 15561961
+    },
+    {
+      "time": "2025-03-15T00:00:00Z",
+      "supply_in_profit": 15570219,
+      "value": 15570219
+    },
+    {
+      "time": "2025-03-16T00:00:00Z",
+      "supply_in_profit": 15207546,
+      "value": 15207546
+    },
+    {
+      "time": "2025-03-17T00:00:00Z",
+      "supply_in_profit": 15566950,
+      "value": 15566950
+    },
+    {
+      "time": "2025-03-18T00:00:00Z",
+      "supply_in_profit": 15265753,
+      "value": 15265753
+    },
+    {
+      "time": "2025-03-19T00:00:00Z",
+      "supply_in_profit": 15837482,
+      "value": 15837482
+    },
+    {
+      "time": "2025-03-20T00:00:00Z",
+      "supply_in_profit": 15536276,
+      "value": 15536276
+    },
+    {
+      "time": "2025-03-21T00:00:00Z",
+      "supply_in_profit": 15608055,
+      "value": 15608055
+    },
+    {
+      "time": "2025-03-22T00:00:00Z",
+      "supply_in_profit": 15435812,
+      "value": 15435812
+    },
+    {
+      "time": "2025-03-23T00:00:00Z",
+      "supply_in_profit": 15797295,
+      "value": 15797295
+    },
+    {
+      "time": "2025-03-24T00:00:00Z",
+      "supply_in_profit": 15835377,
+      "value": 15835377
+    },
+    {
+      "time": "2025-03-25T00:00:00Z",
+      "supply_in_profit": 15865512,
+      "value": 15865512
+    },
+    {
+      "time": "2025-03-26T00:00:00Z",
+      "supply_in_profit": 15695248,
+      "value": 15695248
+    },
+    {
+      "time": "2025-03-27T00:00:00Z",
+      "supply_in_profit": 15800780,
+      "value": 15800780
+    },
+    {
+      "time": "2025-03-28T00:00:00Z",
+      "supply_in_profit": 15418189,
+      "value": 15418189
+    },
+    {
+      "time": "2025-03-29T00:00:00Z",
+      "supply_in_profit": 15057377,
+      "value": 15057377
+    },
+    {
+      "time": "2025-03-30T00:00:00Z",
+      "supply_in_profit": 15023966,
+      "value": 15023966
+    },
+    {
+      "time": "2025-03-31T00:00:00Z",
+      "supply_in_profit": 15111633,
+      "value": 15111633
+    },
+    {
+      "time": "2025-04-01T00:00:00Z",
+      "supply_in_profit": 15786683,
+      "value": 15786683
+    },
+    {
+      "time": "2025-04-02T00:00:00Z",
+      "supply_in_profit": 15088549,
+      "value": 15088549
+    },
+    {
+      "time": "2025-04-03T00:00:00Z",
+      "supply_in_profit": 15206001,
+      "value": 15206001
+    },
+    {
+      "time": "2025-04-04T00:00:00Z",
+      "supply_in_profit": 15549778,
+      "value": 15549778
+    },
+    {
+      "time": "2025-04-05T00:00:00Z",
+      "supply_in_profit": 15329877,
+      "value": 15329877
+    },
+    {
+      "time": "2025-04-06T00:00:00Z",
+      "supply_in_profit": 14710984,
+      "value": 14710984
+    },
+    {
+      "time": "2025-04-07T00:00:00Z",
+      "supply_in_profit": 14943541,
+      "value": 14943541
+    },
+    {
+      "time": "2025-04-08T00:00:00Z",
+      "supply_in_profit": 14691826,
+      "value": 14691826
+    },
+    {
+      "time": "2025-04-09T00:00:00Z",
+      "supply_in_profit": 15426537,
+      "value": 15426537
+    },
+    {
+      "time": "2025-04-10T00:00:00Z",
+      "supply_in_profit": 14928669,
+      "value": 14928669
+    },
+    {
+      "time": "2025-04-11T00:00:00Z",
+      "supply_in_profit": 15631699,
+      "value": 15631699
+    },
+    {
+      "time": "2025-04-12T00:00:00Z",
+      "supply_in_profit": 16042953,
+      "value": 16042953
+    },
+    {
+      "time": "2025-04-13T00:00:00Z",
+      "supply_in_profit": 15596745,
+      "value": 15596745
+    },
+    {
+      "time": "2025-04-14T00:00:00Z",
+      "supply_in_profit": 15924656,
+      "value": 15924656
+    },
+    {
+      "time": "2025-04-15T00:00:00Z",
+      "supply_in_profit": 15563716,
+      "value": 15563716
+    },
+    {
+      "time": "2025-04-16T00:00:00Z",
+      "supply_in_profit": 15786423,
+      "value": 15786423
+    },
+    {
+      "time": "2025-04-17T00:00:00Z",
+      "supply_in_profit": 16025035,
+      "value": 16025035
+    },
+    {
+      "time": "2025-04-18T00:00:00Z",
+      "supply_in_profit": 15808979,
+      "value": 15808979
+    },
+    {
+      "time": "2025-04-19T00:00:00Z",
+      "supply_in_profit": 16222278,
+      "value": 16222278
+    },
+    {
+      "time": "2025-04-20T00:00:00Z",
+      "supply_in_profit": 16016112,
+      "value": 16016112
+    },
+    {
+      "time": "2025-04-21T00:00:00Z",
+      "supply_in_profit": 16459179,
+      "value": 16459179
+    },
+    {
+      "time": "2025-04-22T00:00:00Z",
+      "supply_in_profit": 17065150,
+      "value": 17065150
+    },
+    {
+      "time": "2025-04-23T00:00:00Z",
+      "supply_in_profit": 17162746,
+      "value": 17162746
+    },
+    {
+      "time": "2025-04-24T00:00:00Z",
+      "supply_in_profit": 17224680,
+      "value": 17224680
+    },
+    {
+      "time": "2025-04-25T00:00:00Z",
+      "supply_in_profit": 17419659,
+      "value": 17419659
+    },
+    {
+      "time": "2025-04-26T00:00:00Z",
+      "supply_in_profit": 17398181,
+      "value": 17398181
+    },
+    {
+      "time": "2025-04-27T00:00:00Z",
+      "supply_in_profit": 17088784,
+      "value": 17088784
+    },
+    {
+      "time": "2025-04-28T00:00:00Z",
+      "supply_in_profit": 17514109,
+      "value": 17514109
+    },
+    {
+      "time": "2025-04-29T00:00:00Z",
+      "supply_in_profit": 17083599,
+      "value": 17083599
+    },
+    {
+      "time": "2025-04-30T00:00:00Z",
+      "supply_in_profit": 17099840,
+      "value": 17099840
+    },
+    {
+      "time": "2025-05-01T00:00:00Z",
+      "supply_in_profit": 17739649,
+      "value": 17739649
+    },
+    {
+      "time": "2025-05-02T00:00:00Z",
+      "supply_in_profit": 17720234,
+      "value": 17720234
+    },
+    {
+      "time": "2025-05-03T00:00:00Z",
+      "supply_in_profit": 17490320,
+      "value": 17490320
+    },
+    {
+      "time": "2025-05-04T00:00:00Z",
+      "supply_in_profit": 17153083,
+      "value": 17153083
+    },
+    {
+      "time": "2025-05-05T00:00:00Z",
+      "supply_in_profit": 17262788,
+      "value": 17262788
+    },
+    {
+      "time": "2025-05-06T00:00:00Z",
+      "supply_in_profit": 17672299,
+      "value": 17672299
+    },
+    {
+      "time": "2025-05-07T00:00:00Z",
+      "supply_in_profit": 18018308,
+      "value": 18018308
+    },
+    {
+      "time": "2025-05-08T00:00:00Z",
+      "supply_in_profit": 19486557,
+      "value": 19486557
+    },
+    {
+      "time": "2025-05-09T00:00:00Z",
+      "supply_in_profit": 19310211,
+      "value": 19310211
+    },
+    {
+      "time": "2025-05-10T00:00:00Z",
+      "supply_in_profit": 19529158,
+      "value": 19529158
+    },
+    {
+      "time": "2025-05-11T00:00:00Z",
+      "supply_in_profit": 19458108,
+      "value": 19458108
+    },
+    {
+      "time": "2025-05-12T00:00:00Z",
+      "supply_in_profit": 19228132,
+      "value": 19228132
+    },
+    {
+      "time": "2025-05-13T00:00:00Z",
+      "supply_in_profit": 19429153,
+      "value": 19429153
+    },
+    {
+      "time": "2025-05-14T00:00:00Z",
+      "supply_in_profit": 19320338,
+      "value": 19320338
+    },
+    {
+      "time": "2025-05-15T00:00:00Z",
+      "supply_in_profit": 19374418,
+      "value": 19374418
+    },
+    {
+      "time": "2025-05-16T00:00:00Z",
+      "supply_in_profit": 19243720,
+      "value": 19243720
+    },
+    {
+      "time": "2025-05-17T00:00:00Z",
+      "supply_in_profit": 19107078,
+      "value": 19107078
+    },
+    {
+      "time": "2025-05-18T00:00:00Z",
+      "supply_in_profit": 19695612,
+      "value": 19695612
+    },
+    {
+      "time": "2025-05-19T00:00:00Z",
+      "supply_in_profit": 19684128,
+      "value": 19684128
+    },
+    {
+      "time": "2025-05-20T00:00:00Z",
+      "supply_in_profit": 19793857,
+      "value": 19793857
+    },
+    {
+      "time": "2025-05-21T00:00:00Z",
+      "supply_in_profit": 19867816,
+      "value": 19867816
+    },
+    {
+      "time": "2025-05-22T00:00:00Z",
+      "supply_in_profit": 19764970,
+      "value": 19764970
+    },
+    {
+      "time": "2025-05-23T00:00:00Z",
+      "supply_in_profit": 19477355,
+      "value": 19477355
+    },
+    {
+      "time": "2025-05-24T00:00:00Z",
+      "supply_in_profit": 19479774,
+      "value": 19479774
+    },
+    {
+      "time": "2025-05-25T00:00:00Z",
+      "supply_in_profit": 19591507,
+      "value": 19591507
+    },
+    {
+      "time": "2025-05-26T00:00:00Z",
+      "supply_in_profit": 19572108,
+      "value": 19572108
+    },
+    {
+      "time": "2025-05-27T00:00:00Z",
+      "supply_in_profit": 19453318,
+      "value": 19453318
+    },
+    {
+      "time": "2025-05-28T00:00:00Z",
+      "supply_in_profit": 19300812,
+      "value": 19300812
+    },
+    {
+      "time": "2025-05-29T00:00:00Z",
+      "supply_in_profit": 18935657,
+      "value": 18935657
+    },
+    {
+      "time": "2025-05-30T00:00:00Z",
+      "supply_in_profit": 18572460,
+      "value": 18572460
+    },
+    {
+      "time": "2025-05-31T00:00:00Z",
+      "supply_in_profit": 18847172,
+      "value": 18847172
+    },
+    {
+      "time": "2025-06-01T00:00:00Z",
+      "supply_in_profit": 19066169,
+      "value": 19066169
+    },
+    {
+      "time": "2025-06-02T00:00:00Z",
+      "supply_in_profit": 19122213,
+      "value": 19122213
+    },
+    {
+      "time": "2025-06-03T00:00:00Z",
+      "supply_in_profit": 18941794,
+      "value": 18941794
+    },
+    {
+      "time": "2025-06-04T00:00:00Z",
+      "supply_in_profit": 18638093,
+      "value": 18638093
+    },
+    {
+      "time": "2025-06-05T00:00:00Z",
+      "supply_in_profit": 17742137,
+      "value": 17742137
+    },
+    {
+      "time": "2025-06-06T00:00:00Z",
+      "supply_in_profit": 18551428,
+      "value": 18551428
+    },
+    {
+      "time": "2025-06-07T00:00:00Z",
+      "supply_in_profit": 19100410,
+      "value": 19100410
+    },
+    {
+      "time": "2025-06-08T00:00:00Z",
+      "supply_in_profit": 19075031,
+      "value": 19075031
+    },
+    {
+      "time": "2025-06-09T00:00:00Z",
+      "supply_in_profit": 19779078,
+      "value": 19779078
+    },
+    {
+      "time": "2025-06-10T00:00:00Z",
+      "supply_in_profit": 19771653,
+      "value": 19771653
+    },
+    {
+      "time": "2025-06-11T00:00:00Z",
+      "supply_in_profit": 19350689,
+      "value": 19350689
+    },
+    {
+      "time": "2025-06-12T00:00:00Z",
+      "supply_in_profit": 18983398,
+      "value": 18983398
+    },
+    {
+      "time": "2025-06-13T00:00:00Z",
+      "supply_in_profit": 18890403,
+      "value": 18890403
+    },
+    {
+      "time": "2025-06-14T00:00:00Z",
+      "supply_in_profit": 18739772,
+      "value": 18739772
+    },
+    {
+      "time": "2025-06-15T00:00:00Z",
+      "supply_in_profit": 18704390,
+      "value": 18704390
+    },
+    {
+      "time": "2025-06-16T00:00:00Z",
+      "supply_in_profit": 19344946,
+      "value": 19344946
+    },
+    {
+      "time": "2025-06-17T00:00:00Z",
+      "supply_in_profit": 18317505,
+      "value": 18317505
+    },
+    {
+      "time": "2025-06-18T00:00:00Z",
+      "supply_in_profit": 18445143,
+      "value": 18445143
+    },
+    {
+      "time": "2025-06-19T00:00:00Z",
+      "supply_in_profit": 18379904,
+      "value": 18379904
+    },
+    {
+      "time": "2025-06-20T00:00:00Z",
+      "supply_in_profit": 17714314,
+      "value": 17714314
+    },
+    {
+      "time": "2025-06-21T00:00:00Z",
+      "supply_in_profit": 17366775,
+      "value": 17366775
+    },
+    {
+      "time": "2025-06-22T00:00:00Z",
+      "supply_in_profit": 17245786,
+      "value": 17245786
+    },
+    {
+      "time": "2025-06-23T00:00:00Z",
+      "supply_in_profit": 18765098,
+      "value": 18765098
+    },
+    {
+      "time": "2025-06-24T00:00:00Z",
+      "supply_in_profit": 19157136,
+      "value": 19157136
+    },
+    {
+      "time": "2025-06-25T00:00:00Z",
+      "supply_in_profit": 19376283,
+      "value": 19376283
+    },
+    {
+      "time": "2025-06-26T00:00:00Z",
+      "supply_in_profit": 19195818,
+      "value": 19195818
+    },
+    {
+      "time": "2025-06-27T00:00:00Z",
+      "supply_in_profit": 19247864,
+      "value": 19247864
+    },
+    {
+      "time": "2025-06-28T00:00:00Z",
+      "supply_in_profit": 19365622,
+      "value": 19365622
+    },
+    {
+      "time": "2025-06-29T00:00:00Z",
+      "supply_in_profit": 19572942,
+      "value": 19572942
+    },
+    {
+      "time": "2025-06-30T00:00:00Z",
+      "supply_in_profit": 19114031,
+      "value": 19114031
+    },
+    {
+      "time": "2025-07-01T00:00:00Z",
+      "supply_in_profit": 18420411,
+      "value": 18420411
+    },
+    {
+      "time": "2025-07-02T00:00:00Z",
+      "supply_in_profit": 19616032,
+      "value": 19616032
+    },
+    {
+      "time": "2025-07-03T00:00:00Z",
+      "supply_in_profit": 19737808,
+      "value": 19737808
+    },
+    {
+      "time": "2025-07-04T00:00:00Z",
+      "supply_in_profit": 19262991,
+      "value": 19262991
+    },
+    {
+      "time": "2025-07-05T00:00:00Z",
+      "supply_in_profit": 19317164,
+      "value": 19317164
+    },
+    {
+      "time": "2025-07-06T00:00:00Z",
+      "supply_in_profit": 19536422,
+      "value": 19536422
+    },
+    {
+      "time": "2025-07-07T00:00:00Z",
+      "supply_in_profit": 19228607,
+      "value": 19228607
+    },
+    {
+      "time": "2025-07-08T00:00:00Z",
+      "supply_in_profit": 19457764,
+      "value": 19457764
+    },
+    {
+      "time": "2025-07-09T00:00:00Z",
+      "supply_in_profit": 19879931,
+      "value": 19879931
+    },
+    {
+      "time": "2025-07-10T00:00:00Z",
+      "supply_in_profit": 19844662,
+      "value": 19844662
+    },
+    {
+      "time": "2025-07-11T00:00:00Z",
+      "supply_in_profit": 19761588,
+      "value": 19761588
+    },
+    {
+      "time": "2025-07-12T00:00:00Z",
+      "supply_in_profit": 19640714,
+      "value": 19640714
+    },
+    {
+      "time": "2025-07-13T00:00:00Z",
+      "supply_in_profit": 19853978,
+      "value": 19853978
+    },
+    {
+      "time": "2025-07-14T00:00:00Z",
+      "supply_in_profit": 19693304,
+      "value": 19693304
+    },
+    {
+      "time": "2025-07-15T00:00:00Z",
+      "supply_in_profit": 19622197,
+      "value": 19622197
+    },
+    {
+      "time": "2025-07-16T00:00:00Z",
+      "supply_in_profit": 19690238,
+      "value": 19690238
+    },
+    {
+      "time": "2025-07-17T00:00:00Z",
+      "supply_in_profit": 19708562,
+      "value": 19708562
+    },
+    {
+      "time": "2025-07-18T00:00:00Z",
+      "supply_in_profit": 19130092,
+      "value": 19130092
+    },
+    {
+      "time": "2025-07-19T00:00:00Z",
+      "supply_in_profit": 19068846,
+      "value": 19068846
+    },
+    {
+      "time": "2025-07-20T00:00:00Z",
+      "supply_in_profit": 18870343,
+      "value": 18870343
+    },
+    {
+      "time": "2025-07-21T00:00:00Z",
+      "supply_in_profit": 18854871,
+      "value": 18854871
+    },
+    {
+      "time": "2025-07-22T00:00:00Z",
+      "supply_in_profit": 19736703,
+      "value": 19736703
+    },
+    {
+      "time": "2025-07-23T00:00:00Z",
+      "supply_in_profit": 19355128,
+      "value": 19355128
+    },
+    {
+      "time": "2025-07-24T00:00:00Z",
+      "supply_in_profit": 19228235,
+      "value": 19228235
+    },
+    {
+      "time": "2025-07-25T00:00:00Z",
+      "supply_in_profit": 18779040,
+      "value": 18779040
+    },
+    {
+      "time": "2025-07-26T00:00:00Z",
+      "supply_in_profit": 19193364,
+      "value": 19193364
+    },
+    {
+      "time": "2025-07-27T00:00:00Z",
+      "supply_in_profit": 19685262,
+      "value": 19685262
+    },
+    {
+      "time": "2025-07-28T00:00:00Z",
+      "supply_in_profit": 19102681,
+      "value": 19102681
+    },
+    {
+      "time": "2025-07-29T00:00:00Z",
+      "supply_in_profit": 18913977,
+      "value": 18913977
+    },
+    {
+      "time": "2025-07-30T00:00:00Z",
+      "supply_in_profit": 18611913,
+      "value": 18611913
+    },
+    {
+      "time": "2025-07-31T00:00:00Z",
+      "supply_in_profit": 18331774,
+      "value": 18331774
+    },
+    {
+      "time": "2025-08-01T00:00:00Z",
+      "supply_in_profit": 18262558,
+      "value": 18262558
+    },
+    {
+      "time": "2025-08-02T00:00:00Z",
+      "supply_in_profit": 18251033,
+      "value": 18251033
+    },
+    {
+      "time": "2025-08-03T00:00:00Z",
+      "supply_in_profit": 18335063,
+      "value": 18335063
+    },
+    {
+      "time": "2025-08-04T00:00:00Z",
+      "supply_in_profit": 18486809,
+      "value": 18486809
+    },
+    {
+      "time": "2025-08-05T00:00:00Z",
+      "supply_in_profit": 18326001,
+      "value": 18326001
+    },
+    {
+      "time": "2025-08-06T00:00:00Z",
+      "supply_in_profit": 18441851,
+      "value": 18441851
+    },
+    {
+      "time": "2025-08-07T00:00:00Z",
+      "supply_in_profit": 18848343,
+      "value": 18848343
+    },
+    {
+      "time": "2025-08-08T00:00:00Z",
+      "supply_in_profit": 18717384,
+      "value": 18717384
+    },
+    {
+      "time": "2025-08-09T00:00:00Z",
+      "supply_in_profit": 18536599,
+      "value": 18536599
+    },
+    {
+      "time": "2025-08-10T00:00:00Z",
+      "supply_in_profit": 19705382,
+      "value": 19705382
+    },
+    {
+      "time": "2025-08-11T00:00:00Z",
+      "supply_in_profit": 19413235,
+      "value": 19413235
+    },
+    {
+      "time": "2025-08-12T00:00:00Z",
+      "supply_in_profit": 19809768,
+      "value": 19809768
+    },
+    {
+      "time": "2025-08-13T00:00:00Z",
+      "supply_in_profit": 19905801,
+      "value": 19905801
+    },
+    {
+      "time": "2025-08-14T00:00:00Z",
+      "supply_in_profit": 19175746,
+      "value": 19175746
+    },
+    {
+      "time": "2025-08-15T00:00:00Z",
+      "supply_in_profit": 18481404,
+      "value": 18481404
+    },
+    {
+      "time": "2025-08-16T00:00:00Z",
+      "supply_in_profit": 18430087,
+      "value": 18430087
+    },
+    {
+      "time": "2025-08-17T00:00:00Z",
+      "supply_in_profit": 18645529,
+      "value": 18645529
+    },
+    {
+      "time": "2025-08-18T00:00:00Z",
+      "supply_in_profit": 18315505,
+      "value": 18315505
+    },
+    {
+      "time": "2025-08-19T00:00:00Z",
+      "supply_in_profit": 17808221,
+      "value": 17808221
+    },
+    {
+      "time": "2025-08-20T00:00:00Z",
+      "supply_in_profit": 18059469,
+      "value": 18059469
+    },
+    {
+      "time": "2025-08-21T00:00:00Z",
+      "supply_in_profit": 17745321,
+      "value": 17745321
+    },
+    {
+      "time": "2025-08-22T00:00:00Z",
+      "supply_in_profit": 18488369,
+      "value": 18488369
+    },
+    {
+      "time": "2025-08-23T00:00:00Z",
+      "supply_in_profit": 18261831,
+      "value": 18261831
+    },
+    {
+      "time": "2025-08-24T00:00:00Z",
+      "supply_in_profit": 17876021,
+      "value": 17876021
+    },
+    {
+      "time": "2025-08-25T00:00:00Z",
+      "supply_in_profit": 17623542,
+      "value": 17623542
+    },
+    {
+      "time": "2025-08-26T00:00:00Z",
+      "supply_in_profit": 17811129,
+      "value": 17811129
+    },
+    {
+      "time": "2025-08-27T00:00:00Z",
+      "supply_in_profit": 17717960,
+      "value": 17717960
+    },
+    {
+      "time": "2025-08-28T00:00:00Z",
+      "supply_in_profit": 17871731,
+      "value": 17871731
+    },
+    {
+      "time": "2025-08-29T00:00:00Z",
+      "supply_in_profit": 17201115,
+      "value": 17201115
+    },
+    {
+      "time": "2025-08-30T00:00:00Z",
+      "supply_in_profit": 17321024,
+      "value": 17321024
+    },
+    {
+      "time": "2025-08-31T00:00:00Z",
+      "supply_in_profit": 17379134,
+      "value": 17379134
+    },
+    {
+      "time": "2025-09-01T00:00:00Z",
+      "supply_in_profit": 17423386,
+      "value": 17423386
+    },
+    {
+      "time": "2025-09-02T00:00:00Z",
+      "supply_in_profit": 17844043,
+      "value": 17844043
+    },
+    {
+      "time": "2025-09-03T00:00:00Z",
+      "supply_in_profit": 17971886,
+      "value": 17971886
+    },
+    {
+      "time": "2025-09-04T00:00:00Z",
+      "supply_in_profit": 17804986,
+      "value": 17804986
+    },
+    {
+      "time": "2025-09-05T00:00:00Z",
+      "supply_in_profit": 17648045,
+      "value": 17648045
+    },
+    {
+      "time": "2025-09-06T00:00:00Z",
+      "supply_in_profit": 17507022,
+      "value": 17507022
+    },
+    {
+      "time": "2025-09-07T00:00:00Z",
+      "supply_in_profit": 17935670,
+      "value": 17935670
+    },
+    {
+      "time": "2025-09-08T00:00:00Z",
+      "supply_in_profit": 18081522,
+      "value": 18081522
+    },
+    {
+      "time": "2025-09-09T00:00:00Z",
+      "supply_in_profit": 17884803,
+      "value": 17884803
+    },
+    {
+      "time": "2025-09-10T00:00:00Z",
+      "supply_in_profit": 18395206,
+      "value": 18395206
+    },
+    {
+      "time": "2025-09-11T00:00:00Z",
+      "supply_in_profit": 18640649,
+      "value": 18640649
+    },
+    {
+      "time": "2025-09-12T00:00:00Z",
+      "supply_in_profit": 18674863,
+      "value": 18674863
+    },
+    {
+      "time": "2025-09-13T00:00:00Z",
+      "supply_in_profit": 18627468,
+      "value": 18627468
+    },
+    {
+      "time": "2025-09-14T00:00:00Z",
+      "supply_in_profit": 18558192,
+      "value": 18558192
+    },
+    {
+      "time": "2025-09-15T00:00:00Z",
+      "supply_in_profit": 18520816,
+      "value": 18520816
+    },
+    {
+      "time": "2025-09-16T00:00:00Z",
+      "supply_in_profit": 18844014,
+      "value": 18844014
+    },
+    {
+      "time": "2025-09-17T00:00:00Z",
+      "supply_in_profit": 18736813,
+      "value": 18736813
+    },
+    {
+      "time": "2025-09-18T00:00:00Z",
+      "supply_in_profit": 18751223,
+      "value": 18751223
+    },
+    {
+      "time": "2025-09-19T00:00:00Z",
+      "supply_in_profit": 18375168,
+      "value": 18375168
+    },
+    {
+      "time": "2025-09-20T00:00:00Z",
+      "supply_in_profit": 18423426,
+      "value": 18423426
+    },
+    {
+      "time": "2025-09-21T00:00:00Z",
+      "supply_in_profit": 18236607,
+      "value": 18236607
+    },
+    {
+      "time": "2025-09-22T00:00:00Z",
+      "supply_in_profit": 17728957,
+      "value": 17728957
+    },
+    {
+      "time": "2025-09-23T00:00:00Z",
+      "supply_in_profit": 17571949,
+      "value": 17571949
+    },
+    {
+      "time": "2025-09-24T00:00:00Z",
+      "supply_in_profit": 17931032,
+      "value": 17931032
+    },
+    {
+      "time": "2025-09-25T00:00:00Z",
+      "supply_in_profit": 16869371,
+      "value": 16869371
+    },
+    {
+      "time": "2025-09-26T00:00:00Z",
+      "supply_in_profit": 17017176,
+      "value": 17017176
+    },
+    {
+      "time": "2025-09-27T00:00:00Z",
+      "supply_in_profit": 17035524,
+      "value": 17035524
+    },
+    {
+      "time": "2025-09-28T00:00:00Z",
+      "supply_in_profit": 17691577,
+      "value": 17691577
+    },
+    {
+      "time": "2025-09-29T00:00:00Z",
+      "supply_in_profit": 18206105,
+      "value": 18206105
+    },
+    {
+      "time": "2025-09-30T00:00:00Z",
+      "supply_in_profit": 18142794,
+      "value": 18142794
+    },
+    {
+      "time": "2025-10-01T00:00:00Z",
+      "supply_in_profit": 19390769,
+      "value": 19390769
+    },
+    {
+      "time": "2025-10-02T00:00:00Z",
+      "supply_in_profit": 19787775,
+      "value": 19787775
+    },
+    {
+      "time": "2025-10-03T00:00:00Z",
+      "supply_in_profit": 19837965,
+      "value": 19837965
+    },
+    {
+      "time": "2025-10-04T00:00:00Z",
+      "supply_in_profit": 19788557,
+      "value": 19788557
+    },
+    {
+      "time": "2025-10-05T00:00:00Z",
+      "supply_in_profit": 19888672,
+      "value": 19888672
+    },
+    {
+      "time": "2025-10-06T00:00:00Z",
+      "supply_in_profit": 19827270,
+      "value": 19827270
+    },
+    {
+      "time": "2025-10-07T00:00:00Z",
+      "supply_in_profit": 19586530,
+      "value": 19586530
+    },
+    {
+      "time": "2025-10-08T00:00:00Z",
+      "supply_in_profit": 19680664,
+      "value": 19680664
+    },
+    {
+      "time": "2025-10-09T00:00:00Z",
+      "supply_in_profit": 19401983,
+      "value": 19401983
+    },
+    {
+      "time": "2025-10-10T00:00:00Z",
+      "supply_in_profit": 17502809,
+      "value": 17502809
+    },
+    {
+      "time": "2025-10-11T00:00:00Z",
+      "supply_in_profit": 16797582,
+      "value": 16797582
+    },
+    {
+      "time": "2025-10-12T00:00:00Z",
+      "supply_in_profit": 17812579,
+      "value": 17812579
+    },
+    {
+      "time": "2025-10-13T00:00:00Z",
+      "supply_in_profit": 17916661,
+      "value": 17916661
+    },
+    {
+      "time": "2025-10-14T00:00:00Z",
+      "supply_in_profit": 17640046,
+      "value": 17640046
+    },
+    {
+      "time": "2025-10-15T00:00:00Z",
+      "supply_in_profit": 16611800,
+      "value": 16611800
+    },
+    {
+      "time": "2025-10-16T00:00:00Z",
+      "supply_in_profit": 15936387,
+      "value": 15936387
+    },
+    {
+      "time": "2025-10-17T00:00:00Z",
+      "supply_in_profit": 15735431,
+      "value": 15735431
+    },
+    {
+      "time": "2025-10-18T00:00:00Z",
+      "supply_in_profit": 15885362,
+      "value": 15885362
+    },
+    {
+      "time": "2025-10-19T00:00:00Z",
+      "supply_in_profit": 16316345,
+      "value": 16316345
+    },
+    {
+      "time": "2025-10-20T00:00:00Z",
+      "supply_in_profit": 16737404,
+      "value": 16737404
+    },
+    {
+      "time": "2025-10-21T00:00:00Z",
+      "supply_in_profit": 16255302,
+      "value": 16255302
+    },
+    {
+      "time": "2025-10-22T00:00:00Z",
+      "supply_in_profit": 15769197,
+      "value": 15769197
+    },
+    {
+      "time": "2025-10-23T00:00:00Z",
+      "supply_in_profit": 16680749,
+      "value": 16680749
+    },
+    {
+      "time": "2025-10-24T00:00:00Z",
+      "supply_in_profit": 16868646,
+      "value": 16868646
+    },
+    {
+      "time": "2025-10-25T00:00:00Z",
+      "supply_in_profit": 17202064,
+      "value": 17202064
+    },
+    {
+      "time": "2025-10-26T00:00:00Z",
+      "supply_in_profit": 18185515,
+      "value": 18185515
+    },
+    {
+      "time": "2025-10-27T00:00:00Z",
+      "supply_in_profit": 17940663,
+      "value": 17940663
+    },
+    {
+      "time": "2025-10-28T00:00:00Z",
+      "supply_in_profit": 17504373,
+      "value": 17504373
+    },
+    {
+      "time": "2025-10-29T00:00:00Z",
+      "supply_in_profit": 16513619,
+      "value": 16513619
+    },
+    {
+      "time": "2025-10-30T00:00:00Z",
+      "supply_in_profit": 15676459,
+      "value": 15676459
+    },
+    {
+      "time": "2025-10-31T00:00:00Z",
+      "supply_in_profit": 16352859,
+      "value": 16352859
+    },
+    {
+      "time": "2025-11-01T00:00:00Z",
+      "supply_in_profit": 16423007,
+      "value": 16423007
+    },
+    {
+      "time": "2025-11-02T00:00:00Z",
+      "supply_in_profit": 16523136,
+      "value": 16523136
+    },
+    {
+      "time": "2025-11-03T00:00:00Z",
+      "supply_in_profit": 15259057,
+      "value": 15259057
+    },
+    {
+      "time": "2025-11-04T00:00:00Z",
+      "supply_in_profit": 14373842,
+      "value": 14373842
+    },
+    {
+      "time": "2025-11-05T00:00:00Z",
+      "supply_in_profit": 14810949,
+      "value": 14810949
+    },
+    {
+      "time": "2025-11-06T00:00:00Z",
+      "supply_in_profit": 14358517,
+      "value": 14358517
+    },
+    {
+      "time": "2025-11-07T00:00:00Z",
+      "supply_in_profit": 14909332,
+      "value": 14909332
+    },
+    {
+      "time": "2025-11-08T00:00:00Z",
+      "supply_in_profit": 14690211,
+      "value": 14690211
+    },
+    {
+      "time": "2025-11-09T00:00:00Z",
+      "supply_in_profit": 15141327,
+      "value": 15141327
+    },
+    {
+      "time": "2025-11-10T00:00:00Z",
+      "supply_in_profit": 15530616,
+      "value": 15530616
+    },
+    {
+      "time": "2025-11-11T00:00:00Z",
+      "supply_in_profit": 14677243,
+      "value": 14677243
+    },
+    {
+      "time": "2025-11-12T00:00:00Z",
+      "supply_in_profit": 14454150,
+      "value": 14454150
+    },
+    {
+      "time": "2025-11-13T00:00:00Z",
+      "supply_in_profit": 14041567,
+      "value": 14041567
+    },
+    {
+      "time": "2025-11-14T00:00:00Z",
+      "supply_in_profit": 13166130,
+      "value": 13166130
+    },
+    {
+      "time": "2025-11-15T00:00:00Z",
+      "supply_in_profit": 13345980,
+      "value": 13345980
+    },
+    {
+      "time": "2025-11-16T00:00:00Z",
+      "supply_in_profit": 13043066,
+      "value": 13043066
+    },
+    {
+      "time": "2025-11-17T00:00:00Z",
+      "supply_in_profit": 12833840,
+      "value": 12833840
+    },
+    {
+      "time": "2025-11-18T00:00:00Z",
+      "supply_in_profit": 13019654,
+      "value": 13019654
+    },
+    {
+      "time": "2025-11-19T00:00:00Z",
+      "supply_in_profit": 12816435,
+      "value": 12816435
+    },
+    {
+      "time": "2025-11-20T00:00:00Z",
+      "supply_in_profit": 12557325,
+      "value": 12557325
+    },
+    {
+      "time": "2025-11-21T00:00:00Z",
+      "supply_in_profit": 12613481,
+      "value": 12613481
+    },
+    {
+      "time": "2025-11-22T00:00:00Z",
+      "supply_in_profit": 12877143,
+      "value": 12877143
+    },
+    {
+      "time": "2025-11-23T00:00:00Z",
+      "supply_in_profit": 13054999,
+      "value": 13054999
+    },
+    {
+      "time": "2025-11-24T00:00:00Z",
+      "supply_in_profit": 13169028,
+      "value": 13169028
+    },
+    {
+      "time": "2025-11-25T00:00:00Z",
+      "supply_in_profit": 13169267,
+      "value": 13169267
+    },
+    {
+      "time": "2025-11-26T00:00:00Z",
+      "supply_in_profit": 13413046,
+      "value": 13413046
+    },
+    {
+      "time": "2025-11-27T00:00:00Z",
+      "supply_in_profit": 13507134,
+      "value": 13507134
+    },
+    {
+      "time": "2025-11-28T00:00:00Z",
+      "supply_in_profit": 13431612,
+      "value": 13431612
+    },
+    {
+      "time": "2025-11-29T00:00:00Z",
+      "supply_in_profit": 13417936,
+      "value": 13417936
+    },
+    {
+      "time": "2025-11-30T00:00:00Z",
+      "supply_in_profit": 13364406,
+      "value": 13364406
+    },
+    {
+      "time": "2025-12-01T00:00:00Z",
+      "supply_in_profit": 12935624,
+      "value": 12935624
+    },
+    {
+      "time": "2025-12-02T00:00:00Z",
+      "supply_in_profit": 13740137,
+      "value": 13740137
+    },
+    {
+      "time": "2025-12-03T00:00:00Z",
+      "supply_in_profit": 14079693,
+      "value": 14079693
+    },
+    {
+      "time": "2025-12-04T00:00:00Z",
+      "supply_in_profit": 13710771,
+      "value": 13710771
+    },
+    {
+      "time": "2025-12-05T00:00:00Z",
+      "supply_in_profit": 13230039,
+      "value": 13230039
+    },
+    {
+      "time": "2025-12-06T00:00:00Z",
+      "supply_in_profit": 13178487,
+      "value": 13178487
+    },
+    {
+      "time": "2025-12-07T00:00:00Z",
+      "supply_in_profit": 13346467,
+      "value": 13346467
+    },
+    {
+      "time": "2025-12-08T00:00:00Z",
+      "supply_in_profit": 13442594,
+      "value": 13442594
+    },
+    {
+      "time": "2025-12-09T00:00:00Z",
+      "supply_in_profit": 14025682,
+      "value": 14025682
+    },
+    {
+      "time": "2025-12-10T00:00:00Z",
+      "supply_in_profit": 13788494,
+      "value": 13788494
+    },
+    {
+      "time": "2025-12-11T00:00:00Z",
+      "supply_in_profit": 14020383,
+      "value": 14020383
+    },
+    {
+      "time": "2025-12-12T00:00:00Z",
+      "supply_in_profit": 13184318,
+      "value": 13184318
+    },
+    {
+      "time": "2025-12-13T00:00:00Z",
+      "supply_in_profit": 13210573,
+      "value": 13210573
+    },
+    {
+      "time": "2025-12-14T00:00:00Z",
+      "supply_in_profit": 12905418,
+      "value": 12905418
+    },
+    {
+      "time": "2025-12-15T00:00:00Z",
+      "supply_in_profit": 12702068,
+      "value": 12702068
+    },
+    {
+      "time": "2025-12-16T00:00:00Z",
+      "supply_in_profit": 13089650,
+      "value": 13089650
+    },
+    {
+      "time": "2025-12-17T00:00:00Z",
+      "supply_in_profit": 12694657,
+      "value": 12694657
+    },
+    {
+      "time": "2025-12-18T00:00:00Z",
+      "supply_in_profit": 12557198,
+      "value": 12557198
+    },
+    {
+      "time": "2025-12-19T00:00:00Z",
+      "supply_in_profit": 13282179,
+      "value": 13282179
+    },
+    {
+      "time": "2025-12-20T00:00:00Z",
+      "supply_in_profit": 13344379,
+      "value": 13344379
+    },
+    {
+      "time": "2025-12-21T00:00:00Z",
+      "supply_in_profit": 13394574,
+      "value": 13394574
+    },
+    {
+      "time": "2025-12-22T00:00:00Z",
+      "supply_in_profit": 13320984,
+      "value": 13320984
+    },
+    {
+      "time": "2025-12-23T00:00:00Z",
+      "supply_in_profit": 12868072,
+      "value": 12868072
+    },
+    {
+      "time": "2025-12-24T00:00:00Z",
+      "supply_in_profit": 13171872,
+      "value": 13171872
+    },
+    {
+      "time": "2025-12-25T00:00:00Z",
+      "supply_in_profit": 13058353,
+      "value": 13058353
+    },
+    {
+      "time": "2025-12-26T00:00:00Z",
+      "supply_in_profit": 13060667,
+      "value": 13060667
+    },
+    {
+      "time": "2025-12-27T00:00:00Z",
+      "supply_in_profit": 13272602,
+      "value": 13272602
+    },
+    {
+      "time": "2025-12-28T00:00:00Z",
+      "supply_in_profit": 13215016,
+      "value": 13215016
+    },
+    {
+      "time": "2025-12-29T00:00:00Z",
+      "supply_in_profit": 12772031,
+      "value": 12772031
+    },
+    {
+      "time": "2025-12-30T00:00:00Z",
+      "supply_in_profit": 13567046,
+      "value": 13567046
+    },
+    {
+      "time": "2025-12-31T00:00:00Z",
+      "supply_in_profit": 13046114,
+      "value": 13046114
+    },
+    {
+      "time": "2026-01-01T00:00:00Z",
+      "supply_in_profit": 13731399,
+      "value": 13731399
+    },
+    {
+      "time": "2026-01-02T00:00:00Z",
+      "supply_in_profit": 13985329,
+      "value": 13985329
+    },
+    {
+      "time": "2026-01-03T00:00:00Z",
+      "supply_in_profit": 14111485,
+      "value": 14111485
+    },
+    {
+      "time": "2026-01-04T00:00:00Z",
+      "supply_in_profit": 14313521,
+      "value": 14313521
+    },
+    {
+      "time": "2026-01-05T00:00:00Z",
+      "supply_in_profit": 14918970,
+      "value": 14918970
+    },
+    {
+      "time": "2026-01-06T00:00:00Z",
+      "supply_in_profit": 14751495,
+      "value": 14751495
+    },
+    {
+      "time": "2026-01-07T00:00:00Z",
+      "supply_in_profit": 13968907,
+      "value": 13968907
+    },
+    {
+      "time": "2026-01-08T00:00:00Z",
+      "supply_in_profit": 14027131,
+      "value": 14027131
+    },
+    {
+      "time": "2026-01-09T00:00:00Z",
+      "supply_in_profit": 13835692,
+      "value": 13835692
+    },
+    {
+      "time": "2026-01-10T00:00:00Z",
+      "supply_in_profit": 13694216,
+      "value": 13694216
+    },
+    {
+      "time": "2026-01-11T00:00:00Z",
+      "supply_in_profit": 13956145,
+      "value": 13956145
+    },
+    {
+      "time": "2026-01-12T00:00:00Z",
+      "supply_in_profit": 14166193,
+      "value": 14166193
+    },
+    {
+      "time": "2026-01-13T00:00:00Z",
+      "supply_in_profit": 15359023,
+      "value": 15359023
+    },
+    {
+      "time": "2026-01-14T00:00:00Z",
+      "supply_in_profit": 15597037,
+      "value": 15597037
+    },
+    {
+      "time": "2026-01-15T00:00:00Z",
+      "supply_in_profit": 15213832,
+      "value": 15213832
+    },
+    {
+      "time": "2026-01-16T00:00:00Z",
+      "supply_in_profit": 15232120,
+      "value": 15232120
+    },
+    {
+      "time": "2026-01-17T00:00:00Z",
+      "supply_in_profit": 14992744,
+      "value": 14992744
+    },
+    {
+      "time": "2026-01-18T00:00:00Z",
+      "supply_in_profit": 15074989,
+      "value": 15074989
+    },
+    {
+      "time": "2026-01-19T00:00:00Z",
+      "supply_in_profit": 14394080,
+      "value": 14394080
+    },
+    {
+      "time": "2026-01-20T00:00:00Z",
+      "supply_in_profit": 13105788,
+      "value": 13105788
+    },
+    {
+      "time": "2026-01-21T00:00:00Z",
+      "supply_in_profit": 13415734,
+      "value": 13415734
+    },
+    {
+      "time": "2026-01-22T00:00:00Z",
+      "supply_in_profit": 13338150,
+      "value": 13338150
+    },
+    {
+      "time": "2026-01-23T00:00:00Z",
+      "supply_in_profit": 13556217,
+      "value": 13556217
+    },
+    {
+      "time": "2026-01-24T00:00:00Z",
+      "supply_in_profit": 13300697,
+      "value": 13300697
+    },
+    {
+      "time": "2026-01-25T00:00:00Z",
+      "supply_in_profit": 12387812,
+      "value": 12387812
+    },
+    {
+      "time": "2026-01-26T00:00:00Z",
+      "supply_in_profit": 13093372,
+      "value": 13093372
+    },
+    {
+      "time": "2026-01-27T00:00:00Z",
+      "supply_in_profit": 13441293,
+      "value": 13441293
+    },
+    {
+      "time": "2026-01-28T00:00:00Z",
+      "supply_in_profit": 13303648,
+      "value": 13303648
+    },
+    {
+      "time": "2026-01-29T00:00:00Z",
+      "supply_in_profit": 11477581,
+      "value": 11477581
+    },
+    {
+      "time": "2026-01-30T00:00:00Z",
+      "supply_in_profit": 11549747,
+      "value": 11549747
+    },
+    {
+      "time": "2026-01-31T00:00:00Z",
+      "supply_in_profit": 11130361,
+      "value": 11130361
+    },
+    {
+      "time": "2026-02-01T00:00:00Z",
+      "supply_in_profit": 11068624,
+      "value": 11068624
+    },
+    {
+      "time": "2026-02-02T00:00:00Z",
+      "supply_in_profit": 11236689,
+      "value": 11236689
+    },
+    {
+      "time": "2026-02-03T00:00:00Z",
+      "supply_in_profit": 11075050,
+      "value": 11075050
+    },
+    {
+      "time": "2026-02-04T00:00:00Z",
+      "supply_in_profit": 11033333,
+      "value": 11033333
+    },
+    {
+      "time": "2026-02-05T00:00:00Z",
+      "supply_in_profit": 10360064,
+      "value": 10360064
+    },
+    {
+      "time": "2026-02-06T00:00:00Z",
+      "supply_in_profit": 11283611,
+      "value": 11283611
+    },
+    {
+      "time": "2026-02-07T00:00:00Z",
+      "supply_in_profit": 11076053,
+      "value": 11076053
+    },
+    {
+      "time": "2026-02-08T00:00:00Z",
+      "supply_in_profit": 11260220,
+      "value": 11260220
+    },
+    {
+      "time": "2026-02-09T00:00:00Z",
+      "supply_in_profit": 11194550,
+      "value": 11194550
+    },
+    {
+      "time": "2026-02-10T00:00:00Z",
+      "supply_in_profit": 10906988,
+      "value": 10906988
+    },
+    {
+      "time": "2026-02-11T00:00:00Z",
+      "supply_in_profit": 8988445,
+      "value": 8988445
+    },
+    {
+      "time": "2026-02-12T00:00:00Z",
+      "supply_in_profit": 8892756,
+      "value": 8892756
+    },
+    {
+      "time": "2026-02-13T00:00:00Z",
+      "supply_in_profit": 9400679,
+      "value": 9400679
+    },
+    {
+      "time": "2026-02-14T00:00:00Z",
+      "supply_in_profit": 9650788,
+      "value": 9650788
+    },
+    {
+      "time": "2026-02-15T00:00:00Z",
+      "supply_in_profit": 9297265,
+      "value": 9297265
+    },
+    {
+      "time": "2026-02-16T00:00:00Z",
+      "supply_in_profit": 9431550,
+      "value": 9431550
+    },
+    {
+      "time": "2026-02-17T00:00:00Z",
+      "supply_in_profit": 9065956,
+      "value": 9065956
+    },
+    {
+      "time": "2026-02-18T00:00:00Z",
+      "supply_in_profit": 8864169,
+      "value": 8864169
+    },
+    {
+      "time": "2026-02-19T00:00:00Z",
+      "supply_in_profit": 9020326,
+      "value": 9020326
+    },
+    {
+      "time": "2026-02-20T00:00:00Z",
+      "supply_in_profit": 9436359,
+      "value": 9436359
+    },
+    {
+      "time": "2026-02-21T00:00:00Z",
+      "supply_in_profit": 9428537,
+      "value": 9428537
+    },
+    {
+      "time": "2026-02-22T00:00:00Z",
+      "supply_in_profit": 9270833,
+      "value": 9270833
+    },
+    {
+      "time": "2026-02-23T00:00:00Z",
+      "supply_in_profit": 8549277,
+      "value": 8549277
+    },
+    {
+      "time": "2026-02-24T00:00:00Z",
+      "supply_in_profit": 8555496,
+      "value": 8555496
+    },
+    {
+      "time": "2026-02-25T00:00:00Z",
+      "supply_in_profit": 9497452,
+      "value": 9497452
+    },
+    {
+      "time": "2026-02-26T00:00:00Z",
+      "supply_in_profit": 9289712,
+      "value": 9289712
+    },
+    {
+      "time": "2026-02-27T00:00:00Z",
+      "supply_in_profit": 8900003,
+      "value": 8900003
+    },
+    {
+      "time": "2026-02-28T00:00:00Z",
+      "supply_in_profit": 9140154,
+      "value": 9140154
+    },
+    {
+      "time": "2026-03-01T00:00:00Z",
+      "supply_in_profit": 8836421,
+      "value": 8836421
+    },
+    {
+      "time": "2026-03-02T00:00:00Z",
+      "supply_in_profit": 9766462,
+      "value": 9766462
+    },
+    {
+      "time": "2026-03-03T00:00:00Z",
+      "supply_in_profit": 9728673,
+      "value": 9728673
+    },
+    {
+      "time": "2026-03-04T00:00:00Z",
+      "supply_in_profit": 10220814,
+      "value": 10220814
+    },
+    {
+      "time": "2026-03-05T00:00:00Z",
+      "supply_in_profit": 10085090,
+      "value": 10085090
+    },
+    {
+      "time": "2026-03-06T00:00:00Z",
+      "supply_in_profit": 9487362,
+      "value": 9487362
+    },
+    {
+      "time": "2026-03-07T00:00:00Z",
+      "supply_in_profit": 9145572,
+      "value": 9145572
+    },
+    {
+      "time": "2026-03-08T00:00:00Z",
+      "supply_in_profit": 8817772,
+      "value": 8817772
+    },
+    {
+      "time": "2026-03-09T00:00:00Z",
+      "supply_in_profit": 9637958,
+      "value": 9637958
+    },
+    {
+      "time": "2026-03-10T00:00:00Z",
+      "supply_in_profit": 9956173,
+      "value": 9956173
+    },
+    {
+      "time": "2026-03-11T00:00:00Z",
+      "supply_in_profit": 10018390,
+      "value": 10018390
+    },
+    {
+      "time": "2026-03-12T00:00:00Z",
+      "supply_in_profit": 10190602,
+      "value": 10190602
+    },
+    {
+      "time": "2026-03-13T00:00:00Z",
+      "supply_in_profit": 10206796,
+      "value": 10206796
+    },
+    {
+      "time": "2026-03-14T00:00:00Z",
+      "supply_in_profit": 10299009,
+      "value": 10299009
+    },
+    {
+      "time": "2026-03-15T00:00:00Z",
+      "supply_in_profit": 10501234,
+      "value": 10501234
+    },
+    {
+      "time": "2026-03-16T00:00:00Z",
+      "supply_in_profit": 10583451,
+      "value": 10583451
+    },
+    {
+      "time": "2026-03-17T00:00:00Z",
+      "supply_in_profit": 10427636,
+      "value": 10427636
+    },
+    {
+      "time": "2026-03-18T00:00:00Z",
+      "supply_in_profit": 10147813,
+      "value": 10147813
+    },
+    {
+      "time": "2026-03-19T00:00:00Z",
+      "supply_in_profit": 9783952,
+      "value": 9783952
+    },
+    {
+      "time": "2026-03-20T00:00:00Z",
+      "supply_in_profit": 10034214,
+      "value": 10034214
+    },
+    {
+      "time": "2026-03-21T00:00:00Z",
+      "supply_in_profit": 9850384,
+      "value": 9850384
+    },
+    {
+      "time": "2026-03-22T00:00:00Z",
+      "supply_in_profit": 9268478,
+      "value": 9268478
+    },
+    {
+      "time": "2026-03-23T00:00:00Z",
+      "supply_in_profit": 10190979,
+      "value": 10190979
+    },
+    {
+      "time": "2026-03-24T00:00:00Z",
+      "supply_in_profit": 10143163,
+      "value": 10143163
+    },
+    {
+      "time": "2026-03-25T00:00:00Z",
+      "supply_in_profit": 10365480,
+      "value": 10365480
+    },
+    {
+      "time": "2026-03-26T00:00:00Z",
+      "supply_in_profit": 9391395,
+      "value": 9391395
+    },
+    {
+      "time": "2026-03-27T00:00:00Z",
+      "supply_in_profit": 8797389,
+      "value": 8797389
+    },
+    {
+      "time": "2026-03-28T00:00:00Z",
+      "supply_in_profit": 8839645,
+      "value": 8839645
+    },
+    {
+      "time": "2026-03-29T00:00:00Z",
+      "supply_in_profit": 8657765,
+      "value": 8657765
+    },
+    {
+      "time": "2026-03-30T00:00:00Z",
+      "supply_in_profit": 8958086,
+      "value": 8958086
+    },
+    {
+      "time": "2026-03-31T00:00:00Z",
+      "supply_in_profit": 9574570,
+      "value": 9574570
+    },
+    {
+      "time": "2026-04-01T00:00:00Z",
+      "supply_in_profit": 9442746,
+      "value": 9442746
+    },
+    {
+      "time": "2026-04-02T00:00:00Z",
+      "supply_in_profit": 9030743,
+      "value": 9030743
+    },
+    {
+      "time": "2026-04-03T00:00:00Z",
+      "supply_in_profit": 9114975,
+      "value": 9114975
+    },
+    {
+      "time": "2026-04-04T00:00:00Z",
+      "supply_in_profit": 9271234,
+      "value": 9271234
+    },
+    {
+      "time": "2026-04-05T00:00:00Z",
+      "supply_in_profit": 9867816,
+      "value": 9867816
+    },
+    {
+      "time": "2026-04-06T00:00:00Z",
+      "supply_in_profit": 9747940,
+      "value": 9747940
+    },
+    {
+      "time": "2026-04-07T00:00:00Z",
+      "supply_in_profit": 10672734,
+      "value": 10672734
+    },
+    {
+      "time": "2026-04-08T00:00:00Z",
+      "supply_in_profit": 10406806,
+      "value": 10406806
+    },
+    {
+      "time": "2026-04-09T00:00:00Z",
+      "supply_in_profit": 10567761,
+      "value": 10567761
+    },
+    {
+      "time": "2026-04-10T00:00:00Z",
+      "supply_in_profit": 10657827,
+      "value": 10657827
+    },
+    {
+      "time": "2026-04-11T00:00:00Z",
+      "supply_in_profit": 10709870,
+      "value": 10709870
+    },
+    {
+      "time": "2026-04-12T00:00:00Z",
+      "supply_in_profit": 10175525,
+      "value": 10175525
+    },
+    {
+      "time": "2026-04-13T00:00:00Z",
+      "supply_in_profit": 10890307,
+      "value": 10890307
+    },
+    {
+      "time": "2026-04-14T00:00:00Z",
+      "supply_in_profit": 10712442,
+      "value": 10712442
+    },
+    {
+      "time": "2026-04-15T00:00:00Z",
+      "supply_in_profit": 10888796,
+      "value": 10888796
+    },
+    {
+      "time": "2026-04-16T00:00:00Z",
+      "supply_in_profit": 10957113,
+      "value": 10957113
+    },
+    {
+      "time": "2026-04-17T00:00:00Z",
+      "supply_in_profit": 10929330,
+      "value": 10929330
+    },
+    {
+      "time": "2026-04-18T00:00:00Z",
+      "supply_in_profit": 10833507,
+      "value": 10833507
+    },
+    {
+      "time": "2026-04-19T00:00:00Z",
+      "supply_in_profit": 10489467,
+      "value": 10489467
+    },
+    {
+      "time": "2026-04-20T00:00:00Z",
+      "supply_in_profit": 10878033,
+      "value": 10878033
+    },
+    {
+      "time": "2026-04-21T00:00:00Z",
+      "supply_in_profit": 11034410,
+      "value": 11034410
+    },
+    {
+      "time": "2026-04-22T00:00:00Z",
+      "supply_in_profit": 11018620,
+      "value": 11018620
+    },
+    {
+      "time": "2026-04-23T00:00:00Z",
+      "supply_in_profit": 11078889,
+      "value": 11078889
+    },
+    {
+      "time": "2026-04-24T00:00:00Z",
+      "supply_in_profit": 10804869,
+      "value": 10804869
+    },
+    {
+      "time": "2026-04-25T00:00:00Z",
+      "supply_in_profit": 10921223,
+      "value": 10921223
+    },
+    {
+      "time": "2026-04-26T00:00:00Z",
+      "supply_in_profit": 11347923,
+      "value": 11347923
+    },
+    {
+      "time": "2026-04-27T00:00:00Z",
+      "supply_in_profit": 10785568,
+      "value": 10785568
+    },
+    {
+      "time": "2026-04-28T00:00:00Z",
+      "supply_in_profit": 10689698,
+      "value": 10689698
+    },
+    {
+      "time": "2026-04-29T00:00:00Z",
+      "supply_in_profit": 10571777,
+      "value": 10571777
+    },
+    {
+      "time": "2026-04-30T00:00:00Z",
+      "supply_in_profit": 10728185,
+      "value": 10728185
+    },
+    {
+      "time": "2026-05-01T00:00:00Z",
+      "supply_in_profit": 11118899,
+      "value": 11118899
+    },
+    {
+      "time": "2026-05-02T00:00:00Z",
+      "supply_in_profit": 11459539,
+      "value": 11459539
+    },
+    {
+      "time": "2026-05-03T00:00:00Z",
+      "supply_in_profit": 11393735,
+      "value": 11393735
+    },
+    {
+      "time": "2026-05-04T00:00:00Z",
+      "supply_in_profit": 11412018,
+      "value": 11412018
+    },
+    {
+      "time": "2026-05-05T00:00:00Z",
+      "supply_in_profit": 11456346,
+      "value": 11456346
+    },
+    {
+      "time": "2026-05-06T00:00:00Z",
+      "supply_in_profit": 11468610,
+      "value": 11468610
+    },
+    {
+      "time": "2026-05-07T00:00:00Z",
+      "supply_in_profit": 11272606,
+      "value": 11272606
+    },
+    {
+      "time": "2026-05-08T00:00:00Z",
+      "supply_in_profit": 11298906,
+      "value": 11298906
+    },
+    {
+      "time": "2026-05-09T00:00:00Z",
+      "supply_in_profit": 11409354,
+      "value": 11409354
+    },
+    {
+      "time": "2026-05-10T00:00:00Z",
+      "supply_in_profit": 11671977,
+      "value": 11671977
+    },
+    {
+      "time": "2026-05-11T00:00:00Z",
+      "supply_in_profit": 11598177,
+      "value": 11598177
+    },
+    {
+      "time": "2026-05-12T00:00:00Z",
+      "supply_in_profit": 11225896,
+      "value": 11225896
+    },
+    {
+      "time": "2026-05-13T00:00:00Z",
+      "supply_in_profit": 11069913,
+      "value": 11069913
+    },
+    {
+      "time": "2026-05-14T00:00:00Z",
+      "supply_in_profit": 11444714,
+      "value": 11444714
+    },
+    {
+      "time": "2026-05-15T00:00:00Z",
+      "supply_in_profit": 11040373,
+      "value": 11040373
+    },
+    {
+      "time": "2026-05-16T00:00:00Z",
+      "supply_in_profit": 10660061,
+      "value": 10660061
+    },
+    {
+      "time": "2026-05-17T00:00:00Z",
+      "supply_in_profit": 10568158,
+      "value": 10568158
+    },
+    {
+      "time": "2026-05-18T00:00:00Z",
+      "supply_in_profit": 10500277,
+      "value": 10500277
+    },
+    {
+      "time": "2026-05-19T00:00:00Z",
+      "supply_in_profit": 10476477,
+      "value": 10476477
+    },
+    {
+      "time": "2026-05-20T00:00:00Z",
+      "supply_in_profit": 10661014,
+      "value": 10661014
+    },
+    {
+      "time": "2026-05-21T00:00:00Z",
+      "supply_in_profit": 10719323,
+      "value": 10719323
+    },
+    {
+      "time": "2026-05-22T00:00:00Z",
+      "supply_in_profit": 10146645,
+      "value": 10146645
+    },
+    {
+      "time": "2026-05-23T00:00:00Z",
+      "supply_in_profit": 10459426,
+      "value": 10459426
+    },
+    {
+      "time": "2026-05-24T00:00:00Z",
+      "supply_in_profit": 10623915,
+      "value": 10623915
+    },
+    {
+      "time": "2026-05-25T00:00:00Z",
+      "supply_in_profit": 10668264,
+      "value": 10668264
+    },
+    {
+      "time": "2026-05-26T00:00:00Z",
+      "supply_in_profit": 10237750,
+      "value": 10237750
+    },
+    {
+      "time": "2026-05-27T00:00:00Z",
+      "supply_in_profit": 9979517,
+      "value": 9979517
+    },
+    {
+      "time": "2026-05-28T00:00:00Z",
+      "supply_in_profit": 10089970,
+      "value": 10089970
+    },
+    {
+      "time": "2026-05-29T00:00:00Z",
+      "supply_in_profit": 10080169,
+      "value": 10080169
+    },
+    {
+      "time": "2026-05-30T00:00:00Z",
+      "supply_in_profit": 10216639,
+      "value": 10216639
+    },
+    {
+      "time": "2026-05-31T00:00:00Z",
+      "supply_in_profit": 10138727,
+      "value": 10138727
+    },
+    {
+      "time": "2026-06-01T00:00:00Z",
+      "supply_in_profit": 9786279,
+      "value": 9786279
+    },
+    {
+      "time": "2026-06-02T00:00:00Z",
+      "supply_in_profit": 8556132,
+      "value": 8556132
+    },
+    {
+      "time": "2026-06-03T00:00:00Z",
+      "supply_in_profit": 8185567,
+      "value": 8185567
+    },
+    {
+      "time": "2026-06-04T00:00:00Z",
+      "supply_in_profit": 8071530,
+      "value": 8071530
+    },
+    {
+      "time": "2026-06-05T00:00:00Z",
+      "supply_in_profit": 7672925,
+      "value": 7672925
+    },
+    {
+      "time": "2026-06-06T00:00:00Z",
+      "supply_in_profit": 7793305,
+      "value": 7793305
+    },
+    {
+      "time": "2026-06-07T00:00:00Z",
+      "supply_in_profit": 8310474,
+      "value": 8310474
+    },
+    {
+      "time": "2026-06-08T00:00:00Z",
+      "supply_in_profit": 8168352,
+      "value": 8168352
+    },
+    {
+      "time": "2026-06-09T00:00:00Z",
+      "supply_in_profit": 7934037,
+      "value": 7934037
+    },
+    {
+      "time": "2026-06-10T00:00:00Z",
+      "supply_in_profit": 7862049,
+      "value": 7862049
+    },
+    {
+      "time": "2026-06-11T00:00:00Z",
+      "supply_in_profit": 8521568,
+      "value": 8521568
+    },
+    {
+      "time": "2026-06-12T00:00:00Z",
+      "supply_in_profit": 8475670,
+      "value": 8475670
+    },
+    {
+      "time": "2026-06-13T00:00:00Z",
+      "supply_in_profit": 8814546,
+      "value": 8814546
+    },
+    {
+      "time": "2026-06-14T00:00:00Z",
+      "supply_in_profit": 8939008,
+      "value": 8939008
+    },
+    {
+      "time": "2026-06-15T00:00:00Z",
+      "supply_in_profit": 9019391,
+      "value": 9019391
+    },
+    {
+      "time": "2026-06-16T00:00:00Z",
+      "supply_in_profit": 8799138,
+      "value": 8799138
+    },
+    {
+      "time": "2026-06-17T00:00:00Z",
+      "supply_in_profit": 8695094,
+      "value": 8695094
+    },
+    {
+      "time": "2026-06-18T00:00:00Z",
+      "supply_in_profit": 8212242,
+      "value": 8212242
+    },
+    {
+      "time": "2026-06-19T00:00:00Z",
+      "supply_in_profit": 8475025,
+      "value": 8475025
+    },
+    {
+      "time": "2026-06-20T00:00:00Z",
+      "supply_in_profit": 8787938,
+      "value": 8787938
+    },
+    {
+      "time": "2026-06-21T00:00:00Z",
+      "supply_in_profit": 8274949,
+      "value": 8274949
+    },
+    {
+      "time": "2026-06-22T00:00:00Z",
+      "supply_in_profit": 8535756,
+      "value": 8535756
+    },
+    {
+      "time": "2026-06-23T00:00:00Z",
+      "supply_in_profit": 8199195,
+      "value": 8199195
+    },
+    {
+      "time": "2026-06-24T00:00:00Z",
+      "supply_in_profit": 7702222,
+      "value": 7702222
+    },
+    {
+      "time": "2026-06-25T00:00:00Z",
+      "supply_in_profit": 7570104,
+      "value": 7570104
+    },
+    {
+      "time": "2026-06-26T00:00:00Z",
+      "supply_in_profit": 7702610,
+      "value": 7702610
+    },
+    {
+      "time": "2026-06-27T00:00:00Z",
+      "supply_in_profit": 7642661,
+      "value": 7642661
+    },
+    {
+      "time": "2026-06-28T00:00:00Z",
+      "supply_in_profit": 7514500,
+      "value": 7514500
+    },
+    {
+      "time": "2026-06-29T00:00:00Z",
+      "supply_in_profit": 7785320,
+      "value": 7785320
+    },
+    {
+      "time": "2026-06-30T00:00:00Z",
+      "supply_in_profit": 7458682,
+      "value": 7458682
+    },
+    {
+      "time": "2026-07-01T00:00:00Z",
+      "supply_in_profit": 7829787,
+      "value": 7829787
+    },
+    {
+      "time": "2026-07-02T00:00:00Z",
+      "supply_in_profit": 8285105,
+      "value": 8285105
+    },
+    {
+      "time": "2026-07-03T00:00:00Z",
+      "supply_in_profit": 8632190,
+      "value": 8632190
+    },
+    {
+      "time": "2026-07-04T00:00:00Z",
+      "supply_in_profit": 8780781,
+      "value": 8780781
+    },
+    {
+      "time": "2026-07-05T00:00:00Z",
+      "supply_in_profit": 8967445,
+      "value": 8967445
+    },
+    {
+      "time": "2026-07-06T00:00:00Z",
+      "supply_in_profit": 9059851,
+      "value": 9059851
+    },
+    {
+      "time": "2026-07-07T00:00:00Z",
+      "supply_in_profit": 8687056,
+      "value": 8687056
+    },
+    {
+      "time": "2026-07-08T00:00:00Z",
+      "supply_in_profit": 8344319,
+      "value": 8344319
+    },
+    {
+      "time": "2026-07-09T00:00:00Z",
+      "supply_in_profit": 8731524,
+      "value": 8731524
+    },
+    {
+      "time": "2026-07-10T00:00:00Z",
+      "supply_in_profit": 9279192,
+      "value": 9279192
+    },
+    {
+      "time": "2026-07-11T00:00:00Z",
+      "supply_in_profit": 8940462,
+      "value": 8940462
+    },
+    {
+      "time": "2026-07-12T00:00:00Z",
+      "supply_in_profit": 8920612,
+      "value": 8920612
+    },
+    {
+      "time": "2026-07-13T00:00:00Z",
+      "supply_in_profit": 8339194,
+      "value": 8339194
+    },
+    {
+      "time": "2026-07-14T00:00:00Z",
+      "supply_in_profit": 9600935,
+      "value": 9600935
+    },
+    {
+      "time": "2026-07-15T00:00:00Z",
+      "supply_in_profit": 9490831,
+      "value": 9490831
+    },
+    {
+      "time": "2026-07-16T00:00:00Z",
+      "supply_in_profit": 9101901,
+      "value": 9101901
+    },
+    {
+      "time": "2026-07-17T00:00:00Z",
+      "supply_in_profit": 9226440,
+      "value": 9226440
+    },
+    {
+      "time": "2026-07-18T00:00:00Z",
+      "supply_in_profit": 9621817,
+      "value": 9621817
+    },
+    {
+      "time": "2026-07-19T00:00:00Z",
+      "supply_in_profit": 9553872,
+      "value": 9553872
+    },
+    {
+      "time": "2026-07-20T00:00:00Z",
+      "supply_in_profit": 9658391,
+      "value": 9658391
+    },
+    {
+      "time": "2026-07-21T00:00:00Z",
+      "supply_in_profit": 9927399,
+      "value": 9927399
+    },
+    {
+      "time": "2026-07-22T00:00:00Z",
+      "supply_in_profit": 9737005,
+      "value": 9737005
+    },
+    {
+      "time": "2026-07-23T00:00:00Z",
+      "supply_in_profit": 9552656,
+      "value": 9552656
+    },
+    {
+      "time": "2026-07-24T00:00:00Z",
+      "supply_in_profit": 9123584,
+      "value": 9123584
+    },
+    {
+      "time": "2026-07-25T00:00:00Z",
+      "supply_in_profit": 9322386,
+      "value": 9322386
+    },
+    {
+      "time": "2026-07-26T00:00:00Z",
+      "supply_in_profit": 9657625,
+      "value": 9657625
+    },
+    {
+      "time": "2026-07-27T00:00:00Z",
+      "supply_in_profit": 8917547,
+      "value": 8917547
+    },
+    {
+      "time": "2026-07-28T00:00:00Z",
+      "supply_in_profit": 9038095,
+      "value": 9038095
+    },
+    {
+      "time": "2026-07-29T00:00:00Z",
+      "supply_in_profit": 8958050,
+      "value": 8958050
+    },
+    {
+      "time": "2026-07-30T00:00:00Z",
+      "supply_in_profit": 9453823,
+      "value": 9453823
+    },
+    {
+      "time": "2026-07-31T00:00:00Z",
+      "supply_in_profit": 8256252,
+      "value": 8256252
+    },
+    {
+      "time": "2026-08-01T00:00:00Z",
+      "supply_in_profit": 8258462,
+      "value": 8258462
+    },
+    {
+      "time": "2026-08-02T00:00:00Z",
+      "supply_in_profit": 8822470,
+      "value": 8822470
+    },
+    {
+      "time": "2026-08-03T00:00:00Z",
+      "supply_in_profit": 8806621,
+      "value": 8806621
+    },
+    {
+      "time": "2026-08-04T00:00:00Z",
+      "supply_in_profit": 9290402,
+      "value": 9290402
+    },
+    {
+      "time": "2026-08-05T00:00:00Z",
+      "supply_in_profit": 9724031,
+      "value": 9724031
+    },
+    {
+      "time": "2026-08-06T00:00:00Z",
+      "supply_in_profit": 9334932,
+      "value": 9334932
+    },
+    {
+      "time": "2026-08-07T00:00:00Z",
+      "supply_in_profit": 9874967,
+      "value": 9874967
+    },
+    {
+      "time": "2026-08-08T00:00:00Z",
+      "supply_in_profit": 9825016,
+      "value": 9825016
+    },
+    {
+      "time": "2026-08-09T00:00:00Z",
+      "supply_in_profit": 9769054,
+      "value": 9769054
+    },
+    {
+      "time": "2026-08-10T00:00:00Z",
+      "supply_in_profit": 8954483,
+      "value": 8954483
+    },
+    {
+      "time": "2026-08-11T00:00:00Z",
+      "supply_in_profit": 8770029,
+      "value": 8770029
+    },
+    {
+      "time": "2026-08-12T00:00:00Z",
+      "supply_in_profit": 8531401,
+      "value": 8531401
+    },
+    {
+      "time": "2026-08-13T00:00:00Z",
+      "supply_in_profit": 8533601,
+      "value": 8533601
+    },
+    {
+      "time": "2026-08-14T00:00:00Z",
+      "supply_in_profit": 8325070,
+      "value": 8325070
+    },
+    {
+      "time": "2026-08-15T00:00:00Z",
+      "supply_in_profit": 8445685,
+      "value": 8445685
+    },
+    {
+      "time": "2026-08-16T00:00:00Z",
+      "supply_in_profit": 8182962,
+      "value": 8182962
+    },
+    {
+      "time": "2026-08-17T00:00:00Z",
+      "supply_in_profit": 9752759,
+      "value": 9752759
+    },
+    {
+      "time": "2026-08-18T00:00:00Z",
+      "supply_in_profit": 9877430,
+      "value": 9877430
+    },
+    {
+      "time": "2026-08-19T00:00:00Z",
+      "supply_in_profit": 11045830,
+      "value": 11045830
+    },
+    {
+      "time": "2026-08-20T00:00:00Z",
+      "supply_in_profit": 11612103,
+      "value": 11612103
+    },
+    {
+      "time": "2026-08-21T00:00:00Z",
+      "supply_in_profit": 12260721,
+      "value": 12260721
+    },
+    {
+      "time": "2026-08-22T00:00:00Z",
+      "supply_in_profit": 11859524,
+      "value": 11859524
+    },
+    {
+      "time": "2026-08-23T00:00:00Z",
+      "supply_in_profit": 12098659,
+      "value": 12098659
+    },
+    {
+      "time": "2026-08-24T00:00:00Z",
+      "supply_in_profit": 12305694,
+      "value": 12305694
+    },
+    {
+      "time": "2026-08-25T00:00:00Z",
+      "supply_in_profit": 12042982,
+      "value": 12042982
+    },
+    {
+      "time": "2026-08-26T00:00:00Z",
+      "supply_in_profit": 12270120,
+      "value": 12270120
+    },
+    {
+      "time": "2026-08-27T00:00:00Z",
+      "supply_in_profit": 12465133,
+      "value": 12465133
+    },
+    {
+      "time": "2026-08-28T00:00:00Z",
+      "supply_in_profit": 11740637,
+      "value": 11740637
+    },
+    {
+      "time": "2026-08-29T00:00:00Z",
+      "supply_in_profit": 11927616,
+      "value": 11927616
+    },
+    {
+      "time": "2026-08-30T00:00:00Z",
+      "supply_in_profit": 11909849,
+      "value": 11909849
+    },
+    {
+      "time": "2026-08-31T00:00:00Z",
+      "supply_in_profit": 12010520,
+      "value": 12010520
+    },
+    {
+      "time": "2026-09-01T00:00:00Z",
+      "supply_in_profit": 11575092,
+      "value": 11575092
+    },
+    {
+      "time": "2026-09-02T00:00:00Z",
+      "supply_in_profit": 11470926,
+      "value": 11470926
+    },
+    {
+      "time": "2026-09-03T00:00:00Z",
+      "supply_in_profit": 12601675,
+      "value": 12601675
+    },
+    {
+      "time": "2026-09-04T00:00:00Z",
+      "supply_in_profit": 12344929,
+      "value": 12344929
+    },
+    {
+      "time": "2026-09-05T00:00:00Z",
+      "supply_in_profit": 12367305,
+      "value": 12367305
+    },
+    {
+      "time": "2026-09-06T00:00:00Z",
+      "supply_in_profit": 12451956,
+      "value": 12451956
+    },
+    {
+      "time": "2026-09-07T00:00:00Z",
+      "supply_in_profit": 12104826,
+      "value": 12104826
+    },
+    {
+      "time": "2026-09-08T00:00:00Z",
+      "supply_in_profit": 11821928,
+      "value": 11821928
+    },
+    {
+      "time": "2026-09-09T00:00:00Z",
+      "supply_in_profit": 11697717,
+      "value": 11697717
+    },
+    {
+      "time": "2026-09-10T00:00:00Z",
+      "supply_in_profit": 11155741,
+      "value": 11155741
+    },
+    {
+      "time": "2026-09-11T00:00:00Z",
+      "supply_in_profit": 11320696,
+      "value": 11320696
+    },
+    {
+      "time": "2026-09-12T00:00:00Z",
+      "supply_in_profit": 11365158,
+      "value": 11365158
+    },
+    {
+      "time": "2026-09-13T00:00:00Z",
+      "supply_in_profit": 11202743,
+      "value": 11202743
+    },
+    {
+      "time": "2026-09-14T00:00:00Z",
+      "supply_in_profit": 11817586,
+      "value": 11817586
+    },
+    {
+      "time": "2026-09-15T00:00:00Z",
+      "supply_in_profit": 10962274,
+      "value": 10962274
+    },
+    {
+      "time": "2026-09-16T00:00:00Z",
+      "supply_in_profit": 11139256,
+      "value": 11139256
+    },
+    {
+      "time": "2026-09-17T00:00:00Z",
+      "supply_in_profit": 11149545,
+      "value": 11149545
+    },
+    {
+      "time": "2026-09-18T00:00:00Z",
+      "supply_in_profit": 12622122,
+      "value": 12622122
+    },
+    {
+      "time": "2026-09-19T00:00:00Z",
+      "supply_in_profit": 12670583,
+      "value": 12670583
+    },
+    {
+      "time": "2026-09-20T00:00:00Z",
+      "supply_in_profit": 12636734,
+      "value": 12636734
+    },
+    {
+      "time": "2026-09-21T00:00:00Z",
+      "supply_in_profit": 13878433,
+      "value": 13878433
+    },
+    {
+      "time": "2026-09-22T00:00:00Z",
+      "supply_in_profit": 13724056,
+      "value": 13724056
+    },
+    {
+      "time": "2026-09-23T00:00:00Z",
+      "supply_in_profit": 12788220,
+      "value": 12788220
+    },
+    {
+      "time": "2026-09-24T00:00:00Z",
+      "supply_in_profit": 12892954,
+      "value": 12892954
+    },
+    {
+      "time": "2026-09-25T00:00:00Z",
+      "supply_in_profit": 12607963,
+      "value": 12607963
+    },
+    {
+      "time": "2026-09-26T00:00:00Z",
+      "supply_in_profit": 12758933,
+      "value": 12758933
+    },
+    {
+      "time": "2026-09-27T00:00:00Z",
+      "supply_in_profit": 12877757,
+      "value": 12877757
+    },
+    {
+      "time": "2026-09-28T00:00:00Z",
+      "supply_in_profit": 12440112,
+      "value": 12440112
+    },
+    {
+      "time": "2026-09-29T00:00:00Z",
+      "supply_in_profit": 12508729,
+      "value": 12508729
+    },
+    {
+      "time": "2026-09-30T00:00:00Z",
+      "supply_in_profit": 12442698,
+      "value": 12442698
+    },
+    {
+      "time": "2026-10-01T00:00:00Z",
+      "supply_in_profit": 13415415,
+      "value": 13415415
+    },
+    {
+      "time": "2026-10-02T00:00:00Z",
+      "supply_in_profit": 13050031,
+      "value": 13050031
+    },
+    {
+      "time": "2026-10-03T00:00:00Z",
+      "supply_in_profit": 13257255,
+      "value": 13257255
+    },
+    {
+      "time": "2026-10-04T00:00:00Z",
+      "supply_in_profit": 13912591,
+      "value": 13912591
+    },
+    {
+      "time": "2026-10-05T00:00:00Z",
+      "supply_in_profit": 13673859,
+      "value": 13673859
+    },
+    {
+      "time": "2026-10-06T00:00:00Z",
+      "supply_in_profit": 13609889,
+      "value": 13609889
+    },
+    {
+      "time": "2026-10-07T00:00:00Z",
+      "supply_in_profit": 12117167,
+      "value": 12117167
+    },
+    {
+      "time": "2026-10-08T00:00:00Z",
+      "supply_in_profit": 11942604,
+      "value": 11942604
+    },
+    {
+      "time": "2026-10-09T00:00:00Z",
+      "supply_in_profit": 12051390,
+      "value": 12051390
+    },
+    {
+      "time": "2026-10-10T00:00:00Z",
+      "supply_in_profit": 12160198,
+      "value": 12160198
+    },
+    {
+      "time": "2026-10-11T00:00:00Z",
+      "supply_in_profit": 12496113,
+      "value": 12496113
+    },
+    {
+      "time": "2026-10-12T00:00:00Z",
+      "supply_in_profit": 11869377,
+      "value": 11869377
+    },
+    {
+      "time": "2026-10-13T00:00:00Z",
+      "supply_in_profit": 12134966,
+      "value": 12134966
+    },
+    {
+      "time": "2026-10-14T00:00:00Z",
+      "supply_in_profit": 11775509,
+      "value": 11775509
+    },
+    {
+      "time": "2026-10-15T00:00:00Z",
+      "supply_in_profit": 12008937,
+      "value": 12008937
+    },
+    {
+      "time": "2026-10-16T00:00:00Z",
+      "supply_in_profit": 11834347,
+      "value": 11834347
+    },
+    {
+      "time": "2026-10-17T00:00:00Z",
+      "supply_in_profit": 11800432,
+      "value": 11800432
+    },
+    {
+      "time": "2026-10-18T00:00:00Z",
+      "supply_in_profit": 12029862,
+      "value": 12029862
+    },
+    {
+      "time": "2026-10-19T00:00:00Z",
+      "supply_in_profit": 11937686,
+      "value": 11937686
+    },
+    {
+      "time": "2026-10-20T00:00:00Z",
+      "supply_in_profit": 12340008,
+      "value": 12340008
+    },
+    {
+      "time": "2026-10-21T00:00:00Z",
+      "supply_in_profit": 12852888,
+      "value": 12852888
+    },
+    {
+      "time": "2026-10-22T00:00:00Z",
+      "supply_in_profit": 11466114,
+      "value": 11466114
+    },
+    {
+      "time": "2026-10-23T00:00:00Z",
+      "supply_in_profit": 11305606,
+      "value": 11305606
+    },
+    {
+      "time": "2026-10-24T00:00:00Z",
+      "supply_in_profit": 11364161,
+      "value": 11364161
+    },
+    {
+      "time": "2026-10-25T00:00:00Z",
+      "supply_in_profit": 11123196,
+      "value": 11123196
+    },
+    {
+      "time": "2026-10-26T00:00:00Z",
+      "supply_in_profit": 11123196,
+      "value": 11123196
+    },
+    {
+      "time": "2026-10-27T00:00:00Z",
+      "supply_in_profit": 11123196,
+      "value": 11123196
+    },
+    {
+      "time": "2026-10-28T00:00:00Z",
+      "supply_in_profit": 11123196,
+      "value": 11123196
+    },
+    {
+      "time": "2026-10-29T00:00:00Z",
+      "supply_in_profit": 11123196,
+      "value": 11123196
+    },
+    {
+      "time": "2026-10-30T00:00:00Z",
+      "supply_in_profit": 11123196,
+      "value": 11123196
+    },
+    {
+      "time": "2026-10-31T00:00:00Z",
+      "supply_in_profit": 11123196,
+      "value": 11123196
+    },
+    {
+      "time": "2026-11-01T00:00:00Z",
+      "supply_in_profit": 11123196,
+      "value": 11123196
+    }
+  ]
+}

@@ -378,7 +378,7 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
                     top: 6,
                     right: hasRightAxis ? 3 : 2,
                     bottom: 0,
-                    left: 3,
+                    left: 6,
                   }}
                 >
                   <defs>

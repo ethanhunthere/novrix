@@ -2774,7 +2774,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                                       top: 6,
                                       right: isBtcOn ? 3 : 2,
                                       bottom: 0,
-                                      left: 3,
+                                      left: 6,
                                     }}
                                     style={{ outline: 'none' }}
                                   >
@@ -3040,7 +3040,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                           top: 6,
                           right: showBtcPrice['dominance'] ? 3 : 2,
                           bottom: 0,
-                          left: 3,
+                          left: 6,
                         }}
                       >
                         <defs>
@@ -3357,7 +3357,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                           top: 6,
                           right: showBtcPrice['hashribbons'] ? 3 : 2,
                           bottom: 0,
-                          left: 3,
+                          left: 6,
                         }}
                       >
                         <defs>
@@ -3676,7 +3676,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                           top: 6,
                           right: showBtcPrice['weekMa200'] ? 3 : 2,
                           bottom: 0,
-                          left: 3,
+                          left: 6,
                         }}
                       >
                         <defs>

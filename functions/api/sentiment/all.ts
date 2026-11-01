@@ -12,6 +12,7 @@
 
 interface Env {
   DB: D1Database;
+  ASSETS?: { fetch: typeof fetch };
 }
 
 const CORS = {
@@ -215,6 +216,21 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     const data = await runBatch(env.DB);
     const hasAnyData = Object.values(data).some((v) => Array.isArray(v) && v.length > 0);
     if (!hasAnyData) {
+      if (env.ASSETS) {
+        try {
+          const staticUrl = new URL('/data/onchain/all.json', request.url);
+          const assetRes = await env.ASSETS.fetch(staticUrl);
+          if (assetRes.ok) {
+            const staticPayload = await assetRes.text();
+            return new Response(staticPayload, {
+              status: 200,
+              headers: { ...CORS, 'Cache-Control': CACHE, 'x-data-source': 'static-assets' },
+            });
+          }
+        } catch (assetErr) {
+          console.warn('[sentiment/all] static asset fallback error:', assetErr);
+        }
+      }
       return new Response(
         JSON.stringify({ success: false, error: 'All D1 indicator tables empty or unavailable', data }),
         { status: 503, headers: { ...CORS, 'Cache-Control': 'no-store' } },
@@ -238,6 +254,21 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     console.error(`[sentiment/all] D1 batch error: ${message}`);
+    if (env.ASSETS) {
+      try {
+        const staticUrl = new URL('/data/onchain/all.json', request.url);
+        const assetRes = await env.ASSETS.fetch(staticUrl);
+        if (assetRes.ok) {
+          const staticPayload = await assetRes.text();
+          return new Response(staticPayload, {
+            status: 200,
+            headers: { ...CORS, 'Cache-Control': CACHE, 'x-data-source': 'static-assets' },
+          });
+        }
+      } catch (assetErr) {
+        console.warn('[sentiment/all] fallback catch error:', assetErr);
+      }
+    }
     return new Response(
       JSON.stringify({ success: false, error: 'D1 batch failed', message }),
       { status: 503, headers: CORS },
