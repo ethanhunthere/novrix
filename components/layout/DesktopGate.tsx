@@ -31,13 +31,20 @@ export default function DesktopGate({
       setIsMobile(isNarrow);
       onViewportCheck?.(isNarrow);
     };
-    check();
-    setChecked(true);
+
+    const raf = requestAnimationFrame(() => {
+      check();
+      setChecked(true);
+    });
 
     let timer: ReturnType<typeof setTimeout>;
     const debounced = () => { clearTimeout(timer); timer = setTimeout(check, 100); };
     window.addEventListener('resize', debounced);
-    return () => { window.removeEventListener('resize', debounced); clearTimeout(timer); };
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', debounced);
+      clearTimeout(timer);
+    };
   }, [onViewportCheck]);
 
   if (!checked) return null;
