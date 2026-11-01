@@ -160,22 +160,17 @@ export default function TerminalCycleMonitor() {
           </div>
 
           <div className="text-right sm:text-right">
-            <span
+            <div
               style={{
                 fontFamily: 'var(--ff-mono)',
-                fontSize: '9.5px',
+                fontSize: '10.5px',
                 fontWeight: 600,
-                letterSpacing: '0.03em',
-                color: '#FAF7F2',
-                background: 'rgba(250, 247, 242, 0.08)',
-                padding: '2px 6px',
-                borderRadius: '2px',
-                border: '1px solid rgba(250, 247, 242, 0.16)',
-                display: 'inline-block',
+                letterSpacing: '0.02em',
+                color: INK,
               }}
             >
               {activeTab.statusBadge}
-            </span>
+            </div>
             <div
               style={{
                 fontFamily: 'var(--ff-mono)',
