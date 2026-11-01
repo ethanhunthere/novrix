@@ -701,7 +701,7 @@ export const DateAxisTick = (props: DateAxisTickProps) => {
 
   // Boundary protection:
   // Ensure the left-most date tick NEVER enters into the left Y-axis value column territory.
-  const isFirst = index === 0 || x < Y_AXIS_WIDTH + 18;
+  const isFirst = index === 0 || x < Y_AXIS_WIDTH + 14;
   const isLast = visibleTicksCount > 1 ? index === visibleTicksCount - 1 : false;
   const textAnchor = isFirst ? 'start' : isLast ? 'end' : 'middle';
   const dx = isFirst ? 10 : isLast ? -8 : 0;
@@ -722,9 +722,9 @@ export const DateAxisTick = (props: DateAxisTickProps) => {
   );
 };
 
-export const Y_AXIS_CHART_PADDING = 8;
-export const Y_AXIS_WIDTH = 58;
-export const Y_AXIS_RIGHT_WIDTH = 56;
+export const Y_AXIS_CHART_PADDING = 6;
+export const Y_AXIS_WIDTH = 48;
+export const Y_AXIS_RIGHT_WIDTH = 44;
 
 function axisCoord(value: number | string | undefined): number {
   const n = typeof value === 'number' ? value : Number(value);

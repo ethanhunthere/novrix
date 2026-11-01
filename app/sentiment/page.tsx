@@ -2703,7 +2703,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 onScreenshot={() => capturePanel('sentiment-oscillator')}
               />
               <div
-                className={`px-4 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
+                className={`px-2.5 sm:px-3 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
                 style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
               >
                 {(!visiblePanels.has('sentiment-oscillator') || isLoading) ? (
@@ -2751,9 +2751,9 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                                     data={fngDataToRender}
                                     margin={{
                                       top: 6,
-                                      right: isBtcOn ? 8 : 14,
+                                      right: isBtcOn ? 2 : 6,
                                       bottom: 0,
-                                      left: 8,
+                                      left: 2,
                                     }}
                                     style={{ outline: 'none' }}
                                   >
@@ -2994,7 +2994,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                 onScreenshot={() => capturePanel('dominance')}
               />
               <div
-                className={`px-4 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
+                className={`px-2.5 sm:px-3 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
                 style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
               >
                 {(!visiblePanels.has('dominance') || isDominanceLoading || slicedDominanceChartDataWithPrice.length === 0) ? (
@@ -3016,9 +3016,9 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                         style={{ outline: 'none' }}
                         margin={{
                           top: 6,
-                          right: showBtcPrice['dominance'] ? 8 : 14,
+                          right: showBtcPrice['dominance'] ? 2 : 6,
                           bottom: 0,
-                          left: 8,
+                          left: 2,
                         }}
                       >
                         <defs>
@@ -3313,7 +3313,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                     onScreenshot={() => capturePanel('hashribbons')}
                   />
               <div
-                className={`px-4 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
+                className={`px-2.5 sm:px-3 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
                 style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
               >
                 {(!visiblePanels.has('hashribbons') || isHashribbonsLoading || hashribbonsChartData.length === 0) ? <ChartSkeleton height={ch('hashribbons')} /> : (
@@ -3333,9 +3333,9 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                         style={{ outline: 'none' }}
                         margin={{
                           top: 6,
-                          right: showBtcPrice['hashribbons'] ? 8 : 14,
+                          right: showBtcPrice['hashribbons'] ? 2 : 6,
                           bottom: 0,
-                          left: 8,
+                          left: 2,
                         }}
                       >
                         <defs>
@@ -3630,7 +3630,7 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                     onScreenshot={() => capturePanel('200-week-ma')}
                   />
               <div
-                className={`px-4 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
+                className={`px-2.5 sm:px-3 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
                 style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
               >
                 {(!visiblePanels.has('200-week-ma') || isWeekMa200Loading || weekMa200ChartData.length === 0) ? (
@@ -3651,9 +3651,9 @@ function SentimentContent({ onPrimaryDataReady }: SentimentContentProps) {
                         style={{ outline: 'none' }}
                         margin={{
                           top: 6,
-                          right: 14,
+                          right: 6,
                           bottom: 0,
-                          left: 8,
+                          left: 2,
                         }}
                       >
                         <defs>

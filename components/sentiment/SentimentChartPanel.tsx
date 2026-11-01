@@ -314,7 +314,7 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
       })()}
 
       <div
-        className={`px-4 sm:px-5 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
+        className={`px-2.5 sm:px-3 pt-3 pb-3 ${selectedIndicator !== null ? 'flex-1 min-h-0 flex flex-col' : ''}`}
         style={{ background: 'linear-gradient(180deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.5) 12%, rgba(10,9,8,0.2) 28%, transparent 55%)' }}
       >
 
@@ -340,9 +340,9 @@ const SentimentChartPanel = memo(function SentimentChartPanel({
                     style={{ outline: 'none' }}
                   margin={{
                     top: 6,
-                    right: showBtc && showBtcPrice[panel.indicatorKey] && !panel.btcSameAxis ? 8 : 14,
+                    right: showBtc && showBtcPrice[panel.indicatorKey] && !panel.btcSameAxis ? 2 : 6,
                     bottom: 0,
-                    left: 8,
+                    left: 2,
                   }}
                 >
                   <defs>
